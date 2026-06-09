@@ -30,6 +30,7 @@ COPY docker/setup-web.sh     /usr/local/bin/setup-web.sh
 COPY docker/entrypoint.sh    /usr/local/bin/entrypoint.sh
 COPY docker/nginx.conf       /etc/nginx/sites-available/archspace
 COPY docker/as-cgi           /build/as-cgi
+COPY docker/web-overrides    /build/docker/web-overrides
 COPY web /build/web
 RUN chmod +x /usr/local/bin/setup-runtime.sh /usr/local/bin/setup-web.sh /usr/local/bin/entrypoint.sh
 
