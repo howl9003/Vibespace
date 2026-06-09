@@ -80,7 +80,6 @@ $tokenValid = ($account !== null);
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Set New Password');
-echo auth_title('Set New Password');
 echo auth_error($error);
 
 if ($tokenValid):

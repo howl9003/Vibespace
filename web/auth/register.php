@@ -83,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Register');
-echo auth_title('Create Account');
 echo auth_error($error);
 ?>
 <form method="post" action="/auth/register.php">

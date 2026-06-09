@@ -55,6 +55,9 @@ function auth_page_start(string $title): void {
              width:254px;max-width:100%;margin-top:16px;}
   .as-btnrow a{line-height:0;display:block;}
   .as-btnrow img,.as-btnrow input{display:block;}
+  /* single-button pages (register/forgot/reset): center under the fields */
+  .as-submit{width:254px;max-width:100%;margin-top:16px;text-align:center;}
+  .as-submit .as-btn{display:inline-block;}
   .as-forgot-sm{margin-top:8px;text-align:center;}
   .as-forgot-sm a{color:#B5721E;text-decoration:none;font-size:12px;}
   .as-forgot-sm a:hover{text-decoration:underline;}
@@ -101,6 +104,6 @@ function auth_input(string $label, string $name, string $type = 'text',
 
 /** An original button GIF used as the form submit. */
 function auth_submit(string $gif, string $alt, int $w = 120, int $h = 16): string {
-    return '<div><input class="as-btn" type="image" src="/image/as_login/' . h($gif) . '"'
+    return '<div class="as-submit"><input class="as-btn" type="image" src="/image/as_login/' . h($gif) . '"'
          . ' width="' . $w . '" height="' . $h . '" alt="' . h($alt) . '"></div>';
 }

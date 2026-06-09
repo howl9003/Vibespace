@@ -67,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Forgot Password');
-echo auth_title('Reset Password');
 if (!empty($submitted)) {
     echo auth_ok('If that email exists, a reset link was sent.');
 }
