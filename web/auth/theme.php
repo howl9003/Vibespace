@@ -61,7 +61,7 @@ function auth_page_start(string $title): void {
 </head>
 <body>
 <div class="as-auth-wrap"><div class="as-auth-col">
-  <img class="as-hero" src="/image/as_login/mainimg.gif" width="486" height="152" alt="Archspace">
+  <img class="as-hero" src="/image/as_game/menu_main.gif" width="170" height="119" alt="Archspace">
   <div class="as-box">
 HTML;
 }
