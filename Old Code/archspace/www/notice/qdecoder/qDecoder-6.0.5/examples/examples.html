@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>The qDecoder Project: qDecoder Examples</title>
+</head>
+
+<body>
+<p><h1>qDecoder Examples</h1>
+<i>
+The qDecoder Project
+<br><a href="http://www.qDecoder.org">http://www.qDecoder.org</a>
+
+<p><blockquote>
+qDecoder is a CGI library for C/C++ language programming and a solution
+product for developers. The Query Fetch algorithm of qDecoder which is
+based on linked-list gives developers more simple library interface
+without regard to a method of GET or POST. Also because it gives
+transperance with a subordinate layer, web-based softwares - CGI - is
+designed and embodied in reliability further. The source code for
+qDecoder is freely available to everyone.
+</blockquote>
+
+<p>It is only communication for qDecoder developers that is a qDecoder
+mailing list. Please join our mailing list, if you interest in CGI
+programming using qDecoder.
+To subscribe qDecoder mailing list send mail to majordomo@qDecoder.org
+with "subscribe qDecoder" in the body(not subject) of the message.
+Mailing-list archive can be founded at
+<a href="http://www.qDecoder.org/cgi-bin/CrazyWWWBoard.cgi?db=questions">here</a>.
+</i>
+
+<!-- ex) fetch.cgi -->
+<p><hr noshade>
+<h3>Example: <a href="fetch.c">fetch.c</a></h3>
+<form method="post" action="fetch.cgi">
+  Type anything: <input type="text" name="query" value="">
+  <input type="submit">
+</form>
+
+<!-- ex) multivalue.cgi -->
+<hr size="1" noshade>
+<h3>Example: <a href="multivalue.c">multivalue.c</a></h3>
+<form method="post" action="multivalue.cgi">
+  <input name="checklist" type=checkbox value="Hamburger"> Hamburger
+  <input name="checklist" type=checkbox value="Chicken"> Chicken
+  <input name="checklist" type=checkbox value="Photato"> Photato
+  <input name="checklist" type=checkbox value="Coke"> Coke
+  <input name="checklist" type=checkbox value="Orange Juice"> Orange Juice
+  <input type="submit">
+</form>
+
+<!-- ex) upload.cgi -->
+<hr size="1" noshade>
+<h3>Example: <a href="upload.c">upload.c</a></h3>
+<form method="post" action="upload.cgi" enctype="multipart/form-data">
+   Select file: <input type="file" name="binary"><br>
+  <input type="submit">
+</form>
+
+<!-- ex) download.cgi -->
+<hr size="1" noshade>
+<h3>Example: <a href="download.c">download.c</a></h3>
+Click <a href="download.cgi">here</a> to download source code.
+<p>
+
+<!-- ex) streamedit.cgi -->
+<hr size="1" noshade>
+<h3>Example: <a href="streamedit.c">streamedit.c</a>, <a href="streamedit.html">Parsed HTML files</a></h3>
+<form method="post" action="streamedit.cgi">
+  Name: <input type="text" name="name" value="">
+  <br>Hobby: <input type="text" name="hobby" value="">
+  <br><input type="submit">
+</form>
+
+<!-- ex) arglist.cgi -->
+<hr size="1" noshade>
+<h3>Example: <a href="arglist.c">arglist.c</a></h3>
+<form method="post" action="arglist.cgi">
+  String: <input type="text" name="string" value="Hi, I'm a pretty boy. Are you pretty girl?" size="50"><br>
+  Query:  <input type="text" name="query" value='I am a "pretty girl"'>
+  <input type="submit">
+</form>
+
+<!-- End of examples -->
+<hr noshade>
+<center>
+<a href="http://www.qDecoder.org"><img src="../qDecoder.jpg" alt="qDecoder" border="0"></a>
+</center>
+
+</body>
+</html>

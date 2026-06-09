@@ -1,0 +1,15 @@
+# style <name> [= <name>]
+# {
+#   <option>
+# }
+#
+# widget <widget_set> style <style_name>
+# widget_class <widget_class_set> style <style_name>
+
+style "default"
+{
+  #fontset = "-*-fixed-medium-r-normal--16-*-*-*-*-*-iso8859-1,-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-ksc5601.1987-0"
+  fontset = "-adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1,-*-kodig-medium-r-normal--12-120-75-75-c-120-ksc5601.1987-0"
+    }
+
+widget_class "*" style "default"

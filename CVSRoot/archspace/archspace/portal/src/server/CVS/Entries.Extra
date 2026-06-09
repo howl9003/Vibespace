@@ -1,0 +1,9 @@
+/Makefile.FreeBSD////
+/Makefile.Linux////
+/Makefile.Solaris////
+/as_auth_server.c////
+/auth_server.c////
+/entry_server.c////
+/key_server.c////
+/xlib.c////
+/xlib.h////

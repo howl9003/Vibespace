@@ -1,0 +1,5 @@
+If you're developing you'll want to do these two things:
+add to your /etc/make.conf PORTDIR_OVERLAY=/usr/local/portage
+create a /usr/local/portage/net-www/archspace-cvs
+and copy these contents into there...
+there is an install.sh to do this for you ;)

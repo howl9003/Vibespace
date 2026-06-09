@@ -1,0 +1,8 @@
+/Makefile.Linux////*///
+/Makefile.Mindwarper////*///
+/Makefile.Optimized////*///
+/database.cc////*///
+/sql.cc////*///
+/store.cc////*///
+/store.ct.cc////*///
+/mysql.pool.cc////*///

@@ -1,0 +1,270 @@
+<?php
+include('extention.inc');
+if($cancel) {
+	header("Location: viewforum.$phpEx?forum=$forum");
+}
+
+include('functions.'.$phpEx);
+include('config.'.$phpEx);
+require('auth.'.$phpEx);
+$pagetitle = "New Topic";
+$pagetype = "newtopic";
+$sql = "SELECT forum_name, forum_access, forum_type FROM forums WHERE (forum_id = '$forum')";
+if(!$result = mysql_query($sql, $db))
+	error_die("Can't get forum data.");
+$myrow = mysql_fetch_array($result);
+mysql_free_result($result);
+$forum_name = $myrow[forum_name];
+$forum_access = $myrow[forum_access];
+$forum_type = $myrow[forum_type];
+// $forum_id = $forum;
+$forum_id = $COUNCIL_ID;
+as_get_string();		// AS_STRING 파싱
+
+if(!does_exists($forum, $db, "forum")) {
+	error_die("The forum you are attempting to post to does not exist. Please try again.");
+}
+
+// new topi 을 sumit 했을때
+if($submit)
+{
+   if(trim($message) == '' || trim($subject) == '')
+   {
+		error_die($l_emptymsg);
+   }
+
+/*
+   if (!$user_logged_in)
+   {
+      if($username == '' && $password == '' && $forum_access == 2) 
+      {
+      // Not logged in, and username and password are empty and forum_access is 2 (anon posting allowed)
+      $userdata = array("user_id" => -1); 
+      }
+      else 
+      {
+	   // no valid session, need to check user/pass.
+	   if($username == '' || $password == '') 
+	   {
+		error_die("$l_userpass $l_tryagain");
+	   }
+	   $md_pass = md5($password);
+	   $userdata = get_userdata($username, $db);
+	   if($userdata[user_level] == -1) 
+	   {
+		error_die($l_userremoved);
+	   }
+*/
+/*
+	   if($md_pass != $userdata["user_password"]) 
+       {
+		error_die("$l_wrongpass $l_tryagain");
+       }
+	   if($forum_access == 3 && $userdata[user_level] < 2) 
+	     {
+		error_die($l_nopost);
+	     }
+	   if(is_banned($userdata[user_id], "username", $db))
+	     {
+		error_die($l_banned);
+	     }
+	}
+      if($userdata[user_id] != -1) 
+	{
+	   // You've entered your password and username, we log you in.
+	   $sessid = new_session($userdata[user_id], $REMOTE_ADDR, $sesscookietime, $db);
+	   set_session_cookie($sessid, $sesscookietime, $sesscookiename, $cookiepath, $cookiedomain, $cookiesecure);
+	}
+   }
+   else 
+     {
+	if($forum_access == 3 && $userdata[user_level] < 2) 
+	  {
+	     error_die($l_nopost);
+	  }
+	
+     }
+*/
+   // Either valid user/pass, or valid session. continue with post.. but first:
+   // Check that, if this is a private forum, the current user can post here.
+
+/*
+   if ($forum_type == 1)
+   {
+	   if (!check_priv_forum_auth($userdata[user_id], $forum, TRUE, $db))
+	   {
+	 		error_die("$l_privateforum $l_nopost");
+	   }
+	}
+*/
+
+   if($allow_html == 0 || isset($html))
+     $message = htmlspecialchars($message);
+
+   if($allow_bbcode == 1 && !($HTTP_POST_VARS[bbcode]))
+     $message = bbencode($message);
+   
+   // MUST do make_clickable() before changing \n into <br>.
+   $message = make_clickable($message);
+   $message = str_replace("\n", "<BR>", $message);
+   if(!$smile) {
+      $message = smile($message);
+   }
+
+
+   $message = censor_string($message, $db);
+   $message = addslashes($message);
+   $subject = strip_tags($subject);
+   $subject = censor_string($subject, $db);
+   $subject = addslashes($subject);
+   $poster_ip = $REMOTE_ADDR;
+   $time = date("Y-m-d H:i");
+   $GAME_NAME_DECODE = urldecode($GAME_NAME);
+
+   //to prevent [addsig] from getting in the way, let's put the sig insert down here.
+
+   if($sig && $userdata[user_id] != -1) {
+      $message .= "\n[addsig]";
+   }
+   $GAME_NAME_DECODE = urldecode($GAME_NAME);
+   $sql = "INSERT INTO topics (topic_title, topic_poster, forum_id, topic_time, topic_poster_name) VALUES ('$subject', '$GAME_ID', '$forum', '$time', '$GAME_NAME_DECODE')";
+
+//   if(isset($notify) && $userdata[user_id] != -1)	
+//     $sql .= ", '1'";
+//   else
+//     $sql .= ", '0'";
+//   $sql .= ")";
+   if(!$result = mysql_query($sql, $db)) {
+		error_die("Couldn't enter topic in database.");
+   }
+   $topic_id = mysql_insert_id();
+   $sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_text, post_time, poster_ip, poster_name) VALUES ('$topic_id', '$forum', '$GAME_ID', '$message', '$time', '$poster_ip', '$GAME_NAME_DECODE')";
+   if(!$result = mysql_query($sql, $db)) {
+		error_die("Couldn't enter post in datbase.");
+   }
+
+/*
+   if($userdata[user_id] != -1) {
+      $sql = "UPDATE users SET user_posts=user_posts+1 WHERE (user_id = $GAME_ID)";
+      $result = mysql_query($sql, $db);
+      if (!$result) {
+			error_die("Couldn't update users post count.");
+      }
+   }
+*/
+   $topic = $topic_id;
+   
+   $total_forum = get_total_topics($forum, $db);
+   $total_topic = get_total_posts($topic, $db, "topic")-1;  
+   // Subtract 1 because we want the nr of replies, not the nr of posts.
+   
+   $forward = 1;
+   include('page_header.'.$phpEx);
+   
+   echo "<br><TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACEING=\"0\" ALIGN=\"CENTER\" VALIGN=\"TOP\" WIDTH=\"$tablewidth\">";
+   echo "<TR><TD  BGCOLOR=\"$table_bgcolor\"><TABLE BORDER=\"0\" CALLPADDING=\"1\" CELLSPACEING=\"1\" WIDTH=\"100%\">";
+   echo "<TR BGCOLOR=\"$color1\" ALIGN=\"LEFT\"><TD><font face=\"Verdana\" size=\"2\"><P>";
+   echo "<P><BR><center>$l_stored<P>$l_click <a href=\"viewtopic.$phpEx?topic=$topic_id&forum=$forum&$total_topic\">$l_here</a> $l_viewmsg<p>$l_click <a href=\"viewforum.$phpEx?forum=$COUNCIL_ID\">$l_here</a> $l_returntopic</center><P></font>";
+
+   echo "</TD></TR></TABLE></TD></TR></TABLE><br>";
+   exit();
+   
+} // submit 끝
+// submit 이 아니라면
+else
+{
+   include('page_header.'.$phpEx);
+?>
+
+	<FORM ACTION="<?php echo $PHP_SELF?>" METHOD="POST">
+	<TABLE BORDER="0" CELLPADDING="1" CELLSPACING=0" ALIGN="CENTER" VALIGN="TOP" WIDTH="<?php echo $tablewidth?>"><TR><TD  BGCOLOR="<?php echo $table_bgcolor?>">
+	<TABLE BORDER="0" CELLPADDING="1" CELLSPACING=1" WIDTH="100%">
+	<TR BGCOLOR="<?php echo $color1?>" ALIGN="LEFT">
+<?php
+//	if($forum_access == 1) {
+?>
+<?php
+	}
+//	else if($forum_access == 2) {
+?>
+<?php
+//	}
+//	else if($forum_access == 3) {
+?>
+<?php
+//	}
+?>
+	</TR>
+	<TR ALIGN="LEFT">
+		<TD  BGCOLOR="<?php echo $color1?>"  width=25%><font size="<?php echo $FontSize2?>" face="<?php echo $FontFace?>"><b><?php echo $l_username?>:<b></font></TD>
+		<TD  BGCOLOR="<?php echo $color2?>"><font size="<?php echo $FontSize2?>" face="<?php echo $FontFace?>">
+<?PHP
+	if ($user_logged_in) {
+		echo $userdata[username] . " \n";
+	} else {
+	        // by thedaz
+		// echo "<INPUT TYPE=\"TEXT\" NAME=\"username\" SIZE=\"25\" MAXLENGTH=\"40\" VALUE=\"$userdata[username]\"> \n";
+                $GAME_NAME_DECODE = urldecode($GAME_NAME);
+		echo "<INPUT TYPE=\"TEXT\" NAME=\"username\" SIZE=\"25\" MAXLENGTH=\"40\" VALUE=\"$GAME_NAME_DECODE\" readonly> \n";
+		echo "<INPUT TYPE=\"HIDDEN\" TYPE=\"PASSWORD\" NAME=\"password\" VALUE=\"55555\">";
+	}
+?>
+		</font>
+		</TD>
+	</TR>
+
+<?PHP
+/*
+	if (!$user_logged_in) { 
+*/
+		// no session, need a password.
+/*
+		echo "    <TR ALIGN=\"LEFT\"> \n";
+		echo "        <TD BGCOLOR=\"$color1\" width=\"25%\"><font size=\"$FontSize2\" face=\"$FontFace\"><b>$l_password:</b></font><BR>";
+		echo "        <font size=\"$FontSize3\"><i><a href=\"sendpassword.$phpEx\" target=\"_blank\">$l_passwdlost</a></i></font></TD> \n";
+		echo "        <TD BGCOLOR=\"$color2\"><INPUT TYPE=\"PASSWORD\" NAME=\"password\" SIZE=\"25\" MAXLENGTH=\"25\"></TD> \n";
+		echo "    </TR> \n";
+	}
+*/
+?>
+
+	<TR ALIGN="LEFT">
+		<TD  BGCOLOR="<?php echo $color1?>" width=25%><font size="<?php echo $FontSize2?>" face="<?php echo $FontFace?>"><b><?php echo $l_subject?>:</b></TD>
+		<TD  BGCOLOR="<?php echo $color2?>"> <INPUT TYPE="TEXT" NAME="subject" SIZE="50" MAXLENGTH="100"></TD>
+	</TR>
+	<TR ALIGN="LEFT">
+		<TD  BGCOLOR="<?php echo $color1?>" width=25%><font size="<?php echo $FontSize2?>" face="<?php echo $FontFace?>"><b><?php echo $l_body?>:</b><br><br>
+		<?php
+		echo "$l_htmlis: ";
+		if($allow_html == 1)
+			echo "$l_on<BR>\n";
+		else
+			echo "$l_off<BR>\n";
+/*
+		echo "$l_bbcodeis: ";
+		if($allow_bbcode == 1)
+			echo "$l_on<br>\n";
+		else
+			echo "$l_off<BR>\n";
+*/
+		?>
+		</font></TD>
+		<TD  BGCOLOR="<?php echo $color2?>"><TEXTAREA NAME="message" ROWS=10 COLS=45 WRAP="VIRTUAL"></TEXTAREA></TD>
+	</TR>
+	<TR>
+		<TD  BGCOLOR="<?php echo $color1?>" colspan=2 ALIGN="CENTER">
+		<font size="<?php echo $FontSize2?>" face="<?php echo $FontFace?>">
+		<INPUT TYPE="HIDDEN" NAME="forum" VALUE="<?php echo $forum?>">
+		<INPUT TYPE="SUBMIT" NAME="submit" VALUE="<?php echo $l_submit?>">
+		</FORM>
+		</TD>
+	</TR>
+	</TABLE>
+</TD>
+</TR>
+</TABLE>
+
+<?php
+// }
+require('page_tail.'.$phpEx);
+?>

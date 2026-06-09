@@ -1,0 +1,26 @@
+v1.2.0
+February 9, 2000
+-------------------------------------------
+- Access control list functionality added to private forums (Nathan)
+- Fix for security hole that would allow anyone into the admin area (Bart)
+- Translation system (Bart & James)
+- Centralized error_die() function (Bart)
+- Centralized login_form() function (Bart)
+- Improved Installer (Frank)
+- Config.php cleanup (Bart)
+- Page_header.php cleanup (Bart)
+- Improved BBcode handling (Nathan)
+- Privmsg notification (Nathan & Bart)
+- Fixed password changing (James)
+- Improved tracking of what has been read (Bart)
+- Better indexes on DB (Frank)
+- Fixed postcount (posts get subtracted) (James)
+- Fixed search.php (limit and search order) (Bart) 
+- Auto-linker works correctly now (Nathan)
+- Lots of minor bugfixes and enhancements (Everyone)
+
+v1.0.0
+December 9, 2000
+-------------------------------------------
+Inital release of phpBB.
+Contains too many features to list here.

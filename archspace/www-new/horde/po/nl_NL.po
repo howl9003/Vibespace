@@ -1,0 +1,721 @@
+# Horde Dutch translation.
+# Copyright (C) 2001 Jan Kuipers.
+# Jan Kuipers <jrkuipers@lauwerscollege.nl>, 2001.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.5-cvs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-01-18 17:59+0100\n"
+"PO-Revision-Date: 2004-01-18 18:31+0100\n"
+"Last-Translator: Jan Kuipers <jrkuipers@lauwerscollege.nl>\n"
+"Language-Team: Dutch <i18n@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr ""
+" &#151; %s is klaar om onderstaande, geselecteerde, werkzaamheden uit te "
+"voeren."
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s Onderhoudswerkzaamheden - Bevestiging"
+
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' is niet geconfigureerd in het Horde register."
+
+msgid "24 hours"
+msgstr "24 uurs"
+
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Er heeft zich een fatale fout voorgedaan:</b>"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Add pair"
+msgstr "Paar toevoegen"
+
+msgid "Address Book"
+msgstr "Adresboek"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Alias"
+msgstr "Alias"
+
+msgid "An illegal value was specified."
+msgstr "Een ongeldige waarde opgegeven."
+
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "Bevestiging vragen voor het uitvoeren van onderhoudswerkzaamheden?"
+
+msgid "Authentication rejected by RADIUS server."
+msgstr "Authenticatie geweigerd door RADIUS server"
+
+msgid "Available fields:"
+msgstr "Beschikbare velden:"
+
+msgid "Bad kerberos password."
+msgstr "Verkeerd kerberos wachtwoord."
+
+msgid "Bad kerberos username."
+msgstr "Verkeerde kerberos gebruikersnaam."
+
+msgid "Birthday"
+msgstr "Verjaardag"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Calendar"
+msgstr "Agenda"
+
+msgid "Cancel Problem Report"
+msgstr "Probleemrapport afbreken"
+
+msgid "Cell Phone"
+msgstr "Tel.nr.mobiel"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Selecteer de werkzaamheden, die u op dit moment wilt uitvoeren."
+
+msgid "Close Help Window"
+msgstr "Sluit helpscherm"
+
+msgid "Close Help"
+msgstr "Help afsluiten"
+
+msgid "Close Window"
+msgstr "Sluit window"
+
+msgid "Comics"
+msgstr "Strips"
+
+msgid "Company"
+msgstr "Bedrijf"
+
+msgid "Connection to ftp server failed."
+msgstr "Verbinding met de ftp server mislukt."
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "Inhoud van '%s'"
+
+msgid "Contents of the RAR archive"
+msgstr "Inhoud van het RAR bestand"
+
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr "Kon niet met database verbinden voor SQL sessieverwerker."
+
+#, c-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr "Kon niet met tabel '%s' verbinden voor SQL sessieverwerker."
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Kon onderhoudstakenmodule %s niet openen"
+
+msgid "DD"
+msgstr "DD"
+
+msgid "Daily"
+msgstr "Dagelijks"
+
+msgid "Database query failed."
+msgstr "Database query mislukt."
+
+msgid "Default Identity"
+msgstr "Standaard identiteit"
+
+msgid "Describe the Problem"
+msgstr "Omschrijf het probleem"
+
+msgid "Details have been logged for the administrator."
+msgstr "Details zijn gelogd voor de systeembeheerder."
+
+msgid "Display Options"
+msgstr "Weergaveopties"
+
+msgid "Do not directly access maintenance.php"
+msgstr "Spreek maintenance.php niet direkt aan"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Empty result."
+msgstr "Geen resultaat."
+
+msgid "Error"
+msgstr "Fout"
+
+msgid "Every 15 minutes"
+msgstr "Elke 15 minuten"
+
+msgid "Every 30 seconds"
+msgstr "Elke 30 seconden"
+
+msgid "Every 5 minutes"
+msgstr "Elke 5 minuten"
+
+msgid "Every Login"
+msgstr "Elke aanmelding"
+
+msgid "Every half hour"
+msgstr "Elk half uur"
+
+msgid "Every minute"
+msgstr "Elke minuut"
+
+msgid "Example values:"
+msgstr "Voorbeeldwaarden:"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "Verwachtte \"BEGIN\" in de regel %d."
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "Verwachtte \"END:%s\" in regel %d."
+
+msgid "Failed retrieving preferences."
+msgstr "Ophalen voorkeursinstellingen mislukt."
+
+msgid "Failed to connect to LDAP server."
+msgstr "Verbinding met de LDAP-server is mislukt."
+
+msgid "Failed to connect to SMB server."
+msgstr "Verbinding met de SMB-server is mislukt."
+
+msgid "Fax"
+msgstr "Fax"
+
+msgid "Filters"
+msgstr "Filters"
+
+msgid "Full Description:"
+msgstr "Volledige omschrijving:"
+
+msgid "Help"
+msgstr "Help"
+
+msgid "Home Address"
+msgstr "Thuisadres"
+
+msgid "Home Phone"
+msgstr "Tel.nr.thuis"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Horde Login"
+msgstr "Horde aanmelding"
+
+msgid "Horde System"
+msgstr "Horde systeem"
+
+msgid "Horde Wireless"
+msgstr "Horde draadloos"
+
+msgid "Horde is not properly configured"
+msgstr "Horde is niet juist geconfigureerd."
+
+msgid "Horde"
+msgstr "Horde"
+
+msgid "Icons Only"
+msgstr "Alleen pictogrammen"
+
+msgid "Icons with text"
+msgstr "Pictogrammen met tekst"
+
+msgid "Import Error: "
+msgstr "Importeerfout: "
+
+msgid "Import"
+msgstr "Importeren"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "Geimporteerd veld: %s"
+
+msgid "Imported fields:"
+msgstr "Geimporteerde velden:"
+
+msgid "Kerberos server rejected authentication."
+msgstr "Kerberos server weigerde authenticatie."
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "List Help Topics"
+msgstr "Lijst van help onderdelen"
+
+msgid "Log in"
+msgstr "Aanmelden"
+
+msgid "Log out"
+msgstr "Afmelden"
+
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Aanmelding mislukt. Hoogstwaarschijnlijk heeft u uw gebruikersnaam of "
+"wachtwoord verkeerd ingevoerd."
+
+msgid "Logout"
+msgstr "Afmelden"
+
+msgid "MM"
+msgstr "MM"
+
+msgid "Mail"
+msgstr "E-mail"
+
+msgid "Map Date and Time Fields"
+msgstr "Koppel datum- en tijdvelden"
+
+msgid "Map Import Fields"
+msgstr "Koppel importvelden"
+
+msgid "Matching fields"
+msgstr "Overeenkomende velden"
+
+msgid "Memos"
+msgstr "Memo's"
+
+msgid "Menu mode:"
+msgstr "Menu mode:"
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Monthly"
+msgstr "Maandelijks"
+
+msgid "My Summary"
+msgstr "Mijn samenvatting"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "Never"
+msgstr "Nooit"
+
+msgid "No configuration information specified for FTP VFS."
+msgstr "Geen configuratieinformatie opgegeven voor FTP VFS."
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "Geen configuratieinformatie opgegeven voor LDAP voorkeursinstellingen."
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "Geen configuratieinformatie opgegeven voor SQL categorieen."
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "Geen configuratieinformatie opgegeven voor SQL voorkeursinstellingen."
+
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr "Geen configuratieinformatie opgegeven voor SQL sessieverwerker."
+
+msgid "No configuration information specified for SQL VFS."
+msgstr "Geen configuratieinformatie opgegeven voor SQL VFS."
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "Geen configuratieinformatie opgegeven voor SQL authenticatie."
+
+msgid "No configuration information specified for SQL-File VFS."
+msgstr "Geen configuratieinformatie opgegeven voor SQL-Bestand VFS."
+
+msgid "No preferences are available."
+msgstr "Er zijn geen voorkeursinstellingen beschikbaar."
+
+msgid "Notes"
+msgstr "Notities"
+
+msgid "Notice"
+msgstr "Opmerking"
+
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "Aankondigingsluisteraar %s niet gevonden."
+
+msgid "Number of columns in the summary view:"
+msgstr "Aantal kolommen in de samenvattingsweergave:"
+
+msgid "Options"
+msgstr "Opties"
+
+msgid "Other Information"
+msgstr "Andere informatie"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "Perform Maintenance Operations"
+msgstr "Onderhoudswerkzaamheden uitvoeren"
+
+msgid "Phone"
+msgstr "Telefoon"
+
+msgid "Please provide a summary of the problem."
+msgstr "Geef een samenvatting van het probleem, a.u.b."
+
+msgid "Please provide your username and password"
+msgstr "Geef uw gebruikersnaam en wachtwoord, a.u.b."
+
+msgid "Problem Description"
+msgstr "Probleemomschrijving"
+
+msgid "Refresh Summary View:"
+msgstr "Samenvattingsweergave verversen:"
+
+msgid "Remove pair"
+msgstr "Paar verwijderen"
+
+#, c-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "Vereiste '%s' niet opgegeven in sessieverwerkerconfiguratie."
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "Vereiste 'basedn' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'basedn' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr "Vereiste 'bdc_hostspec' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr "Vereiste 'database' niet opgegeven in sessieverwerkerconfiguratie."
+
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "Vereiste 'database' niet opgegeven in VFS configuratie."
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "Vereiste 'database' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "Vereiste 'database' niet opgegeven in configuratie van categorieen."
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'database' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr "Vereiste 'domain' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr "Vereiste 'hostspec' niet opgegeven in sessieverwerkerconfiguratie."
+
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "Vereiste 'hostspec' niet opgegeven in VFS configuratie."
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "Vereiste 'hostspec' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "Vereiste 'hostspec' niet opgegeven in configuratie van categorieen."
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'hostspec' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr "Vereiste 'password' niet opgegeven in sessieverwerkerconfiguratie."
+
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "Vereiste 'password' niet opgegeven in VFS configuratie."
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "Vereiste 'password' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "Vereiste 'password' niet opgegeven in configuratie van categorieen."
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'password' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr "Vereiste 'pdc_hostspec' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr "Vereiste 'phptype' niet opgegeven in sessieverwerkerconfiguratie."
+
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "Vereiste 'phptype' niet opgegeven in VFS configuratie."
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "Vereiste 'phptype' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "Vereiste 'phptype' niet opgegeven in configuratie van categorieen."
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'phptype' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "Vereiste 'port' niet opgegeven in VFS configuratie."
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "Vereiste 'table' niet opgegeven in configuratie van categorieen."
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'table' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "Vereiste 'uid' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'uid' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr "Vereiste 'username' niet opgegeven in sessieverwerkerconfiguratie."
+
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "Vereiste 'username' niet opgegeven in VFS configuratie."
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "Vereiste 'username' niet opgegeven in authenticatieconfiguratie."
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "Vereiste 'username' niet opgegeven in configuratie van categorieen."
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr ""
+"Vereiste 'username' niet opgegeven in configuratie van voorkeursinstellingen."
+
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "Vereiste 'vfsroot' niet opgegeven in VFS configuratie."
+
+msgid "Return to Options"
+msgstr "Terug naar opties"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "Save Options"
+msgstr "Bewaar opties"
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Selecteer de karakters die u nodig heeft, uit onderstaande vakjes. Daarna "
+"kun u deze kopiëren en plakken in het tekstvak."
+
+msgid "Select the date delimiter:"
+msgstr "Kies het datumscheidingsteken:"
+
+msgid "Select the date format:"
+msgstr "Kies de datumopmaak:"
+
+msgid "Select the time delimiter:"
+msgstr "Kies het tijdscheidingsteken:"
+
+msgid "Select the time format:"
+msgstr "Kies de tijdopmaak:"
+
+msgid "Select two matching fields."
+msgstr "Selecteer twee overeenkomende velden."
+
+msgid "Select your preferred language:"
+msgstr "Kies uw gewenste taal:"
+
+msgid "Send Problem Report"
+msgstr "Probleemrapport verzenden"
+
+msgid "Set your page refreshing, and other display options."
+msgstr "Instellen van uw paginaverversing en andere weergaveopties."
+
+msgid "Set your preferred display language."
+msgstr "Instellen van uw gewenste weergavetaal."
+
+msgid "Short Summary:"
+msgstr "Korte samenvatting:"
+
+msgid "Skip Maintenance"
+msgstr "Onderhoud overslaan"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Sommige Horde configuratiebestanden ontbreken:"
+
+msgid "Special Character Input"
+msgstr "Speciaal karakter invoer"
+
+msgid "Success"
+msgstr "Succes"
+
+msgid "Tasks"
+msgstr "TaakManager"
+
+msgid "Text Only"
+msgstr "Alleen tekst"
+
+#, c-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr ""
+"Het programma wat gebruikt wordt voor het weergeven van dit bericht type (%"
+"s), werd niet op het systeem gevonden."
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"In het register wordt aangegeven hoe de verschillende Horde toepassingen met "
+"elkaar communiceren. U dient hier alle geinstalleerde Horde toepassingen op "
+"te geven."
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"Dit bestand beheert de globale MIME stuurprogramma's voor het Horde "
+"raamwerk, waarmee het toepassingen mogelijk wordt gemaakt, om programma's, "
+"zoals enscripts of mswordview te gebruiken om content te converteren in HTML "
+"voor weergave in een browser."
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"Dit bestand beheert het stylesheet dat gebruikt wordt voor het instellen van "
+"kleuren en lettertypen van het Horde raamwerk en alle toepassingen die niet "
+"voorzien in eigen instellingen."
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"Dit bestand koppelt de bestandsextenties met logische MIME types, waarmee "
+"het Horde toepassingen mogelijk wordt gemaakt om uit te vinden op welke "
+"manier de content wordt afgehandeld, zoals e-mailattachments of CVS "
+"checkouts."
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"Dit is het hoofdconfiguratiebestand van Horde. Het bevat paden en "
+"basisonderdelen die van toepassing zijn op het centrale raamwerk en alle "
+"Horde toepassingen."
+
+msgid "This number must be at least one."
+msgstr "Dit getal dient tenminste één te zijn."
+
+msgid "This value must be a number."
+msgstr "Deze waarde dient een getal te zijn."
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Type mismatch."
+msgstr "Type fout."
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "Niet in staat met de SQL server te verbinden."
+
+msgid "Unable to read the vfsroot directory."
+msgstr "Niet in staat om de vfsroot directory te lezen."
+
+msgid "Unable to register preferences in session."
+msgstr "Niet in staat om de voorkeurinstellingen in de sessie te registreren."
+
+msgid "Unable to translate this Word document"
+msgstr "Niet in staat om dit Word document te vertalen"
+
+msgid "Undo Changes"
+msgstr "Herstel wijzigingen"
+
+msgid "Unexpected end of file."
+msgstr "Onverwacht bestandseinde."
+
+msgid "Use Default Value"
+msgstr "Gebruik standaardwaarde"
+
+msgid "User Options"
+msgstr "Gebruikersopties"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Warning"
+msgstr "Waarschuwing"
+
+msgid "Weekly"
+msgstr "Wekelijks"
+
+#, c-format
+msgid "Welcome to %s"
+msgstr "Welkom bij %s"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "Welkom, %s"
+
+msgid "What application should Horde display after login?"
+msgstr "Welke toepassing dient Horde weer te geven na aanmelding?"
+
+msgid "Work Address"
+msgstr "Werkadres:"
+
+msgid "Work Phone"
+msgstr "Tel.nr.werk"
+
+msgid "YY"
+msgstr "JJ"
+
+msgid "Yearly"
+msgstr "Jaarlijks"
+
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "U bent afgemeld. <br />Bedankt voor het gebruik van het systeem."
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr ""
+"U dient het probleem te omschrijven, voordat u het probleemrapport kunt "
+"verzenden."
+
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "Uw %s sessie is verlopen. Opnieuw aanmelden, a.u.b."
+
+msgid "Your Email Address:"
+msgstr "Uw e-mailadres:"
+
+msgid "Your Information"
+msgstr "Uw informatie"
+
+msgid "Your Name:"
+msgstr "Uw naam:"
+
+msgid "Your options have been updated."
+msgstr "Uw opties zijn bijgewerkt."
+
+msgid "[Problem Report]"
+msgstr "[Probleemrapport]"
+
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[regel %s van %s]"
+
+msgid "vCard"
+msgstr "vCard"

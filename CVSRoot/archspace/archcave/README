@@ -1,0 +1,4 @@
+ant build file - build.xml
+tomcat webapp files (WEB-INF), config files, css/jsp/images for 'webpages' - webapp
+servlet, bean, etc files - src
+

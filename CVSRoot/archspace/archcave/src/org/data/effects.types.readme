@@ -1,0 +1,45 @@
+format:
+name, set, change, purpotional
+
+gain: if negative, have negative gain
+change: if negative, have negative change
+
+some functions should be overloaded to accept float types for purportional gains/change
+
+only change effects can be undone, purportional changes get malformed over time, and set changes would require certain tracking features that would add to the complexity of the code. At the momenet i see little need to support undoing of set and puportional changes, for now simple change type will be support for undoing. To undo simple change all we need to do is pass *-1 in the argument and we are good to go :)
+
+xml value format:
+
+n = set
+ex:
+8
+
++-n = change
+ex:
++5
+
+n% = purportional
+ex:
+3%
+
+
+further examples:
+<policy>-345</policy>
+makes the person loose policy with id of 345
+
+<rp>55%</rp>
+increases rp by 55%
+
+<production_cm>5<production_cm>
+sets production_cm at 5
+
+<random_tech>-3</random_tech>
+looses 3 random techs
+
+<gain_tech>-55</gain_tech>
+is the same as
+<loose_tech>55</loose_tech>
+loose_tech is gain_tech inversed, so...
+<loose_tech>-55</loose_tech>
+is the same as
+<gain_tech>55</gain_tech>

@@ -1,0 +1,39 @@
+Engineering Specialist:
+	Level
+		<=5
+			DR +5
+		<=8
+			DR +5
+			Repair +1
+		<=12
+			DR +8
+			Repair +1
+		<=15
+			DR +10
+			Repair +1 / per 10
+			Repair Speed +15
+		== 16
+			DR +11
+			Repair +1 / per 10
+			Repair Speed +16
+			Impenetrable Armor +16
+		== 17
+			DR +12
+			Repair +1 / per 10
+			Repair Speed +17
+			Impenetrable Armor +17
+		== 18
+			DR +13
+			Repair +2 / per 10
+			Repair Speed +18
+			Impenetrable Armor +18
+		== 19
+			DR +15
+			Repair +2 / per 10
+			Repair Speed +19
+			Impenetrable Armor +19
+		== 20
+			DR +20
+			Repair +3 / per 10
+			Repair Speed +40
+			Impenetrable Armor +40

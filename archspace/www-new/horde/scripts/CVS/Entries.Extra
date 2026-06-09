@@ -1,0 +1,7 @@
+/.htaccess////*///
+/SCRIPTS////*///
+/horde-rsync.sh////*///
+/set_perms.sh////*///
+D/db///////
+D/ldap///////
+D/mime_mapping///////

@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS notice;
+
+CREATE TABLE notice (
+  id			int default '0' not null auto_increment,
+  date			char(8) not null,
+  title			char(50) not null,
+  description	text not null,
+
+  PRIMARY KEY (id)
+);
+

@@ -1,0 +1,318 @@
+!
+! X-Resources sample(.Xdefaults .Xresources)
+! 
+!   .Xresources is preferred because .Xdefaults is an old name
+!   and xdm now reads only .Xresources.
+!
+!   1999/07/08, CHOI Junho <cjh@kr.freebsd.org>
+!
+
+!
+! widget-wide setup
+!
+
+! coloring
+*customization: color
+
+*DeIconifyWarp: on
+*warp: on
+
+! always scrollbar
+*scrollBar: true
+
+! select common fonts
+!*font: -adobe-courier-medium-r-normal--14-140-75-75-m-90-iso8859-1
+!*font: -b&h-lucida-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!*font: -linotype-helvetica-medium-r-*-sans-12-*-*-*-*-*-*-*
+*font: -adobe-helvetica-medium-r-*--12-*-*-*-*-*-*-*
+
+! common background/foreground color
+!*background: gray80
+*foreground: black
+
+! Xaw
+!*international: true
+*Command*background: #b0b0e0
+!*Command*font: -linotype-helvetica-bold-r-*-sans-12-*-*-*-*-*-*-*
+*Command*font: -adobe-helvetica-medium-r-*--12-*-*-*-*-*-*-*
+!*fontSet: -linotype-helvetica-medium-r-*-sans-12-*-*-*-*-*-*-*,-sun-kodig-medium-r-normal--12-120-75-75-c-120-ksc5601.1987-0
+!*fontSet: -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1,-hanyang-kodig-medium-r-normal--12-120-72-72-c-120-ksc5601.1987-0
+*fontSet: -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1,-*-kodig-medium-r-normal--12-120-75-75-c-120-ksc5601.1987-0
+
+! Default Motif fonts
+!*fontList: -linotype-helvetica-bold-r-*-sans-12-*-*-*-*-*-*-*;-sun-kodig-medium-r-normal--12-120-75-75-c-120-ksc5601.1987-0:
+!*fontList: -*-helvetica-medium-r-*-*-*-120-*-*-*-*-iso8859-*;-hanyang-kodig-medium-r-normal--12-120-72-72-c-120-ksc5601.1987-0:
+!*fontList: -linotype-helvetica-bold-r-*-sans-12-*-*-*-*-*-*-*;-sun-kodig-medium-r-normal--12-120-75-75-c-120-ksc5601.1987-0:
+
+!
+! Application Setup
+!
+
+! xterm variants
+xterm*font: fixed
+xterm*autoWrap: true
+xterm*VT100*colorBDMode: off
+xterm**VT100*underLine: on
+hanterm*autoWrap: true
+hanterm*VT100*colorBDMode: off
+hanterm*VT100*colorMode: off
+! to use 3-bul type hangul keyboard in hanterm, uncomment follow lines.
+!Hanterm*hangulKeyboard: 3
+Hanterm*background: white
+Hanterm*foreground: black
+! 16pt font pair
+hanterm.vt100.boldFont: -schumacher-clean-*-r-normal--16-*-*-*-*-*-iso8859-1
+hanterm.vt100.font: -schumacher-clean-*-r-normal--16-*-*-*-*-*-iso8859-1
+hanterm.vt100.hangulFont: -kaist-iyagi-bold-r-normal--16-160-75-75-c-160-johabsh-1
+! 12pt font pair
+!hanterm.vt100.boldFont: -adobe-courier-bold-r-normal--10-100-75-75-*-*-iso8859-1
+!hanterm.vt100.boldFont: -misc-fixed-bold-r-semicondensed--13-120-*-75-*-*-iso8859-1
+!hanterm.vt100.font: -adobe-courier-medium-r-normal--10-100-75-75-*-*-iso8859-1
+!hanterm.vt100.font: -misc-fixed-medium-r-semicondensed--13-120-*-75-*-*-iso8859-1
+!hanterm.vt100.hangulFont: -sun-kodig-medium-r-normal--12-120-75-75-c-120-ksc5601.1987-0
+!hanterm.vt100.hangulFont: -hanyang-kodig-medium-r-normal--12-120-72-72-c-120-ksc5601.1987-0
+
+! Hanterm color
+!Hanterm*VT100*color0: black
+!Hanterm*VT100*color1: red4
+!Hanterm*VT100*color2: green4
+!Hanterm*VT100*color3: yellow4
+!Hanterm*VT100*color4: blue4
+!Hanterm*VT100*color5: magenta4
+!Hanterm*VT100*color6: cyan4
+!Hanterm*VT100*color7: #d0d0d0
+!Hanterm*VT100*color8: gray30
+!Hanterm*VT100*color9: #b00000
+!Hanterm*VT100*color10: green4
+!Hanterm*VT100*color11: yellow4
+!Hanterm*VT100*color12: blue4
+!Hanterm*VT100*color13: magenta4
+!Hanterm*VT100*color14: cyan4
+!Hanterm*VT100*color15: #d0d0d0
+
+! kterm font
+!kterm.vt100*font: -adobe-courier-medium-r-*-*-14-*-*-*-*-*-iso8859-1
+kterm.vt100*font: -schumacher-clean-*-r-normal--16-*-*-*-*-*-iso8859-1
+kterm*background: white
+kterm*foreground: black
+! 16pt font pair
+
+! xfontsel
+xfontsel*background: 		grey90
+xfontsel*foreground:		black
+
+! xscreensaver
+! no need to specify in FreeBSD if you installed games dist.
+!noseguy*program: 		/usr/local/bin/fortune -s
+
+! ghostview
+ghostview*magstep: 		-1
+ghostview*media:		a4 
+
+! xarchie
+! set your domain
+!xarchie*ftpMailAddress: %s@%s.snu.ac.kr
+! set your default download directory
+!xarchie*ftpLocalDir: /home/junker/ftp
+xarchie*maxHits:        500
+xarchie*timeout:	10
+xarchie*retries:	5
+Xarchie*xarchieFont:            *-fixed-medium-r-*-*-13-*-*-*-*-*-iso8859-*
+Xarchie*xarchieBoldFont:        *-fixed-bold-r-*-*-13-*-*-*-*-*-iso8859-*
+
+! xpostit
+!xpostit*Text*font: -linotype-helvetica-medium-r-narrow-sans-12-120-72-72-p-53-iso8859-1
+xpostit*Text*font: -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1
+xpostit*PostItNote.Form.background: bisque
+
+! emacses
+!emacs.font: 7x13bold
+emacs.geometry: 80x40+8+32
+emacs.background: #ffffff
+emacs.foreground: #111111
+emacs.bitmapIcon: on
+emacs.borderColor: grey30
+!Emacs*FontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*Foreground:			Black
+!Emacs*Background:			White
+Emacs.modeline.attributeForeground:	Black
+Emacs.modeline.attributeBackground:	Gray75
+
+! Set the color of the text cursor.
+Emacs*cursorColor:			Blue
+
+! Set the color of the mouse pointer.
+Emacs*pointerColor:			Gray20
+
+! Set the menubar colors.  This overrides the default foreground and
+! background colors specified above.
+Emacs*menubar*Foreground:		Gray30
+Emacs*menubar*Background:		Gray75
+! This is for buttons in the menubar.  
+! Yellow would be better, but that would map to white on monochrome.
+Emacs*menubar.buttonForeground:		Blue
+Emacs*XlwMenu.selectColor:		ForestGreen
+Emacs*XmToggleButton.selectColor:	ForestGreen
+
+! Specify the colors of popup menus.
+Emacs*popup*Foreground:			Black
+Emacs*popup*Background:			Gray75
+
+! Specify the colors of the various sub-widgets of the dialog boxes.
+Emacs*dialog*Foreground:		Black
+! #A5C0C1 is a shade of blue
+Emacs*dialog*Background:		#A5C0C1
+Emacs*dialog*XmTextField*Background:	WhiteSmoke
+Emacs*dialog*XmText*Background:		WhiteSmoke
+Emacs*dialog*XmList*Background:		WhiteSmoke
+
+! Xlw Scrollbar colors
+Emacs*XlwScrollBar.Foreground:		Gray30
+Emacs*XlwScrollBar.Background:		Gray75
+Emacs*XmScrollBar.Foreground:		Gray30
+Emacs*XmScrollBar.Background:		Gray75
+
+! Emacs.topToolBarHeight:		37
+! Emacs.bottomToolBarHeight:		0
+! Emacs.leftToolBarWidth:		0
+! Emacs.rightToolBarWidth:		0
+
+! Fonts.
+! ======
+! 
+!Emacs.default.attributeFont:  -*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
+!Emacs.default.attributeFont:  -*-Lucida Sans Typewriter-Medium-R-*-*-*-120-72-72-*-*-ISO8859-1
+!xemacs.default.attributeFont:  -b&h-lucidatypewriter-medium-r-normal-sans-12-120-75-75-m-70-iso8859-1
+
+! If you choose a font which does not have an italic version, you can specify
+! some other font to use for it here:
+! 
+!Emacs.italic.attributeFont:  -*-courier-medium-o-*-*-*-120-*-*-*-*-iso8859-*
+!Emacs.italic.attributeFont:  -*-Lucida Sans Typewriter-Medium-R-*-*-*-120-72-72-*-*-ISO8859-1
+!Emacs.bold-italic.attributeFont:  -*-courier-bold-o-*-*-*-120-*-*-*-*-iso8859-*
+!
+! And here is how you would set the background color of the `highlight' face,
+! but only on the screen named `debugger':
+! 
+! Emacs*debugger.highlight.attributeBackground:		PaleTurquoise
+! 
+! See the NEWS file (C-h n) for a more complete description of the resource
+! syntax of faces.
+
+! Font of the modeline, menubar and pop-up menus.
+! Note that the menubar resources do not use the `face' syntax, since they
+! are X toolkit widgets and thus outside the domain of XEmacs proper.
+! 
+!hanemacs*menubar*Font: 		-linotype-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+hanemacs*menubar*Font: 		-adobe-helvetica-bold-r-normal--12-120-75-75-p-70-iso8859-1
+!emacs*menubar*Font: 		-linotype-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+emacs*menubar*Font: 		-adobe-helvetica-bold-r-normal--12-120-75-75-p-70-iso8859-1
+!hanemacs*popup*Font:		-linotype-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+hanemacs*popup*Font:		-adobe-helvetica-bold-r-normal--12-120-75-75-p-70-iso8859-1
+!emacs*popup*Font:		-linotype-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+emacs*popup*Font:		-adobe-helvetica-bold-r-normal--12-120-75-75-p-70-iso8859-1
+
+! Font in the Motif dialog boxes.
+! (Motif uses `fontList' while most other things use `font' - if you don't
+! know why you probably don't want to.)
+! 
+!Emacs*XmDialogShell*FontList:	-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+!Emacs*XmTextField*FontList:	-*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
+!Emacs*XmText*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
+!Emacs*XmList*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
+
+
+! Dialog box translations.
+! =======================
+
+! This accelerator binds <return> in a dialog box to <activate> on button1
+Emacs*dialog*button1.accelerators:#override\
+<KeyPress>Return: ArmAndActivate()\n\
+<KeyPress>KP_Enter: ArmAndActivate()\n\
+Ctrl<KeyPress>m: ArmAndActivate()\n
+
+! Translations to make the TextField widget behave more like XEmacs
+Emacs*XmTextField.translations: #override\n\
+	!<Key>osfBackSpace:	delete-previous-character()\n\
+	!<Key>osfDelete:	delete-previous-character()\n\
+	!Ctrl<Key>h: 		delete-previous-character()\n\
+	!Ctrl<Key>d: 		delete-next-character()\n\
+	!Meta<Key>osfDelete:	delete-previous-word()\n\
+	!Meta<Key>osfBackSpace:	delete-previous-word()\n\
+	!Meta<Key>d:		delete-next-word()\n\
+	!Ctrl<Key>k:		delete-to-end-of-line()\n\
+	!Ctrl<Key>g:		process-cancel()\n\
+	!Ctrl<Key>b:		backward-character()\n\
+	!<Key>osfLeft:		backward-character()\n\
+	!Ctrl<Key>f:		forward-character()\n\
+	!<Key>osfRight:		forward-character()\n\
+	!Meta<Key>b:		backward-word()\n\
+	!Meta<Key>osfLeft:	backward-word()\n\
+	!Meta<Key>f:		forward-word()\n\
+	!Meta<Key>osfRight:	forward-word()\n\
+	!Ctrl<Key>e:		end-of-line()\n\
+	!Ctrl<Key>a:		beginning-of-line()\n\
+	!Ctrl<Key>w:		cut-clipboard()\n\
+	!Meta<Key>w:		copy-clipboard()\n\
+	<Btn2Up>:		copy-primary()\n
+
+! With the XEmacs typeahead it's better to not have space be bound to
+! ArmAndActivate() for buttons that appear in dialog boxes.  This is
+! not 100% Motif compliant but the benefits far outweight the
+! compliancy problem.  
+Emacs*dialog*XmPushButton.translations:#override\n\
+    <Btn1Down>:         Arm()\n\
+    <Btn1Down>,<Btn1Up>: Activate()\
+			Disarm()\n\
+    <Btn1Down>(2+):     MultiArm()\n\
+    <Btn1Up>(2+):       MultiActivate()\n\
+    <Btn1Up>:           Activate()\
+		        Disarm()\n\
+    <Key>osfSelect:  	ArmAndActivate()\n\
+    <Key>osfActivate:   ArmAndActivate()\n\
+    <Key>osfHelp:	Help()\n\
+    ~Shift ~Meta ~Alt <Key>Return:	ArmAndActivate()\n\
+    <EnterWindow>:      Enter()\n\
+    <LeaveWindow>:      Leave()\n
+
+! emacs 19.34-motif font?
+!Emacs*ButtonFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*DefaultFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*FontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*LabelFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*TextFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*buttonFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*defaultFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*labelFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+!Emacs*textFontList: -b&h-lucida sans-*-r-*-*-12-*-*-*-*-*-iso8859-1
+
+Emacs*ButtonFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*DefaultFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*FontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*LabelFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*TextFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*buttonFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*defaultFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*labelFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+Emacs*textFontList: -adobe-helvetica-bold-r-normal-*-12-120-75-75-*-*-iso8859-1
+
+! for emacs 20
+! Emacs 20
+Emacs.Font: *-fontset-7
+Emacs.Fontset-0: -misc-fixed-medium-r-normal-*-12-120-*-*-m-60-fontset-6,\
+        korean-ksc5601:-*-kodig-medium-r-normal--12-120-*-ksc5601*-*
+Emacs.Fontset-1: -misc-fixed-medium-r-normal-*-12-120-*-*-m-60-fontset-6b,\
+        korean-ksc5601:-ksg-gtr-medium-r-normal--12-110-*-ksc5601*-*
+Emacs.Fontset-2: -*-courier-medium-r-normal-*-12-120-*-*-m-70-fontset-7,\
+        korean-ksc5601:-*-kodig-medium-r-normal--12-*-*-ksc5601*-*,\
+        japanese-jisx0208:-misc-fixed-medium-r-normal--14-*-jisx0208*-*
+Emacs.Fontset-3: -*-courier-medium-r-normal-*-12-120-*-*-m-70-fontset-7b,\
+        korean-ksc5601:-ksg-gtr-medium-r-normal--14-130-*-ksc5601*-*,\
+        japanese-jisx0208:-misc-fixed-medium-r-normal--14-*-jisx0208*-*
+Emacs.Fontset-4: -*-courier-medium-r-normal-*-12-120-*-*-m-70-fontset-7c,\
+        korean-ksc5601:-*-kodig-medium-r-normal--*-140-*-*-c-*-ksc5601*-*,\
+        japanese-jisx0208:-misc-fixed-medium-r-normal--14-*-jisx0208*-*
+
+! from Netscape FAQ, redirecting error dialog boxes to console
+Netscape*useStderrDialog:               False
+Netscape*useStdoutDialog:               False

@@ -1,0 +1,12 @@
+#	$Id: dot.login_conf,v 1.1 1997/08/18 03:07:43 ache Exp $
+#
+# see login.conf(5)
+#
+#me:\
+#	:charset=iso-8859-1:\
+#	:lang=de_DE.ISO_8859-1:
+
+# me is your environment
+me:\
+	:charset=euc-kr\
+	:lang=ko_KR.EUC:

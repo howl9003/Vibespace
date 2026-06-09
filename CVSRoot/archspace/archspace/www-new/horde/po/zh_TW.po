@@ -1,0 +1,688 @@
+# Horde Traditional Chinese Translation.
+# Copyright (C) 2001 David Chang. 張良文,台灣
+# David Chang <david@thbuo.gov.tw>, 2001.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.3\n"
+"POT-Creation-Date: 2003-05-05 09:41+0800\n"
+"PO-Revision-Date: 2002-12-19 13:37+0100\n"
+"Last-Translator: David Chang <david@thbuo.gov.tw>\n"
+"Language-Team: Traditional Chinese <i18n@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=BIG5\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#, c-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr " &#151; %s 已針對下列事項，維護操作就緒."
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s 維護操作 - 確認"
+
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' 尚未在 HORDE 的註冊檔(Registry)中設定."
+
+msgid "24 hours"
+msgstr "24 小時制"
+
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>發生了一個嚴重的錯誤:</b>"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Add pair"
+msgstr "新增對"
+
+msgid "Address Book"
+msgstr "通訊錄"
+
+msgid "Address"
+msgstr "地址"
+
+msgid "Alias"
+msgstr "別名"
+
+msgid "An illegal value was specified."
+msgstr "一個不合法的值被使用."
+
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "執行操作維護前顯示確認對話?"
+
+msgid "Authentication rejected by RADIUS server."
+msgstr "RADIUS 驗證錯誤."
+
+msgid "Available fields:"
+msgstr "可用的欄位:"
+
+msgid "Bad kerberos password."
+msgstr "kerberos 密碼錯誤."
+
+msgid "Bad kerberos username."
+msgstr "kerberos 使用者名稱錯誤."
+
+msgid "Birthday"
+msgstr "生日"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Calendar"
+msgstr "行事曆"
+
+msgid "Cancel Problem Report"
+msgstr "取消問題反應"
+
+msgid "Cell Phone"
+msgstr "行動電話"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "勾選你想要操作的項目."
+
+msgid "Close Help Window"
+msgstr "關閉說明視窗"
+
+msgid "Close Help"
+msgstr "關閉說明"
+
+msgid "Close Window"
+msgstr "關閉視窗"
+
+msgid "Comics"
+msgstr "卡通"
+
+msgid "Company"
+msgstr "公司"
+
+msgid "Connection to ftp server failed."
+msgstr "連結至 FTP 檔案伺服器失敗."
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "'%s' 檔案內容"
+
+msgid "Contents of the RAR archive"
+msgstr "RAR 壓縮檔案的內容"
+
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr "SQL SessionHandler 無法連結至資料庫."
+
+#, c-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr "SQL SessionHandler 無法連結至資料庫表格(table) '%s'."
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "無法開啟維護工作模組 %s"
+
+msgid "DD"
+msgstr "日"
+
+msgid "Daily"
+msgstr "每日"
+
+msgid "Database query failed."
+msgstr "資料庫查詢失敗."
+
+msgid "Default Identity"
+msgstr "預設的身份識別"
+
+msgid "Describe the Problem"
+msgstr "問題描述"
+
+msgid "Details have been logged for the administrator."
+msgstr "細節請參考系統管理登錄."
+
+msgid "Display Options"
+msgstr "顯示選項"
+
+msgid "Do not directly access maintenance.php"
+msgstr "不要直接存取 maintenance.php"
+
+msgid "Email"
+msgstr "電子郵件"
+
+msgid "Empty result."
+msgstr "空白結果."
+
+msgid "Error"
+msgstr "錯誤"
+
+msgid "Every 15 minutes"
+msgstr "每 15 分鐘"
+
+msgid "Every 30 seconds"
+msgstr "每 30 秒鐘"
+
+msgid "Every 5 minutes"
+msgstr "每 5 分鐘"
+
+msgid "Every Login"
+msgstr "每次登入"
+
+msgid "Every half hour"
+msgstr "每 30 分鐘"
+
+msgid "Every minute"
+msgstr "每 1 分鐘"
+
+msgid "Example values:"
+msgstr "範例值:"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "預期在行 %d \"開始\"的地方."
+
+#, fuzzy, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "預期在行 %d \"的結尾:%s\"."
+
+msgid "Failed retrieving preferences."
+msgstr "讀取偏好設定失敗"
+
+msgid "Failed to connect to LDAP server."
+msgstr "無法連線至 LDAP 伺服器."
+
+msgid "Failed to connect to SMB server."
+msgstr "無法連線至 SMB 伺服器."
+
+msgid "Fax"
+msgstr "傳真"
+
+msgid "Full Description:"
+msgstr "完整描述"
+
+msgid "Help"
+msgstr "說明"
+
+msgid "Home Address"
+msgstr "住家地址"
+
+msgid "Home Phone"
+msgstr "住家電話"
+
+msgid "Home"
+msgstr ""
+
+msgid "Horde Login"
+msgstr "Horde 登入"
+
+msgid "Horde System"
+msgstr "Horde 系統"
+
+msgid "Horde Wireless"
+msgstr "Horde 無線"
+
+msgid "Horde is not properly configured"
+msgstr "Horde 尚未完整規劃"
+
+msgid "Horde"
+msgstr ""
+
+msgid "Icons Only"
+msgstr "純圖示"
+
+msgid "Icons with text"
+msgstr "圖示及文字"
+
+msgid "Import Error: "
+msgstr "匯入錯誤: "
+
+msgid "Import"
+msgstr "匯入"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "匯入欄位: %s"
+
+msgid "Imported fields:"
+msgstr "匯入欄位:"
+
+msgid "Kerberos server rejected authentication."
+msgstr "Kerberos 認證錯誤."
+
+msgid "Language"
+msgstr "語言"
+
+msgid "List Help Topics"
+msgstr "列出說明標題"
+
+msgid "Log in"
+msgstr "登入"
+
+msgid "Log out"
+msgstr "登出"
+
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr "登入失敗.可能是你的使用者名稱或密碼不正確."
+
+msgid "Logout"
+msgstr "登出"
+
+msgid "MM"
+msgstr "月"
+
+msgid "Mail"
+msgstr "郵件"
+
+msgid "Map Date and Time Fields"
+msgstr "對映日期與時間欄位"
+
+msgid "Map Import Fields"
+msgstr "對映匯入欄位"
+
+msgid "Matching fields"
+msgstr "匹配欄位中"
+
+msgid "Memos"
+msgstr "備忘錄"
+
+msgid "Menu mode:"
+msgstr "選單模式:"
+
+msgid "Message"
+msgstr "郵件"
+
+msgid "Monthly"
+msgstr "每月"
+
+msgid "My Summary"
+msgstr "我的摘要"
+
+msgid "Name"
+msgstr "名稱"
+
+msgid "Never"
+msgstr "從未"
+
+msgid "No configuration information specified for FTP VFS."
+msgstr "沒有指定的 FTP VFS 設定資訊."
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "沒有指定的 LDAP 偏好選項設定資訊."
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "沒有指定的 SQL 分類設定資訊."
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "沒有指定的 SQL 偏好選項設定資訊."
+
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr "沒有指定的 SQL SessionHandler 設定資訊."
+
+msgid "No configuration information specified for SQL VFS."
+msgstr "沒有指定的 SQL VFS設定資訊."
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "沒有指定的 SQL 驗證設定資訊."
+
+msgid "No configuration information specified for SQL-File VFS."
+msgstr "沒有指定的 SQL-File VFS設定資訊."
+
+msgid "No preferences are available."
+msgstr "沒有可用的偏好可供選擇."
+
+msgid "Notes"
+msgstr "備忘錄"
+
+msgid "Notice"
+msgstr "通知"
+
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "找不到被知會者 %s."
+
+msgid "Number of columns in the summary view:"
+msgstr "摘要顯示的欄位數目:"
+
+msgid "Options"
+msgstr "選項"
+
+msgid "Other Information"
+msgstr "其他資訊"
+
+msgid "Password"
+msgstr "密碼"
+
+msgid "Perform Maintenance Operations"
+msgstr "執行維護操作"
+
+msgid "Phone"
+msgstr "電話"
+
+msgid "Please provide a summary of the problem."
+msgstr "請提供問題的摘要."
+
+msgid "Please provide your username and password"
+msgstr "請輸入你的使用者名稱及密碼"
+
+msgid "Problem Description"
+msgstr "問題描述"
+
+msgid "Refresh Summary View:"
+msgstr "重新整理摘要檢視:"
+
+msgid "Remove pair"
+msgstr "移除對"
+
+#, c-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "SessionHandler 設定必須指定 '%s'"
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "LDAP 驗證設定必須指定 'basedn'"
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "LDAP 偏好設定必須指定 'basedn'"
+
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'bdc_hostspec'"
+
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr "SessionHandler 設定必須指定 'database'"
+
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "VFS設定必須指定 'database'"
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'database'"
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "分類設定必須指定 'database'"
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "偏好設定必須指定 'database'"
+
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'domain'"
+
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr "SessionHandler 設定必須指定 'hostspec'"
+
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "VFS設定必須指定 'hostspec'"
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'hostspec'"
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "分類設定必須指定 'hostspec'"
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "偏好設定必須指定 'hostspec'"
+
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr "SessionHandler 設定必須指定 'password'"
+
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "VFS設定必須指定 'password'"
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'password'"
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "分類設定必須指定 'password'"
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "偏好設定必須指定 'password'"
+
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'pdc_hostspec'"
+
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr "SessionHandler 設定必須指定 'phptype'"
+
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "VFS設定必須指定 'phptype'"
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'phptype'"
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "分類設定必須指定 'phptype'"
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "偏好設定必須指定 'phptype'"
+
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "VFS設定必須指定通訊埠號 'port'"
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "分類設定必須指定 'table'"
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "偏好設定必須指定表格名稱 'table'"
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'uid'"
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "偏好設定必須指定 'uid'"
+
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr "SessionHandler 設定必須指定 'username'"
+
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "VFS設定必須指定 'username'"
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "驗證設定必須指定 'username'"
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "分類設定必須指定 'username'"
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "偏好設定必須指定 'username'"
+
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "VFS設定必須指定通訊埠號 'vfsport'"
+
+msgid "Return to Options"
+msgstr "返回選項"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Save Options"
+msgstr "儲存選項"
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"於以下的視窗中選取特殊字元.並配合滑鼠複製該選取文字,然後貼上於文件編輯區."
+
+msgid "Select the date delimiter:"
+msgstr "選擇日期分隔:"
+
+msgid "Select the date format:"
+msgstr "選擇日期日期格式:"
+
+msgid "Select the time format:"
+msgstr "選擇日期時間格式:"
+
+msgid "Select two matching fields."
+msgstr "選擇相互匹配的二個欄位."
+
+msgid "Select your preferred language:"
+msgstr "選擇偏好語言:"
+
+msgid "Send Problem Report"
+msgstr "傳送問題反應"
+
+msgid "Set your page refreshing, and other display options."
+msgstr "設定你的頁面更新頻率,及其他顯示選項."
+
+msgid "Set your preferred display language."
+msgstr "設定你要用來顯示的偏好語言."
+
+msgid "Short Summary:"
+msgstr "簡短摘要:"
+
+msgid "Skip Maintenance"
+msgstr "略過維護"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "遺失部分的 Horde 設定檔:"
+
+msgid "Special Character Input"
+msgstr "特殊字元輸入"
+
+msgid "Success"
+msgstr "成功"
+
+msgid "Tasks"
+msgstr "待辦事項"
+
+msgid "Text Only"
+msgstr "純文字"
+
+#, c-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr "用以檢視此類型 (%s) 郵件的程式並不存在於系統上."
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Horde 以登錄設定檔(registry.php) 連結各項應用程式.你應該在此列出,你已安裝的任"
+"何 Horde 應用程式."
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"這個檔案控制 Horde 旗下應用程式中,所有關於 MIME 的驅動程式,以允許像 enscript "
+"或 mswordview 此類的程式 轉換文件以 HTML 的格式呈現於瀏覽器上."
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"這個檔案控制文件中關於顏色與字體的展現風格.當 Horde 旗下應用程式中,未指文件風"
+"格時,此檔案的設定便被使用."
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"這個檔案對映副檔名與邏輯 MIME 型式,告訴 Horde 旗下的所有應用程式如何掌控檔案"
+"的展現方式,例如電子郵件中的附加檔案處理以及 CVS 檢查."
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr "這是 Horde 的主要設定檔.並包含其旗下所有應用程式的路徑與項目."
+
+msgid "This number must be at least one."
+msgstr "此數值最少必須是 1."
+
+msgid "This value must be a number."
+msgstr "必須是一個數字."
+
+msgid "Title"
+msgstr "標題"
+
+msgid "Type mismatch."
+msgstr "型態不一致."
+
+msgid "URL"
+msgstr "網址"
+
+msgid "Unable to connect to SQL server."
+msgstr "無法連結至 SQL 伺服器."
+
+msgid "Unable to read the vfsroot directory."
+msgstr "無法讀取 vfsroot 目錄."
+
+msgid "Unable to register preferences in session."
+msgstr "無法在登入會期(session)中註冊偏好設定."
+
+msgid "Unable to translate this Word document"
+msgstr "無法轉換 Word 文件"
+
+msgid "Undo Changes"
+msgstr "取消更改"
+
+msgid "Unexpected end of file."
+msgstr "非預期的檔案結尾."
+
+msgid "Use Default Value"
+msgstr "使用預設值"
+
+msgid "User Options"
+msgstr "使用者選項"
+
+msgid "Username"
+msgstr "使用者"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Weekly"
+msgstr "每週"
+
+#, c-format
+msgid "Welcome to %s"
+msgstr "歡迎到 %s"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "歡迎, %s"
+
+msgid "What application should Horde display after login?"
+msgstr "登入後應該先顯示哪一個應用程式?"
+
+msgid "Work Address"
+msgstr "辦公室地址"
+
+msgid "Work Phone"
+msgstr "辦公室電話"
+
+msgid "YY"
+msgstr "年"
+
+msgid "Yearly"
+msgstr "每年"
+
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "你已登出.<br />謝謝你使用本系統."
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "請描述問題，在你傳送問題報告之前."
+
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "你的 %s 會期已過時.請重新登入."
+
+msgid "Your Email Address:"
+msgstr "你的電子郵件住址:"
+
+msgid "Your Information"
+msgstr "你的資訊"
+
+msgid "Your Name:"
+msgstr "你的大名:"
+
+msgid "Your options have been updated."
+msgstr "你的選項已更新."
+
+msgid "[Problem Report]"
+msgstr "[問題反映]"
+
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[位於行 %s 共 %s 行]"
+
+msgid "vCard"
+msgstr "vCard"

@@ -1,0 +1,5 @@
+config file loader
+generate ACCore with config file bindings and JStoreStation
+done: create a hash class that used java.lang.String
+
+support generated relational references

@@ -1,0 +1,1325 @@
+# Horde Swedish translation
+# Copyright (C) 2003 Andreas Dahlén.
+# Andreas Dahlén <andreas@dahlen.ws>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.2-cvs\n"
+"POT-Creation-Date: 2003-08-05 22:56+0200\n"
+"PO-Revision-Date: 2001-11-10 16:21+0100\n"
+"Last-Translator: Andreas Dahlén <andreas@dahlen.ws>\n"
+"Language-Team: Swedish <dev@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: po/translation.php:65
+msgid ""
+"  -M, --message=MESSAGE  Use this commit message instead of the default ones."
+msgstr ""
+
+#: po/translation.php:69
+msgid ""
+"  -a, --add=FILE        Add this PO file to the compendium. Useful to\n"
+"                        include a compendium from a different branch to\n"
+"                        the generated compendium."
+msgstr ""
+
+#: po/translation.php:125
+msgid ""
+"  -b, --base=/PATH  Full path to the (Horde) base directory that should be\n"
+"                    used."
+msgstr ""
+
+#: po/translation.php:83
+msgid ""
+"  -c, --compendium=FILE  Merge new translations to this compendium file\n"
+"                         instead of the default one (compendium.po in the\n"
+"                         horde/po directory."
+msgstr ""
+
+#: po/translation.php:94 po/translation.php:100
+msgid ""
+"  -c, --compendium=FILE  Use this compendium file instead of the default\n"
+"                         one (compendium.po in the horde/po directory)."
+msgstr ""
+
+#: po/translation.php:126
+msgid "  -d, --debug       Show error messages from the executed binaries."
+msgstr ""
+
+#: po/translation.php:70
+msgid "  -d, --directory=DIR   Create compendium in this directory."
+msgstr ""
+
+#: po/translation.php:127
+msgid "  -h, --help        Show this help message."
+msgstr ""
+
+#: po/translation.php:81 po/translation.php:88
+msgid "  -l, --locale=ll_CC     Use only this locale."
+msgstr ""
+
+#: po/translation.php:63 po/translation.php:92 po/translation.php:98
+msgid "  -l, --locale=ll_CC     Use this locale."
+msgstr ""
+
+#: po/translation.php:71 po/translation.php:77
+msgid "  -l, --locale=ll_CC    Use this locale."
+msgstr ""
+
+#: po/translation.php:82
+msgid "  -m, --module=MODULE    Build MO files only for this (Horde) module."
+msgstr ""
+
+#: po/translation.php:64
+msgid ""
+"  -m, --module=MODULE    Commit translations only for this (Horde) module."
+msgstr ""
+
+#: po/translation.php:93
+msgid "  -m, --module=MODULE    Merge PO files only for this (Horde) module."
+msgstr ""
+
+#: po/translation.php:89
+msgid ""
+"  -m, --module=MODULE    Update help files only for this (Horde) module."
+msgstr ""
+
+#: po/translation.php:99
+msgid "  -m, --module=MODULE    Update only this (Horde) module."
+msgstr ""
+
+#: po/translation.php:78
+msgid "  -m, --module=MODULE   Create a PO file only for this (Horde) module."
+msgstr ""
+
+#: po/translation.php:74
+msgid "  -m, --module=MODULE  Generate POT file only for this (Horde) module."
+msgstr ""
+
+#: po/translation.php:66
+msgid ""
+"  -n, --new              This is a new translation, commit also CREDITS,\n"
+"                         CHANGES and lang.php.dist."
+msgstr ""
+
+#: po/translation.php:84
+msgid ""
+"  -n, --no-compendium    Don't merge new translations to the compendium."
+msgstr ""
+
+#: po/translation.php:95 po/translation.php:101
+msgid "  -n, --no-compendium    Don't use a compendium."
+msgstr ""
+
+#: po/translation.php:128
+msgid "  -t, --test        Show the executed commands but don't run anything."
+msgstr ""
+
+#: po/translation.php:120
+msgid "  commit      Commit translations to the CVS server."
+msgstr ""
+
+#: po/translation.php:121
+msgid "  commit-help Commit help files to the CVS server."
+msgstr ""
+
+#: po/translation.php:112
+msgid ""
+"  compendium  Rebuild the compendium file. Warning: This overwrites the\n"
+"              current compendium."
+msgstr ""
+
+#: po/translation.php:113
+msgid "  extract     Generate PO template (.pot) files."
+msgstr ""
+
+#: po/translation.php:111
+msgid "  help        Show this help message."
+msgstr ""
+
+#: po/translation.php:114
+msgid ""
+"  init        Create one or more PO files for a new locale. Warning: This\n"
+"              overwrites the existing PO files of this locale."
+msgstr ""
+
+#: po/translation.php:118
+msgid "  make        Build binary MO files from the specified PO files."
+msgstr ""
+
+#: po/translation.php:119
+msgid ""
+"  make-help   Mark all entries in the XML help file being up-to-date and\n"
+"              prepare the file for the next execution of update-help. You\n"
+"              should only run make-help AFTER update-help and revising the\n"
+"              help file."
+msgstr ""
+
+#: po/translation.php:115
+msgid ""
+"  merge       Merge the current PO file with the current PO template file."
+msgstr ""
+
+#: po/translation.php:116
+msgid "  update      Run extract and merge sequent."
+msgstr ""
+
+#: po/translation.php:117
+msgid ""
+"  update-help Extract all new and changed entries from the English XML help\n"
+"              file and merge them with the existing ones."
+msgstr ""
+
+#: templates/maintenance/confirm_top.inc:14
+#, c-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr ""
+" &#151; %s kommer att utföra de underhållsfunktinerna som är ikryssade nedan."
+
+#: po/translation.php:858
+#, c-format
+msgid "%d bytes written."
+msgstr "%d tecken skrivna."
+
+#: po/translation.php:959
+#, c-format
+msgid "%d of %d entries marked as up-to-date"
+msgstr "%d av %d värden är markerade som aktuella"
+
+#: templates/maintenance/confirm_top.inc:7
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s Underhållsfunktion - Bekräftelse"
+
+#: po/translation.php:368
+#, c-format
+msgid "%s not found. Run 'translation extract' first."
+msgstr "%s hittades inte. Kör 'translation extract' först."
+
+#: po/translation.php:155
+#, c-format
+msgid ""
+"%sWarning:%s This program was only tested on gettext 0.11. There is no\n"
+"guarantee that it will work with your version of gettext."
+msgstr ""
+"%sVarning:%s Programmet är enbart testat med gettext 0.11."
+
+#: po/translation.php:140
+#, c-format
+msgid "%sfound:%s %s"
+msgstr "%sfann:%s %s"
+
+#: lib/Registry.php:453 lib/Registry.php:749
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' är inte konfigurerad i Horde Registry."
+
+#: po/translation.php:167
+msgid ", trying C++ instead"
+msgstr ", försöker C++ istället"
+
+#: po/translation.php:1014 po/translation.php:1016
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: templates/data/datemap.inc:102
+msgid "24 hours"
+msgstr "24 timmar"
+
+#: lib/Horde.php:235
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Ett fatalt fel har inträffat:</b>"
+
+#: templates/data/datemap.inc:103
+msgid "AM/PM"
+msgstr "AM/PM"
+
+#: po/translation.php:647
+msgid "Adding new files to repository:"
+msgstr "Lägger till nya filer till repository:"
+
+#: lib/MIME/Viewer/vcard.php:86
+msgid "Address"
+msgstr "Adress"
+
+#: config/registry.php.dist:136
+msgid "Address Book"
+msgstr "Adressbok"
+
+#: lib/MIME/Viewer/vcard.php:64
+msgid "Alias"
+msgstr "Alias"
+
+#: lib/PrefsUI.php:100
+msgid "An illegal value was specified."
+msgstr "Ett felaktigt värde angavs."
+
+#: config/prefs.php.dist:70
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "Fråga efter bekräftelse innan underhållsaktiviteter utförs?"
+
+#: lib/Auth/radius.php:206
+msgid "Authentication rejected by RADIUS server."
+msgstr "Authentisering avvisades av RADIUS-servern."
+
+#: templates/data/csvmap.inc:84
+msgid "Available fields:"
+msgstr "Tillgängliga fält:"
+
+#: lib/Auth/krb5.php:81
+msgid "Bad kerberos password."
+msgstr "Felaktigt kerberos-lösenord."
+
+#: lib/Auth/krb5.php:83
+msgid "Bad kerberos username."
+msgstr "Felaktigt kerberos-användarnamn."
+
+#: lib/MIME/Viewer/vcard.php:71
+msgid "Birthday"
+msgstr "Födelsedag"
+
+#: po/translation.php:441
+#, c-format
+msgid "Building MO files for module %s%s%s..."
+msgstr "Skapar MO-filer för modul %s%s%s..."
+
+#: po/translation.php:458
+#, c-format
+msgid "Building locale %s%s%s... "
+msgstr "Skapar 'locale' för %s%s%s... "
+
+#: config/registry.php.dist:172
+msgid "CVS"
+msgstr "CVS"
+
+#: config/registry.php.dist:145
+msgid "Calendar"
+msgstr "Kalender"
+
+#: lib/MIME/Viewer/vcard.php:103
+msgid "Cell Phone"
+msgstr "Mobiltelefon"
+
+#: templates/maintenance/confirm_top.inc:16
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Kryssa i de funktion(er) du vill utföra."
+
+#: templates/help/menu.inc:12
+msgid "Close Help"
+msgstr "Stäng hjälp"
+
+#: templates/help/menu.inc:12
+msgid "Close Help Window"
+msgstr "Stäng hjälpfönster"
+
+#: config/registry.php.dist:181
+msgid "Comics"
+msgstr "Lustigheter"
+
+#: po/translation.php:58
+msgid "Command options:"
+msgstr "kommandoinställningar:"
+
+#: po/translation.php:110
+msgid "Commands:"
+msgstr "Kommandon:"
+
+#: po/translation.php:685
+msgid "Committing:"
+msgstr "Uppdaterar:"
+
+#: lib/MIME/Viewer/vcard.php:152
+msgid "Company"
+msgstr "Företag"
+
+#: lib/VFS/ftp.php:422
+msgid "Connection to ftp server failed."
+msgstr "Förbindelse med FTP-server misslyckades."
+
+#: po/translation.php:1032
+msgid "Console_Getopt not found."
+msgstr "Console_Getopt finns inte."
+
+#: lib/MIME/Viewer/tgz.php:50 lib/MIME/Viewer/zip.php:45
+#, c-format
+msgid "Contents of '%s'"
+msgstr "Innehåll i '%s'"
+
+#: lib/MIME/Viewer/rar.php:46
+msgid "Contents of the RAR archive"
+msgstr "Innehåll i RAR-filen"
+
+#: po/translation.php:766
+#, c-format
+msgid "Copying %s to %s"
+msgstr "Kopierar %s till %s"
+
+#: lib/SessionHandler/mysql.php:270
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr "Kan inte kontakta databasen för SQL sessionshanterare. "
+
+#: lib/SessionHandler/mysql.php:274
+#, c-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr "Kan inte kontakta tabell '%s' för SQL sessionshanterare."
+
+#: po/translation.php:769
+#, c-format
+msgid "Could not copy %s to %s"
+msgstr "Kunde inte kopiera %s till %s"
+
+#: po/translation.php:467 po/translation.php:759
+#, c-format
+msgid "Could not create locale directory for locale %s:"
+msgstr "Kunde inta skapa katalog för 'locale' %s:"
+
+#: lib/Maintenance.php:397
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Kan inte öppna Maintenance_Task modul %s"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "DD"
+msgstr "DD"
+
+#: lib/Maintenance.php:30
+msgid "Daily"
+msgstr "Daglig"
+
+#: lib/Auth/sql.php:207 lib/Auth/sql.php:235 lib/Auth/sql.php:260
+msgid "Database query failed."
+msgstr "Databasfråga misslyckades."
+
+#: lib/Identity.php:73
+msgid "Default Identity"
+msgstr "Förvald identitet"
+
+#: problem.php:92 problem.php:96 problem.php:107
+msgid "Describe the Problem"
+msgstr "Beskriv problemet"
+
+#: lib/Horde.php:243
+msgid "Details have been logged for the administrator."
+msgstr "Detaljer har loggats för systemadministratören."
+
+#: config/prefs.php.dist:12
+msgid "Display Options"
+msgstr "Visningsinställningar"
+
+#: maintenance.php:26
+msgid "Do not directly access maintenance.php"
+msgstr "Accessa inte maintenance.php direkt"
+
+#: lib/MIME/Viewer/vcard.php:137
+msgid "Email"
+msgstr "E-post"
+
+#: lib/Auth/ldap.php:113
+msgid "Empty result."
+msgstr "Tomt resultat."
+
+#: po/translation.php:845
+#, c-format
+msgid "Entries: %d total, %d up-to-date, %d new, %d changed, %d unknown"
+msgstr "Värden: %d totalt, %d aktuella, %d nya, %d ändrade, %d okända"
+
+#: status.php:16 lib/Notification/status.php:41
+msgid "Error"
+msgstr "Fel"
+
+#: po/translation.php:260 po/translation.php:305 po/translation.php:1054
+#: po/translation.php:1111 po/translation.php:1176
+msgid "Error: "
+msgstr "Fel: "
+
+#: config/prefs.php.dist:41
+msgid "Every 15 minutes"
+msgstr "Var 15:e minut"
+
+#: config/prefs.php.dist:38
+msgid "Every 30 seconds"
+msgstr "Var 30:e sekund"
+
+#: config/prefs.php.dist:40
+msgid "Every 5 minutes"
+msgstr "Var 5:e minut"
+
+#: lib/Maintenance.php:31
+msgid "Every Login"
+msgstr "Varje inloggning"
+
+#: config/prefs.php.dist:42
+msgid "Every half hour"
+msgstr "Varje halvtimma"
+
+#: config/prefs.php.dist:39
+msgid "Every minute"
+msgstr "Varje minut"
+
+#: templates/data/datemap.inc:28
+msgid "Example values:"
+msgstr "Exempel på värden:"
+
+#: po/translation.php:210 po/translation.php:221 po/translation.php:271
+#: po/translation.php:324 po/translation.php:383 po/translation.php:394
+#: po/translation.php:445 po/translation.php:478 po/translation.php:487
+#: po/translation.php:495 po/translation.php:524 po/translation.php:553
+#: po/translation.php:565 po/translation.php:622 po/translation.php:679
+#: po/translation.php:701 po/translation.php:734 po/translation.php:890
+#: po/translation.php:1124
+msgid "Executing:"
+msgstr "Utför:"
+
+#: lib/Data.php:264
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "Förväntade \"BEGIN\" på rad %d."
+
+#: lib/Data.php:285
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "Förväntade \"END:%s\" på rad %d."
+
+#: po/translation.php:196
+#, c-format
+msgid "Extracting from %s... "
+msgstr "Extraherar från %s... "
+
+#: lib/Prefs/sql.php:316
+msgid "Failed retrieving preferences."
+msgstr "Misslyckades att hämta inställningar."
+
+#: lib/Auth/ldap.php:103
+msgid "Failed to connect to LDAP server."
+msgstr "Misslyckades att kontakta LDAP-server."
+
+#: lib/Auth/smb.php:108
+msgid "Failed to connect to SMB server."
+msgstr "Misslyckades att kontakta SMB-server."
+
+#: lib/MIME/Viewer/vcard.php:108
+msgid "Fax"
+msgstr "Fax"
+
+#: config/registry.php.dist:127
+msgid "Filters"
+msgstr "Filter"
+
+#: po/translation.php:1139
+#, c-format
+msgid "Found applications: %s"
+msgstr "Hittade applikation: %s"
+
+#: po/translation.php:1131
+msgid "Found directories:"
+msgstr "Hittade kataloger:"
+
+#: templates/problem/problem.inc:26
+msgid "Full Description:"
+msgstr "Fullständig beskrivning:"
+
+#: po/translation.php:1048
+msgid "Getopt Error: "
+msgstr "Getopt-fel: "
+
+#: help.php:15 lib/Help.php:426 lib/Help.php:427 templates/help/index.inc:13
+#: templates/navbar/menu.inc:19
+msgid "Help"
+msgstr "Hjälp"
+
+#: po/translation.php:108
+msgid ""
+"Helper application to create and maintain translations for the Horde\n"
+"framework and its applications.\n"
+"For an introduction read the file README in this directory."
+msgstr ""
+
+#: templates/navbar/menu.inc:8
+msgid "Home"
+msgstr "Hem"
+
+#: lib/MIME/Viewer/vcard.php:82
+msgid "Home Address"
+msgstr "Adress, hem"
+
+#: lib/MIME/Viewer/vcard.php:99
+msgid "Home Phone"
+msgstr "Telefon, hem"
+
+#: config/registry.php.dist:90
+msgid "Horde"
+msgstr "Horde"
+
+#: login.php:101
+msgid "Horde Login"
+msgstr "Horde inloggning"
+
+#: menu.php:20
+msgid "Horde System"
+msgstr "Horde system"
+
+#: templates/index/wap.inc:13
+msgid "Horde Wireless"
+msgstr "Horde wireless"
+
+#: templates/index/notconfigured.inc:4
+msgid "Horde is not properly configured"
+msgstr "Horde är inte korrekt konfigurerat"
+
+#: po/translation.php:1015
+msgid "Horde translation generator"
+msgstr "Översättningsgenerator för Horde"
+
+#: config/prefs.php.dist:51
+msgid "Icons Only"
+msgstr "Enbart ikoner"
+
+#: config/prefs.php.dist:52
+msgid "Icons with text"
+msgstr "Ikoner med text"
+
+#: lib/Data.php:264 lib/Data.php:281 lib/Data.php:285
+msgid "Import Error: "
+msgstr "Importfel: "
+
+#: templates/data/datemap.inc:20
+#, c-format
+msgid "Imported field: %s"
+msgstr "Importerade fält: %s"
+
+#: templates/data/csvmap.inc:74
+msgid "Imported fields:"
+msgstr "Importerade fält:"
+
+#: po/translation.php:365
+#, c-format
+msgid "Initializing module %s... "
+msgstr "Initialiserar modul %s... "
+
+#: lib/Auth/krb5.php:85
+msgid "Kerberos server rejected authentication."
+msgstr "Kerberos-server avvisade authetifikation."
+
+#: config/prefs.php.dist:6
+msgid "Language"
+msgstr "Språk"
+
+#: templates/help/menu.inc:9
+msgid "List Help Topics"
+msgstr "Visa hjälpämnen"
+
+#: po/translation.php:1026
+msgid "Loading libraries..."
+msgstr "Laddar bibliotek..."
+
+#: templates/navbar/menu.inc:14
+msgid "Log in"
+msgstr "Logga in"
+
+#: menu.php:47 templates/login/user.inc:9
+msgid "Log out"
+msgstr "Logga ut"
+
+#: login.php:66
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Inloggning misslyckades. Troligtvis var användarnamn eller lösenord "
+"felaktigt."
+
+#: config/registry.php.dist:109
+msgid "Logout"
+msgstr "Logga ut"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "MM"
+msgstr "MM"
+
+#: config/registry.php.dist:118
+msgid "Mail"
+msgstr "E-post"
+
+#: po/translation.php:1034
+msgid "Make sure that you have PEAR installed and in your include path."
+msgstr "Se till att PEAR är installerat och finns med i din sökväg."
+
+#: po/translation.php:464 po/translation.php:756
+#, c-format
+msgid "Making directory %s"
+msgstr "Skapar katalog %s"
+
+#: templates/data/datemap.inc:10
+msgid "Map Date and Time Fields"
+msgstr "Knyt ihop datum- och tidfält"
+
+#: templates/data/csvmap.inc:57
+msgid "Map Import Fields"
+msgstr "Knyt ihop importfält"
+
+#: templates/data/csvmap.inc:102
+msgid "Matching fields"
+msgstr "Matchande fält"
+
+#: config/registry.php.dist:154
+msgid "Memos"
+msgstr "Anteckningar"
+
+#: config/prefs.php.dist:53
+msgid "Menu mode:"
+msgstr "Menyläge:"
+
+#: po/translation.php:310
+#, c-format
+msgid "Merging all %s.po files to the compendium... "
+msgstr "Slår ihop alla %s.po filer till compendium..."
+
+#: po/translation.php:543
+#, c-format
+msgid "Merging the PO file for %s%s%s to the compendium... "
+msgstr "Slår ihop PO-filen för %s%s%s till compendium..."
+
+#: po/translation.php:267
+#, c-format
+msgid "Merging translation for module %s..."
+msgstr "Slår ihop översättning för modul %s..."
+
+#: status.php:29 lib/Notification/status.php:54
+msgid "Message"
+msgstr "Meddelande"
+
+#: lib/Maintenance.php:28
+msgid "Monthly"
+msgstr "Månatlig"
+
+#: login.php:69
+msgid "My Summary"
+msgstr "Min summering"
+
+#: lib/MIME/Viewer/vcard.php:56
+msgid "Name"
+msgstr "Namn"
+
+#: config/prefs.php.dist:37
+msgid "Never"
+msgstr "Aldrig"
+
+#: po/translation.php:167
+msgid "No"
+msgstr "Nej"
+
+#: lib/VFS/ftp.php:402
+msgid "No configuration information specified for FTP VFS."
+msgstr "Ingen konfigurationsinformation angiven för FTP VFS."
+
+#: lib/Prefs/ldap.php:100
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "Ingen konfigurationsinformation angiven för LDAP inställningar."
+
+#: lib/Category/sql.php:73
+msgid "No configuration information specified for SQL Categories."
+msgstr "Ingen konfigurationsinformation angiven för SQL kategorier."
+
+#: lib/Prefs/sql.php:83
+msgid "No configuration information specified for SQL Preferences."
+msgstr "Ingen konfigurationsinformation angiven för SQL inställningar."
+
+#: lib/SessionHandler/mysql.php:247 lib/SessionHandler/pgsql.php:216
+#: lib/SessionHandler/sql.php:186
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr "Ingen konfigurationsinformation angiven för SQL sessionshanterare."
+
+#: lib/VFS/sql.php:450
+msgid "No configuration information specified for SQL VFS."
+msgstr "Ingen konfigurationsinformation angiven för SQL CFS."
+
+#: lib/Auth/sql.php:94
+msgid "No configuration information specified for SQL authentication."
+msgstr "Ingen konfigurationsinformation angiven för SQL authentisering."
+
+#: lib/VFS/sql_file.php:471
+msgid "No configuration information specified for SQL-File VFS."
+msgstr "Ingen konfigurationsinformation angiven för SQL-File VFS."
+
+#: po/translation.php:946
+#, c-format
+msgid "No entry with the id '%s' exists in the original help file."
+msgstr ""
+
+#: po/translation.php:260 po/translation.php:305
+msgid "No locale specified."
+msgstr "Ingen 'locale' vald."
+
+#: lib/Prefs/ldap.php:322 lib/Prefs/ldap.php:430 lib/Prefs/session.php:53
+#: lib/Prefs/sql.php:197 lib/Prefs/sql.php:273
+msgid "No preferences are available."
+msgstr "Inga inställningar är tillgängliga."
+
+#: lib/MIME/Viewer/vcard.php:157
+msgid "Notes"
+msgstr "Anteckningar"
+
+#: templates/maintenance/confirm_top.inc:13
+msgid "Notice"
+msgstr "För kännedom"
+
+#: lib/Notification.php:105
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "Notifieringslyssnare '%s' hittades inte."
+
+#: config/prefs.php.dist:30
+msgid "Number of columns in the summary view:"
+msgstr "Antal kolumner på sammanställningssidan:"
+
+#: po/translation.php:157 po/translation.php:1030
+msgid "OK"
+msgstr "OK"
+
+#: templates/login/user.inc:7 templates/navbar/menu.inc:11
+msgid "Options"
+msgstr "Inställningar"
+
+#: po/translation.php:124
+msgid "Options:"
+msgstr "Inställningar:"
+
+#: config/prefs.php.dist:11
+msgid "Other Information"
+msgstr "Annan information"
+
+#: po/translation.php:160
+msgid "PHP support in xgettext: "
+msgstr "PHP-suport i xgettext: "
+
+#: templates/login/login.inc:71
+msgid "Password"
+msgstr "Lösenord"
+
+#: lib/MIME/Viewer/vcard.php:105
+msgid "Phone"
+msgstr "Telefon"
+
+#: po/translation.php:39
+msgid "Please report any bugs to i18n@lists.horde.org."
+msgstr "Rapportera eventuella fel till i18n@lists.horde.org."
+
+#: problem.php:110
+msgid "Problem Description"
+msgstr "Problembeskrivning"
+
+#: config/prefs.php.dist:43
+msgid "Refresh Summary View:"
+msgstr "Uppdatera sammanställningsvy:"
+
+#: lib/SessionHandler/mysql.php:253
+#, c-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "Erfodrad '%s' är inte angiven i konfigureringen av sessionshanterare."
+
+#: lib/Auth/ldap.php:91
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "Erfodrad 'basedn' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Prefs/ldap.php:106
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "Erfodrad 'basedn' är inte angiven i konfigureringen av inställningar."
+
+#: lib/Auth/smb.php:92
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"Erfodrad 'bdc_hostspec' är inte angiven i konfigureringen av autentisering."
+
+#: lib/SessionHandler/pgsql.php:228 lib/SessionHandler/sql.php:201
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr ""
+"Erfodrad 'database' är inte angiven i konfigureringen av sessionshanterare."
+
+#: lib/VFS/sql.php:465 lib/VFS/sql_file.php:486
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "Erfodrad 'database' är inte angiven i konfigureringen av VFS."
+
+#: lib/Auth/sql.php:109
+msgid "Required 'database' not specified in authentication configuration."
+msgstr ""
+"Erfodrad 'database' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Category/sql.php:88
+msgid "Required 'database' not specified in categories configuration."
+msgstr "Erfodrad 'database' är inte angiven i konfigureringen av kategorier."
+
+#: lib/Prefs/sql.php:98
+msgid "Required 'database' not specified in preferences configuration."
+msgstr ""
+"Erfodrad 'database' är inte angiven i konfigureringen av inställningar."
+
+#: lib/Auth/smb.php:95
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr "Erfodrad 'domain' är inte angiven i konfigureringen av autentisering."
+
+#: lib/SessionHandler/pgsql.php:219 lib/SessionHandler/sql.php:192
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr ""
+"Erfodrad 'hostspec' är inte angiven i konfigureringen av sessionshanterare."
+
+#: lib/VFS/ftp.php:411 lib/VFS/sql.php:456 lib/VFS/sql_file.php:477
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "Erfodrad 'hostspec' är inte angiven i konfigureringen av VFS."
+
+#: lib/Auth/ldap.php:88 lib/Auth/sql.php:100
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr ""
+"Erfodrad 'hostspec' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Category/sql.php:79
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "Erfodrad 'hostspec' är inte angiven i konfigureringen av kategorier."
+
+#: lib/Prefs/ldap.php:103 lib/Prefs/sql.php:89
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr ""
+"Erfodrad 'hostspec' är inte angiven i konfigureringen av inställningar."
+
+#: lib/SessionHandler/pgsql.php:225 lib/SessionHandler/sql.php:198
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr ""
+"Erfodrad 'password' är inte angiven i konfigureringen av sessionshanterare."
+
+#: lib/VFS/ftp.php:408 lib/VFS/sql.php:462 lib/VFS/sql_file.php:483
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "Erfodrad 'password' är inte angiven i konfigureringen av VFS."
+
+#: lib/Auth/ldap.php:97 lib/Auth/sql.php:106
+msgid "Required 'password' not specified in authentication configuration."
+msgstr ""
+"Erfodrad 'password' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Category/sql.php:85
+msgid "Required 'password' not specified in categories configuration."
+msgstr "Erfodrad 'password' är inte angiven i konfigureringen av kategorier."
+
+#: lib/Prefs/ldap.php:115 lib/Prefs/sql.php:95
+msgid "Required 'password' not specified in preferences configuration."
+msgstr ""
+"Erfodrad 'password' är inte angiven i konfigureringen av inställningar."
+
+#: lib/Auth/smb.php:89
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"Erfodrad 'pdc_hostspec' är inte angiven i konfigureringen av autentisering."
+
+#: lib/SessionHandler/sql.php:189
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr ""
+"Erfodrad 'phptype' är inte angiven i konfigureringen av sessionshanterare."
+
+#: lib/VFS/sql.php:453 lib/VFS/sql_file.php:474
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "Erfodrad 'phptype' är inte angiven i konfigureringen av VFS."
+
+#: lib/Auth/sql.php:97
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "Erfodrad 'phptype' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Category/sql.php:76
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "Erfodrad 'phptype' är inte angiven i konfigureringen av kategorier."
+
+#: lib/Prefs/sql.php:86
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "Erfodrad 'phptype' är inte angiven i konfigureringen av inställningar."
+
+#: lib/VFS/ftp.php:414
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "Erfodrad 'port' är inte angiven i konfigureringen av VFS."
+
+#: lib/Category/sql.php:91
+msgid "Required 'table' not specified in categories configuration."
+msgstr "Erfodrad 'table' är inte angiven i konfigureringen av kategorier."
+
+#: lib/Prefs/sql.php:101
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "Erfodrad 'table' är inte angiven i konfigureringen av inställningar."
+
+#: lib/Auth/ldap.php:94
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "Erfodrad 'uid' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Prefs/ldap.php:109
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "Erfodrad 'uid' är inte angiven i konfigureringen av inställningar."
+
+#: lib/SessionHandler/pgsql.php:222 lib/SessionHandler/sql.php:195
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr ""
+"Erfodrad 'username' är inte angiven i konfigureringen av sessionshanterare."
+
+#: lib/VFS/ftp.php:405 lib/VFS/sql.php:459 lib/VFS/sql_file.php:480
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "Erfodrad 'username' är inte angiven i konfigureringen av VFS."
+
+#: lib/Auth/sql.php:103
+msgid "Required 'username' not specified in authentication configuration."
+msgstr ""
+"Erfodrad 'username' är inte angiven i konfigureringen av autentisering."
+
+#: lib/Category/sql.php:82
+msgid "Required 'username' not specified in categories configuration."
+msgstr "Erfodrad 'username' är inte angiven i konfigureringen av kategorier."
+
+#: lib/Prefs/ldap.php:112 lib/Prefs/sql.php:92
+msgid "Required 'username' not specified in preferences configuration."
+msgstr ""
+"Erfodrad 'username' är inte angiven i konfigureringen av inställningar."
+
+#: lib/VFS/sql_file.php:489
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "Erfodrad 'vfsroot' är inte angiven i konfigureringen av VFS."
+
+#: lib/MIME/Viewer/vcard.php:147
+msgid "Role"
+msgstr "Roll"
+
+#: po/translation.php:1121
+msgid "Searching Horde applications..."
+msgstr ""
+
+#: po/translation.php:135
+msgid "Searching gettext binaries..."
+msgstr ""
+
+#: util/special_characters.php:38
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Ange de tecken du behöver i rutorna nedan. Du kan sedan kopiera och klistra "
+"in dem i textarutan."
+
+#: templates/data/datemap.inc:54
+msgid "Select the date delimiter:"
+msgstr "Ange avgänsare för data:"
+
+#: templates/data/datemap.inc:64
+msgid "Select the date format:"
+msgstr "Välj datumformat:"
+
+#: templates/data/datemap.inc:90
+msgid "Select the time delimiter:"
+msgstr "Ange avgänsare för tid:"
+
+#: templates/data/datemap.inc:99
+msgid "Select the time format:"
+msgstr "Välj tidsformat:"
+
+#: templates/data/csvmap.inc:65
+msgid "Select two matching fields."
+msgstr "Välj två matchande fält:"
+
+#: config/prefs.php.dist:23
+msgid "Select your preferred language:"
+msgstr "Välj förvalt språk:"
+
+#: config/prefs.php.dist:13
+msgid "Set your page refreshing, and other display options."
+msgstr "Sätt din siduppdatering och andra visningsinställningar."
+
+#: config/prefs.php.dist:7
+msgid "Set your preferred display language."
+msgstr "Välj förvalt språk för visning."
+
+#: templates/problem/problem.inc:21
+msgid "Short Summary:"
+msgstr "Kort summering:"
+
+#: po/translation.php:451
+msgid "Skipped..."
+msgstr ""
+
+#: templates/index/notconfigured.inc:9
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Några av Horde's konfigurationsfiler saknas:"
+
+#: util/special_characters.php:14
+msgid "Special Character Input"
+msgstr "Inmatning av speciella tecken"
+
+#: status.php:20 lib/Notification/status.php:45
+msgid "Success"
+msgstr "Lyckat"
+
+#: config/registry.php.dist:163
+msgid "Tasks"
+msgstr "Uppgifter"
+
+#: config/prefs.php.dist:50
+msgid "Text Only"
+msgstr "Enbart text"
+
+#: po/translation.php:752
+#, c-format
+msgid "The %s help file for %s doesn't yet exist. Creating a new one."
+msgstr ""
+
+#: po/translation.php:779 po/translation.php:910
+#, c-format
+msgid "The help file %s didn't start with <?xml"
+msgstr ""
+
+#: lib/MIME/Viewer/deb.php:33 lib/MIME/Viewer/enscript.php:34
+#: lib/MIME/Viewer/msexcel.php:34 lib/MIME/Viewer/mspowerpoint.php:34
+#: lib/MIME/Viewer/msword.php:35 lib/MIME/Viewer/rar.php:35
+#: lib/MIME/Viewer/rpm.php:33 lib/MIME/Viewer/tgz.php:35
+#: lib/MIME/Viewer/zip.php:35
+#, c-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr ""
+"Programmet som används för att visa den här meddelandetypen (%s) saknas på "
+"systemet."
+
+#: templates/index/notconfigured.inc:42
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Registret beskriver hur applikationer i Horde kontaktar varandra. Du skall "
+"ange de installerade applikationerna i Horde här."
+
+#: po/translation.php:743
+#, c-format
+msgid "There doesn't yet exist a help file for %s."
+msgstr ""
+
+#: po/translation.php:789 po/translation.php:795 po/translation.php:920
+#: po/translation.php:926
+#, c-format
+msgid ""
+"There was an error opening the file %s. Try running translation.php with the "
+"flag -d to see any error messages from the xml parser."
+msgstr ""
+
+#: templates/index/notconfigured.inc:28
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"Den här filen kontrollerar de globala MIME drivrutinerna för Horde's "
+"ramverk, vilket möjliggör att applikationer kan använda program som enscript "
+"eller mswordview för att översätta innehåll till HTML för visning i en "
+"bläddrare."
+
+#: templates/index/notconfigured.inc:21
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"Den här filen kontrollerar de stylesheet som används för att ange färger och "
+"typsnitt i Hordes ramverk och applikationer som inte har definierat egna."
+
+#: templates/index/notconfigured.inc:35
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"Den här filen knyter samman filtyper till logiska MIME typer, vilket gör att "
+"Horde kan hantera innehåll som bilagor i e-post och utcheckningar ur CVS."
+
+#: templates/index/notconfigured.inc:14
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"Det här är huvudkonfigurationsfilen för Horde. Den innehåller sökvägar och "
+"grundläggande inställningar för Horde och applikationer."
+
+#: lib/PrefsUI.php:109
+msgid "This number must be at least one."
+msgstr "Numret måste vara minst ett."
+
+#: lib/PrefsUI.php:107
+msgid "This value must be a number."
+msgstr "Värdet måste vara numeriskt."
+
+#: lib/MIME/Viewer/vcard.php:142
+msgid "Title"
+msgstr "Titel"
+
+#: lib/Data.php:285
+msgid "Type mismatch."
+msgstr "Felaktig typ."
+
+#: lib/MIME/Viewer/vcard.php:162
+msgid "URL"
+msgstr "URL"
+
+#: lib/Auth/sql.php:119
+msgid "Unable to connect to SQL server."
+msgstr "Kan inte kontakta SQL-server."
+
+#: lib/VFS/file.php:452
+msgid "Unable to read the vfsroot directory."
+msgstr "Misslyckades att läsa katalogen för vfsroot."
+
+#: lib/Prefs/session.php:92
+msgid "Unable to register preferences in session."
+msgstr "Kan inte registrera inställningar i en session."
+
+#: lib/MIME/Viewer/msword.php:57
+msgid "Unable to translate this Word document"
+msgstr "Kan inte översätta Worddokumentet"
+
+#: lib/Data.php:281
+msgid "Unexpected end of file."
+msgstr "Oväntat filslut."
+
+#: po/translation.php:1176
+#, c-format
+msgid "Unknown command: %s"
+msgstr "Okänt kommando: %s"
+
+#: po/translation.php:774 po/translation.php:905
+#, c-format
+msgid "Updating %s help file for %s."
+msgstr "Uppdaterar hjälpfilen (%s) för %s."
+
+#: po/translation.php:55 po/translation.php:105 po/translation.php:106
+msgid "Usage:"
+msgstr "Användning:"
+
+#: templates/prefs/select.inc:3
+msgid "Use Default Value"
+msgstr "Använd förvalt värde"
+
+#: prefs.php:61
+msgid "User Options"
+msgstr "Användarinställningar"
+
+#: templates/login/login.inc:67
+msgid "Username"
+msgstr "Användarnamn"
+
+#: status.php:24 lib/Notification/status.php:49
+msgid "Warning"
+msgstr "Varning"
+
+#: po/translation.php:467 po/translation.php:504 po/translation.php:513
+#: po/translation.php:743 po/translation.php:752 po/translation.php:759
+#: po/translation.php:769 po/translation.php:779 po/translation.php:789
+#: po/translation.php:795 po/translation.php:910 po/translation.php:920
+#: po/translation.php:926 po/translation.php:946
+msgid "Warning: "
+msgstr "Varning: "
+
+#: lib/Maintenance.php:29
+msgid "Weekly"
+msgstr "Veckovis"
+
+#: templates/login/login.inc:59
+#, c-format
+msgid "Welcome to %s"
+msgstr "Välkommen till %s"
+
+#: templates/login/user.inc:4 templates/wml/login/user.inc:1
+#, c-format
+msgid "Welcome, %s"
+msgstr "Välkommen, %s"
+
+#: config/prefs.php.dist:61
+msgid "What application should Horde display after login?"
+msgstr "Vilken applikation skall visas efter inloggning?"
+
+#: lib/MIME/Viewer/vcard.php:84
+msgid "Work Address"
+msgstr "Adress, arbete"
+
+#: lib/MIME/Viewer/vcard.php:101
+msgid "Work Phone"
+msgstr "Telefon, arbete"
+
+#: po/translation.php:851
+#, c-format
+msgid "Writing updated help file to %s."
+msgstr ""
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "YY"
+msgstr "YY"
+
+#: lib/Maintenance.php:27
+msgid "Yearly"
+msgstr "Årlig"
+
+#: po/translation.php:164
+msgid "Yes"
+msgstr "Ja"
+
+#: login.php:65
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "Du har loggats ut.<br />Tack för att du använder systemet."
+
+#: login.php:64
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "Din %s session har upphört. Var god logga in igen."
+
+#: templates/problem/problem.inc:16
+msgid "Your Email Address:"
+msgstr "Din e-post adress:"
+
+#: config/prefs.php.dist:5
+msgid "Your Information"
+msgstr "Din information"
+
+#: templates/problem/problem.inc:11
+msgid "Your Name:"
+msgstr "Ditt namn:"
+
+#: lib/PrefsUI.php:146
+msgid "Your options have been updated."
+msgstr "Dina inställningar har uppdaterats."
+
+#: problem.php:67
+msgid "[Problem Report]"
+msgstr "[Problemrapport]"
+
+#: lib/Horde.php:239
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[rad %s av %s]"
+
+#: po/translation.php:504
+msgid "an error has occured:"
+msgstr "ett fel har inträffat:"
+
+#: po/translation.php:226 po/translation.php:333 po/translation.php:403
+#: po/translation.php:534 po/translation.php:574
+msgid "done"
+msgstr "klar"
+
+#: po/translation.php:335 po/translation.php:367 po/translation.php:405
+#: po/translation.php:536 po/translation.php:576
+msgid "failed"
+msgstr "misslyckad"
+
+#: po/translation.php:142
+msgid "not found"
+msgstr "fanns inte"
+
+#: po/translation.php:513
+#, c-format
+msgid "the Horde PO file for the locale %s does not exist:"
+msgstr "PO-filen för Horde för ´locale´ %s finns inte:"
+
+#: lib/MIME/Viewer/vcard.php:36
+msgid "vCard"
+msgstr "vCard"

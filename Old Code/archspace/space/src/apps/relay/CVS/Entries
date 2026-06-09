@@ -1,0 +1,26 @@
+/Makefile/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/admin.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/admin.table.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/banner.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/banner.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/data.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/gettext.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/main.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/pages.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/player.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/player.table.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/protocol.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/race.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/relay.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/relay.conn.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/relay.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/script.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/script.h/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/server.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/server.list.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/user.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/user.table.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+/web.conn.cc/1.1.1.1/Fri Apr 12 06:53:32 2002//
+D/DB////
+D/msg////
+D/page////

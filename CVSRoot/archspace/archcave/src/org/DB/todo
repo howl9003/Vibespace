@@ -1,0 +1,12 @@
+dome: create commanders table
+done: add more cm stuff
+done: add vitality or war_weariness to inhabitants
+done: create unit design table
+done: create messages table
+
+note: no java performance penatlties for using unsigned mediumint, it still use java int
+note: when refering to another table, plz use the suffix _id for variables
+note: for things we intend to hash put a _hash at the end
+
+note: unsigned variables get upgraded in java, so only use unsigned when needed.
+note: old_owner in inhabitants means that if the inhabitant is taken over and loyalty is greater then 50, then the old_owner becomes the overall ruler

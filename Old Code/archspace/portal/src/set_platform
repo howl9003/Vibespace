@@ -1,0 +1,42 @@
+#!/bin/sh
+#set -x
+
+# user check
+if [ "x`whoami`" != "xspace" ]; then
+	echo "This script can be run only by space account"
+	exit 4
+fi
+
+case "$1" in
+	freebsd)
+		echo "Setting Makefile for FreeBSD....."
+
+		/bin/rm /space/portal/src/lib/Makefile
+		/bin/rm /space/portal/src/server/Makefile
+
+		/bin/ln -s /space/portal/src/lib/Makefile.FreeBSD /space/portal/src/lib/Makefile
+		/bin/ln -s /space/portal/src/server/Makefile.FreeBSD /space/portal/src/server/Makefile
+
+		echo "The job has finished"
+	;;
+
+	solaris)
+		echo "Setting Makefile for Solaris....."
+
+		/bin/rm /space/portal/src/lib/Makefile
+		/bin/rm /space/portal/src/elib/Makefile
+		/bin/rm /space/portal/src/server/Makefile
+
+		/bin/ln -s /space/portal/src/lib/Makefile.Solaris /space/portal/src/lib/Makefile
+		/bin/ln -s /space/portal/src/server/Makefile.Solaris /space/portal/src/server/Makefile
+
+		echo "The job has finished"
+	;;
+
+	*)
+		echo "Unknown platform symbol!"
+	;;
+esac
+
+exit 
+

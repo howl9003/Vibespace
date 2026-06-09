@@ -1,0 +1,5 @@
+Name: as_module
+ConfigStart
+ LIBS="$LIBS -lmysqlclient -lpam -lm -lcrypt
+ echo "AS MODULE CONFIG..."
+ConfigEnd

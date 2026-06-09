@@ -1,0 +1,1688 @@
+<Imperial Tournament>
+{
+	Number(1000),
+	<Type>
+	[
+		Type("Galactic"),
+		Type("Imperial")
+	],
+	Description("The Emperor has declared it time for the a Tournament.  Any leaders that wish may send people to compete.  There is risk involved as people have been known to die, but there is also a chance for great glory."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	Duration(48)
+},
+<Imperial Purge>
+{
+	Number(1001),
+	<Type>
+	[
+		Type("Galactic"),
+		Type("Imperial")
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Description("The Empire has decided to purge all enemies of the empire through putting a price on their head.  They are reviewing all of their records, and declaring many criminals Most Wanted.")
+},
+<Imperial Suspicion>
+{
+	Number(1002),
+	<Type>
+	[
+		Type("Galactic"),
+		Type("Imperial")
+	],
+	Description("Something has changed the Emperor's general belief in his subjects.  He becomes very suspicious, for a while."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Duration(168)
+},
+<Imperial Confidence>
+{
+	Number(1003),
+	<Type>
+	[
+		Type("Galactic"),
+		Type("Imperial")
+	],
+	Description("Something has changed the Emperor's general belief in his subjects.  He becomes very confident, for a while."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Duration(168)
+},
+<Magistrate Replaced>
+{
+	Number(1100),
+	<Type>
+	[
+		Type("Magistrate"),
+		Type("Cluster")
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	Description("The Empire has decided that your cluster needs a new magistrate.  They send a replacement.")
+},
+<Magistrate Assassinated>
+{
+	Number(1101),
+	<Type>
+	[
+		Type("Magistrate"),
+		Type("Cluster")
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Description("An unknown party assassinates the Magistrate.  The Empire sends a replacement.  Because of suspicion about which the guilty party is, the replacement is very paranoid.")
+},
+<Super Nova>
+{
+	Number(1102),
+	<Type>
+	[
+		Type("Cluster")
+	],
+	Description("One of the stars in this start cluster goes supernova.  This has enormous effects in this cluster. This is causing many horrible problems for planets in that system."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(120),
+	DurationMax(240)
+},
+<Excellent Restaurant Chain Opens>
+{
+	Number(1103),
+	<Type>
+	[
+		Type("Cluster")
+	],
+	Description("A new restaurant chain opens up which serves food your people have never tried before.  They love it.  The problem is, returning fleets often stop off at space stations along the way in order to eat there."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	Duration(168)
+},
+<Intersystem-Wide Call for Peace>
+{
+	Number(1104),
+	<Type>
+	[
+		Type("Cluster")
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	Description("Everyone is crying out for peace. All production will be stopped if their demands are not met.")
+},
+<Disastrous Ascending Failure>
+{
+	Number(1105),
+	<Type>
+	[
+		Type("Cluster")
+	],
+	Description("One of the neighbors of your cluster recently attempted to ascend. They made a horrible mistake, and channeled energies they did not understand.  This energy is flooding your cluster and having horrible consequences.  Space is so unstable that your fleet cannot move, and your own homes seem more hostile to life."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	Duration(24)
+},
+<Intersystem Scandal>
+{
+	Number(1106),
+	<Type>
+	[
+		Type("Cluster")
+	],
+	Description("There has recently been a shocking accusation made in your system.  Council XXXX has been accused of planning an attempt on the Emperor's life.  All other councils have a choice.  They can side with the Empire, or they can side with the accused."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	Duration(48)
+},
+<Fanatic Craze amongst the Young>
+{
+	Number(1107),
+	<Type>
+	[
+		Type("Cluster")
+	],
+	Description("The youth of your cluster have all become obsessed with a new interactive game.  They must have anything with the logo on it, or they throw fits.  This is forcing you to divert many needed resources to making things for them to buy. Hopefully this craze will not last too long."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	DurationMin(72),
+	DurationMax(168),
+},
+<Scientific Mishap>
+{
+	Number(1200),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("One of your scientists was certain that they had found a way to replicate matter and increase the resources of your planets.  Unfortunately, they were wrong and the experiment had a major impact on the planet they were testing it on."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Change Planet Resource>
+		{
+			Arg1(-2)
+		}
+	]
+},
+<Orbital Realignment>
+{
+	Number(1201),
+	<Type>
+	[
+		Type("Major"),
+		Type("Answer")
+	],
+	Description("A company composed of a species you have never seen before approaches you for the fee you owe them for their service.  After a lot of discussion, you learn that they are from the Orbital Alignment Masters.  They agree to charge you only 3M PP for their services."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Answer("Yes"),
+			Arg1(-3000000)
+		},
+		<Switch Planet Order>
+		{
+			Answer("Yes")
+		}
+	]
+},
+<Attempted Military Coup>
+{
+	Number(1202),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("The on planet military on one of your planets attempts to take the planet from you.  You are able to put the revolt down yourself, but you must divert critical resources to the effort."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Set Fleet Mission>
+		{
+			Arg1(8),
+			Arg2(7200)
+		},
+		<Set Fleet Mission>
+		{
+			Arg1(8),
+			Arg2(7200)
+		},
+		<Set Fleet Mission>
+		{
+			Arg1(8),
+			Arg2(7200)
+		},
+		<Set Fleet Mission>
+		{
+			Arg1(8),
+			Arg2(7200)
+		}
+	]
+},
+<Attempted Succession>
+{
+	Number(1203),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("One of your planets has attempted a rebellion!!"),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Lose Planet>
+		{
+			BeginOnly("Yes")
+		}
+	]
+},
+<Dockside Sabotage>
+{
+	Number(1204),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("Somehow, your ship storage docks have been sabotaged.  None of the ships in your pool survived the explosion."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	<EffectList>
+	[
+		<Destroy All Docked Ship>
+		{
+			BeginOnly("Yes")
+		}
+	]
+},
+<Rogue Agerus Moves In>
+{
+	Number(1205),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("A wandering Agerus moves into a system near yours.  It is aggressively attempting to increase its amount of control. It may occasionally attack to take your planets.  Of course, if you could defeat it¡¦you might increase your own empire."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	<EffectList>
+	[
+		<Win and Gain Planet>
+		{
+			Target(6),
+			Arg1(400),
+			Arg2(1)
+		}
+	]
+},
+<Racial Amnesia>
+{
+	Number(1206),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("When those cosmic radiation storms came through, you didn't think it caused any damage.  Unfortunately, that is because you forgot.  In fact, you forgot quite a bit."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	<EffectList>
+	[
+		<Lose Tech>
+		{
+		},
+		<Lose Project>
+		{
+		}
+	]
+},
+<Major Meteor Impact>
+{
+	Number(1207),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("This giant meteor was seen to be heading into your system, but it was too late to destroy it.  The impact causes gigantic damage to your people and your infrastructure."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Planet Lost Building>
+		{
+			Apply("Proportional"),
+			Arg1(-50),
+			Arg2(-1)
+		},
+		<Change Planet Population>
+		{
+			Apply("Proportional"),
+			Arg1(-30)
+		}
+	]
+
+},
+<Hole in the Space-Time Continuum>
+{
+	Number(1208),
+	<Type>
+	[
+		Type("Major")
+	],
+	Description("Your system is sucked into this whole and is shot out again at some unknown time.  You notice no change to your system, but the Empire seems slightly different."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	Duration(2),
+	<EffectList>
+	[
+		<Skip Turn>
+		{
+			Duration(1)
+		}
+	]
+},
+<Governmental Collapse>
+{
+	Number(1209),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Human Only")
+	],
+	Description("The current form of government has been removed through a coup.  For a while, things are rough, but after people adapt, things seem better.  For a while at least."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	DurationMin(192),
+	DurationMax(312),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(-4),
+			Duration(72)
+		},
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(-4),
+			Duration(72)
+		},
+		<Change Control Model>
+		{
+			Target(10),
+			Arg1(-4),
+			Duration(72)
+		},
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(2)
+		},
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(2)
+		},
+		<Change Control Model>
+		{
+			Target(10),
+			Arg1(2)
+		}
+	]
+},
+<Colony Lost/Refound>
+{
+	Number(1210),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Targoid Only")
+	],
+	Description("One of your research colonies was given too much freedom by the parent mind, and all contact was lost.  This colony was on its own for a while.  When it was regained, the parent mind decided to incorporate all its new knowledge and resources."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	Duration(96),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			BeginOnly("Yes"),
+			Arg1(10000000)
+		},
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(2)
+		}
+	]
+},
+<Mystic Vision>
+{
+	Number(1211),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Xeloss Only")
+	],
+	Description("One of your High politicians has been given a vision.  This vision inspires your people and they work with greater ferocity for a while."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	Duration(168),
+	<EffectList>
+	[
+		<Change All Commander Ability>
+		{
+			Target(0),
+			Arg1(2),
+		},
+		<Change All Commander Ability>
+		{
+			Target(1),
+			Arg1(2),
+		},
+		<Change All Commander Ability>
+		{
+			Target(2),
+			Arg1(2),
+		},
+		<Change All Commander Ability>
+		{
+			Target(3),
+			Arg1(2),
+		},
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(2)
+		}
+	]
+},
+<New Race Joins Up>
+{
+	Number(1212),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Xesperados Only")
+	],
+	Description("The remains of another race which survived the M-13 collapse join you.  They bring a new technology with them and new ways of thinking."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	Duration(168),
+	<EffectList>
+	[
+		<Gain Tech>
+		{
+			BeginOnly("Yes"),
+		},
+		<Change All Commander Ability>
+		{
+			Target(10),
+			Arg1(-10),
+		},
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(2)
+		}
+	]
+},
+<Living Asteroid Belt Found>
+{
+	Number(1213),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Agerus Only")
+	],
+	Description("In your wanderings you encounter a rogue spawn of young Agerus. You bring them under your control and add them to your fleet."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	<EffectList>
+	[
+		<Gain Fleet>
+		{
+			Target(7),
+			Arg1(400),
+			Arg2(3)
+		},
+		<Gain Fleet>
+		{
+			Target(7),
+			Arg1(400),
+			Arg2(3)
+		}
+	]
+},
+<Successful Evintos Infiltration>
+{
+	Number(1214),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Tecanoid Only")
+	],
+	Description("Some of your spies have been able to infiltrate the Evintos in hopes of gaining even more knowledge of how to evolve to a pure machine existence."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Duration(168),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(5)
+		},
+		<Change Control Model>
+		{
+			Target(7),
+			Arg1(5)
+		}
+	]
+},
+<Ransom a Famous Pirate>
+{
+	Number(1215),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Buckaneer Only")
+	],
+	Description("You are lucky enough to be in the right place at the right time.  You are able to pay the ransom for a famous pirate who agrees to work for you in repayment."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(-200000)
+		},
+		<Gain Commander>
+		{
+			Target(15)
+		}
+	]
+},
+<Sabotage Discovered>
+{
+	Number(1216),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Bosalian Only")
+	],
+	Description("Your scientists after hundreds of years of study are certain they have proof of an important Truth.  They believe they have proven that the reason your people did not Ascend was that there was sabotage from another race."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	DurationMin(168),
+	DurationMax(336),
+	<EffectList>
+	[
+		<Change All Commander Ability>
+		{
+			Target(0),
+			Arg1(5),
+		},
+		<Change All Commander Ability>
+		{
+			Target(1),
+			Arg1(5),
+		},
+		<Change All Commander Ability>
+		{
+			Target(2),
+			Arg1(5),
+		},
+		<Change All Commander Ability>
+		{
+			Target(3),
+			Arg1(5),
+		}
+	]
+},
+<Past Memory Core Found>
+{
+	Number(1217),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Evintos Only")
+	],
+	Description("An old memory core from a lost colony is found.  This core has the knowledge of ages past."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	DurationMin(72),
+	DurationMax(120),
+	<EffectList>
+	[
+		<Gain Secret Project>
+		{
+			BeginOnly("Yes")
+		},
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(-1)
+		}
+	]
+},
+<Military Genius Trained>
+{
+	Number(1218),
+	<Type>
+	[
+		Type("Racial"),
+		Type("Xerusian Only")
+	],
+	Description("Your military college has produced one of those genius tacticians that are only born once a millennium.  This person becomes the best professor your academies have ever seen."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	DurationMin(72),
+	DurationMax(120),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(8),
+			Arg1(7)
+		}
+	]
+},
+<Imperial Tour>
+{
+	Number(1219),
+	<Type>
+	[
+		Type("System"),
+		Type("Empire")
+	],
+	Description("The Emperor has decided to tour your system. The Emperor demands tribute from you because the Emperor thinks you have too much money. Also, the Emperor has brought his own defensive fleet with him, and they will defend you while he is in the area."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	DurationMin(24),
+	DurationMax(48),
+	<EffectList>
+	[
+		<Guarded by Imperial Fleet>
+		{
+		}
+	]
+},
+<Your Presence is Demanded in Court>
+{
+	Number(1220),
+	<Type>
+	[
+		Type("System"),
+		Type("Empire"),
+		Type("Answer"),
+	],
+	Description("You are called to court.  If you attend, it will be a large honor.  The problem is, your people tend to not work as well without your supervision.  You have a choice of whether or not you appear, however, if you don't appear, you will definitely anger the empire."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	Duration(24),
+	<EffectList>
+	[
+		<Invasion From Empire>
+		{
+			Answer("No"),
+			Chance(30),
+			BeginOnly("Yes"),
+			Arg1(300),
+			Arg2(5)
+		},
+		<Change Empire Relation>
+		{
+			Answer("Yes"),
+			BeginOnly("Yes"),
+			Arg1(10),
+		},
+		<Change Control Model>
+		{
+			Answer("Yes"),
+			Target(7),
+			Arg1(-2)
+		}
+	]
+},
+<Imperial Investigator>
+{
+	Number(1221),
+	<Type>
+	[
+		Type("System"),
+		Type("Empire"),
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Description("The Empire has sent an investigator to determine if the Magistrate has been giving accurate reports.  He reports to the Empire on your loyalty and the Empire decides that the magistrate has been reporting accurately." )
+},
+<Imperial Investigator>
+{
+	Number(1222),
+	<Type>
+	[
+		Type("System"),
+		Type("Empire"),
+	],
+	Description("The Empire has sent an investigator to determine if the Magistrate has been giving accurate reports.  He reports to the Empire on your loyalty and the Empire decides that the magistrate has been to humble on your behalf." ),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(1000000),
+			BeginOnly("Yes")
+		}
+	]
+},
+<Imperial Investigator>
+{
+	Number(1223),
+	<Type>
+	[
+		Type("System"),
+		Type("Empire"),
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Description("The Empire has sent an investigator to determine if the Magistrate has been giving accurate reports.  He reports to the Empire on your loyalty and the Empire decides that the magistrate has been to kind for one as evil as you." ),
+	<EffectList>
+	[
+		<Change Empire Relation>
+		{
+			Arg1(-50)
+		}
+	]
+},
+<Heroic Rescue>
+{
+	Number(1224),
+	<Type>
+	[
+		Type("System"),
+		Type("Magistrate"),
+	],
+	Description("One of your commanders succeeds in rescuing a kidnapped child of your magistrate."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Change Empire Relation>
+		{
+			Arg1(30)
+		},
+		<Commander Level Up>
+		{
+			Arg1(1)
+		}
+	]
+},
+<Imperial Gift>
+{
+	Number(1225),
+	<Type>
+	[
+		Type("System"),
+		Type("Magistrate"),
+	],
+	Description("The Emperor, or the Magistrate in his place, has deemed you worth of a gift."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	<EffectList>
+	[
+		<Grant Boon>
+		{
+		}
+	]
+},
+<Imperial Levies>
+{
+	Number(1226),
+	<Type>
+	[
+		Type("System"),
+		Type("Magistrate"),
+	],
+	Description("The Emperor has decided to improve the fleets of the Magistrate.  To do this, he is calling for all systems to send warriors.  From your system he demands commanders."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	<EffectList>
+	[
+		<Lose Commander>
+		{
+			Apply("Proportional"),
+			Arg1(25)
+		}
+	]
+},
+<Population Explosion>
+{
+	Number(1227),
+	<Type>
+	[
+		Type("System"),
+	],
+	Description("One of your planets has had a massive population surge.."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	Duration(72),
+	<EffectList>
+	[
+		<Change Planet Control Model>
+		{
+			Arg1(1),
+			Arg2(5)
+		}
+	]
+},
+<Workers Stay Overtime>
+{
+	Number(1228),
+	<Type>
+	[
+		Type("System"),
+	],
+	Description("Your workers have been inspired by something¡¦no-one is sure what¡¦but they have been working extra lately."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	Duration(72),
+	<EffectList>
+	[
+		<Change Planet Control Model>
+		{
+			Arg1(3),
+			Arg2(5)
+		}
+	]
+},
+<New Resources Discovered>
+{
+	Number(1229),
+	<Type>
+	[
+		Type("System"),
+	],
+	Description("Just as you thought that you had exhausted the remains of the main resource of the planet, your scientists discover a large amount of another useful resource."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	<EffectList>
+	[
+		<Change Planet Resource>
+		{
+			Arg1(1)
+		}
+	]
+},
+<Rampant Epidemic>
+{
+	Number(1230),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus")
+	],
+	Description("One of your planets is struck by a meteor which contains the DNA coding for a horrible virus.  This greatly harms your population."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	Duration(72),
+	<EffectList>
+	[
+		<Change Planet Population>
+		{
+			BeginOnly("Yes"),
+			Apply("Proportional"),
+			Arg1(-33)
+		},
+		<Change Planet Control Model>
+		{
+			Arg1(1),
+			Arg2(-7)
+		}
+	]
+},
+<Natural Tectonic Disaster>
+{
+	Number(1231),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus")
+	],
+	Description("One of your major cities experiences major tectonic shifting resulting in earthquakes and minor volcanic eruptions.  Your scientists are able to warn your population in time, but there is major damage to your buildings."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Planet Lost Building>
+		{
+			Apply("Proportional"),
+			Arg1(-20),
+			Arg2(-1)
+		}
+	]
+},
+<Freakish Weather>
+{
+	Number(1232),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus")
+	],
+	Description("One of your planets suffers major storms such as tornadoes and hurricanes.  This wrecks some buildings, kills some people, and reduces production."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(1),
+	DurationMax(3),
+	<EffectList>
+	[
+		<Change Planet Population>
+		{
+			Apply("Proportional"),
+			Arg1(-2),
+		},
+		<Change Planet Control Model>
+		{
+			Arg1(3),
+			Arg2(-2),
+		},
+		<Planet Lost Building>
+		{
+			Apply("Proportional"),
+			Arg1(-2),
+			Arg2(-1)
+		}
+	]
+},
+<Radical Terrorists>
+{
+	Number(1233),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus")
+	],
+	Description("These terrorists have decided that altering the environment is evil, even if it is necessary to live.  To prove they are dedicated, they blow up your gravity control center."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Lose Planet Gravity Control>
+		{
+		}
+	]
+},
+<Agerus Spawning Frenzy>
+{
+	Number(1234),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your system is filled with millions of tiny Agerus spawn.  They are too small to recognize as Agerus, but are in search of a good asteroid belt to colonize.  They clog all ship traffic and their hard bodies constantly strain ship shields."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	Duration(24),
+	<EffectList>
+	[
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(15),
+			Arg2(-20),
+		}
+	]
+},
+<Interstellar Dust Cloud>
+{
+	Number(1235),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your system is filled with a fine particulate cloud which moves seemingly of its own will. This cloud has the effect of dispersing beams fired in it."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(24),
+	DurationMax(48),
+	<EffectList>
+	[
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(19),
+			Arg2(-20),
+		}
+	]
+},
+<Discrimination Demonstrations>
+{
+	Number(1236),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("A segment of you population demands equal treatment.  They complain for weeks and finally you give in to their demands.  You will let them work, just like all your other subjects. After a while, they decide they don't like work much after all and quit."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	DurationMin(120),
+	DurationMax(168),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(3)
+		}
+	]
+},
+<Temporary Wormhole>
+{
+	Number(1237),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("You have found a temporary wormhole.  With you current technology, you can even make it open where you want.  This helps reduce the time it takes for your attacking fleets to travel."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(120),
+	DurationMax(168),
+	<EffectList>
+	[
+		<Change Your Fleet Return Time>
+		{
+			Arg1(-50)
+		}
+	]
+},
+<Silly Old Game>
+{
+	Number(1238),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your people discover an old game from the 'web' days called 'Ultra-Wizard'.  This seems to help morale a lot, but a while later it seems to be affecting your commanders as they all seem to think that a new strategy called 'stracking' would definitely help win battles."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	DurationMin(120),
+	DurationMax(168),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(3)
+		},
+		<Change All Commander Ability>
+		{
+			Target(11),
+			Arg1(1)
+		}
+	]
+},
+<Insane Mental Giant>
+{
+	Number(1239),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Somewhere in your system, someone or something with enormous psychic powers has gone insane.  It has been broadcasting non-stop on all psychic wavelengths.  All you know is that it is reducing the effects of all psychic attacks in your system, and he keeps repeating something about a being known as 'Dora'."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	DurationMin(48),
+	DurationMax(72),
+	<EffectList>
+	[
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(32),
+			Arg2(25)
+		}
+	]
+},
+<Carbon Cloud>
+{
+	Number(1240),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("A large dark cloud rolls into your system one day.  Any ships, which travel through the cloud, build up a large deposit of carbon on their hulls.  This greatly slows them down, but ballistic weapons have less effect as this coating absorbs their force."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(48),
+	DurationMax(72),
+	<EffectList>
+	[
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(57),
+			Arg2(-20)
+		},
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(5),
+			Arg2(-10)
+		},
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(6),
+			Arg2(-10)
+		}
+	]
+},
+<Solar Blackout>
+{
+	Number(1241),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("The sun just seemed to disappear one day.  When your scientists went to study why, they found that there were billions of small creatures hurling themselves into the star.  The scientists assume the light from the star will be allowed through in a couple of days.  During the meantime, your planets can survive on their reserve energy.  In fact, the lack of solar rays is allowing some excellent viewings of the galaxy because of a lack of solar interference."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(48),
+	DurationMax(72),
+	<EffectList>
+	[
+		<Change Ship Ability on Planet>
+		{
+			Apply("Proportional"),
+			Arg1(20),
+			Arg2(10)
+		}
+	]
+},
+<Industrial Nanite Failure>
+{
+	Number(1242),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("These nanites were originally produced in order to help reduce waste.  There was an error in their programming somewhere.  They have been weakening the end product of many of your critical processes.  This is adding major excess waste."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(48),
+	DurationMax(72),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(7),
+			Arg1(-2)
+		}
+	]
+},
+<Experiment Gone Wrong>
+{
+	Number(1243),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your scientists were studying how your brain works and they made a horrible error.  They accidentally irradiated their own brains too much.  Your research capacity drops alarmingly until you can train some new scientists.  "),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	DurationMin(120),
+	DurationMax(168),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(-5)
+		}
+	]
+},
+<Angry Entertainment>
+{
+	Number(1244),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("The young on your planets have started enjoying a new violent form of entertainment.  There are many accidents and many of them seem to be ignoring education."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	DurationMin(120),
+	DurationMax(168),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(-3)
+		},
+		<Change Control Model>
+		{
+			Target(1),
+			Arg1(-3)
+		},
+		<Change Control Model>
+		{
+			Target(4),
+			Arg1(2)
+		}
+	]
+},
+<Religious Revolution>
+{
+	Number(1245),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("The religion of your systems has been greatly altered by recent events.  The people are in a very good mood for a while and willing to ignore problems with the planet around them.  However, this is because they are now blaming their troubles on those in other systems."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	DurationMin(24),
+	DurationMax(168),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(0),
+			Arg1(3)
+		},
+		<Change Control Model>
+		{
+			Target(9),
+			Arg1(-3)
+		}
+	]
+},
+<Mass Hysteria>
+{
+	Number(1246),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your people are convinced that they are being infiltrated by some alien race.  Suspicion is everywhere and people no longer trust anything.  "),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	DurationMin(72),
+	DurationMax(120),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(-3)
+		},
+		<Change Control Model>
+		{
+			Target(9),
+			Arg1(-3)
+		}
+	]
+},
+<Computer Virus>
+{
+	Number(1247),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your computer system has been corrupted by a presentient form of AI.  This AI is drastically slowing your development progress."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	DurationMin(72),
+	DurationMax(120),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(-3)
+		}
+	]
+},
+<New Tech Discovered>
+{
+	Number(1248),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your scout ships find a relic from earlier in the Empire, and thinking to salvage the materials, return with it.  Upon looting the remains, your engineers discover valuable information in the computers. "),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	<EffectList>
+	[
+		<Gain Tech>
+		{
+		}
+	]
+},
+<Bribe from a Wealthy Merchant>
+{
+	Number(1249),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("A wealthy trading baron asks to open trade with your planets. In exchange he is offering to help start the local economy by giving you 300k PP."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(300000),
+			BeginOnly("Yes")
+		}
+	]
+},
+<Pirates in Your Trading Lanes>
+{
+	Number(1250),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("There have been pirates sighted in your system. Your scout ships detected a band of roving pirates in your trade lanes.  After dispatching them, you gained 500k reward for their deaths."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(500000)
+		}
+	]
+},
+<Pirates in Your Trading Lanes>
+{
+	Number(1251),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("There have been pirates sighted in your system. Your trading lanes are under attack by pirates.  All commerce you are under is reduced."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Duration(24),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(6),
+			Arg1(-4)
+		}
+	]
+},
+<Supercommander Offers You his Help>
+{
+	Number(1252),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("A roving commander with a heroic reputation offers to help you in your cause."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Gain Commander>
+		{
+			Target(13)
+		}
+	]
+},
+<Assassination>
+{
+	Number(1253),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("One of your active commanders is assassinated."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Lose Commander>
+		{
+			Apply("Absolute"),
+			Arg1(1)
+		}
+	]
+},
+<Sabotage>
+{
+	Number(1254),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("One of your fleets has been sabotaged.  All of the ships in this fleet take damage and need repairs."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	<EffectList>
+	[
+		<Damage Fleet>
+		{
+			Apply("Proportional"),
+			Arg1(25)
+		}
+	]
+},
+<Previous Civilization Discovered>
+{
+	Number(1255),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus")
+	],
+	Description("Your archaeologists discover the remains of a highly advanced civilization on one of your planets."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	Duration(24),
+	<EffectList>
+	[
+		<Gain Tech>
+		{
+			BeginOnly("Yes")
+		},
+		<Change Control Model>
+		{
+			Target(2),
+			Arg1(2)
+		}
+	]
+},
+<Silicon Insect Swarm>
+{
+	Number(1256),
+	<Type>
+	[
+		Type("System")
+	],
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	Description("These insects fly in one day on the dark side of your planet.  You are afraid at first what damage they might cause.  Then you realize that all they are eating is scrap material.  When they leave weeks later, your planet has undergone a great change."),
+	<EffectList>
+	[
+		<Change Planet Resource>
+		{
+			Arg1(1)
+		}
+	]
+},
+<Commerce Title Offered>
+{
+	Number(1257),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus"),
+		Type("Answer")
+	],
+	Description("You are elected as the guardian of free commerce by the galaxy commerce guild. All you have to do is pay 1,000,000 PP, and you'll have the title."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(-1000000),
+			Answer("Yes"),
+			BeginOnly("Yes")
+		}
+	]
+},
+<Commerce Title Offered>
+{
+	Number(1258),
+	<Type>
+	[
+		Type("System"),
+		Type("Immune to Agerus"),
+		Type("Answer")
+	],
+	Description("You are elected as the guardian of free commerce by the galaxy commerce guild. All you have to do is pay 1,000,000 PP, and you'll have the title."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	Duration(24),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(-1000000),
+			Answer("Yes"),
+			BeginOnly("Yes")
+		},
+		<Change Control Model>
+		{
+			Target(6),
+			Arg1(5)
+		},
+		<Change Honor>
+		{
+			Arg1(10),
+			BeginOnly("Yes")
+		}
+	]
+},
+<Secret Informant Offers Information>
+{
+	Number(1259),
+	<Type>
+	[
+		Type("System"),
+		Type("Answer")
+	],
+	Description("An information dealer offers you information about your enemy for the low cost of 1 million PP."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Answer("Yes"),
+			Arg1(-1000000)
+		},
+		<Change Honor>
+		{
+			Answer("Yes"),
+			Arg1(-10)
+		},
+		<Show Player>
+		{
+		}
+	]
+},
+<Council-Wide Pressing of Total War Declaration>
+{
+	Number(1260),
+	<Type>
+	[
+		Type("System"),
+		Type("Council")
+	],
+	Description("The people within your council's territory are rioting. They are pressing for a total war declaration against your enemy.  As the Speaker, you cannot help but to declare total war."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/demonstration.gif>"),
+	<EffectList>
+	[
+		<Council Declare Total War>
+		{
+		}
+	]
+},
+<Invasion from a Ruined Galaxy>
+{
+	Number(1261),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("An unknown fleet, composed of newly arrived survivors of G-13, has invaded your system.  You have to fight back against them or die."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Win or Lose Planet>
+		{
+			Target(9),
+			Arg1(600),
+			Arg2(3)
+		}
+	]
+},
+<Whispers of the Ascended>
+{
+	Number(1262),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("From somewhere, the whispering of those who have ascended is being broadcast to your people's minds. None of your people can understand what the voices are whispering, nor can they determine where the voices are speaking from.  The effect is critical however, because everyone is starting to day-dream, and all industry is stopping, All your fleets are sitting idle."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	Duration(6),
+	<EffectList>
+	[
+		<Gain Tech>
+		{
+			BeginOnly("Yes"),
+			Chance(25)
+		},
+		<Change Control Model>
+		{
+			Target(3),
+			Arg1(-5)
+		},
+		<Change Control Model>
+		{
+			Target(4),
+			Arg1(-5)
+		}
+	]
+},
+<Information Routing Error>
+{
+	Number(1263),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your main coordination system had a horrible malfunction.  You learned about it in time to avoid it destroying your empire, but it did cause some problems."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/plot.gif>"),
+	Duration(3),
+	<EffectList>
+	[
+		<Change Concentration Mode>
+		{
+		}
+	]
+},
+<Horrible Accusations>
+{
+	Number(1264),
+	<Type>
+	[
+		Type("System"),
+		Type("Magistrate")
+	],
+	Description("Some unknown party has implicated you in an attempt to remove the magistrate from the Emperor's favor. The Magistrate trusted the party and you could feel his scorn response."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Empire Relation>
+		{
+			Arg1(-15)
+		}
+	]
+},
+<Horrible Accusations>
+{
+	Number(1265),
+	<Type>
+	[
+		Type("System"),
+		Type("Magistrate")
+	],
+	Description("Some unknown party has implicated you in an attempt to remove the magistrate from the Emperor's favor. However, the Magistrate entrusted you."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Empire Relation>
+		{
+			Arg1(5)
+		}
+	]
+},
+<Traitorous Commander>
+{
+	Number(1266),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("One of your commanders has gotten bored with being passed by for promotion.  He has left your system, and takes some money and a ship with him."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Lose Commander>
+		{
+			Apply("Absolute"),
+			Arg1(1)
+		}
+	]
+},
+<Beneficial Defection>
+{
+	Number(1267),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("One of your enemies has angered his people.  You benefit from this because one of his commanders wishes to join your cause.  It will only take a little money to pay for them to escape their current leader. "),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/meeting.gif>"),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			Arg1(-50000),
+			BeginOnly("Yes")
+		},
+		<Recruit Enemy Commander>
+		{
+		}
+	]
+},
+<Energy Leech>
+{
+	Number(1268),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("This odd being latches on to one of your fleet groups and drains all ship energy.  Before it can be destroyed, all hands aboard die.  This includes some of your commanders unfortunately."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/explosion.gif>"),
+	<EffectList>
+	[
+		<Kill Commander and Disband Fleet>
+		{
+		}
+	]
+},
+<Archeological Find>
+{
+	Number(1269),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your scientists unearth a strange device one day.  Only after intense study do they realize what it is.  This device will help to moderate this planets gravity."),
+	Image("<IMG SRC=http://image.archspace.co.kr/image/as_game/event/ancient.gif>"),
+	<EffectList>
+	[
+		<Gain Planet Gravity Control>
+		{
+		}
+	]
+}
+
+

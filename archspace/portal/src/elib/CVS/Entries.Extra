@@ -1,0 +1,15 @@
+/Makefile.FreeBSD////*///
+/Makefile.Linux////*///
+/Makefile.Solaris////*///
+/cgi.c////*///
+/cgi.h////*///
+/crypt.c////*///
+/crypt.h////*///
+/mysqllib.c////*///
+/mysqllib.h////*///
+/runtime.c////*///
+/runtime.h////*///
+/server.c////*///
+/server.h////*///
+/utility.c////*///
+/utility.h////*///

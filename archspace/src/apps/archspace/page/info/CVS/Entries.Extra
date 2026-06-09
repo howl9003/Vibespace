@@ -1,0 +1,17 @@
+/clusters.cc////*///
+/clusters_council.cc////*///
+/council_search.cc////*///
+/council_search_result.cc////*///
+/info.cc////*///
+/info_council.cc////*///
+/info_link.cc////*///
+/player_search.cc////*///
+/player_search_result.cc////*///
+/rank_council_diplomatic.cc////*///
+/rank_council_fleet.cc////*///
+/rank_council_overall.cc////*///
+/rank_council_planet.cc////*///
+/rank_player_fleet.cc////*///
+/rank_player_overall.cc////*///
+/rank_player_planet.cc////*///
+/rank_player_tech.cc////*///

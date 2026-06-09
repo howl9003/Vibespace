@@ -1,0 +1,3 @@
+#!/bin/sh
+/usr/local/bin/rsync -avz localhost::game_html /space/space/game/web/
+/usr/local/bin/rsync -avz localhost::game_www /space/www/

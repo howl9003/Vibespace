@@ -1,0 +1,48 @@
+CC = gcc
+#CFLAGS = -g
+#CFLAGS = -I/space/mysql/include/mysql -I../lib -Wall -O6 -mcpu=pentiumpro -I../elib
+CFLAGS = -DLINUX -Wall -O2 -I/usr/include/mysql -I../lib -I../elib -I/usr/include/archspace
+#CFLAGS = -g -I/usr/local/include/mysql -I../lib -Wall -I../elib
+#LIBS = -L/space/mysql/lib/mysql -lc -L../elib -lelib -L../lib -ldbbs -lmysqlclient -lm -lkvm -lcrypt -static -lcipher -lz
+LIBS = -L/usr/lib/mysql -lc -L../elib -lelib -L../lib -ldbbs -lmysqlclient -lm #-lkvm 
+
+CFILES = xlib.c
+
+OTHERS = Makefile aaa.cgi
+
+COBJS = $(CFILES:.c=.o)
+.c.o:    ;    $(CC) $(CFLAGS) -c $*.c
+
+.SUFFIXES: .c .o
+
+all : key_server entry_server auth_server as_auth_server
+
+key_server : $(COBJS) key_server.c
+	$(CC) -o key_server key_server.c $(COBJS) $(CFLAGS) $(LIBS)
+
+entry_server : $(COBJS) entry_server.c
+	$(CC) -o entry_server entry_server.c $(COBJS) $(CFLAGS) $(LIBS)
+
+auth_server : $(COBJS) auth_server.c
+	$(CC) -o auth_server auth_server.c $(COBJS) $(CFLAGS) $(LIBS)
+
+as_auth_server : $(COBJS) as_auth_server.c
+	$(CC) -o as_auth_server as_auth_server.c $(COBJS) $(CFLAGS) $(LIBS)
+
+install: key_server entry_server auth_server as_auth_server
+#	rm /usr/sbin/key_server
+#	rm /usr/sbin/entry_server
+#	rm /usr/sbin/auth_server
+#	rm /usr/sbin/as_auth_server 
+	mv -v key_server /usr/sbin/
+	mv -v entry_server /usr/sbin/
+	mv -v auth_server /usr/sbin/
+	mv -v as_auth_server /usr/sbin/
+
+clean :
+	rm -f *.o tags
+#	ctags *.c *.h
+
+tags : 
+#	ctags *.c *.h
+

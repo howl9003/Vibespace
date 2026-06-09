@@ -1,0 +1,75 @@
+#!/bin/sh
+#set -x
+
+# user check
+if [ "x`whoami`" != "xspace" ]; then
+	echo "This script can be run only by space account"
+	exit 4
+fi
+
+config_file="/space/space/game/etc/config"
+
+case "$1" in
+	en)
+		echo "Setting script files for English....."
+
+		/bin/rm -rf /space/space/game/script
+		/bin/mkdir /space/space/game/script
+
+		/bin/ln -s /space/space/src/script/admiral_name.en /space/space/game/script/admiral_name
+		/bin/ln -s /space/space/src/script/cluster.en /space/space/game/script/cluster
+		/bin/ln -s /space/space/src/script/component.en /space/space/game/script/component
+		/bin/ln -s /space/space/src/script/empire_ship_design /space/space/game/script/empire_ship_design
+		/bin/ln -s /space/space/src/script/ending.en /space/space/game/script/ending
+		/bin/ln -s /space/space/src/script/ending_project /space/space/game/script/ending_project
+		/bin/ln -s /space/space/src/script/event.en /space/space/game/script/event
+		/bin/ln -s /space/space/src/script/project.en /space/space/game/script/project
+		/bin/ln -s /space/space/src/script/race.en /space/space/game/script/race
+		/bin/ln -s /space/space/src/script/secret_project.en /space/space/game/script/secret_project
+		/bin/ln -s /space/space/src/script/ship.en /space/space/game/script/ship
+		/bin/ln -s /space/space/src/script/spy.en /space/space/game/script/spy
+		/bin/ln -s /space/space/src/script/tech.en /space/space/game/script/tech
+
+		sed 1,'$'s/'Language = en'/'Language = en'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+		sed 1,'$'s/'Language = ko'/'Language = en'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+
+		echo "The job has finished"
+	;;
+
+	ko)
+		echo "Setting script files for Korean....."
+
+		/bin/rm -rf /space/space/game/script
+		/bin/mkdir /space/space/game/script
+
+		/bin/ln -s /space/space/src/script/admiral_name.ko /space/space/game/script/admiral_name
+		/bin/ln -s /space/space/src/script/cluster.ko /space/space/game/script/cluster
+		/bin/ln -s /space/space/src/script/component.ko /space/space/game/script/component
+		/bin/ln -s /space/space/src/script/empire_ship_design /space/space/game/script/empire_ship_design
+		/bin/ln -s /space/space/src/script/ending.ko /space/space/game/script/ending
+		/bin/ln -s /space/space/src/script/ending_project /space/space/game/script/ending_project
+		/bin/ln -s /space/space/src/script/event.ko /space/space/game/script/event
+		/bin/ln -s /space/space/src/script/project.ko /space/space/game/script/project
+		/bin/ln -s /space/space/src/script/race.ko /space/space/game/script/race
+		/bin/ln -s /space/space/src/script/secret_project.ko /space/space/game/script/secret_project
+		/bin/ln -s /space/space/src/script/ship.ko /space/space/game/script/ship
+		/bin/ln -s /space/space/src/script/spy.ko /space/space/game/script/spy
+		/bin/ln -s /space/space/src/script/tech.ko /space/space/game/script/tech
+
+		sed 1,'$'s/'Language = en'/'Language = ko'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+		sed 1,'$'s/'Language = ko'/'Language = ko'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+
+		echo "The job has finished"
+	;;
+
+	*)
+		echo "Unknown language symbol!"
+	;;
+esac
+
+exit 
+

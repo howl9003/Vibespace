@@ -1,0 +1,24 @@
+<?php
+$null = 0;
+$key_server_con = "www.archmage.co.kr 4000";
+$key_server = "Key Server";
+
+$entry_server_con = "www.archmage.co.kr 6000";
+$entry_server = "Entry Server";
+
+$auth_server_con = "www.archmage.co.kr 5000";
+$auth_server = "Auth Server";
+
+$as_auth_server_con = "localhost 11114";
+$as_auth_server = "Archspace Auth Server";
+
+$logfile = "/space/portal/log/log";
+$KeyFile = "/space/portal/log/key";
+
+# Portal DB Information
+
+$PortalHost = "www.archmage.co.kr";
+$PortalUser = "space";
+$PortalPassword = "rlaclrnr";
+$PortalDatabase = "EntryServer";
+?>

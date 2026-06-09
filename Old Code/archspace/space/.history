@@ -1,0 +1,200 @@
+#+1061669809
+cd game/etc/
+#+1061669810
+vi config
+#+1061669896
+cd ../bo
+#+1061669897
+cd ../bin/
+#+1061669899
+./spacectl restart
+#+1061669962
+ls
+#+1061669965
+gdb archspace archspace.core
+#+1061670019
+cd
+#+1061670022
+cd src/apps/archspace/
+#+1061670030
+vi player.h
+#+1061670037
+vi player.table.cc
+#+1061670046
+vi game.cc
+#+1061670077
+vi player.h
+#+1061670089
+vi player.cc
+#+1061670181
+vi race.h
+#+1061670198
+vi game.h
+#+1061670237
+cd page/admin/
+#+1061670241
+vi reset_result.cc
+#+1061670338
+cd
+#+1061670339
+cd game/bin/
+#+1061670354
+./spacectl restart
+#+1061670464
+mysql Archspace
+#+1061670473
+./spacectl restart
+#+1061670797
+cd
+#+1061670798
+cd src/apps/archspace/
+#+1061670799
+cd page/admin/
+#+1061670802
+vi reset_result.cc
+#+1061670817
+cd
+#+1061670818
+cd game/bin/
+#+1061670820
+./spacectl stop
+#+1061670841
+mysqladmin drop Archspace
+#+1061670846
+mysqladmin drop CouncilForum
+#+1061670852
+mysqladmin create Archspace
+#+1061670858
+./initialize_game
+#+1061670878
+mysql Archspace < Archspace.dump
+#+1061670890
+mysqladmin drop Archspace
+#+1061670894
+mysqladmin drop CouncilForum
+#+1061670901
+mysqladmin create Archspace
+#+1061670904
+mysqladmin create CouncilForum
+#+1061670911
+mysql Archspace < Archspace.dump
+#+1061670940
+mysql CouncilForum < CouncilForum.dump
+#+1061670944
+./spacectl restart
+#+1061671208
+./spacectl sotp
+#+1061671210
+./spacectl stop
+#+1061671233
+mysqladmin drop Archspace
+#+1061671238
+mysqladmin drop CouncilForum
+#+1061671243
+mysqladmin create Archspace
+#+1061671247
+mysqladmin create CouncilForum
+#+1061671253
+mysql Archspace < Archspace.dump
+#+1061671282
+mysql CouncilForum < CouncilForum.dump
+#+1061671293
+./spacectl restart
+#+1061671481
+./spacectl stop
+#+1061671503
+mysqladmin drop Archspace
+#+1061671507
+mysqladmin drop CouncilForum
+#+1061671512
+mysqladmin create Archspace
+#+1061671516
+mysqladmin create CouncilForum
+#+1061671522
+mysql CouncilForum CouncilForum.dump
+#+1061671525
+mysql CouncilForum < CouncilForum.dump
+#+1061671529
+mysql Archspace Archspace.dump
+#+1061671531
+mysql Archspace < Archspace.dump
+#+1061671564
+./spacectl restart
+#+1061672451
+cd
+#+1061672452
+cd src/apps/archspace/
+#+1061672454
+vi council.table.cc
+#+1061673250
+cd
+#+1061673251
+cd game/bin/
+#+1061673252
+./spacectl stop
+#+1061673283
+mysql Archspace
+#+1061673292
+mysqladmin drop Archspace
+#+1061673295
+mysqladmin drop CouncilForum
+#+1061673300
+mysqladmin create Archspace
+#+1061673303
+mysqladmin create CouncilForum
+#+1061673312
+mysql Archspace < Archspace.dump
+#+1061673340
+mysql CouncilForum < CouncilForum.dump
+#+1061673394
+./spacectl start
+#+1061673582
+mysql Archspace
+#+1061673727
+cd
+#+1061673728
+cd src/apps/archspace/
+#+1061673730
+vi player.cc
+#+1061673744
+vi player.cc
+#+1061673913
+vi player.h
+#+1061673923
+make
+#+1061673970
+cd
+#+1061673971
+cd game/bin/
+#+1061673977
+mysqladmin drop Archspace
+#+1061673979
+mysqladmin drop CouncilForum.dump
+#+1061673984
+mysqladmin drop CouncilForum
+#+1061673988
+mysqladmin create Archspace
+#+1061673991
+mysqladmin create CouncilForum
+#+1061673996
+mysql CouncilForum < CouncilForum.dump
+#+1061674001
+mysql Archspace < Archspace.dump
+#+1061674145
+./spacectl stop
+#+1061674165
+mysqladmin drop Archspace
+#+1061674171
+mysqladmin drop CouncilForum
+#+1061674177
+mysqladmin create Archspace
+#+1061674177
+mysqladmin create Archspace
+#+1061674181
+mysqladmin create CouncilForum
+#+1061674187
+mysql CouncilForum < CouncilForum.dump
+#+1061674190
+mysql Archspace < Archspace.dump
+#+1061770865
+exit

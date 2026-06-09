@@ -1,0 +1,6 @@
+<p>
+Welcome to the Archspace CVS Repository Viewer!
+</p>
+<p>
+The old CVS viewer was removed because this one is cooler!
+</p>

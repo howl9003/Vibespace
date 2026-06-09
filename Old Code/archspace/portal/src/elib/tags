@@ -1,0 +1,46 @@
+BIT_CHECK	utility.h	/^#define BIT_CHECK(flag, bit) ((flag) & (bit))$/
+BIT_REMOVE	utility.h	/^#define BIT_REMOVE(flag, bit) ((flag) & ~(bit)) $/
+BIT_SET	utility.h	/^#define BIT_SET(flag, bit)  ((flag) | (bit))$/
+CREATE	utility.h	/^#define CREATE(result, type, number)  do { \\$/
+GET_DLBUF	server.h	/^#define GET_DLBUF(d)  ((struct descriptor_buf *)GE/
+INSERT_LIST	utility.h	/^#define INSERT_LIST( c, n )     do { \\$/
+Mserver	server.c	/^main( int argc, char **argv )$/
+add_message_input	server.c	/^void add_message_input( DESCRIPTOR *d, MSG_DATA *m/
+arch_strdup	utility.c	/^char *arch_strdup( char *str )$/
+char_to_hex	utility.c	/^char *char_to_hex( unsigned char c )$/
+count_bit	crypt.c	/^int count_bit( char *str )$/
+decrypt_success	crypt.c	/^int decrypt_success( char *str )$/
+dice	utility.c	/^int dice( int i, int j )$/
+end_of_transmission	server.c	/^void end_of_transmission( DESCRIPTOR *d )$/
+flush_desc_buf	server.c	/^void flush_desc_buf( DESCRIPTOR *d )$/
+get_random_str	utility.c	/^char *get_random_str(int len)$/
+init_mysql	mysqllib.c	/^MYSQL *init_mysql( char *host, char *db_name, char/
+init_runtime_trigger	runtime.c	/^void init_runtime_trigger( char *name, int tick, i/
+junk_query_string_list	cgi.c	/^void junk_query_string_list( QUERY_STRING *q )$/
+main_loop	server.c	/^int main_loop( int entry_server_fd )$/
+max	utility.c	/^int max( int a, int b )$/
+min	utility.c	/^int min( int a, int b )$/
+my_atoi	utility.c	/^int my_atoi( char *str )$/
+my_decrypt	crypt.c	/^void my_decrypt( char *key, char *src, char *dest /
+my_destruct_descriptor	server.c	/^void my_destruct_descriptor( DESCRIPTOR *t, DESCRI/
+my_encrypt	crypt.c	/^void my_encrypt( char *key, char *src, char *dest /
+my_isalnum	utility.c	/^int my_isalnum( char c )$/
+my_new_descriptor	server.c	/^void my_new_descriptor( DESCRIPTOR **dlist, int s,/
+my_signal_exits	server.c	/^void my_signal_exits(int signum)$/
+my_stop_server	server.c	/^void my_stop_server(int signum)$/
+new_query_string	cgi.c	/^QUERY_STRING *new_query_string( char *name, char */
+number	utility.c	/^int number( int i )$/
+parse_input	server.c	/^QUERY_STRING *parse_input( DESCRIPTOR *d )$/
+parse_string	cgi.c	/^QUERY_STRING *parse_string( char *str )$/
+process_exception_all	server.c	/^void process_exception_all( DESCRIPTOR **dlist, fd/
+process_io_all	server.c	/^void process_io_all( DESCRIPTOR **dlist, fd_set *i/
+process_page_all	server.c	/^void process_page_all( DESCRIPTOR **dlist )$/
+run_rt_trigger	runtime.c	/^void run_rt_trigger( int loop_per_sec )$/
+sdice	utility.c	/^int sdice( int c )$/
+search_query_string	cgi.c	/^char *search_query_string( QUERY_STRING *qlist, ch/
+send_output_to_client	server.c	/^void send_output_to_client(d, va_alist)$/
+send_output_to_client_raw	server.c	/^void send_output_to_client_raw( DESCRIPTOR *d, con/
+split_word	cgi.c	/^char *split_word( char *out, char *in, char stop )/
+unescape_url	cgi.c	/^void unescape_url( char *url )$/
+urlencode	cgi.c	/^void urlencode( char *src, char *dest )$/
+x2c	cgi.c	/^unsigned char x2c( char *x )$/

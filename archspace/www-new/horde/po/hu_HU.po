@@ -1,0 +1,990 @@
+# Horde Hungarian translation file.
+# Copyright (C) 2002-2004 Laszlo L. Tornoci
+# This file is distributed under the same license as the Horde package.
+# Latest versions: ftp://xenia.sote.hu/pub/linux/horde/
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-08-04 23:31+0200\n"
+"PO-Revision-Date: 2004-02-29 09:54+0200\n"
+"Last-Translator: Laszlo L. Tornoci <torlasz@xenia.sote.hu>\n"
+"Language-Team: Hungarian <i18n@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: templates/maintenance/confirm_top.inc:14
+#, php-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr "%s készen áll az alább kijelölt karbantartási feladatok elvégzésére."
+
+#: templates/maintenance/confirm_top.inc:7
+#, php-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s karbantartási feladatok - megerõsítés"
+
+#: lib/Registry.php:453 lib/Registry.php:749
+#, php-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' nincs konfigurálva a Horde Registry-ben."
+
+#: templates/data/datemap.inc:102
+msgid "24 hours"
+msgstr "24 óra"
+
+#: lib/Horde.php:235
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Helyrehozhatatlan hiba történt:</b>"
+
+#: templates/data/datemap.inc:103
+msgid "AM/PM"
+msgstr "de/du"
+
+#: templates/data/csvmap.inc:94
+msgid "Add pair"
+msgstr "Új pár hozzáadása"
+
+#: lib/MIME/Viewer/vcard.php:86
+msgid "Address"
+msgstr "Cím"
+
+#: config/registry.php.dist:136
+msgid "Address Book"
+msgstr "Címjegyzék"
+
+#: lib/MIME/Viewer/vcard.php:64
+msgid "Alias"
+msgstr "Alias"
+
+#: lib/PrefsUI.php:100
+msgid "An illegal value was specified."
+msgstr "A megadott érték nem fogadható el."
+
+#: config/prefs.php.dist:70
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr ""
+"Kér-e a megerõsítésre vonatkozó kérdést a karbantartási feladatok elvégzése "
+"elõtt?"
+
+#: lib/Auth/radius.php:206
+msgid "Authentication rejected by RADIUS server."
+msgstr "A RADIUS szerveren történõ azonosítás nem sikerült."
+
+#: templates/data/csvmap.inc:84
+msgid "Available fields:"
+msgstr "A rendelkezésre álló mezõk:"
+
+#: lib/Auth/krb5.php:81
+msgid "Bad kerberos password."
+msgstr "Nem megfelelõ a kerberos jelszó."
+
+#: lib/Auth/krb5.php:83
+msgid "Bad kerberos username."
+msgstr "Nem megfelelõ a kerberos felhasználói név."
+
+#: lib/MIME/Viewer/vcard.php:71
+msgid "Birthday"
+msgstr "Születésnap"
+
+#: config/registry.php.dist:172
+msgid "CVS"
+msgstr "CVS"
+
+#: config/registry.php.dist:145
+msgid "Calendar"
+msgstr "Naptár"
+
+#: templates/problem/problem.inc:35
+msgid "Cancel Problem Report"
+msgstr "Mégse küldök hibajelentést"
+
+#: lib/MIME/Viewer/vcard.php:103
+msgid "Cell Phone"
+msgstr "Mobiltelefon"
+
+#: templates/maintenance/confirm_top.inc:16
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Jelölje ki azokat a feladato(ka)t, ami(ke)t most el kíván végezni."
+
+#: templates/help/menu.inc:12
+msgid "Close Help"
+msgstr "A magyarázat bezárása"
+
+#: templates/help/menu.inc:12
+msgid "Close Help Window"
+msgstr "A magyarázó ablak bezárása"
+
+#: util/special_characters.php:147
+msgid "Close Window"
+msgstr "Az ablak bezárása"
+
+#: config/registry.php.dist:181
+msgid "Comics"
+msgstr "Viccek"
+
+#: lib/MIME/Viewer/vcard.php:152
+msgid "Company"
+msgstr "Cég"
+
+#: lib/VFS/ftp.php:422
+msgid "Connection to ftp server failed."
+msgstr "Megszakadt az ftp szerverrel való kapcsolat."
+
+#: lib/MIME/Viewer/zip.php:45 lib/MIME/Viewer/tgz.php:50
+#, php-format
+msgid "Contents of '%s'"
+msgstr "'%s' tartalma"
+
+#: lib/MIME/Viewer/rar.php:46
+msgid "Contents of the RAR archive"
+msgstr "A RAR archívum tartalma"
+
+#: lib/SessionHandler/mysql.php:270
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr ""
+"Nem sikerült kapcsolódni a session kezeléshez szükséges SQL adatbázishoz."
+
+#: lib/SessionHandler/mysql.php:274
+#, php-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr ""
+"Nem sikerült kapcsolódni a session kezeléshez szükséges SQL adatbázis %s "
+"táblázatához."
+
+#: lib/Maintenance.php:397
+#, php-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "A %s karbantartási modul nem nyitható meg"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "DD"
+msgstr "NN"
+
+#: lib/Maintenance.php:30
+msgid "Daily"
+msgstr "naponta"
+
+#: lib/Auth/sql.php:207 lib/Auth/sql.php:235 lib/Auth/sql.php:260
+msgid "Database query failed."
+msgstr "Az adatbázisban való keresés nem sikerült."
+
+#: lib/Identity.php:73
+msgid "Default Identity"
+msgstr "Alapértelmezés szerinti azonosító"
+
+#: problem.php:92 problem.php:96 problem.php:107
+msgid "Describe the Problem"
+msgstr "Adjon leírást a problémáról"
+
+#: lib/Horde.php:243
+msgid "Details have been logged for the administrator."
+msgstr "A részletek a rendszergazda számára készülõ naplófájlba kerültek."
+
+#: config/prefs.php.dist:12
+msgid "Display Options"
+msgstr "Megjelenítési beállítások"
+
+#: maintenance.php:26
+msgid "Do not directly access maintenance.php"
+msgstr "A maintenance.php nem érhetõ el közvetlenül."
+
+#: lib/MIME/Viewer/vcard.php:137
+msgid "Email"
+msgstr "Email"
+
+#: lib/Auth/ldap.php:113
+msgid "Empty result."
+msgstr "Nincs ilyen."
+
+#: status.php:16 lib/Notification/status.php:41
+msgid "Error"
+msgstr "Hiba"
+
+#: config/prefs.php.dist:41
+msgid "Every 15 minutes"
+msgstr "15 percenként"
+
+#: config/prefs.php.dist:38
+msgid "Every 30 seconds"
+msgstr "30 másodpercenként"
+
+#: config/prefs.php.dist:40
+msgid "Every 5 minutes"
+msgstr "5 percenként"
+
+#: lib/Maintenance.php:31
+msgid "Every Login"
+msgstr "minden bejelentkezéskor"
+
+#: config/prefs.php.dist:42
+msgid "Every half hour"
+msgstr "félóránként"
+
+#: config/prefs.php.dist:39
+msgid "Every minute"
+msgstr "percenként"
+
+#: templates/data/datemap.inc:28
+msgid "Example values:"
+msgstr "Példa értékek:"
+
+#: lib/Data.php:264
+#, php-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "A %d. sorban a \"BEGIN\" szónak kellett volna elõfordulnia."
+
+#: lib/Data.php:285
+#, php-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "A \"END:%s\" kifejezésnek kellett volna elõfordulni a %d. sorban."
+
+#: lib/Prefs/sql.php:316
+msgid "Failed retrieving preferences."
+msgstr "A személyes beállításokat nem sikerült beolvasni."
+
+#: lib/Auth/ldap.php:103
+msgid "Failed to connect to LDAP server."
+msgstr "Az LDAP szerver nem érhetõ el."
+
+#: lib/Auth/smb.php:108
+msgid "Failed to connect to SMB server."
+msgstr "Az SMB szerver nem érhetõ el."
+
+#: lib/MIME/Viewer/vcard.php:108
+msgid "Fax"
+msgstr "Fax"
+
+#: config/registry.php.dist:127
+msgid "Filters"
+msgstr "Szûrõk"
+
+#: templates/problem/problem.inc:26
+msgid "Full Description:"
+msgstr "Részletes leírás:"
+
+#: help.php:15 lib/Help.php:426 lib/Help.php:427 templates/help/index.inc:13
+#: templates/navbar/menu.inc:19
+msgid "Help"
+msgstr "Segítség"
+
+#: templates/navbar/menu.inc:8
+msgid "Home"
+msgstr ""
+
+#: lib/MIME/Viewer/vcard.php:82
+msgid "Home Address"
+msgstr "Otthoni cím"
+
+#: lib/MIME/Viewer/vcard.php:99
+msgid "Home Phone"
+msgstr "Otthoni telefon"
+
+#: templates/index/wap.inc:7 config/registry.php.dist:90
+msgid "Horde"
+msgstr "Horde"
+
+#: login.php:101
+msgid "Horde Login"
+msgstr "Horde bejelentkezés"
+
+#: menu.php:20
+msgid "Horde System"
+msgstr "Horde rendszer"
+
+#: templates/index/wap.inc:13
+msgid "Horde Wireless"
+msgstr "Drótnélküli Horde"
+
+#: templates/index/notconfigured.inc:4
+msgid "Horde is not properly configured"
+msgstr "A Horde program nincs megfelelõen konfigurálva"
+
+#: config/prefs.php.dist:51
+msgid "Icons Only"
+msgstr "csak ikonok"
+
+#: config/prefs.php.dist:52
+msgid "Icons with text"
+msgstr "ikonok és szöveg is"
+
+#: templates/data/datemap.inc:117 templates/data/csvmap.inc:128
+msgid "Import"
+msgstr "Importálás"
+
+#: lib/Data.php:264 lib/Data.php:281 lib/Data.php:285
+msgid "Import Error: "
+msgstr "Hiba az importálásban:"
+
+#: templates/data/datemap.inc:20
+#, php-format
+msgid "Imported field: %s"
+msgstr "Az importált mezõ: %s"
+
+#: templates/data/csvmap.inc:74
+msgid "Imported fields:"
+msgstr "Az importált mezõk:"
+
+#: lib/Auth/krb5.php:85
+msgid "Kerberos server rejected authentication."
+msgstr "A Kerberos szerveren történõ azonosítás nem sikerült."
+
+#: config/prefs.php.dist:6
+msgid "Language"
+msgstr "Nyelv"
+
+#: templates/help/menu.inc:9
+msgid "List Help Topics"
+msgstr "Azoknak a témáknak a listája amirõl segítség kapható"
+
+#: templates/login/login.inc:76 templates/navbar/menu.inc:14
+msgid "Log in"
+msgstr "Bejelentkezés"
+
+#: menu.php:47 templates/login/user.inc:9
+msgid "Log out"
+msgstr "Kijelentkezés"
+
+#: login.php:66
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"A bejelentkezés nem sikerült. Ennek legvalószínûbb oka az, hogy rosszul írta "
+"be a felhasználói nevét vagy jelszavát."
+
+#: config/registry.php.dist:109
+msgid "Logout"
+msgstr "Kijelentkezés"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "MM"
+msgstr "HH"
+
+#: config/registry.php.dist:118
+msgid "Mail"
+msgstr "Levelezés"
+
+#: templates/data/datemap.inc:10
+msgid "Map Date and Time Fields"
+msgstr "Dátum és idõ mezõk megfeleltetése"
+
+#: templates/data/csvmap.inc:57
+msgid "Map Import Fields"
+msgstr "Import mezõk megfeleltetése"
+
+#: templates/data/csvmap.inc:102
+msgid "Matching fields"
+msgstr "Egymásnak megfelelõ mezõk"
+
+#: config/registry.php.dist:154
+msgid "Memos"
+msgstr "Feljegyzések"
+
+#: config/prefs.php.dist:53
+msgid "Menu mode:"
+msgstr "A menü megjelenése:"
+
+#: status.php:29 lib/Notification/status.php:54
+msgid "Message"
+msgstr "Üzenet"
+
+#: lib/Maintenance.php:28
+msgid "Monthly"
+msgstr "havonta"
+
+#: login.php:69
+msgid "My Summary"
+msgstr "Az összefoglalásom"
+
+#: lib/MIME/Viewer/vcard.php:56
+msgid "Name"
+msgstr "Név"
+
+#: config/prefs.php.dist:37
+msgid "Never"
+msgstr "soha"
+
+#: lib/VFS/ftp.php:402
+msgid "No configuration information specified for FTP VFS."
+msgstr "A konfigurációban hiányzik az FTP VFS rendszerre vonatkozó adat."
+
+#: lib/Prefs/ldap.php:100
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "Az LDAP személyes beállítások nincsenek konfigurálva."
+
+#: lib/Category/sql.php:73
+msgid "No configuration information specified for SQL Categories."
+msgstr "Nincs SQL konfigurációs adat a kategóriákra."
+
+#: lib/Prefs/sql.php:83
+msgid "No configuration information specified for SQL Preferences."
+msgstr "Nincs SQL konfigurációs adat a felhasználói beállításokra."
+
+#: lib/SessionHandler/sql.php:186 lib/SessionHandler/pgsql.php:216
+#: lib/SessionHandler/mysql.php:247
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr ""
+"A program konfigurációjában hiányzik az SQL session kezelésre vonatkozó adat."
+
+#: lib/VFS/sql.php:450
+msgid "No configuration information specified for SQL VFS."
+msgstr ""
+"A program konfigurációjában hiányzik az SQL VFS rendszerre vonatkozó adat."
+
+#: lib/Auth/sql.php:94
+msgid "No configuration information specified for SQL authentication."
+msgstr "Nincs SQL konfigurációs adat a felhasználói azonosításra."
+
+#: lib/VFS/sql_file.php:471
+msgid "No configuration information specified for SQL-File VFS."
+msgstr ""
+"A program konfigurációjában hiányzik az SQL-File VFS rendszerre vonatkozó "
+"adat."
+
+#: lib/Prefs/ldap.php:322 lib/Prefs/ldap.php:430 lib/Prefs/sql.php:197
+#: lib/Prefs/sql.php:273 lib/Prefs/session.php:53
+msgid "No preferences are available."
+msgstr "A személyes beállítások nem állnak rendelkezésre."
+
+#: lib/MIME/Viewer/vcard.php:157
+msgid "Notes"
+msgstr "Megjegyzés"
+
+#: templates/maintenance/confirm_top.inc:13
+msgid "Notice"
+msgstr "Figyelmeztetés"
+
+#: lib/Notification.php:105
+#, php-format
+msgid "Notification listener %s not found."
+msgstr "Nem található a program figyelmeztetéseket fogadó %s komponense."
+
+#: config/prefs.php.dist:30
+msgid "Number of columns in the summary view:"
+msgstr "Az összefoglaló nézet oszlopainak száma:"
+
+#: templates/login/user.inc:7 templates/navbar/menu.inc:11
+msgid "Options"
+msgstr "Opciók"
+
+#: config/prefs.php.dist:11
+msgid "Other Information"
+msgstr "Egyéb információ"
+
+#: templates/login/login.inc:71
+msgid "Password"
+msgstr "Jelszó"
+
+#: templates/maintenance/confirm_bottom.inc:6
+msgid "Perform Maintenance Operations"
+msgstr "Karbantartási feladatok"
+
+#: lib/MIME/Viewer/vcard.php:105
+msgid "Phone"
+msgstr "Telefon"
+
+#: templates/problem/javascript.inc:7
+msgid "Please provide a summary of the problem."
+msgstr "Kérem röviden írja le a probléma lényegét."
+
+#: templates/login/login.inc:14 templates/login/login.inc:18
+msgid "Please provide your username and password"
+msgstr "Kérem adja meg a bejelentkezési nevét és jelszavát"
+
+#: problem.php:110
+msgid "Problem Description"
+msgstr "A probléma leírása"
+
+#: config/prefs.php.dist:43
+msgid "Refresh Summary View:"
+msgstr "Az összefoglaló nézet frissítése:"
+
+#: templates/data/csvmap.inc:127
+msgid "Remove pair"
+msgstr "A pár törlése"
+
+#: lib/SessionHandler/mysql.php:253
+#, php-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "A session kezelés konfigurációjában nincs megadva '%s'."
+
+#: lib/Auth/ldap.php:91
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr ""
+"A 'basedn' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/Prefs/ldap.php:106
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr ""
+"A 'basedn' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/Auth/smb.php:92
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"A 'bdc_hostspec' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/SessionHandler/sql.php:201 lib/SessionHandler/pgsql.php:228
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr "A session kezelés konfigurációjában nincs megadva a 'database'."
+
+#: lib/VFS/sql.php:465 lib/VFS/sql_file.php:486
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'database'."
+
+#: lib/Auth/sql.php:109
+msgid "Required 'database' not specified in authentication configuration."
+msgstr ""
+"A 'database' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/Category/sql.php:88
+msgid "Required 'database' not specified in categories configuration."
+msgstr "A 'database' értéket nem adták meg a kategóriák konfigurációjában."
+
+#: lib/Prefs/sql.php:98
+msgid "Required 'database' not specified in preferences configuration."
+msgstr ""
+"A 'database' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/Auth/smb.php:95
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr ""
+"Az 'domain' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/SessionHandler/sql.php:192 lib/SessionHandler/pgsql.php:219
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr "A session kezelés konfigurációjában nincs megadva a 'hostspec'."
+
+#: lib/VFS/sql.php:456 lib/VFS/ftp.php:411 lib/VFS/sql_file.php:477
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'hostspec'."
+
+#: lib/Auth/ldap.php:88 lib/Auth/sql.php:100
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr ""
+"A 'hostspec' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/Category/sql.php:79
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "A 'hostspec' értéket nem adták meg a kategóriák konfigurációjában."
+
+#: lib/Prefs/ldap.php:103 lib/Prefs/sql.php:89
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr ""
+"A 'hostspec' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/SessionHandler/sql.php:198 lib/SessionHandler/pgsql.php:225
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr "A session kezelés konfigurációjában nincs megadva a 'password'."
+
+#: lib/VFS/sql.php:462 lib/VFS/ftp.php:408 lib/VFS/sql_file.php:483
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'password'."
+
+#: lib/Auth/ldap.php:97 lib/Auth/sql.php:106
+msgid "Required 'password' not specified in authentication configuration."
+msgstr ""
+"A 'password' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/Category/sql.php:85
+msgid "Required 'password' not specified in categories configuration."
+msgstr "A 'password' értéket nem adták meg a kategóriák konfigurációjában."
+
+#: lib/Prefs/ldap.php:115 lib/Prefs/sql.php:95
+msgid "Required 'password' not specified in preferences configuration."
+msgstr ""
+"A 'password' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/Auth/smb.php:89
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"A 'pdc_hostspec' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/SessionHandler/sql.php:189
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr "A session kezelés konfigurációjában nincs megadva a 'phptype'."
+
+#: lib/VFS/sql.php:453 lib/VFS/sql_file.php:474
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'phptype'."
+
+#: lib/Auth/sql.php:97
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr ""
+"A 'phptype' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/Category/sql.php:76
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "A 'phptype' értéket nem adták meg a kategóriák konfigurációjában."
+
+#: lib/Prefs/sql.php:86
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr ""
+"A 'phptype' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/VFS/ftp.php:414
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'port'."
+
+#: lib/Category/sql.php:91
+msgid "Required 'table' not specified in categories configuration."
+msgstr "A 'table' értéket nem adták meg a kategóriák konfigurációjában."
+
+#: lib/Prefs/sql.php:101
+msgid "Required 'table' not specified in preferences configuration."
+msgstr ""
+"A 'table' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/Auth/ldap.php:94
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr ""
+"Az 'uid' értéket nem adták meg az felhasználói azonosítás konfigurációjában."
+
+#: lib/Prefs/ldap.php:109
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr ""
+"Az 'uid' értéket nem adták meg az felhasználói beállítások konfigurációjában."
+
+#: lib/SessionHandler/sql.php:195 lib/SessionHandler/pgsql.php:222
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr "A session kezelés konfigurációjában nincs megadva a 'username'."
+
+#: lib/VFS/sql.php:459 lib/VFS/ftp.php:405 lib/VFS/sql_file.php:480
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'username'."
+
+#: lib/Auth/sql.php:103
+msgid "Required 'username' not specified in authentication configuration."
+msgstr ""
+"A 'username' értéket nem adták meg az felhasználói azonosítás "
+"konfigurációjában."
+
+#: lib/Category/sql.php:82
+msgid "Required 'username' not specified in categories configuration."
+msgstr "A 'username' értéket nem adták meg a kategóriák konfigurációjában."
+
+#: lib/Prefs/ldap.php:112 lib/Prefs/sql.php:92
+msgid "Required 'username' not specified in preferences configuration."
+msgstr ""
+"A 'username' értéket nem adták meg az felhasználói beállítások "
+"konfigurációjában."
+
+#: lib/VFS/sql_file.php:489
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "A VFS konfigurációban nincs megadva a 'vfsroot'."
+
+#: templates/prefs/end.inc:7
+msgid "Return to Options"
+msgstr "Vissza az opciókhoz"
+
+#: lib/MIME/Viewer/vcard.php:147
+msgid "Role"
+msgstr "Szerep"
+
+#: templates/prefs/end.inc:5
+msgid "Save Options"
+msgstr "Mentés"
+
+#: util/special_characters.php:38
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Válassza ki a kívánt karakter(eke)t az alábbi lehetõségek közül. Ezután "
+"\"copy/paste\" módszerrel a megfelelõ helyre másolhatja õket."
+
+#: templates/data/datemap.inc:54
+msgid "Select the date delimiter:"
+msgstr "Válassza ki a dátumelválasztó karaktert:"
+
+#: templates/data/datemap.inc:64
+msgid "Select the date format:"
+msgstr "Válassza ki a dátum formátumát:"
+
+#: templates/data/datemap.inc:90
+msgid "Select the time delimiter:"
+msgstr "Válassza ki az idõelválasztó karaktert:"
+
+#: templates/data/datemap.inc:99
+msgid "Select the time format:"
+msgstr "Válassza ki az idõ formátumát:"
+
+#: templates/data/csvmap.inc:65
+msgid "Select two matching fields."
+msgstr "Válasszon ki két egymásnak megfelelõ mezõt."
+
+#: config/prefs.php.dist:23
+msgid "Select your preferred language:"
+msgstr "Válassza ki az Önnek megfelelõ nyelvet:"
+
+#: templates/problem/problem.inc:34
+msgid "Send Problem Report"
+msgstr "Hibajelentés küldése"
+
+#: config/prefs.php.dist:13
+msgid "Set your page refreshing, and other display options."
+msgstr "Az oldal frissítési gyakorisága és más megjelenítési beállítások."
+
+#: config/prefs.php.dist:7
+msgid "Set your preferred display language."
+msgstr "Beállíthatja az Önnek megfelelõ nyelvet."
+
+#: templates/problem/problem.inc:21
+msgid "Short Summary:"
+msgstr "Rövid összefoglalás:"
+
+#: templates/maintenance/confirm_bottom.inc:9
+msgid "Skip Maintenance"
+msgstr "A karbantartás kihagyása"
+
+#: templates/index/notconfigured.inc:9
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Hiányzik a Horde program néhány konfigurációs fájlja:"
+
+#: util/special_characters.php:14
+msgid "Special Character Input"
+msgstr "Speciális karakter bevitele"
+
+#: status.php:20 lib/Notification/status.php:45
+msgid "Success"
+msgstr "Sikerült"
+
+#: config/registry.php.dist:163
+msgid "Tasks"
+msgstr "Feladatok"
+
+#: config/prefs.php.dist:50
+msgid "Text Only"
+msgstr "csak szöveg"
+
+#: lib/MIME/Viewer/deb.php:33 lib/MIME/Viewer/rar.php:35
+#: lib/MIME/Viewer/enscript.php:34 lib/MIME/Viewer/mspowerpoint.php:34
+#: lib/MIME/Viewer/msword.php:35 lib/MIME/Viewer/rpm.php:33
+#: lib/MIME/Viewer/zip.php:35 lib/MIME/Viewer/tgz.php:35
+#: lib/MIME/Viewer/msexcel.php:34
+#, php-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr ""
+"A szerveren nem található az a program, ami ennek (%s) a fájltípusnak a "
+"megjelenítéséhez szükséges."
+
+#: templates/index/notconfigured.inc:42
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"A 'registry' fájl határozza meg, a Horde alkalmazások közötti kommunikációt. "
+"Itt szerepelnie kell az összes installált Horde alkalmazásnak."
+
+#: templates/index/notconfigured.inc:28
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"Ez a fájl tartalmazza a Horde rendszer számára elérhetõ MIME meghajtó "
+"modulokat, s így olyan segédprogramok segítségével, mint az enscript és az "
+"mswordview bizonyos fájlok HTML-lé alakítva közvetlenül megjeleníthetõk a "
+"böngészõprogramban."
+
+#: templates/index/notconfigured.inc:21
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"Ez a file tartalmazza a stíluslap információkat, melyek meghatározzák a szín "
+"és fontbeállításokat a Horde rendszer és az összes olyan program számára, "
+"melynek nincs saját beállítása."
+
+#: templates/index/notconfigured.inc:35
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"Ez a fájl rendeli hozzá a fájlnév kiegészítésekhez (extension) a logikai "
+"MIME típusokat, melyek révén a Horde alkalmazások tudják, hogyan kezeljék "
+"pl. az email mellékleteket, vagy CVS fájlkikéréseket."
+
+#: templates/index/notconfigured.inc:14
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"Ez a fõ Horde konfigurációs fájl. Itt állíthatók be az alapprogram és a "
+"többi Horde alkalmazás számára az elérési útvonalak és közös alapértékek."
+
+#: lib/PrefsUI.php:109
+msgid "This number must be at least one."
+msgstr "Ez a szám nem lehet egynél kisebb."
+
+#: lib/PrefsUI.php:107
+msgid "This value must be a number."
+msgstr "Ez az érték csak szám lehet."
+
+#: lib/MIME/Viewer/vcard.php:142
+msgid "Title"
+msgstr "Titulus"
+
+#: lib/Data.php:285
+msgid "Type mismatch."
+msgstr "A típusok nem egyeznek."
+
+#: lib/MIME/Viewer/vcard.php:162
+msgid "URL"
+msgstr "URL"
+
+#: lib/VFS/file.php:208 lib/VFS/musql.php:430 lib/VFS/ftp.php:254
+#, php-format
+msgid "Unable to change permission for VFS file %s/%s."
+msgstr "Nem sikerült a %s/%s VFS fájl hozzáférési jogait megváltoztatni."
+
+#: lib/Auth/sql.php:119
+msgid "Unable to connect to SQL server."
+msgstr "Az SQL szerver nem érhetõ el."
+
+#: lib/VFS/file.php:452
+msgid "Unable to read the vfsroot directory."
+msgstr "Nem sikerült a vfsroot könyvtár olvasása."
+
+#: lib/Prefs/session.php:92
+msgid "Unable to register preferences in session."
+msgstr "A személyes beállítások nem menthetõk el."
+
+#: lib/VFS/file.php:379 lib/VFS/musql.php:215 lib/VFS/ftp.php:210
+#, php-format
+msgid "Unable to rename VFS file %s/%s."
+msgstr "A %s/%s nevû VFS fájl átnevezése nem sikerült."
+
+#: lib/MIME/Viewer/msword.php:57
+msgid "Unable to translate this Word document"
+msgstr "Nem sikerült lefordítani ezt a Word dokumentumot"
+
+#: templates/prefs/end.inc:6
+msgid "Undo Changes"
+msgstr "Mégse mentsük el"
+
+#: lib/Data.php:281
+msgid "Unexpected end of file."
+msgstr "Túl korán vége lett a fájlnak."
+
+#: templates/prefs/select.inc:3
+msgid "Use Default Value"
+msgstr "Az alapértelmezett érték"
+
+#: prefs.php:61
+msgid "User Options"
+msgstr "Felhasználói beállítások"
+
+#: templates/login/login.inc:67
+msgid "Username"
+msgstr "Felhasználói név"
+
+#: status.php:24 lib/Notification/status.php:49
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
+#: lib/Maintenance.php:29
+msgid "Weekly"
+msgstr "hetente"
+
+#: templates/login/login.inc:59
+#, php-format
+msgid "Welcome to %s"
+msgstr "Üdvözöljük: %s"
+
+#: templates/wml/login/user.inc:1 templates/login/user.inc:4
+#, php-format
+msgid "Welcome, %s"
+msgstr "Üdvözöljük, %s"
+
+#: config/prefs.php.dist:61
+msgid "What application should Horde display after login?"
+msgstr "A bejelentkezés után melyik Horde alkalmazás jelenjen meg?"
+
+#: lib/MIME/Viewer/vcard.php:84
+msgid "Work Address"
+msgstr "Munkahelyi cím"
+
+#: lib/MIME/Viewer/vcard.php:101
+msgid "Work Phone"
+msgstr "Munkahelyi telefon"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "YY"
+msgstr "ÉÉ"
+
+#: lib/Maintenance.php:27
+msgid "Yearly"
+msgstr "évente"
+
+#: login.php:65
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr ""
+"Sikeresen kijelentkezett.<br />Köszönjük, hogy használta szolgáltatásunkat."
+
+#: templates/problem/javascript.inc:11
+msgid "You must describe the problem before you can send the problem report."
+msgstr ""
+"Elõbb le kell írnia, hogy milyen problémát tapasztalt, mielõtt elküldi a "
+"hibajelentést."
+
+#: login.php:64
+#, php-format
+msgid "Your %s session has expired. Please login again."
+msgstr ""
+"Az Ön %s kapcsolata idõtúllépés miatt megszakadt. Kérem jelentkezzen be újra."
+
+#: templates/problem/problem.inc:16
+msgid "Your Email Address:"
+msgstr "Az Ön email címe:"
+
+#: config/prefs.php.dist:5
+msgid "Your Information"
+msgstr "Személyes információ"
+
+#: templates/problem/problem.inc:11
+msgid "Your Name:"
+msgstr "Az Ön neve:"
+
+#: lib/PrefsUI.php:146
+msgid "Your options have been updated."
+msgstr "Az Ön új beállításait elmentettük."
+
+#: problem.php:67
+msgid "[Problem Report]"
+msgstr "[Hibajelentés]"
+
+#: lib/Horde.php:239
+#, php-format
+msgid "[line %s of %s]"
+msgstr "[%s/%s sor]"
+
+#: menu.php:37 menu.php:39
+msgid "name"
+msgstr "név"
+
+#: lib/MIME/Viewer/vcard.php:36
+msgid "vCard"
+msgstr "vCard"

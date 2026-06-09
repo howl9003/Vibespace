@@ -1,0 +1,23 @@
+<?
+  Header("Content-type: image/gif");
+  Header("Pragma: no-cache");
+
+  if(!$ctxt) $ctxt = "AdInfoS";
+  if(!$cval) $cval = 0;
+
+  if($ctxt != "AdInfoS" && $ctxt != "AdInfoP")
+	$ctxt = "AdInfoS";
+
+  if($ctxt == "AdInfoP") {
+    $a = getdate(time() + 24*3600);
+    $expire = mktime(0, 0, 0, $a[mon], $a[mday], $a[year]);
+  }
+  else {
+    $expire = ""; 
+  }
+
+  setcookie($ctxt, $cval, $expire, "/", "68.11.248.40");
+  setcookie($ctxt, $cval, $expire, "/", "68.11.248.40");
+
+  echo ("GIF89a\001\000\001\000\200\000\000\000\000\000\000\000\000\041\371\004\001\000\000\000\000\054\000\000\000\000\001\000\001\000\100\002\002\104\001\000\073");
+?>

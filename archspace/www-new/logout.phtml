@@ -1,0 +1,14 @@
+<?
+  include "include/libstd.php";
+  include "include/libnotice.php";
+
+  setcookie("ID_STRING", "", time() - 3600, "/");
+  setcookie("AS_STRING", "", time() - 3600, "/");
+  setcookie("ARCHSPACE_HOST", "", time() - 3600, "/");
+  setcookie("ARCHSPACE_PORT", "", time() - 3600, "/");
+  setcookie("NAME", "", time() - 3600, "/");
+  require_once "./ipbsdk_class.inc.php";
+  $SDK =& new IPBSDK();
+  $SDK->logout();
+  header("Location: /main.php");
+?>

@@ -1,0 +1,887 @@
+<?php
+	# Mantis - a php based bugtracking system
+	# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	# Copyright (C) 2002 - 2004  Mantis Team   - mantisbt-dev@lists.sourceforge.net
+	# This program is distributed under the terms and conditions of the GPL
+	# See the README and LICENSE files for details
+
+	# Finnish: Jani Reinikainen, devel@reinikainen.net
+	# Finnish: Juha, jomustaj@iki.fi
+	###########################################################################
+	# Finnish strings for Mantis
+	# -------------------------------------------------
+	# $Revision: 1.1.1.1 $
+	# $Author: brian $
+	# $Date: 2004/12/25 09:14:39 $
+	#
+	# $Id: strings_finnish.txt,v 1.1.1.1 2004/12/25 09:14:39 brian Exp $
+	###########################################################################
+?>
+<?php
+# Charset
+$s_charset = 'iso-8859-15';
+
+# Group commands menuitems
+$s_actiongroup_menu_move = 'Siirrä';
+$s_actiongroup_menu_assign = 'Osoita';
+$s_actiongroup_menu_close = 'Sulje';
+$s_actiongroup_menu_delete = 'Poista';
+$s_actiongroup_menu_resolve = 'Ratkaise';
+$s_actiongroup_menu_update_priority = 'Päivitä Prioriteetti';
+$s_actiongroup_menu_update_status = 'Päivitä Status';
+
+# new strings:
+$s_all_projects = 'Kaikki Projektit';
+$s_move_bugs = 'Siirrä Bugit';
+$s_operation_successful = 'Komento suoritettu onnistuneesti.';
+$s_date_order = 'Date Order';
+$s_print_all_bug_page_link = 'Tulosta Raportit';
+$s_csv_export = 'CSV Export';
+$s_login_anonymously = 'Sisäänkirjoittaudu nimettömänä';
+$s_anonymous = 'Anonymous';
+$s_jump_to_bugnotes = 'Mene Muistiinpanoihin';
+$s_public_project_msg = 'Tämä projekti on JULKINEN.  Kaikilla käyttäjillä on pääsy.';
+$s_private_project_msg = 'Tämä projekti on YKSITYINEN.  Vain pääkäyttäjillä ja erikseen lisätyillä käyttäjillä on pääsy.';
+$s_access_level_project = 'Projektin Käyttöoikeustaso';
+$s_view_submitted_bug_link = 'Näytä Lisätty Bugi';
+$s_assigned_projects = 'Osoitetut Projektit';
+$s_unassigned_projects = 'Osoittamattomat Projektit';
+$s_print = 'Tulosta';
+$s_jump = 'Mene';
+$s_copy_users = 'Kopioi Käyttäjät';
+$s_copy_categories_from = 'Kopioi kategoriat täältä';
+$s_copy_categories_to = 'Kopioi ketegoriat tänne';
+$s_bug_history = 'Bugin Historia';
+$s_field = 'Kenttä';
+$s_old_value = 'Vanha Arvo';
+$s_new_value = 'Uusi Arvo';
+$s_date_modified = 'Muokkausajankohta';
+$s_bugnote = 'Muistiinpano';
+$s_change = 'Muuta';
+$s_bugnote_view_state = 'Näytä Muistiinpanon Tila';
+$s_bug_monitor = 'Bugia Seurataan';
+$s_bug_end_monitor = 'Lopeta Bugin Seuranta';
+$s_announcement = 'Ilmoitus';
+$s_stays_on_top = 'Pysyy Päällimmäisenä';
+$s_delete_bugnote_button = 'Poista Muistiinpano';
+$s_delete_bugnote_sure_msg = 'Oletko varma, että haluat poistaa tämän muistiinpanon ?';
+$s_bug_relationships = 'Relationships';
+$s_empty_password_sure_msg = 'Käyttäjällä on tyhjä salasana. Oletko varma, että tämä on haluttua ?';
+$s_empty_password_button = 'Käytä tyhjää salasanaa';
+
+$s_duplicate_of = 'kaksoiskappale bugista %id';
+$s_has_duplicate = 'on kaksoiskappale %id';
+$s_related_to = 'sukulainen bugille %id';
+$s_dependant_on = 'riipuu bugista %id';
+$s_blocks = 'estää bugin %id';
+
+$s_new_bug = 'Uusi Bugi';
+$s_bugnote_added = 'Muistiinpano Lisätty';
+$s_bugnote_edited = 'Muistiinpano Muokattu';
+$s_bugnote_deleted = 'Muistiinpano Poistettu';
+$s_summary_updated = 'Yhteenveto Päivitetty';
+$s_description_updated = 'Kuvaus Päivitetty';
+$s_additional_information_updated = 'Lisätiedot Päivitetty';
+$s_steps_to_reproduce_updated = 'Toisto-ohjeet Päivitetty';
+$s_file_added = 'Tiedosto Lisätty';
+$s_file_deleted = 'Tiedosto Poistettu';
+$s_bug_deleted = 'Bug Deleted';
+
+$s_make_private = 'Tee Yksityinen';
+$s_make_public = 'Tee Julkinen';
+
+$s_create_new_project_link = 'Luo Uusi Projekti';
+
+$s_login_link = 'Sisäänkirjoittaudu';
+
+# bug_actiongroup_page.php : mass treatment
+$s_bug_actiongroup_failed = 'Sinulla ei ole tarvittavia oikeuksia suorittaa tätä komentoa näille bugeille: ';
+$s_close_bugs_conf_msg = 'Oletko varma, että haluat sulkea nämä bugit ?';
+$s_delete_bugs_conf_msg = 'Oletko varma, että haluat poistaa nämä bugit ?';
+$s_move_bugs_conf_msg = 'Siirrä bugit tänne';
+$s_assign_bugs_conf_msg = 'Osoita bugit käyttäjälle';
+$s_resolve_bugs_conf_msg = 'Valitse bugin ratkaisu';
+$s_priority_bugs_conf_msg = 'Valitse bugin prioriteetti';
+$s_status_bugs_conf_msg = 'Valitse bugin status';
+$s_close_group_bugs_button = 'Sulje Bugit' ;
+$s_delete_group_bugs_button = 'Poista Bugit' ;
+$s_move_group_bugs_button = 'Siirrä Bugit' ;
+$s_assign_group_bugs_button = 'Osoita Bugit' ;
+$s_resolve_group_bugs_button = 'Ratkaise Bugit' ;
+$s_priority_group_bugs_button = 'Päivitä Prioriteetti' ;
+$s_status_group_bugs_button = 'Päivitä Status' ;
+
+# improved JPgraphs strings
+$s_graph_imp_status_title = 'Synthesis graphs by status' ;
+$s_graph_imp_priority_title = 'Synthesis graphs by priority' ;
+$s_graph_imp_severity_title = 'Synthesis graphs by severity';
+$s_graph_imp_category_title = 'Synthesis graphs by category';
+$s_graph_imp_resolution_title = 'Synthesis graphs by resolution';
+$s_by_status_pct = 'statusprosentin mukaan';
+$s_by_priority_pct = 'prioriteettiprosentin mukaan';
+$s_by_severity_pct = 'vakavuusasteen mukaan';
+$s_by_category_pct = 'kategoriaprosentin mukaan';
+$s_by_resolution_pct = 'ratkaisuprosentin mukaan';
+$s_by_severity_mix = 'vakavuusasteen ja statuksen mukaan';
+$s_by_priority_mix = 'prioriteetin ja statuksen mukaan';
+$s_by_resolution_mix = 'ratkaisun ja statuksen mukaan';
+$s_synthesis_link = 'Synteesi';
+$s_status_link = 'Tilan mukaan';
+$s_priority_link = 'Prioriteetin mukaan';
+$s_severity_link = 'Vakavuusasteen mukaan';
+$s_category_link = 'Kategorian mukaan';
+$s_resolution_link = 'Ratkaisun mukaan';
+
+# print_all_bug_page.php : display selected bugs
+$s_hide_button = 'Näytä vain valitut';
+
+# print_all_bug_options.php : printing preferences
+$s_printing_preferences_title = 'Valitse tulostettavat kentät';
+$s_printing_options_link = 'Tulostusasetukset';
+
+# word and excel export
+$s_bugnote_title = 'Muistiinpanojen hallinta' ;
+$s_bugnote_date = 'Muistiinpanon päiväys';
+$s_bugnote_description = 'Muistiinpanon kuvaus';
+
+$s_error_no_proceed = 'Please use the "Back" button in your web browser to return to the previous page.  There you can correct whatever problems were identified in this error or select another action.  You can also click an option from the menu bar to go directly to a new section.';
+
+# ERROR strings
+$MANTIS_ERROR[ERROR_GENERIC]            = 'VIRHE: Virhe suoritettaessa tätä komentoa. Saatat haluta ilmoittaa tästä virheestä paikallisen järjestelmäsi ylläpitäjälle.';
+$MANTIS_ERROR[ERROR_SQL]                = 'VIRHE: SQL-virhe havaitty.  Ole hyvä ja raportoi tämä virhe ';
+$MANTIS_ERROR[ERROR_REPORT]             = 'VIRHE: Raportissasi oli virhe.';
+$MANTIS_ERROR[ERROR_NO_FILE_SPECIFIED]  = 'VIRHE: Tiedosto ei ole määritelty';
+$MANTIS_ERROR[ERROR_FILE_DISALLOWED]    = 'VIRHE: Tämä tiedostotyyppi ei ole sallittu';
+$MANTIS_ERROR[ERROR_NO_DIRECTORY]       = 'VIRHE: Hakemistoa ei ole olemassa. Ole hyvä ja tarkista projektin asetukset.';
+$MANTIS_ERROR[ERROR_DUPLICATE_FILE]     = 'VIRHE: Tämä tiedosto on kaksoiskappale.  Ole hyvä ja poista alkuperäinen tiedosto ensin.';
+$MANTIS_ERROR[ERROR_DUPLICATE_PROJECT]  = 'VIRHE: Samanniminen projekti on jo olemassa.';
+$MANTIS_ERROR[ERROR_EMPTY_FIELD]        = 'VIRHE: Tarvittu kenttä on tyhjä. Ole hyvä ja tarkista syöttösi.';
+$MANTIS_ERROR[ERROR_PROTECTED_ACCOUNT]  = 'VIRHE: Tämä käyttäjätunnus on suojattu.  Pääsy on sallittu vasta kun suojaus poistetaan.';
+$MANTIS_ERROR[ERROR_ACCESS_DENIED]      = 'VIRHE: Pääsy Kielletty.';
+$MANTIS_ERROR[ERROR_UPLOAD_FAILURE]     = 'VIRHE: Tiedoston lähetys epäonnistui. PHP:n tiedostolähetystoiminnot saattavat olla pois päältä.  Ole hyvä ja pyydä järjestelmäsi ylläpitäjää ajamaan admin_check-skripti debuggaustoimenpiteitä varten.';
+$MANTIS_ERROR[ERROR_FILE_TOO_BIG]       = 'VIRHE: Tiedoston lähetys epäonnistui. Tämä johtuu luutavasti siitä, että tiedoston koko ylittää PHP:n nykyisen enimmäiskoon.';
+$MANTIS_ERROR[ERROR_GPC_VAR_NOT_FOUND]  = 'VIRHE: Tämän sivun vaatimaa muuttujaa ei löydy.';
+$MANTIS_ERROR[ERROR_USER_NAME_NOT_UNIQUE]= 'VIRHE: Valitsemasi käyttäjätunnus on jo käytössä. Palatkaa edelliselle sivulle ja antakaa toinen käyttäjätunnus.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_NOT_FOUND]='VIRHE: Asetusta ei löydy.';
+$MANTIS_ERROR[ERROR_LANG_STRING_NOT_FOUND]='VIRHE: Merkkijonoa ei löydy.';
+$MANTIS_ERROR[ERROR_BUGNOTE_NOT_FOUND]  = 'VIRHE: Muistiinpanoa ei löydy.';
+$MANTIS_ERROR[ERROR_PROJECT_NOT_FOUND]  = 'VIRHE: Projektia ei löydy.';
+$MANTIS_ERROR[ERROR_DB_FIELD_NOT_FOUND] = 'VIRHE: Tietokantakenttää ei löydy.';
+$MANTIS_ERROR[ERROR_FTP_CONNECT_ERROR]	= 'VIRHE: Yhetys FTP-palvelimelle epäonnistui.';
+$MANTIS_ERROR[ERROR_PROJECT_NAME_NOT_UNIQUE] = 'VIRHE: Samanniminen projekti on jo olemassa.  Palaa edelliselle sivulle ja anna toinen nimi.';
+$MANTIS_ERROR[ERROR_PROJECT_NAME_INVALID]='VIRHE: Virheellinen projektin nimi.  Projektin nimet eivät voi olla tyhjiä.';
+$MANTIS_ERROR[ERROR_USER_NOT_FOUND]	= 'VIRHE: Käyttäjätunnusta ei löydy.';
+$MANTIS_ERROR[ERROR_AUTH_INVALID_COOKIE]= 'VIRHE: Selaimesi sisäänkirjautumistiedot ovat virheelliset.  Kenties käyttäjätunnuksesi on poistettu?';
+$MANTIS_ERROR[ERROR_USER_PREFS_NOT_FOUND]='VIRHE: Tämän käyttäjän asetuksia ei löydy.';
+$MANTIS_ERROR[ERROR_NEWS_NOT_FOUND]	= 'VIRHE: Uutisartikkelia ei löydy.';
+$MANTIS_ERROR[ERROR_USER_CREATE_PASSWORD_MISMATCH]='VIRHE: Annettu salasana ei vastaa salasanan varmistusta.';
+$MANTIS_ERROR[ERROR_GPC_ARRAY_EXPECTED]	= 'VIRHE: Odotin matriisia, mutta sain merkkijonon.';
+$MANTIS_ERROR[ERROR_GPC_ARRAY_UNEXPECTED]='VIRHE: Odotin merkkijonoa, mutta sain matriisin.';
+$MANTIS_ERROR[ERROR_BUG_NOT_FOUND]	= 'VIRHE: Bugia ei löydy.';
+$MANTIS_ERROR[ERROR_EMAIL_INVALID]	= 'VIRHE: Virheellinen sähköpostiosoite.';
+$MANTIS_ERROR[ERROR_USER_PROFILE_NOT_FOUND]= 'VIRHE: Profiilia ei löydy.';
+$MANTIS_ERROR[ERROR_FILE_NOT_ALLOWED]	= 'VIRHE: Tämän tyyppiset tiedostot eivät ole sallittuja.';
+$MANTIS_ERROR[ERROR_FILE_DUPLICATE]	= 'VIRHE: Tämä tiedosto on kaksoiskappale.  Ole hyvä ja poista alkuperäinen tiedosto ensin.';
+$MANTIS_ERROR[ERROR_FILE_INVALID_UPLOAD_PATH] = 'VIRHE: Virheellinen upload path.  Hakemistoa ei ole tai se ei ole webpalvelimen kirjoitettavissa';
+$MANTIS_ERROR[ERROR_BUG_DUPLICATE_SELF]	= 'VIRHE: Et voi määritellä bugia itsensä kaksoiskappaleeksi.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_NOT_FOUND]= 'VIRHE: Mukautettua kenttää ei löydy';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE]= 'VIRHE: Tällainen nimi on jo olemassa.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE]= 'VIRHE: Ainakin vielä yksi projekti käyttää tätä kenttää.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'VIRHE: Kentällä on virheellinen arvo';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Invalid custom field definition';
+$MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED]	= 'VIRHE: LDAP-autentikaatio epäonnistui';
+$MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED]= 'VIRHE: Yhteydenotto LDAP-palvelimeen epäonnistui';
+$MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED]	= 'VIRHE: LDAP Record Update epäonnistui.';
+$MANTIS_ERROR[ERROR_LDAP_USER_NOT_FOUND]= 'VIRHE: Käyttäjätunnusta ei löydy LDAP-palvelimelta.';
+$MANTIS_ERROR[ERROR_BUG_RESOLVED_ACTION_DENIED]= 'VIRHE: Valittua komentoa ei voida suorittaa, koska bugi on ratkaistu';
+$MANTIS_ERROR[ERROR_DB_CONNECT_FAILED]	= 'VIRHE: Tietokantayhteys epäonnistui.';
+$MANTIS_ERROR[ERROR_DB_QUERY_FAILED]	= 'VIRHE: Tietokantakysely epäonnistui.';
+$MANTIS_ERROR[ERROR_DB_SELECT_FAILED]	= 'VIRHE: Tietokantavalinta epäonnistui.';
+$MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'VIRHE: Samanniminen kategoria on jo olemassa.';
+$MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'VIRHE: Kopiointitoimea ei ole määritelty.';
+$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'VIRHE: Kategoriaa ei löydy.';
+$MANTIS_ERROR[ERROR_VERSION_DUPLICATE]  = 'VIRHE: Samanniminen versio on jo olemassa.';
+$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND]  = 'VIRHE: Versiota ei löydy.';
+$MANTIS_ERROR[ERROR_USER_NAME_INVALID]  = 'VIRHE: Virheellinen käyttäjätunnus.';
+$MANTIS_ERROR[ERROR_USER_DOES_NOT_HAVE_REQ_ACCESS] = 'User does not have required access level';
+
+$s_login_error = 'VIRHE: Käyttäjätunnuksesi saattaa olla pois käytöstä tai antamasi käyttäjätunnus/salasana-yhdistelmä on väärä.';
+$s_login_cookies_disabled = 'VIRHE: Selaimesi ei tunnu ymmärtävän tai hyväksyvän evästeitä.';
+
+# General Strings
+$s_go_back = 'Takaisin';
+$s_proceed = 'Klikkaa tästä jatkaaksesi';
+
+$s_switch = 'Vaihda';
+$s_logged_in_as = 'Olet sisäänkirjautuneena käyttäjätunnuksella';
+
+$s_prefix_for_deleted_users = 'käyttäjä';
+
+$s_administrator = 'pääkäyttäjä';
+$s_myself = "Myself";
+
+# Enum Strings
+$s_access_levels_enum_string      = '10:viewer,25:reporter,40:updater,55:developer,70:manager,90:administrator';
+$s_project_status_enum_string     = '10:development,30:release,50:stable,70:obsolete';
+$s_project_view_state_enum_string = '10:julkinen,50:yksityinen';
+$s_view_state_enum_string         = '10:julkinen,50:yksityinen';
+
+$s_priority_enum_string           = '10:ei ole,20:alhainen,30:normaali,40:korkea,50:kiireellinen,60:välitön';
+$s_severity_enum_string           = '10:feature,20:trivial,30:text,40:tweak,50:minor,60:major,70:crash,80:block';
+$s_reproducibility_enum_string    = '10:aina,30:joskus,50:satunnaisesti,70:ei kokeiltu,90:ei toistettavissa,100:N/A';
+$s_status_enum_string             = '10:uusi,20:palaute,30:huomioitu,40:varmistettu,50:osoitettu,80:ratkaistu,90:suljettu';
+$s_resolution_enum_string         = '10:avoin,20:korjattu,30:uudelleenavattu,40:ei toistettavissa,50:ei korjattavissa,60:kaksoiskappale,70:ei ole bugi,80:pidätetään,90:ei korjata';
+$s_projection_enum_string         = '10:none,30:tweak,50:minor fix,70:major rework,90:redesign';
+$s_eta_enum_string                = '10:none,20:< 1 päivä,30:2-3 päivää,40:< 1 viikko,50:< 1 kuukausi,60:> 1 kuukausi';
+
+# Email Strings
+$s_new_account_subject = 'Uusi käyttäjätunnuksesi';
+$s_new_account_greeting = 'Tervehdys ja tervetuloa bugtrackeriin. Oheessa sisäänkirjautumiseen tarvittavat tiedot' . "\n\n";
+$s_new_account_url = 'Voit sisäänkirjautua täällä: ';
+$s_new_account_username = 'Käyttäjätunnus: ';
+$s_new_account_password = 'Salasana: ';
+$s_new_account_message = 'Olkaa hyvä ja muuttakaa salasananne heti sisäänkirjautumisen jälkeen.  Huomioikaa myös, että salasanat tallennetaan yksisuuntaista algoritmia käyttäen.  Henkilökunta ei voi etsiä kadonnutta salasanaa.  Jos unohdatte salasananne, on se pakko resetoida.' . "\n\n";
+$s_new_account_do_not_reply = 'Älkää vastatko tähän viestiin.' . "\n";
+
+$s_reset_request_msg = 'Salasanan resetointipyyntö';
+$s_account_name_msg = 'Käyttäjätunnuksesi on';
+$s_news_password_msg = 'Tässä on uusi salasanasi';
+
+$s_email_notification_title_for_status_bug_feedback = 'The following bug requires your FEEDBACK.';
+$s_email_notification_title_for_status_bug_acknowledged = 'The following bug has been ACKNOWLEDGED.';
+$s_email_notification_title_for_status_bug_confirmed = 'The following bug has been CONFIRMED.';
+$s_email_notification_title_for_status_bug_assigned = 'The following bug has been ASSIGNED.';
+$s_email_notification_title_for_status_bug_resolved = 'The following bug has been RESOLVED.';
+$s_email_notification_title_for_status_bug_closed = 'The following bug has been CLOSED';
+
+$s_email_notification_title_for_action_bug_submitted = 'The following bug has been SUBMITTED.';
+$s_email_notification_title_for_action_bug_assigned = 'The following bug has been ASSIGNED.';
+$s_email_notification_title_for_action_bug_reopened = 'The following bug has been REOPENED.';
+$s_email_notification_title_for_action_bug_deleted = 'The following bug has been DELETED.';
+
+$s_email_notification_title_for_action_bugnote_submitted = 'A BUGNOTE has been added to this bug.';
+
+$s_email_reporter = 'Raportoija';
+$s_email_handler = 'Käsittelijä';
+$s_email_project = 'Projekti';
+$s_email_bug = 'Bugin ID';
+$s_email_category = 'Kategoria';
+$s_email_reproducibility = 'Reproducibility';
+$s_email_severity = 'Vakavuusaste';
+$s_email_priority = 'Prioriteetti';
+$s_email_status = 'Status';
+$s_email_resolution = 'Ratkaisu';
+$s_email_duplicate = 'Kaksoiskappale';
+$s_email_date_submitted = 'Luontiajankohta';
+$s_email_last_modified = 'Muokkausajankohta';
+$s_email_summary =  'Yhteenveto';
+$s_email_description = 'Kuvaus';
+
+# account_delete.php
+$s_account_protected_msg = 'Käyttäjätunnus on suojattu. Asetuksia ei voi muuttaa...';
+$s_account_removed_msg = 'Käyttäjätunnuksesi on poistettu...';
+
+# account_delete_page.php
+$s_confirm_delete_msg = 'Oletko varma, että haluat poistaa käyttäjätunnuksesi?';
+$s_delete_account_button = 'Poista Käyttäjätunnus';
+
+# account_page.php
+$s_manage_profiles_link = 'Profiilit';
+$s_change_preferences_link = 'Asetukset';
+$s_edit_account_title = 'Muokkaa Käyttäjätunnusta';
+$s_username = 'Käyttäjätunnus';
+$s_email = 'Sähköposti';
+$s_password = 'Salasana';
+$s_confirm_password  = 'Varmista Salasana';
+$s_access_level = 'Käyttöoikeustaso';
+$s_update_user_button = 'Päivitä Käyttäjätunnus';
+
+# account_prefs_page.php
+$s_default_account_preferences_title = 'Käyttäjätunnuksen Asetukset';
+$s_default_project = 'Oletusprojekti';
+$s_advanced_report = 'Näytä yksityiskohtaiset raportit';
+$s_advanced_view = 'Näytä bugien yksityiskohdat';
+$s_advanced_update = 'Näytä yksityiskohtainen bugipäivitys';
+$s_refresh_delay = 'Virkistyksen Viive';
+$s_redirect_delay = 'Edelleenohjauksen Viive';
+$s_email_on_new = 'Lähetä sähköposti kun uusi bugi raportoidaan';
+$s_email_on_assigned = 'Lähetä sähköposti kun bugi osoitetaan';
+$s_email_on_feedback = 'Lähetä sähköposti kun bugille annetaan palaute';
+$s_email_on_resolved = 'Lähetä sähköposti kun bugi ratkaistaan';
+$s_email_on_closed = 'Lähetä sähköposti kun bugi suljetaan';
+$s_email_on_reopened = 'Lähetä sähköposti kun bugi uudelleenavataan';
+$s_email_on_bugnote_added = 'Lähetä sähköposti kun bugiin lisätään muistiinpano';
+$s_email_on_status_change = 'Lähetä sähköposti statuksen muuttuessa';
+$s_email_on_priority_change = 'Lähetä sähköposti prioriteetin muuttuessa';
+$s_language = 'Kieli';
+$s_update_prefs_button = 'Päivitä Asetukset';
+$s_reset_prefs_button = 'Oletusasetukset';
+
+# account_prefs_reset.php
+$s_prefs_reset_msg = 'Asetukset palautettu oletuksiin...';
+
+# account_prefs_update.php
+$s_prefs_updated_msg = 'Asetukset päivitetty...';
+
+# account_profile_add.php
+$s_profile_added_msg = 'Profiili lisätty...';
+
+# account_profile_delete.php
+$s_profile_deleted_msg = 'Profiili poistettu...';
+
+# account_profile_edit_page.php
+$s_edit_profile_title = 'Muokkaa Profiilia';
+$s_platform = 'Alusta';
+$s_operating_system = 'Käyttöjärjestelmä';
+$s_additional_description = 'Lisätietoja';
+$s_update_profile_button = 'Päivitä Profiili';
+
+# account_profile_make_default.php
+$s_profile_defaulted_msg = 'Oletusprofiili päivitetty...';
+
+# account_profile_manage_page.php
+$s_add_profile_title = 'Lisää Profiili';
+$s_add_profile_button = 'Lisää Profiili';
+$s_edit_or_delete_profiles_title = 'Muokkaa tai Poista Profiileja';
+$s_edit_profile = 'Muokkaa Profiiliä';
+$s_make_default = 'Tee Oletus';
+$s_delete_profile = 'Poista Profiiili';
+$s_select_profile = 'Valitse Profiili';
+$s_submit_button = 'Lähetä';
+
+# account_profile_update.php
+$s_profile_updated_msg = 'Profiili päivitetty...';
+
+# account_update.php
+$s_account_updated_msg = 'Käyttäjätunnuksesi on onnistuneesti päivitetty...';
+$s_email_updated = 'Sähköpostiosoite onnistuneesti päivitetty';
+$s_password_updated = 'Salasana onnistuneesti vaihdettu';
+
+# bug_assign.php
+$s_bug_assign_msg       = 'Bugi on onnistuneesti osoitettu...';
+
+# bug_close.php
+$s_bug_close_msg       = 'Bugi on suljettu...';
+$s_close_immediately   = 'Sulje välittömästi:';
+
+# bug_close_page.php
+$s_close_bug_title = 'Sulje Bugi';
+
+# bug_delete.php
+$s_bug_deleted_msg = 'Bugi on poistettu...';
+
+# bug_delete_page.php
+$s_delete_bug_sure_msg = 'Oletko varma, että haluat poistaa tämän bugin?';
+$s_delete_bug_button = 'Poista Bugi';
+
+# bug_monitor.php
+$s_monitor_bug_button = 'Seuraa Bugia';
+$s_unmonitor_bug_button = 'Lopeta Bugin Seuranta';
+
+# bug_file_add.php
+$s_file_upload_msg = 'Tiedoston lähetys onnistui';
+
+# bug_file_upload_inc.php
+$s_upload_file = 'Lähetä Tiedosto';
+$s_select_file = 'Valitse Tiedosto';
+$s_upload_file_button = 'Lähetä Tiedosto';
+$s_max_file_size = 'Enimmäiskoko';
+
+# bug_reopen.php
+$s_bug_reopened_msg = 'Bugi on uudelleenavattu...';
+$s_reopen_add_bugnote_title = 'Lisää muistiinpanoksi uudelleenavaamisen syy';
+$s_bugnote_add_reopen_button = 'Lisää muistiinpano ja uudelleenavaa bugi';
+
+# bug_resolve_page.php
+$s_resolve_bug_title = 'Ratkaise Bugi';
+$s_resolve_bug_button = 'Ratkaise Bugi';
+
+# bug_resolve_page2.php
+$s_bug_resolved_msg = 'Bugi on ratkaistu. Lisää muistiinpanoja alla...';
+$s_resolve_add_bugnote_title = 'Lisää muistiinpanoksi ratkaisu';
+$s_bugnote_add_resolve_button = 'Lisää Muistiinpano';
+
+# bug_reminder_page.php
+$s_from = 'Keneltä';
+$s_to = 'Kenelle';
+$s_on = 'Milloin';
+$s_sent_you_this_reminder_about = 'lähetti sinulle muistutuksen seuraavasta asiasta';
+$s_bug_reminder = 'Lähetä muistutus';
+$s_reminder_sent_to = 'Muistutus lähetetty';
+$s_bug_send_button = 'Lähetä';
+$s_reminder = 'Muistutus';
+
+# bug_update.php
+$s_bug_updated_msg = 'Bugi on onnistuneesti päivitetty...';
+
+# bug_update_advanced_page.php
+$s_back_to_bug_link = 'Takaisin Bugiin';
+$s_update_simple_link = 'Yksinkertainen Päivitys';
+$s_updating_bug_advanced_title = 'Päivitetään Bugin Tietoja';
+$s_id = 'ID';
+$s_category = 'Kategoria';
+$s_severity = 'Vakavuusaste';
+$s_reproducibility = 'Toistettavuus';
+$s_date_submitted = 'Lähetysajankohta';
+$s_last_update = 'Päivitysajankohta';
+$s_reporter = 'Raportoija';
+$s_assigned_to = 'Osoitettu';
+$s_priority = 'Prioriteetti';
+$s_resolution = 'Ratkaisu';
+$s_status = 'Status';
+$s_duplicate_id = 'Kaksoiskappaleen ID';
+$s_os = 'Käyttöjärjestelmä';
+$s_projection = 'Projection';
+$s_os_version = 'Versio';
+$s_eta = 'ETA';
+$s_product_version = 'Tuoteversio';
+$s_build = 'Build';
+$s_votes = 'Ääniä';
+$s_summary = 'Yhteenveto';
+$s_description = 'Kuvaus';
+$s_steps_to_reproduce = 'Toisto­ohjeet';
+$s_additional = 'Lisätietoja';
+$s_information = 'Tietoja';
+$s_update_information_button = 'Päivitä Tiedot';
+
+# bug_update_page.php
+$s_update_advanced_link = 'Päivitä Advanced';
+$s_updating_bug_simple_title = 'Päivitetään Bugin Tietoja';
+
+# bug_vote_add.php
+$s_vote_added_msg = 'Ääni lisätty...';
+
+# bugnote_add.php
+$s_bugnote_added_msg = 'Muistiinpano lisätty...';
+
+# bugnote_delete.php
+$s_bugnote_deleted_msg = 'Muistiinpano poistettu...';
+$s_bug_notes_title = 'Bugin Muistiinpanot';
+
+# bugnote_edit_page.php
+$s_edit_bugnote_title = 'Muokkaa Muistiinpanoa';
+
+# bugnote_inc.php
+$s_no_bugnotes_msg = 'Tällä bugilla ei ole muistiinpanoja.';
+$s_delete_link = 'Poista';
+$s_add_bugnote_title = 'Lisää Muistiinpano';
+$s_add_bugnote_button = 'Lisää Muistiinpano';
+$s_bugnote_edit_link = 'Muokkaa';
+$s_close_bug_button = 'Sulje Bugi';
+
+# bugnote_update.php
+$s_bugnote_updated_msg = 'Muistiinpano onnistuneesti päivitetty...';
+$s_edited_on = 'muokattu: ';
+
+# index.php
+$s_click_to_login = 'Klikkaa tästä sisäänkirjautuaksesi';
+
+# login.php
+
+# login_page.php
+$s_login_page_info = 'Tervetuloa bugtrackeriin.';
+$s_login_title = 'Sisäänkirjoittaudu';
+$s_save_login = 'Tallenna sisäänkirjautuminen';
+$s_choose_project = 'Valitse Projekti';
+$s_login_button = 'Sisäänkirjoittaudu';
+$s_signup_link = 'rekisteröi uusi käyttäjätunnus';
+
+# login_select_proj_page.php
+$s_select_project_button = 'Valitse Projekti';
+
+# logout_page.php
+$s_logged_out_title = 'Uloskirjauduttu...';
+$s_redirecting = '...Edelleenohjataan';
+$s_here = 'Here';
+
+# main_page.php
+$s_open_and_assigned_to_me = 'Avoimia ja minulle osoitettuja';
+$s_open_and_reported_to_me = 'Avoimia ja minun raportoimia';
+$s_newer_news_link = 'Uudempia Uutisia';
+$s_older_news_link = 'Vanhempia Uutisia';
+$s_archives = 'Arkistot';
+$s_rss = 'RSS';
+
+# manage_create_new_user.php
+$s_created_user_part1 = 'Luotu käyttäjätunnus';
+$s_created_user_part2 = 'käyttöoikeustasolla';
+
+# manage_create_user_page.php
+$s_create_new_account_title = 'Luo Uusi Käyttäjätunnus';
+$s_verify_password = 'Varmista Salasana';
+$s_enabled = 'Käytössä';
+$s_protected = 'Suojattu';
+$s_create_user_button = 'Luo Käyttäjä';
+
+# manage_page.php
+$s_hide_disabled = 'Piilota pois käytöstä olevat';
+$s_filter_button = 'Sovella suodatin';
+$s_manage_users_link = 'Käyttäjähallinta';
+$s_manage_projects_link = 'Projektinhallinta';
+$s_manage_custom_field_link = 'Mukautetut kentät';
+$s_create_new_account_link = 'Luo Uusi Käyttäjätunnus';
+$s_projects_link = 'Projektit';
+$s_documentation_link = 'Dokumentaatio';
+$s_new_accounts_title = 'Uudet Käyttäjätunnukset';
+$s_1_week_title = '1 Viikko';
+$s_never_logged_in_title = 'Ei koskaan sisäänkirjautunut';
+$s_prune_accounts = 'Karsi Käyttäjätunnuksia';
+$s_hide_inactive = 'Piilota Toimettomat';
+$s_manage_accounts_title = 'Käyttäjähallinta';
+$s_p = 'p';
+$s_date_created = 'Luontiajankohta';
+$s_last_visit = 'Edellinen Käynti';
+$s_edit_user_link = 'Muokkaa Käyttäjää';
+
+# manage_proj_add.php
+$s_project_added_msg = 'Projekti lisätty...';
+
+# manage_proj_category_add.php
+$s_category_added_msg = 'Kategoria lisätty...';
+
+# manage_proj_category_delete.php
+$s_category_deleted_msg = 'Kategoria poistettu...';
+
+# manage_proj_category_delete_page.php
+$s_category_delete_sure_msg = 'Oletko varma, että haluat poistaa tämän kategorian?';
+$s_delete_category_button = 'Poista Kategoria';
+
+# manage_proj_category_edit_page.php
+$s_edit_project_category_title = 'Muokkaa Projektin Kategoriaa';
+$s_update_category_button = 'Päivitä Kategoria';
+
+# manage_proj_category_update.php
+$s_category_updated_msg = 'Kategoria päivitetty...';
+
+# manage_proj_delete.php
+$s_project_deleted_msg = 'Projekti poistettu...';
+
+# manage_proj_delete_page.php
+$s_project_delete_msg = 'Oletko varma, että haluat poistaa tämän projektin ja kaikki siihen liitetyt bugit?';
+$s_project_delete_button = 'Poista Projekti';
+
+# manage_proj_edit_page.php
+$s_edit_project_title = 'Muokkaa Projektia';
+$s_project_name = 'Projektin Nimi';
+$s_view_status = 'Status';
+$s_public = 'julkinen';
+$s_private = 'yksityinen';
+$s_update_project_button = 'Päivitä Projekti';
+$s_delete_project_button = 'Poista Projekti';
+$s_categories_and_version_title = 'Kategoriat ja Versiot';
+$s_categories = 'Kategoriat';
+$s_add_category_button = 'Lisää Kategoria';
+$s_versions = 'Versiot';
+$s_add_version_button = 'Lisää Versio';
+$s_edit_link = 'Muokkaa';
+$s_actions = 'Toimet';
+$s_version = 'Versio';
+$s_timestamp = 'Ajankohta';
+$s_update = 'Päivitä';
+
+# manage_proj_menu_page.php
+$s_add_project_title = 'Lisää Projekti';
+$s_upload_file_path = 'Upload File Polku';
+$s_add_project_button = 'Lisää Projekti';
+$s_projects_title = 'Projektit';
+$s_name = 'Nimi';
+
+# manage_proj_update.php
+$s_project_updated_msg = 'Projekti päivitetty...';
+
+# manage_proj_version_add.php
+$s_version_added_msg = 'Versio lisätty...';
+
+# manage_proj_version_delete.php
+$s_version_deleted_msg = 'Versio poistettu...';
+
+# manage_proj_version_delete_page.php
+$s_version_delete_sure = 'Oletko varma, että haluat poistaa tämän version?';
+$s_delete_version_button = 'Poista Versio';
+
+# manage_proj_version_edit_page.php
+$s_edit_project_version_title = 'Muokkaa Projektin Versiota';
+$s_update_version_button = 'Päivitä Versio';
+
+# manage_proj_version_update.php
+$s_version_updated_msg = 'Versio on päivitetty...';
+
+# manage_user_delete.php
+$s_account_delete_protected_msg = 'Käyttäjätunnus on suojattu. Tämä käyttäjätunnus ei ole poistettavissa.';
+$s_account_deleted_msg = 'Käyttäjätunnus poistettu...';
+
+# manage_user_delete_page.php
+$s_delete_account_sure_msg = 'Oletko varma, että haluat poistaa tämän käyttäjätunnuksen?';
+
+# manage_user_prune.php
+$s_accounts_pruned_msg = 'Kaikki yli viikon vanhat käyttäjätunnukset joilla ei ole sisäänkirjoittauduttu kertaakaan ovat poistettu';
+$s_prune_accounts_button = 'Karsi';
+$s_confirm_account_pruning = 'Oletko varma, että haluat poistaa kaikki vanhat käyttäjätunnukset joilla ei ole sisäänkirjoittauduttu kertaakaan?';
+
+# manage_user_page.php
+$s_edit_user_title = 'Muokkaa Käyttäjää';
+$s_reset_password_button = 'Resetoi Salasana';
+$s_delete_user_button = 'Poista Käyttäjä';
+$s_reset_password_msg = 'Resetoi Salasana asettaa käyttäjälle satunnaisesti luodun salasanan.';
+$s_reset_password_msg2 = 'Resetoi Salasana asettaa käyttäjälle tyhjän salasanan.';
+$s_show_all_users = 'ALL';
+
+# manage_user_reset.php
+$s_account_reset_protected_msg = 'Käyttäjätunnus on suojattu. Salasanaa ei voida resetoida.';
+$s_account_reset_msg = 'Uusi salasana on luotu ja sähköpostitettu käyttäjälle...';
+$s_account_reset_msg2 = 'Käyttäjätunnukselle on asetettu tyhjä salasana...';
+
+# manage_user_update.php
+$s_manage_user_protected_msg = 'Käyttäjätunnus on suojattu. Käyttöoikeustaso ja Käytössä-valinnat suojattu. Kaikki muu käyttäjätunnuksessa päivitetty...';
+$s_manage_user_updated_msg = 'Käyttäjätunnus päivitetty...';
+
+# menu_inc.php
+$s_main_link = 'Pääsivu';
+$s_view_bugs_link = 'Näytä Bugit';
+$s_report_bug_link = 'Raportoi Bugi';
+$s_summary_link = 'Yhteenveto';
+$s_account_link = 'Käyttäjätunnukseni';
+$s_users_link = 'Käyttäjät';
+$s_manage_link = 'Hallinta';
+$s_edit_news_link = 'Muokkaa Uutisia';
+$s_docs_link = 'Dokumentaatio';
+$s_logout_link = 'Poistu';
+
+# meta_inc.php
+
+# news_add.php
+$s_news_added_msg = 'Uutisartikkeli lisätty...';
+
+# news_delete.php
+$s_news_deleted_msg = 'Uutisartikkeli poistettu...';
+
+# news_delete_page.php
+$s_delete_news_sure_msg = 'Oletko varma, että haluat poistaa tämän uutisartikkelin?';
+$s_delete_news_item_button = 'Poista Uutisartikkeli';
+
+# news_edit_page.php
+$s_edit_news_title = 'Muokkaa Uutisia';
+$s_headline = 'Otsikko';
+$s_body = 'Leipäteksti';
+$s_update_news_button = 'Päivitä Uutiset';
+
+# news_menu_page.php
+$s_add_news_title = 'Lisää Uutisia';
+$s_post_to = 'Post to';
+$s_post_news_button = 'Lisää Uutinen';
+$s_edit_or_delete_news_title = 'Muokkaa tai Poista Uutisia';
+$s_edit_post = 'Muokkaa Artikkelia';
+$s_delete_post = 'Poista Artikkeli';
+$s_select_post = 'Valitse Artikkeli';
+
+# news_update.php
+$s_news_updated_msg = 'Uutinen päivitetty...';
+
+# news_view_page.php
+$s_back_link = 'Takaisin';
+
+# proj_doc_add.php
+$s_file_uploaded_msg = 'Tiedosto onnistuneesti lähetetty';
+
+# proj_doc_add_page.php
+$s_upload_file_title = 'Lähetä Tiedosto';
+$s_title = 'Otsikko';
+
+# proj_doc_delete.php
+$s_project_file_deleted_msg = 'Projektin tiedosto poistettu';
+
+# proj_doc_delete_page.php
+$s_confirm_file_delete_msg = 'Oletko varma, että haluat poistaa tämän tiedoston?';
+
+# proj_doc_edit_page.php
+$s_filename = 'Tiedostonimi';
+$s_file_update_button = 'Päivitä Tiedosto';
+$s_file_delete_button = 'Poista Tiedosto';
+
+# proj_doc_page.php
+$s_project_documentation_title = 'Projektin Dokumentaatio';
+$s_user_documentation = 'Käyttäjien Dokumentaatio';
+$s_project_documentation = 'Projektin Dokumentaatio';
+$s_add_file = 'Lisää Tiedosto';
+
+# proj_doc_update.php
+$s_project_document_updated = 'Projekti onnistuneesti päivitetty';
+
+# proj_user_add.php
+$s_project_user_added_msg = 'Käyttäjä onnistuneesti lisätty tähän projektiin';
+
+# proj_user_delete.php
+$s_project_removed_user_msg = 'Käyttäjä onnistuneesti poistettu tästä projektista';
+
+# proj_user_delete_page.php
+$s_remove_user_sure_msg = 'Oletko varma, että haluat poistaa tämän käyttäjätunnuksen?';
+
+# proj_user_menu_page.php
+$s_add_user_title = 'Lisää käyttäjä projektiin';
+$s_add_user_button = 'Lisää Käyttäjätunnus';
+$s_project_selection_title = 'Projektin Valinta';
+$s_remove_link = 'Poista';
+
+# proj_user_update.php
+$s_updated_user_msg = 'Käyttäjätunnus päivitetty';
+
+# report_add.php
+$s_must_enter_category = 'Sinun on valittava kategoria';
+$s_must_enter_severity = 'Sinun on vlittava vakavuusaste';
+$s_must_enter_reproducibility = 'Sinun on annettava toistettavuus';
+$s_must_enter_summary = 'Sinun on annettava yhteenveto';
+$s_must_enter_description = 'Sinun on annettava kuvaus';
+$s_report_more_bugs = 'Raportoi Lisää Bugeja';
+$s_submission_thanks_msg = 'Kiitos';
+
+# report_bug_advanced_page.php
+$s_simple_report_link = 'Yksinkertainen Raportti';
+$s_enter_report_details_title = 'Syötä Raportin Tiedot';
+$s_required = 'tarvittu';
+$s_select_category = 'Valitse Kategoria';
+$s_select_reproducibility = 'Valitse Toistettavuus';
+$s_select_severity = 'Valitse Vakavuusaste';
+$s_or_fill_in = 'TAI täytä seuraavat kentät';
+$s_assign_to = 'Osoita käyttäjälle';
+$s_additional_information = 'Lisätietoja';
+$s_submit_report_button = 'Lähetä Raportti';
+$s_check_report_more_bugs = 'rastita raportoidaksesi lisää bugeja';
+
+# report_bug_page.php
+$s_advanced_report_link = 'Yksityiskohtainen Raportti';
+$s_report_stay = 'Report Stay';
+
+# set_project.php
+$s_selected_project = 'Valittu projekti';
+$s_valid_project_msg = 'Sinun täytyy valita voimassaoleva projekti';
+
+# signup.php
+$s_invalid_email = 'EI OLE PAIKKAANSAPITÄVÄ SÄHKÖPOSTIOSOITE';
+$s_duplicate_username = 'KÄYTTÄJÄTUNNUS ON JO OLEMASSA.  VALITSE TOINEN KÄYTTÄJÄTUNNUS';
+$s_account_create_fail = 'KÄYTTÄJÄTUNNUKSEN LUONTI EPÄONNISTUI';
+$s_account_added = 'Uusi käyttäjätunnus luotu.';
+$s_password_emailed_msg = 'Salasanasi lähetetään sinulle sähköpostiosoitteeseesi.';
+$s_no_reponse_msg = 'Käyttäjätunnuksenne saatetaan poistaa ellette toimi viikon sisällä.';
+
+# signup_page.php
+$s_signup_info = 'Valitse käyttäjätunnus ja syötä voimassaoleva sähköpostiosoite.  Satunnaisesti luotu salasana lähetetään sähköpostiisi.';
+$s_signup_title = 'Rekisteröidy';
+$s_signup_button = 'Rekisteröidy';
+
+# site_settings_edit_page.php
+$s_edit_site_settings_title = 'Muokkaa Sivuston Asetuksia';
+$s_save_settings_button = 'Tallenna Asetukset';
+
+# site_settings_page.php
+$s_site_settings_title = 'Sivuston Asetukset';
+$s_system_info_link = 'Järjestelmätiedot';
+$s_site_settings_link = 'Sivuston Asetukset';
+
+# site_settings_update.php
+$s_site_settings_updated_msg = 'Sivuston asetukset päivitetty';
+
+# summary_page.php
+$s_summary_title = 'Yhteenveto';
+$s_summary_jpgraph_link = 'Yksityiskohtainen yhteenveto';
+$s_by_project = 'by project';
+$s_by_status = 'statuksen mukaan';
+$s_by_date = 'päivien mukaan';
+$s_by_severity = 'vakavuusasteen mukaan';
+$s_by_resolution = 'ratkaisun mukaan';
+$s_by_category = 'katogorian mukaan';
+$s_by_priority = 'prioriteetin mukaan';
+$s_by_developer = 'kehittäjän mukaan';
+$s_by_reporter ='raportoijan mukaan';
+$s_reporter_by_resolution = 'Reporter By Resolution';
+$s_reporter_effectiveness = 'Reporter Effectiveness';
+$s_developer_by_resolution = 'Developer By Resolution';
+$s_percentage_fixed = '% Fixed';
+$s_percentage_errors = '% False';
+$s_errors = 'False';
+$s_total = 'Total';
+$s_time_stats = 'ratkaistujen bugien aikatilastot (päiviä)';
+$s_longest_open_bug = 'kauin avoin bugi';
+$s_longest_open = 'kauin avoin';
+$s_average_time = 'keskimääräinen aika';
+$s_total_time = 'yhteenlaskettu aika';
+$s_developer_stats = 'kehittäjien tilastot';
+$s_reporter_stats = 'raportoijien tilastot';
+$s_orct = '(avoin/ratkaistu/suljettu/yhteensä)';
+
+# view_all_bug_page.php
+$s_any = 'mikä tahansa';
+$s_show = 'Näytä';
+$s_changed = 'Muutettu(tuntia)';
+$s_viewing_bugs_title = 'Näytetään Bugit';
+$s_updated = 'Päivitetty';
+
+# view_all_inc.php
+$s_none = 'none';
+$s_search ='Haku';
+$s_view_prev_link = 'Näytä edelliset';
+$s_view_next_link = 'Näytä seuraavat';
+$s_prev = 'Prev';
+$s_next = 'Next';
+$s_first = 'First';
+$s_last = 'Last';
+
+# view_bug_advanced_page.php
+$s_view_simple_link = 'Näytä yksinkertainen';
+$s_viewing_bug_advanced_details_title = 'Näytetään bugin yksityiskohtaiset tiedot';
+$s_product_build = 'Tuotteen Build';
+$s_system_profile = 'Järjestelmäkuvaus';
+$s_update_bug_button = 'Päivitä Bugi';
+$s_bug_assign_to_button = 'Assign To:';
+$s_reopen_bug_button = 'Uudelleenavaa Bugi';
+$s_attached_files = 'Liitetiedostot';
+$s_publish = 'Julkaise';
+$s_cached = 'Välimuistissa';
+
+# view_bug_inc.php
+
+# view_bug_page.php
+$s_view_advanced_link = 'Näytä Yksityiskohdat';
+$s_viewing_bug_simple_details_title = 'Näytetään bugin yksinkertaiset tiedot';
+
+# bug_monitor_list_view_inc.php
+$s_no_users_monitoring_bug = 'Yksikään käyttäjä ei seuraa tätä bugia.';
+$s_users_monitoring_bug = 'Käyttäjät jotka seuraavat tätä bugia';
+$s_monitoring_user_list = 'Käyttäjälistaus';
+
+# custom field strings
+$s_add_custom_field_button = 'Uusi mukautettu kenttä';
+$s_delete_custom_field_button = 'Poista mukautettu kenttä';
+$s_delete_custom_field_everywhere = 'Poista mukautettu kenttä kaikkialta';
+$s_update_custom_field_button = 'Päivitä mukautettu kenttä';
+$s_add_existing_custom_field = 'Lisää tämä olemassaolevaan mukautettuun kenttään';
+$s_edit_custom_field_title = 'Muokkaa mukautettua kenttää';
+$s_custom_field = 'Kenttä';
+$s_custom_fields_setup = 'Mukautetut Kentät';
+$s_custom_field_name = 'Nimi';
+$s_custom_field_project_count = 'Projektien lukumäärä';
+$s_custom_field_type = 'Tyyppi';
+$s_custom_field_possible_values = 'Mahdolliset Arvot';
+$s_custom_field_default_value = 'Oletusarvo';
+$s_custom_field_valid_regexp = 'Regular Expression';
+$s_custom_field_access_level_r = 'Lukuoikeus';
+$s_custom_field_access_level_rw = 'Kirjoitusoikeus';
+$s_custom_field_length_min = 'Vähimmäispituus';
+$s_custom_field_length_max = 'Enimmäispituus';
+$s_custom_field_advanced = 'Yksityiskohdat';
+$s_custom_field_sequence = 'Järjestys';
+$s_custom_field_type_enum_string = '0:Merkkijono,1:Numerojono,2:Liukuluku,3:Numeroitu,4:Sähköpostiosoite';
+
+$s_confirm_used_custom_field_deletion = 'Tämä kenttä on liitetty ainakin yhteen projektiin.  Jos jatkat, kaikki tähän kenttään liitetyt arvot poistetaan. Tätä komentoa ei voida jälkeenpäin kumota.  Jos et halua poistaa tätä kenttää, paina selaimesi Takaisin-painiketta.  Jatkaaksesi, paina allaolevaa painiketta';
+$s_confirm_custom_field_deletion = 'Oletko varma, että haluat poistaa tämän mukautetun kentän ja kaikki siihe liitetyt arvot?';
+$s_field_delete_button = 'Poista Kenttä';
+
+$s_hide_status = 'Piilota Status';
+$s_filter_closed = "Suljettu";
+$s_filter_resolved = "Ratkaistu";
+
+$s_attachments = "attachment(s)";
+$s_attachment_alt = "A";
+
+# PHPMailer
+$s_phpmailer_language = 'en';
+?>

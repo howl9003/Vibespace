@@ -1,0 +1,118 @@
+#include "bounty.h"
+#include "archspace.h"
+
+CBountyTable::~CBountyTable()
+{
+
+}
+
+bool 
+CBountyTable::load(CMySQL &aMySQL)
+{
+	// load bounty
+	//aMySQL.query( "LOCK TABLE bounty READ" );
+	aMySQL.query( "SELECT id, source_player, target_player, empire_points, expire_time FROM bounty" );
+
+	aMySQL.use_result();
+
+	while(aMySQL.fetch_row())
+	{
+		new_bounty(aMySQL.row());
+	}
+
+	aMySQL.free_result();
+	//aMySQL.query( "UNLOCK TABLES" );
+	SLOG("load bounty");
+
+	return true;
+}
+
+void
+CBountyTable::new_bounty(COfferedBounty *aOfferedBounty, CPlayer *aTargetPlayer)
+{
+	if (aOfferedBounty == NULL || aTargetPlayer == NULL) 
+	{
+		SLOG("CBountyTable::new_bounty() was sent null junk");
+		return;
+	}
+	aTargetPlayer->accept_bounty(aOfferedBounty);
+}
+
+void
+CBountyTable::new_bounty(MYSQL_ROW aRow)
+{
+	CBounty *newBounty = new CBounty(aRow);
+	if ((newBounty->is_valid())&&(!newBounty->is_expired()))
+	{
+		mBounties[newBounty->get_id()] = newBounty;
+	}
+	else
+	{
+		SLOG("CBountyTable::new_bounty(MYSQL_ROW aRow) : bounty is not valid or it expired");
+		newBounty->type(QUERY_DELETE);
+		STORE_CENTER->store(*newBounty);
+	}
+}
+
+CBounty* 
+CBountyTable::get_by_id(int aID)
+{
+	std::map<int, CBounty*>::iterator aIter = mBounties.find(aID);
+	if (aIter == mBounties.end()) 
+	{
+		SLOG("CBountyTable::get_by_id a bounty was not found that was requested for");
+		return NULL;
+	}
+	return aIter->second;
+}
+
+CBounty* 
+CBountyTable::get_by_target_id(int aID)
+{
+	std::map<int, CBounty*>::iterator aIter;
+	for (aIter = mBounties.begin(); aIter != mBounties.end(); aIter++) 
+	{
+		if ((aIter->second)->get_target_player()->get_game_id()==aID) return aIter->second;
+	}
+	return NULL;
+}
+
+void 
+CBountyTable::remove(int aID)
+{
+	std::map<int, CBounty*>::iterator aIter = mBounties.find(aID);
+	if (aIter == mBounties.end()) 
+	{
+		SLOG("CBountyTable::remove(int aID) a bounty was not found that was requested for");
+		return;
+	}
+	CBounty *aBounty = aIter->second;
+	aBounty->type(QUERY_DELETE);
+	STORE_CENTER->store(*aBounty);
+	aBounty->get_source_player()->remove_bounty(aBounty->get_id());
+	mBounties.erase(aIter);
+}
+
+void 
+CBountyTable::remove(CBounty *aBounty)
+{
+	remove(aBounty->get_id());
+}
+
+void
+CBountyTable::remove_by_target_id(int aID)
+{
+	std::map<int, CBounty*>::iterator aIter;
+	for (aIter = mBounties.begin(); aIter != mBounties.end(); aIter++) 
+	{
+		if ((aIter->second)->get_target_player()->get_game_id()==aID) remove(aIter->second);
+	}
+}
+
+void 
+CBountyTable::add(CBounty* aBounty)
+{
+	mBounties[aBounty->get_id()] = aBounty;
+	aBounty->type(QUERY_INSERT);
+	STORE_CENTER->store(*aBounty);
+}

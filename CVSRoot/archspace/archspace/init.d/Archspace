@@ -1,0 +1,249 @@
+#!/sbin/runscript
+
+#
+# Archspace Server Init Script
+#
+
+#
+# Global Variable Section
+#
+AS_PID="/etc/archspace/archspace.pid"
+AS="/usr/sbin/archspace"
+AS_NEW="/usr/sbin/archspace.new"
+AS_CONFIG="/etc/archspace/archspace.config"
+MSG_DIR="/usr/src/archspace/apps/archspace/"
+LOG_FILE_DIR="/var/log/archspace/"
+MONITOR_SCRIPT="/usr/sbin/archspacemon"
+MONITOR_PID="/etc/archspace/archspacemon.pid"
+
+# list of log file logs to be cleaned -- do not edit
+SYSTEM_LOG="${LOG_FILE_DIR}systemlog"
+MONITOR_LOG="${LOG_FILE_DIR}monitor.log"
+DATABASE_LOG="${LOG_FILE_DIR}dblog"
+LASTCRASH_LOG="${LOG_FILE_DIR}lastcrash.log"
+
+# Additional function added to command line
+opts="${opts} clean start_monitor stop_monitor restart_monitor"
+
+#
+# Process Dependencies
+#
+
+depend() {
+	need net mysql ArchspacePortal
+	use logger apache
+}
+
+#
+# Function for starting Archspace
+#  - checks for new server file and (will later) asks about replacement?
+#  - attempts to start the server
+#  - handles status and pid init shiz
+#  - TODO: make sure pidfile created and processes actually start
+#
+
+start() {
+	ebegin "Starting Archspace"
+
+	if [ -f ${AS_NEW} ]
+	then
+		einfo "New Archspace server file found -- updating"
+		mv ${AS_NEW} ${AS}
+		if [ -f ${AS_NEW} ]
+		then
+			eerror "Error copying over new server file"
+		fi
+	fi
+	
+	# Make the translations -- FIXME: too much spam
+	make -s -C ${MSG_DIR} message &> /dev/null
+
+	# Start the server
+	cd ${LOG_FILE_DIR}
+	if [ -f ${AS_CONFIG} ]
+	then
+		/sbin/start-stop-daemon --start --quiet --background \
+		--exec ${AS} --pidfile ${AS_PID} \
+		-- -c ${AS_CONFIG}
+		einfo "Waiting 10 seconds for the server to finish loading"
+		sleep 10
+		start_monitor
+	else
+		eerror "${AS_CONFIG} does not exist, create the file and service may need zapping"
+	fi
+	eend $?
+}
+
+start_monitor() {
+ebegin "Starting Archspace Monitor Script"
+
+if [ -f ${MONITOR_PID} ]
+then
+	
+	einfo "Archspace Monitor PID File Detected"
+
+	temp_pid=`/usr/bin/cat $MONITOR_PID`
+	if [[ -e /proc/$temp_pid ]]
+	then	
+		eerror "Archspace Monitor Process Found -- Not Starting"
+		#instead of just restarting the monitor, just exit
+		#stop_monitor
+		exit 0
+	else
+		einfo "Archspace Monitor Process NOT running...starting it."
+	fi
+fi
+
+if [ -f ${MONITOR_SCRIPT} ]
+then
+	/sbin/start-stop-daemon --start --quiet --background \
+	--exec ${MONITOR_SCRIPT} --pidfile ${MONITOR_PID} \
+	--make-pidfile -- ${LOG_FILE_DIR}
+	
+else
+	eerror "Archspace Monitor Script Does Not Exist!"
+fi
+eend $?
+}
+
+stop_monitor() {
+ebegin "Stopping Archspace Monitor Script"
+if [ -f ${MONITOR_SCRIPT} ]
+then
+	if [ -f ${MONITOR_PID} ]
+	then
+		start-stop-daemon -o --quiet --stop --retry 9/0/KILL/0 \
+		--pidfile ${MONITOR_PID} --signal 9
+		rm ${MONITOR_PID}
+		# this is bad, but needed
+		echo "`date` :: Archspace Monitor Shutdown" >> $MONITOR_LOG
+	else
+		eerror "Archspace Monitor is already stopped"
+	fi
+else
+	eerror "Archspace Monitor Script Does Not Exist!"
+fi
+eend $?
+}
+
+restart_monitor() {
+ebegin "Restarting the archspace monitor"
+stop_monitor
+start_monitor
+eend $?
+}
+
+#
+# Function for cleanely stopping Archspace
+# I think this is mostly perfect.
+# TODO: could add a PID/process check to the beginning
+# but it's kinda redundant
+#
+
+stop() {
+	stop_monitor
+	ebegin "Stopping Archspace..."
+	# Retries forver with sig -15 and then kill to shutdown the server
+	# or something ;p
+	start-stop-daemon -o --quiet --stop --signal 15 --retry 15 \
+	--pidfile ${AS_PID}
+	
+	# If process is dead remove the pidfile
+	if [ -f $AS_PID ]
+	then
+		temp_pid=`/usr/bin/cat $AS_PID`
+		# Sleep 3 seconds just to make sure the /proc/pid got removed
+		sleep 3
+	
+		if [[ -e /proc/$temp_pid ]]
+		then
+			eerror "/proc/${temp_pid} still exists!!! process may still be running."
+		else
+			einfo "/proc/${temp_pid} dead -- removing ${AS_PID}"
+			rm ${AS_PID}
+			if [ -f ${AS_PID} ]
+			then
+				error "Error removing ${AS_PID}"
+			else
+				einfo "${AS_PID} removed"
+			fi
+		fi
+	else
+		eerror "Archspace PID file missing!!! Already stopped?"
+	fi
+	eend $?
+}
+
+#
+# Cleans the Archspace log by log and reports any errors
+# Makes sure server is stopped to do so =)
+# - Seems final?
+#
+
+clean() {
+	ebegin "Cleaning Archspace Logs"
+	
+	# check for and stop a running server -- not quite right
+	if [ -f ${AS_PID} ]
+	then
+		einfo "Archspace Server detected!!!"
+		# for some reason just plain stop wasn't working right
+		/etc/init.d/Archspace stop
+	else
+		einfo "Server already stopped, continuing to clean logs.."
+	fi
+
+	# Remove the system log
+	if [ -f ${SYSTEM_LOG} ]
+	then
+		einfo "Removing ${SYSTEM_LOG}"
+		rm  ${SYSTEM_LOG}
+		if [ -f ${SYSTEM_LOG} ]
+		then
+			eerror "Could not remove ${SYSTEM_LOG}"
+		fi
+	else
+		einfo "${SYSTEM_LOG} was already clean"
+	fi
+	
+	# Remove the monitor log
+	if [ -f ${MONITOR_LOG} ]
+	then
+		einfo "Removing ${MONITOR_LOG}"
+		rm ${MONITOR_LOG}
+		if [ -f ${MONITOR_LOG} ]
+		then 
+			error "Could not remov ${MONITOR_LOG}"
+		fi
+	else
+		einfo "${MONITOR_LOG} was already clean"
+	fi
+
+	# Remove the database log
+	if [ -f ${DATABASE_LOG} ]
+	then
+		einfo "Removing ${DATABASE_LOG}"
+		rm ${DATABASE_LOG}
+		if [ -f ${DATABASE_LOG} ]
+		then 
+			error "Could not remov ${DATABASE_LOG}"
+		fi
+	else
+		einfo "${DATABASE_LOG} was already clean"
+	fi
+
+	# Remove the lastcrash log
+	if [ -f ${LASTCRASH_LOG} ]
+	then
+		einfo "Removing ${LASTCRASH_LOG}"
+		rm ${LASTCRASH_LOG}
+		if [ -f ${LASTCRASH_LOG} ]
+		then 
+			error "Could not remov ${LASTCRASH_LOG}"
+		fi
+	else
+		einfo "${LASTCRASH_LOG} was already clean"
+	fi
+
+	eend $?
+}

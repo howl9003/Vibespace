@@ -1,0 +1,1253 @@
+# Ship classes of Imperial Grand Fleet
+#
+# Number 1xx, 2xx, 3xx, ..., 500 -> Tech level
+# x00, 10, 20, ... -> Ship size - 1
+# ex) 490 class is ship size 10, TL 4 ship
+#
+# Class name is temporary just the number
+# 
+# key is class number +9000
+#
+# 2000/3/20, outsider
+
+<101 Class>
+{
+	Number(101),
+	Body(4001),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101),
+			Amount(4)
+		}
+	]
+},
+
+ 
+<102 Class>
+{
+	Number(102),
+	Body(4001),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6102),
+			Amount(3)
+		}
+	]
+},
+ 
+
+ 
+<201 Class>
+{
+	Number(202),
+	Body(4002),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101), Amount(3)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(3)
+		}
+	]
+},
+ 
+
+ 
+<202 Class>
+{
+	Number(202),
+	Body(4002),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6102), Amount(3)
+		},
+		<Weapon>
+		{
+			Number(6202), Amount(2)
+		}
+	]
+},
+ 
+
+ 
+<203 Class>
+{
+	Number(203),
+	Body(4002),
+	Armor(5107),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(2)
+		},
+		<Weapon>
+		{
+			Number(6304), Amount(2)
+		}
+	]
+},
+ 
+
+ 
+<301 Class>
+{
+	Number(301),
+	Body(4003),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<Device>
+	[
+		Number(5501)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101), Amount(6)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(6)
+		}
+	]
+},
+ 
+
+ 
+<302 Class>
+{
+	Number(302),
+	Body(4003),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<Device>
+	[
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6303), Amount(4)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(4)
+		}
+	]
+},
+ 
+
+ 
+<303 Class>
+{
+	Number(303),
+	Body(4003),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(5)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(5)
+		}
+	]
+},
+ 
+
+ 
+<401 Class>
+{
+	Number(401),
+	Body(4004),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<Device>
+	[
+		Number(5501)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(7)
+		}
+	]
+},
+ 
+
+ 
+<402 Class>
+{
+	Number(402),
+	Body(4004),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<Device>
+	[
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6303), Amount(5)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(5)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(5)
+		}
+	]
+},
+ 
+
+ 
+<403 Class>
+{
+	Number(403),
+	Body(4004),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(5)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(5)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(5)
+		}
+	]
+},
+ 
+
+ 
+<404 Class>
+{
+	Number(404),
+	Body(4004),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(2)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(2)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(2)
+		}
+	]
+},
+ 
+
+ 
+<501 Class>
+{
+	Number(501),
+	Body(4005),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<Device>
+	[
+		Number(5501),
+		Number(5504)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101), Amount(9)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(9)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(9)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(9)
+		}
+	]
+},
+ 
+
+ 
+<502 Class>
+{
+	Number(502),
+	Body(4005),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<Device>
+	[
+		Number(5502),
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6303), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(7)
+		}
+	]
+},
+ 
+
+ 
+<503 Class>
+{
+	Number(503),
+	Body(4005),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(7)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(7)
+		}
+	]
+},
+ 
+
+ 
+<504 Class>
+{
+	Number(504),
+	Body(4005),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(3)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(3)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(3)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(3)
+		}
+	]
+},
+ 
+
+ 
+<601 Class>
+{
+	Number(601),
+	Body(4006),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<Device>
+	[
+		Number(5501),
+		Number(5504)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101), Amount(16)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(16)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(16)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(16)
+		}
+	]
+},
+ 
+
+ 
+<602 Class>
+{
+	Number(602),
+	Body(4006),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<Device>
+	[
+		Number(5502),
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6303), Amount(12)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(12)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(12)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(12)
+		}
+	]
+},
+ 
+
+ 
+<603 Class>
+{
+	Number(603),
+	Body(4006),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(13)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(13)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(13)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(13)
+		}
+	]
+},
+ 
+
+ 
+<604 Class>
+{
+	Number(604),
+	Body(4006),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(6)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(6)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(6)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(6)
+		}
+	]
+},
+ 
+
+ 
+<605 Class>
+{
+	Number(605),
+	Body(4006),
+	Armor(5113),
+	Computer(5205),
+	Shield(5305),
+	Engine(5405),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6209), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(8)
+		}
+	]
+},
+ 
+
+ 
+<701 Class>
+{
+	Number(701),
+	Body(4007),
+	Armor(5101),
+	Computer(5201),
+	Shield(5301),
+	Engine(5401),
+	<Device>
+	[
+		Number(5501),
+		Number(5504)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6101), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6101), Amount(22)
+		}
+	]
+},
+ 
+
+ 
+<702 Class>
+{
+	Number(702),
+	Body(4007),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<Device>
+	[
+		Number(5502),
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6303), Amount(17)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(17)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(17)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(17)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(17)
+		}
+	]
+},
+ 
+
+ 
+<703 Class>
+{
+	Number(703),
+	Body(4007),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(19)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(19)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(19)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(19)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(19)
+		}
+	]
+},
+ 
+
+ 
+<704 Class>
+{
+	Number(704),
+	Body(4007),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(8)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(8)
+		}
+	]
+},
+ 
+
+ 
+<705 Class>
+{
+	Number(705),
+	Body(4007),
+	Armor(5113),
+	Computer(5205),
+	Shield(5305),
+	Engine(5405),
+	<Device>
+	[
+		Number(5502),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6209), Amount(11)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(11)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(11)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(11)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(11)
+		}
+	]
+},
+ 
+
+ 
+<802 Class>
+{
+	Number(802),
+	Body(4008),
+	Armor(5102),
+	Computer(5202),
+	Shield(5302),
+	Engine(5402),
+	<Device>
+	[
+		Number(5502),
+		Number(5516),
+		Number(5509)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		}
+	]
+},
+ 
+
+ 
+<803 Class>
+{
+	Number(803),
+	Body(4008),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5502),
+		Number(5516),
+		Number(5515)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(33)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		},
+		<Weapon>
+		{
+			Number(6303), Amount(31)
+		}
+	]
+},
+ 
+
+ 
+<804 Class>
+{
+	Number(804),
+	Body(4008),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5502),
+		Number(5515),
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(14)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(14)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(14)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(14)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(14)
+		}
+	]
+},
+ 
+
+ 
+<805 Class>
+{
+	Number(805),
+	Body(4008),
+	Armor(5113),
+	Computer(5205),
+	Shield(5305),
+	Engine(5405),
+	<Device>
+	[
+		Number(5502),
+		Number(5515),
+		Number(5516)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6209), Amount(20)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(20)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(20)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(20)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(20)
+		}
+	]
+},
+ 
+
+ 
+<903 Class>
+{
+	Number(903),
+	Body(4009),
+	Armor(5111),
+	Computer(5203),
+	Shield(5303),
+	Engine(5403),
+	<Device>
+	[
+		Number(5502),
+		Number(5515),
+		Number(5516),
+		Number(5501)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6204), Amount(48)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(48)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(48)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(48)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(48)
+		},
+		<Weapon>
+		{
+			Number(6204), Amount(48)
+		}
+	]
+},
+ 
+
+ 
+<904 Class>
+{
+	Number(904),
+	Body(4009),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5502),
+		Number(5515),
+		Number(5516),
+		Number(5501)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(21)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(21)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(21)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(21)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(21)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(21)
+		}
+	]
+},
+ 
+
+ 
+<905 Class>
+{
+	Number(905),
+	Body(4009),
+	Armor(5113),
+	Computer(5205),
+	Shield(5305),
+	Engine(5405),
+	<Device>
+	[
+		Number(5502),
+		Number(5515),
+		Number(5516),
+		Number(5517)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6209), Amount(29)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(29)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(29)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(29)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(29)
+		},
+		<Weapon>
+		{
+			Number(6209), Amount(29)
+		}
+	]
+},
+ 
+
+ 
+<1004 Class>
+{
+	Number(1004),
+	Body(4010),
+	Armor(5107),
+	Computer(5204),
+	Shield(5304),
+	Engine(5404),
+	<Device>
+	[
+		Number(5502),
+		Number(5501),
+		Number(5515),
+		Number(5516),
+		Number(5522)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		},
+		<Weapon>
+		{
+			Number(6306), Amount(32)
+		}
+	]
+},
+ 
+
+ 
+<1005 Class>
+{
+	Number(1005),
+	Body(4010),
+	Armor(5105),
+	Computer(5205),
+	Shield(5305),
+	Engine(5405),
+	<Device>
+	[
+		Number(5502),
+		Number(5504),
+		Number(5527),
+		Number(5516),
+		Number(5522)
+	],
+	<WeaponList>
+	[
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		},
+		<Weapon>
+		{
+			Number(6210), Amount(22)
+		}
+	]
+}
+ 
+
+

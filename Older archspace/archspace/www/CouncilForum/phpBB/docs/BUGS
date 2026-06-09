@@ -1,0 +1,42 @@
+Known Issues
+------------------------------------------------------------------------
+There are a few known bugs in phpBB v1.0.0, so if you find a bug please
+check here befor posting to the support forums or emailing the team.
+
+------------------------------------------------------------------------
+1) Dynamic Signaturs do not survive editing
+
+This shouldn't be much of an issue. Signatures are treated as dynamic when
+posting, a BBCode style tag is attached to each post that a signature is a
+attached to so that viewtopic.php will show the signature as it is listed
+for the user in the Database. That means that signatures will not get
+'stale'. However, if you edit a post that you have attached you signature
+too it will not be dynamic in that post any longer. The signature will
+remain with the post but it will not change when the user updates his/her
+signature in there profile.
+-------------------------------------------------------------------------
+
+
+Reporting Bugs
+------------------------------------------------------------------------
+Found a bug that isn't listed here? Good, we'll fix it! To report a bug you
+can go to the offical phpBB forums at http://www.phpbb.com/phpBB/ and post
+it in the 'phpBB Bug Reports' forum (please make sure someone else hasn't
+already reported it there!), or you can email it to bugs@phpbb.com
+
+If you are emailing a bug please follow this little template:
+
+Subject: [BUG] Brief Description
+Body:
+phpBB Version: <version number, You can find this in config.php or page_tail>
+Web Server Software: <Apache/IIS/Whatever>
+Web Server Version: <You get the idea>
+PHP Version: <3.0.9/4.0.3pl1 etc etc>
+Full description of error, how to reproduce it, and preferrable with a URL 
+where we can check it out ourselves.
+
+If email bugs are not subbmitted in this manor they will most likely get
+lost in the mail! Please follow it carfully!
+
+Thank you.
+The phpBB Group.

@@ -1,0 +1,395 @@
+this document is to simply stipulate what variables should be include in the base classes.
+Its main purpose is to show what variables are not implemented in the DB, but will be implemented in the java code and to show the status.
+
+
+object users (
+ id mediumint(6) NOT NULL,
+ player_id mediumint(6) NOT NULL,
+ email varchar(30) NOT NULL,
+ name varchar(20) NOT NULL,
+ password char(20) NOT NULL,
+ verification int unsigned NOT NULL,
+ admin_hash char(1) NOT NULL,
+ preference_hash char(3) NOT NULL,
+ #end of sql objects
+ 
+ player
+ 
+);
+
+object players (
+ id mediumint(6) NOT NULL,
+ name varchar(20) NOT NULL,
+ 
+ ruler_id mediumint(6) NOT NULL,
+ 
+ choices_hash char(5) NOT NULL,
+ plocies_hash char(2) NOT NULL,
+ tech_hash char(50) NOT NULL,
+ abilities_hash char(3) NOT NULL,
+ era tinyint(3) NOT NULL,
+ 
+ currency int(10) unsigned NOT NULL,
+ research_invest int(9) NOT NULL,
+ current_research_id smallint(5) NOT NULL,
+ 
+ honor tinyint(3) DEFAULT '50' NOT NULL,
+ security_level tinyint(3) DEFAULT '1' NOT NULL,
+ alertness tinyint(3) DEFAULT '0' NOT NULL,
+ 
+ turn int(9) NOT NULL,
+ news_turn int(9) DEFAULT '0' NOT NULL,
+ news_production int(9) DEFAULT '0' NOT NULL,
+ news_research int(9) DEFAULT '0' NOT NULL,
+ news_population int(9) DEFAULT '0' NOT NULL,
+ #end of sql objects
+ 
+ ruler
+ user
+ current_research
+ inhabitant_list
+ design_list
+ army_list
+ message_list
+ relation_list
+ commander_list
+ event_list
+ player_action_list
+ battle_list
+        cm
+ 
+ 
+);
+
+object territories (
+ id int(9) NOT NULL,
+ 
+ type tinyint(3) NOT NULL,
+ resources_hash char(2) NOT NULL,
+ improvements_hash char(1) NOT NULL,
+ #end of sql objects
+ 
+ inhabitant
+);
+
+object inhabitants (
+ id int(9) NOT NULL,
+ territory_id int(9) NOT NULL,
+ owner_id mediumint(6) NOT NULL,
+ old_owner_id mediumint(6) NOT NULL,
+ loyalty smallint(3) NOT NULL,
+ 
+ name varchar(30) NOT NULL,
+ population smallint(5) NOT NULL,
+ grain smallint(5) NOT NULL,
+ production_points smallint(5) NOT NULL,
+ domestic_production_id smallint(5) NOT NULL,
+ military_production_id smallint(5) NOT NULL,
+ governor_can_build_units tinyint(3) NOT NULL,
+ investment int(9) NOT NULL,
+ vitality tinyint(3) NOT NULL,
+ 
+ improvements_hash char(4) NOT NULL,
+ #end of sql objects
+ 
+ territory
+ owner
+ owner_inhabitants_list
+ old_owner
+ domestic_production
+ military_production
+ unit_list
+ local_cm
+);
+
+object designs (
+ id int(9) NOT NULL,
+ owner_id mediumint(6) NOT NULL,
+ name varchar(20) NOT NULL,
+ 
+ chasis tinyint(3) NOT NULL,
+ 
+ weapon1_id smallint(5) NOT NULL,
+ weapon2_id smallint(5) NOT NULL,
+ weapon3_id smallint(5) NOT NULL,
+ 
+ armor1_id smallint(5) NOT NULL,
+ armor2_id smallint(5) NOT NULL,
+ armor3_id smallint(5) NOT NULL,
+ 
+ special1_id smallint(5) NOT NULL,
+ special2_id smallint(5) NOT NULL,
+ special3_id smallint(5) NOT NULL,
+ #end of sql objects
+ 
+ owner
+ squad_cm
+ squad_effect_list
+);
+
+object units (
+ id int(9) NOT NULL,
+ inhabitant_id int(9) NOT NULL,
+ owner_id unsigned mediumint NOT NULL,
+ 
+ design_id int(9) NOT NULL,
+ quantity tinyint(3) NOT NULL,
+ #end of sql objects
+ 
+ inhabitant
+ owner
+ design
+ 
+);
+
+object squads (
+ id int(9) NOT NULL,
+ army_id int(9) NOT NULL,
+ name varchar(20) NOT NULL,
+ 
+ design_id int(9) NOT NULL,
+ quantity tinyint(3) NOT NULL,
+ vitality tinyint(3) NOT NULL,
+ hp unsigned mediumint NOT NULL,
+ commander_id int(9) NOT NULL,
+ experience tinyint(3) NOT NULL,
+ moves tinyint(3) NOT NULL,
+ #end of sql objects
+ 
+ owner
+ design
+ commander
+ army
+);
+
+object heros (
+ id int(9) NOT NULL,
+ army_id int(9) NOT NULL,
+ hero_id unsigned mediumint NOT NULL,
+ 
+ vitality tinyint(3) NOT NULL,
+ hp unsigned mediumint NOT NULL,
+ moves tinyint(3) NOT NULL,
+ 
+ #end of sql objects
+ 
+ owner
+ army
+);
+
+object armies (
+ id int(9) NOT NULL,
+ name varchar(20) NOT NULL,
+ territory_id int(9) NOT NULL,
+ owner_id unsigned mediumint NOT NULL,
+ commanding_squad_id int(9) NOT NULL,
+ 
+ #end of sql objects
+ owner
+ squad_list
+ hero_list
+ commanding_squad
+);
+
+object messages (
+ id int(9) NOT NULL,
+ 
+ sender_id mediumint(6) NOT NULL,
+ reciever_id mediumint(6) NOT NULL,
+ type tinyint(3) NOT NULL,
+ 
+ content tinytext NOT NULL,
+ #end of sql objects
+ 
+ sender # derived from sender_id
+ reciever # derived from reciever_id
+);
+
+object relations (
+ id int(9) NOT NULL,
+ 
+ player1_id mediumint(6) NOT NULL,
+ player2_id mediumint(6) NOT NULL,
+ type tinyint(3) NOT NULL,
+ #end of sql objects
+ 
+ player1 # derived from player1_id
+ player2 # derived from player2_id
+ 
+);
+
+object commanders (
+ id int(9) NOT NULL,
+ owner_id mediumint(6) NOT NULL,
+ name varchar(20) NOT NULL,
+ 
+ level tinyint(3) NOT NULL,
+ abilities_hash char(4) NOT NULL,
+ experience mediumint(6) NOT NULL,
+ max_command tinyint(3) NOT NULL,
+ 
+ melee tinyint(3) NOT NULL,
+ range tinyint(3) NOT NULL,
+ barrage tinyint(3) NOT NULL,
+ detection tinyint(3) NOT NULL,
+ defense tinyint(3) NOT NULL,
+ mobility tinyint(3) NOT NULL,
+ pillage tinyint(3) NOT NULL,
+ plunder tinyint(3) NOT NULL,
+ blockade tinyint(3) NOT NULL,
+ morale_boost tinyint(3) NOT NULL,
+ #end of sql objects
+ 
+ owner # derived from owner_id
+);
+
+object events (
+ id int(9) NOT NULL,
+ event_id mediumint(6) NOT NULL,
+ owner_id mediumint(6) NOT NULL,
+ start_time int(9) NOT NULL,
+ #end of sql objects
+ 
+ expire_time int
+ event_definition # derived from event_id
+ owner # derived from owner_id
+ 
+);
+
+object player_action (
+ id int(9) NOT NULL,
+ type tinyint(3) NOT NULL,
+ owner_id mediumint(6) NOT NULL,
+ #end of sql objects
+ 
+ expire_time int
+ owner # derived from owner_id
+ 
+);
+
+object battles (
+ id int(9) NOT NULL,
+ attacker mediumint(6) NOT NULL,
+ defender mediumint(6) NOT NULL,
+ outcome tinyint(3) NOT NULL,
+ time int(9) NOT NULL,
+ #end of sql objects
+ 
+); 
+
+#objects that are not defined in sql
+object cm (
+ production_cm tinyint(3) NOT NULL,
+ trade_cm tinyint(3) NOT NULL,
+ research_cm tinyint(3) NOT NULL,
+ military_cm tinyint(3) NOT NULL,
+ resource_cm tinyint(3) NOT NULL,
+ nature_cm tinyint(3) NOT NULL,
+ mysticism_cm tinyint(3) NOT NULL,
+ morale_cm tinyint(3) NOT NULL,
+ agriculture_cm tinyint(3) NOT NULL,
+ development_cm tinyint(3) NOT NULL,
+ spy_cm tinyint(3) NOT NULL,
+ tactics_cm tinyint(3) NOT NULL,
+);
+
+object Techs
+object Choices
+object Policies
+object Abilities
+
+object PlayerInhabitants inherits InhabitantsList {
+ population
+ power
+}
+
+object TerrainCM {
+ melee
+ range
+ barrage
+ detection
+ defense
+ mobility
+ pillage
+ plunder
+ blockade
+ defence
+ attack
+}
+
+object WeaponCM {
+ range
+ cool_down
+ vitality_usage
+ type
+ attack_rate
+ speed
+ dice_rolled
+ dice_type
+ squad_effect_list
+}
+
+#not finished, only a sketch
+object SquadEffect {
+ type
+ value
+ static_or_purportional
+ apply_effect(Squad)
+}
+
+object SquadEffectList {
+ applyinit(SquadCM)
+ applyturn(ACBattleField, Squad)
+ applyattack(ACBattleField, Squad, defender)
+ applydefense(ACBattleField, Squad, attacker)
+ applypost(Squad, ACPlayer)
+}
+
+object SquadCM {
+ build_cost
+ max_moves
+ max_hp
+ max_vitality
+ healing_rate
+ vitality_rate
+ melee
+ range
+ barrage
+ detection
+ defense
+ mobility
+ pillage
+ plunder
+ blockade
+ defence
+ attack
+}
+
+#abilities are define in the code
+#effects and prerequisites are defined in xml
+
+#objects populated by xml definitions
+object terrain_definitions
+object domestic_enhancement_definitions
+object territory_enhancement_definitions
+object territory_resource_definitions
+object event_definitions
+#ability: commander_ability
+object design_chasis_definitions
+object design_armor_definitions
+object design_weapon_definitions
+object design_special_definitions
+#ability: unit_abilities
+object choices_definitions
+object policy_definitions
+#ability: player_abilities
+object tech_definitions
+object effect_definitions
+object prerequisite_definitions
+
+#methods of consideration
+apply_effect
+remove_effect
+effect_from_policies
+effect_from_decisions
+effect_from_enhancement

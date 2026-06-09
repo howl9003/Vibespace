@@ -1,0 +1,56 @@
+#!/bin/sh
+#set -x
+
+# Initialize DB
+echo "Removing Archspace DB....."
+mysqladmin drop Archspace
+echo "Removing CouncilForum DB....."
+mysqladmin drop CouncilForum
+
+echo "Creating Archspace DB....."
+mysqladmin create Archspace
+echo "Creating CouncilForum DB....."
+mysqladmin create CouncilForum
+
+echo "Initializing Archspace DB....."
+mysql Archspace < /space/space/src/apps/archspace/DB/all.sql
+echo "Initializing CouncilForum DB....."
+mysql CouncilForum < /space/www/CouncilForum/docs/phpBB.schema
+
+# Initialize data file directory
+
+rm -rf /space/space/game/data
+mkdir /space/space/game/data
+mkdir /space/space/game/data/admin
+mkdir /space/space/game/data/crontab
+mkdir /space/space/game/data/battle
+
+i=0
+while [ "$i" -le 7 ]
+do
+	mkdir /space/space/game/data/battle/$i
+
+	i=$(($i+1))
+done
+
+mkdir /space/space/game/data/news
+
+i=1
+while [ "$i" -le 9 ]
+do
+	mkdir /space/space/game/data/news/$i
+
+	j=0
+	while [ "$j" -le 9 ]
+	do
+		mkdir /space/space/game/data/news/$i/$j
+		j=$(($j+1));
+	done
+
+	i=$(($i+1));
+done
+
+mkdir /space/space/game/data/event
+mkdir /space/space/game/data/diplomatic_message
+mkdir /space/space/game/data/council_message
+

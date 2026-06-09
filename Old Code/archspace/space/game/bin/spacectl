@@ -1,0 +1,122 @@
+#!/bin/sh
+#set -x
+
+spacectl_pid_fn=/space/space/game/log/spacectl.pid
+archspace_pid_fn=/space/space/game/log/archspace.pid
+
+MAX_WAIT_TIME=5400
+
+# user check
+if [ "x`whoami`" != "xspace" ]; then
+	echo "!!! RUN this script when your ID is space"
+	exit 4
+fi
+
+# disk free space check
+diskspace=`/bin/df | /usr/bin/grep space | /usr/bin/grep "[890][0-9]%"`
+if [ "x$diskspace" != "x" ]; then
+	echo "!!! Disk free space is not enought !!!"
+	exit 8
+fi
+
+
+case "$1" in
+	start)
+		echo "Checking mutual exclusive"
+		if [ -f $spacectl_pid_fn -o -f $archspace_pid_fn ]; then
+			echo " !!! Have trouble. two or more ARCHSPACE running now. check it."
+			exit 2
+		fi
+
+		echo "Running ARCHSPACE game server"
+		while [ 1 ]
+		do
+			if [ -f /space/space/game/bin/archspace.new ]
+			then
+				/bin/cp /space/space/game/bin/archspace.new /space/space/game/bin/archspace
+				rm /space/space/game/bin/archspace.new
+			fi
+			`cd /space/space/src/apps/archspace/;make message`
+			/space/space/game/bin/archspace -c /space/space/game/etc/config
+
+			echo
+			echo "Run again ARCHSPACE game server, because game server die."
+			/bin/sleep 5
+		done &
+
+		echo $! > $spacectl_pid_fn
+		if [ ! -f $spacectl_pid_fn ]; then
+			echo "!!! Cannot make spacectl pid file at $spacectl_pid_fn. check it"
+			exit 8
+		fi
+	;;
+	stop)
+		echo "Stoping spacectl script"
+		if [ -f $spacectl_pid_fn ]; then
+			spacectl_pid=`/bin/cat $spacectl_pid_fn`
+			if [ "x$spacectl_pid" != "x" ]; then
+				echo killing spacectl script : pid is $spacectl_pid
+				kill $spacectl_pid 2> /dev/null 1> /dev/null
+			fi
+			/bin/rm -f $spacectl_pid_fn
+		fi
+
+		echo "Stoping ARCHSPACE game server"
+		if [ -f $archspace_pid_fn ]; then
+			archspace_pid=`/bin/cat $archspace_pid_fn`
+			if [ "x$archspace_pid" != "x" ]; then
+				echo "killing ARCHSPACE game server (with -15) : pid is $archspace_pid"
+				kill -15 $archspace_pid 2> /dev/null 1> /dev/null
+
+				inner_time=1
+				start_time=`/bin/date "+%Y%m%d%H%M%S"`
+				echo "Wait flushing game data : time is $start_time"
+				while [ "x`ps -p $archspace_pid | grep -v grep | grep $archspace_pid`" != "x" ]
+				do
+					if [ $inner_time -gt $MAX_WAIT_TIME ]; then
+						echo
+						echo " !!! Time limit ($MAX_WAIT_TIME) to stop ARCHSPACE."
+						echo " !!! Killing ARCHSPACE process."
+						kill -9 $archspace_pid
+						break
+					fi
+					/bin/sleep 5
+					inner_time=`/bin/expr $inner_time + 11`
+				done
+
+#				finish_time=`/bin/date -v+${inner_time}S "+%Y%m%d%H%M%S"`
+#				echo "Wait flushing DataBase : from `/bin/date "+%Y%m%d%H%M%S"` to $finish_time"
+#				while [ `/bin/date "+%Y%m%d%H%M%S"` -lt $finish_time ]
+#				do
+					/bin/sleep 10
+#				done
+				echo "finish flushing : time is "`/bin/date "+%Y%m%d%H%M%S"`
+			fi
+			/bin/rm -f $archspace_pid_fn
+		fi
+	;;
+	restart)
+		$0 stop
+		$0 start
+	;;
+	clean)
+		$0 stop
+		rm /space/space/game/log/*
+	;;
+	"")
+		echo "type '$0 help' to see how to use"
+		$0 restart
+	;;
+	*)
+		echo "Usage of spacectl script:"
+		echo "$0 start   : starting"
+		echo "$0 stop    : stopping"
+		echo "$0 restart : restarting"
+		echo "$0 clean   : cleaning log"
+		echo "$0         : restarting"
+	;;
+esac
+
+exit 
+
+

@@ -1,0 +1,128 @@
+<html>
+<head>
+<title>Use IPB SDK inside IPB</title>
+<style type="text/css">
+body {
+	font-family: Verdana, Helvetica, Sans-Serif, Arial;
+	margin: 0px;
+}
+
+p {
+	margin-top: 0px;
+}
+
+.subhead {
+	font-size: 12pt;
+	margin: 0px;
+}
+
+.codesample {
+	background-color: #e0e0e0;
+	width: 100%;
+	border: 1px solid #000000;
+	padding: 3px;
+	font-family: Courier, Courier New, Fixedsys, monospace;
+}
+
+#header {
+	background-color: #000000;
+	color: #ffffff;
+	padding: 5px;
+	font-size: 16pt;
+}
+
+#header2 {
+	background-color: #c0c0c0;
+	padding: 5px;
+	font-size: 8pt;
+}
+
+#header2 a {
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+#header2 a:hover {
+	text-decoration: underline;
+}
+
+#title {
+	font-size : 16pt;
+	font-weight: normal;
+	padding: 5px;
+	margin: 0px;
+}
+
+#overview {
+	border: 1px solid Black;
+	padding : 5px;
+	background-color : #e0e0e0;
+	margin: 5px;
+}
+
+#warning {
+	border: 1px solid Black;
+	padding : 5px;
+	margin-top: 5px;
+	font-size: 10pt;
+	background-color: #FFFF9B;
+	margin: 5px;
+}
+
+#main {
+	font-size: 10pt;
+	padding: 5px;
+}
+
+#seealso {
+	font-size: 8pt;
+	padding: 5px;
+}
+
+#main a, #seealso a {
+	color: #0000ff;
+	font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+Use IPB SDK inside IPB
+</div>
+
+<div id="header2">
+Version 1.0 Beta Notes
+</div>
+
+<div id="main">
+<p>As of Version 1.0 of IPB SDK, you can use the SDK inside Invision Power Board itself. This allows you to enhance and modify your forum how you want it, with the ease and convinience of IPB SDK.</p>
+
+<h3 class="subhead">Installation</h3>
+<p>The first step is to set up the IPB SDK itself. Take a look at docs/install.html from the downloaded file for more information. Once you have installed the IPB SDK you need to make a small change to index.php to allow you to use the SDK's functions in it.</p>
+
+<p>Open index.php. Find around line 228:</p>
+<div class="codesample">
+$ibforums->js_base_url = $ibforums->vars['board_url'].'/index.'.$ibforums->vars['php_ext'].'?s='.$ibforums->session_id.'&';
+</div>
+
+<p>Add After:</p>
+<div class="codesample">
+// IPB SDK 1.0<br />
+require_once ("/path/to/ipbsdk/ipbsdk_class.inc.php");<br />
+$SDK = new IPBSDK();
+</div>
+
+<p>You will have to change /path/to/ipbsdk/ to the path of your IPB SDK installation. Save and Upload. You should now be able to use the SDK's functions in IPB.</p>
+
+<h3 class="subhead">Tips</h3>
+<p>Invision Power Board's code contains alot of classes and functions and you'll probably be using IPB SDK's functions in a function. Remember to put <em>global $SDK;</em> at the start of the function or to refer to functions like <em>$GLOBALS['SDK']->is_loggedin()</em>.</p>
+
+<h3 class="subhead">Support and Feedback</h3>
+<p>If any functions do not work correctly inside IPB, or queries on this <a href="http://forums.ibplanet.com/index.php?showforum=64">please use the usual SDK support and feedback forum</a>.</p>
+
+</div>
+
+</body>
+</html>

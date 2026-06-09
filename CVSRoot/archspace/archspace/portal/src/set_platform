@@ -1,0 +1,54 @@
+#!/bin/sh
+#set -x
+
+# user check
+case "$1" in
+	freebsd)
+		echo "Setting Makefile for FreeBSD....."
+
+		/bin/rm $PWD/lib/Makefile
+		/bin/rm $PWD/server/Makefile
+		/bin/rm $PWD/elib/Makefile
+
+		/bin/ln -s $PWD/lib/Makefile.FreeBSD $PWD/lib/Makefile
+		/bin/ln -s $PWD/server/Makefile.FreeBSD $PWD/server/Makefile
+		/bin/ln -s $PWD/elib/Makefile.FreeBSD $PWD/elib/Makefile
+
+		echo "The job has finished"
+	;;
+	
+	linux)
+		echo "Setting Makefile for Linux....."
+
+		/bin/rm $PWD/lib/Makefile
+		/bin/rm $PWD/server/Makefile
+		/bin/rm $PWD/elib/Makefile
+
+		/bin/ln -s $PWD/lib/Makefile.Linux $PWD/lib/Makefile
+		/bin/ln -s $PWD/server/Makefile.Linux $PWD/server/Makefile
+		/bin/ln -s $PWD/elib/Makefile.Linux $PWD/elib/Makefile
+
+		echo "The job has finished"
+	;;
+
+	solaris)
+		echo "Setting Makefile for Solaris....."
+
+		/bin/rm $PWD/lib/Makefile
+		/bin/rm $PWD/server/Makefile
+		/bin/rm $PWD/elib/Makefile
+
+		/bin/ln -s $PWD/lib/Makefile.Solaris $PWD/lib/Makefile
+		/bin/ln -s $PWD/server/Makefile.Solaris $PWD/server/Makefile
+		/bin/ln -s $PWD/elib/Makefile.Solaris $PWD/elib/Makefile
+
+		echo "The job has finished"
+	;;
+
+	*)
+		echo "Unknown platform symbol!"
+	;;
+esac
+
+exit 
+

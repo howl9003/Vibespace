@@ -1,0 +1,11 @@
+
+This directory holds all the configuration files for the
+CVS module.  If a file ends with .dist, then that is the
+file containing the default configuration; copy it to the
+relevant file without the .dist extension, and edit that
+to suit your site's needs.
+
+config.php   : The main configuration file
+cvsroots.php : The repositories configuration file
+
+$Horde: chora/config/README,v 1.4 2001/05/24 00:50:02 avsm Exp $

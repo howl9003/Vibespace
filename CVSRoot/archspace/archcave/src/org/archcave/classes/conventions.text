@@ -1,0 +1,12 @@
+local variable preffixes:
+'s' = an object loaded from SQL db
+'m' = a loval variable
+'a' = a variable passed through an argument, or a variable that will only exist in that function
+
+object suffixes:
+'List' = simply a collection of object, maybe sorted.
+'Table' = symbolic of the SQL table
+
+gain, change and set functions:
+when accepting a float (%), assume its a percentage change
+when accepting a negative (-), unset or decrease
