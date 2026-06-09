@@ -221,6 +221,10 @@ CBannerCenter::load(char *aBannerPath, char *aTopBanner, char *aBottomBanner)
 	Banner->set_bottom_banner();
 	Banner->add_banner_code(BOTTOMBANNER);
 	add_banner(Banner);
+
+	// Port fix: this bool function originally fell off the end (UB); modern
+	// g++ traps (ud2) on the missing return. Banners are always loaded OK here.
+	return true;
 }
 
 char *
