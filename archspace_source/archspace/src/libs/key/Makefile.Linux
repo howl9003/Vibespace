@@ -1,8 +1,8 @@
 CC=g++
-CFLAGS=-g -Wall
+CFLAGS=-g -fpermissive -Wall -Wno-write-strings
 LIBDIRS=-L/usr/local/lib
 LIBS=-static -lstdc++ 
-INCLUDES=-I/usr/include/g++ -I/usr/include -I/usr/include/mysql -I../include -I/usr/include/pth
+INCLUDES=-I/usr/include/g++ -I/usr/include -I/usr/include/mariadb -I/usr/include/mysql -I../include -I/usr/include/pth
 DEFINES=-DDEBUG -DLINUX
 
 VPATH=$(HOME)src/libs/include

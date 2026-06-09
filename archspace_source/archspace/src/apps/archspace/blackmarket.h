@@ -22,6 +22,11 @@ class CPlayer;
 #define PROJECT_EXPIRE_TIME	60 * 3	// 3 hours
 #define PLANET_EXPIRE_TIME	60 * 3	// 3 hours
 
+// Display-only offset for the leasers-office cost message; the actual cost
+// check uses no offset, so 0 keeps the shown multiplier consistent (port fix:
+// this constant was referenced but never defined in the original source).
+#define BLACK_MARKET_PLANET_COUNT_OFFSET	0
+
 class CBid : public CStore
 {
 	public:

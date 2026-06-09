@@ -6,10 +6,10 @@ MSGFMT=/usr/bin/msgfmt
 DOC=/usr/bin/doc++
 DOCTARGETDIR=/var/www/localhost/htdocs/doc/archspace
 MAKE=/usr/bin/make
-CFLAGS=-g -pipe -Wall -DTHREAD_SAFE
-LIBDIRS=-L/usr/lib -L/usr/local/lib -L/usr/lib/mysql -L/usr/lib/pth
-LIBS=-larchspace -lpth -lmysqlclient# -lz -lc -lcrypt -lm
-INCLUDES=-I/usr/include/g++ -I/usr/include -I/usr/include/mysql -I../../libs/include -I/usr/include/pth
+CFLAGS=-g -pipe -fpermissive -Wall -Wno-write-strings -DTHREAD_SAFE
+LIBDIRS=-L/usr/lib -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -L/usr/lib/pth
+LIBS=-larchspace -lpth -lmariadb# -lz -lc -lcrypt -lm
+INCLUDES=-I/usr/include/g++ -I/usr/include -I/usr/include/mariadb -I/usr/include/mysql -I../../libs/include -I/usr/include/pth
 DEFINES=-DDEBUG -DLINUX -DEVENTS -DNOREFFERER #-DNOEMPIRERETAL
 HEADERFILES=\
 		archspace.h \

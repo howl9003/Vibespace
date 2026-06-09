@@ -448,7 +448,11 @@ class CString
 	RECYCLE(gStringZone);
 };
 
-inline 
+// Modern C++ no longer injects friend names into the enclosing namespace,
+// so declare the free function format() at namespace scope (port fix).
+CString& format(const char *aFormat, ...);
+
+inline
 CString
 CString::clone() const
 {

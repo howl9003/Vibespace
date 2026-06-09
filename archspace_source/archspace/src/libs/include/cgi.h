@@ -30,6 +30,7 @@
 class CPage;
 class CPageStation;
 class CConnection;
+class CHTMLStation;
 
 extern TZone gQueryZone;
 /**
@@ -185,7 +186,7 @@ class CHTMLStation: public CSortedList
 };
 
 /**
-	CGI¸¦ Àü¼ÛÇÏ´Â ¼­¹öÀÇ Á¢¼ÓÀ» °ü¸®ÇÏ´Â Å¬·¹½º
+	CGIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 */
 class CConnection: public CSocket
 {
@@ -258,7 +259,7 @@ class CConnection: public CSocket
 };
 
 /**
-	CGI¸¦ Á¦°øÇÏ±â À§ÇÑ ·çÆ¾ÀÌ Ã·°¡µÈ ¼­¹ö Å¬·¹½º
+	CGIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¾ï¿½ï¿½ Ã·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 */
 class CCGIServer: public CLoopServer
 {

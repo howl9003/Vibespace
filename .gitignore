@@ -1,0 +1,22 @@
+# Build artifacts from compiling the Archspace engine
+*.o
+*.a
+*.so
+*.lo
+*.la
+
+# Compiled binaries
+archspace_source/archspace/src/apps/archspace/archspace
+archspace_source/archspace/src/apps/archspace/viewsize
+archspace_source/archspace/src/apps/relay/relay
+
+# Generated platform Makefile symlinks (created by src/set_platform)
+archspace_source/archspace/src/libs/Makefile
+archspace_source/archspace/src/libs/*/Makefile
+archspace_source/archspace/src/apps/archspace/Makefile
+archspace_source/archspace/src/apps/archspace/msg/Makefile
+archspace_source/archspace/src/apps/relay/Makefile
+
+# gettext compiled catalogs
+*.mo
+*.gmo

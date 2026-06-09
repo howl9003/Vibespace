@@ -1,6 +1,6 @@
 CC=g++
-CFLAGS=-g -Wall 
-INCLUDES=-I/usr/include/g++ -I/usr/include -I../include -I/usr/include/pth -I/usr/include/mysql -I/usr/local/include/mysql -I/usr/local/include/pth
+CFLAGS=-g -fpermissive -Wall -Wno-write-strings
+INCLUDES=-I/usr/include/g++ -I/usr/include -I../include -I/usr/include/pth -I/usr/include/mariadb -I/usr/include/mysql -I/usr/local/include/mysql -I/usr/local/include/pth
 SUBDIRS=util net frame cgi runtime database key
 MAKE=make
 DOC=/usr/bin/doc++

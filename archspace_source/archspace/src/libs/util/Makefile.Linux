@@ -1,8 +1,8 @@
 CC=g++
-CFLAGS=-g -Wall 
+CFLAGS=-g -fpermissive -Wall -Wno-write-strings
 LIBDIRS=-L/usr/lib -L/usr/local/lib -L/usr/local/lib/mysql -L/usr/lib/mysql
 LIBS=-static -lstdc++ -lpth -lmysqlclient -lz
-INCLUDES=-I/usr/include/g++ -I/usr/include -I../include -I/usr/include/pth -I/usr/include/mysql
+INCLUDES=-I/usr/include/g++ -I/usr/include -I../include -I/usr/include/pth -I/usr/include/mariadb -I/usr/include/mysql
 DEFINES=-DDEBUG
 
 LEX=flex
