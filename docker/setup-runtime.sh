@@ -42,6 +42,13 @@ cp -rf "$SRC/src/web"  /usr/src/archspace/
 # source tree is left untouched.
 grep -rlZ '\$IMAGE_SERVER_URL/image' /usr/src/archspace/web 2>/dev/null \
     | xargs -0 -r sed -i 's#\$IMAGE_SERVER_URL/image#/image#g'
+# Modern-browser compat in the page templates (look unchanged):
+#  - UTF-8 instead of euc-kr/iso-8859-1
+#  - cursor:hand (IE-only) -> cursor:pointer  (e.g. the building-ratio sliders)
+grep -rlZ -iE 'charset=euc-kr|charset=iso-8859-1' /usr/src/archspace/web 2>/dev/null \
+    | xargs -0 -r sed -i -E 's/charset=euc-kr/charset=utf-8/Ig; s/charset=iso-8859-1/charset=utf-8/Ig'
+grep -rlZ 'cursor:hand' /usr/src/archspace/web 2>/dev/null \
+    | xargs -0 -r sed -i 's/cursor:hand/cursor:pointer/g'
 
 echo "[setup] creating runtime data tree (from etc/initialize_game, non-interactive)"
 mkdir -p /var/archspace/data/admin /var/archspace/data/crontab \

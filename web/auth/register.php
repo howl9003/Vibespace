@@ -3,7 +3,7 @@
  * register.php — New account registration.
  *
  * GET  — Display the registration form.
- * POST — Validate input, create account, establish session, redirect to /main.php.
+ * POST — Validate input, create account, establish session, redirect to /archspace/index.html.
  *
  * Fields: email, password, password2 (confirmation).
  * Rules:
@@ -20,7 +20,7 @@ require_once __DIR__ . '/lib.php';
 
 // If already logged in, go straight to the game.
 if (current_account() !== null) {
-    header('Location: /main.php', true, 303);
+    header('Location: /archspace/index.html', true, 303);
     exit;
 }
 
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         create_session($newId);
 
-        header('Location: /main.php', true, 303);
+        header('Location: /archspace/index.html', true, 303);
         exit;
     }
 }

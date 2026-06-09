@@ -103,20 +103,9 @@ CGame::~CGame()
 char *
 CGame::get_charset()
 {
-	switch (mLanguage)
-	{
-		case CGame::LANG_EN :
-			return "charset=iso-8859-1";
-			break;
-
-		case CGame::LANG_KO :
-			return "charset=euc-kr";
-			break;
-
-		default :
-			return "charset=iso-8859-1";
-			break;
-	}
+	// Modern UTF-8 for all languages (the adapter also emits a UTF-8 HTTP
+	// Content-Type); avoids the legacy iso-8859-1/euc-kr mojibake.
+	return "charset=utf-8";
 }
 
 CPlayer *

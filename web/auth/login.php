@@ -3,7 +3,7 @@
  * login.php — Player login.
  *
  * GET  — Display the login form.
- * POST — Validate credentials, create session, redirect to /main.php (303).
+ * POST — Validate credentials, create session, redirect to /archspace/index.html (303).
  *        On failure, re-render form with "Invalid email or password."
  */
 
@@ -14,7 +14,7 @@ require_once __DIR__ . '/lib.php';
 
 // Already logged in — skip to game.
 if (current_account() !== null) {
-    header('Location: /main.php', true, 303);
+    header('Location: /archspace/index.html', true, 303);
     exit;
 }
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashToCheck = $row['password_hash'] ?? '$argon2id$v=19$m=65536,t=4,p=1$x$x';
     if ($row !== null && auth_verify($password, $hashToCheck)) {
         create_session((int)$row['id']);
-        header('Location: /main.php', true, 303);
+        header('Location: /archspace/index.html', true, 303);
         exit;
     }
 

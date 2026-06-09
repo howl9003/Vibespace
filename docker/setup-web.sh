@@ -21,6 +21,20 @@ if [ -f "$TARBALL" ]; then
     find "$WWW" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
+#     with a CSS-grid + named-iframe shell; same look, modern + mobile).
+OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
+if [ -d "$OVERRIDES" ]; then
+    echo "[web] applying web overrides (de-framed shell, ...)"
+    cp -rf "$OVERRIDES"/. "$WWW"/
+fi
+
+# 1c) Modern-browser compat on the static www pages (UTF-8, cursor:pointer).
+grep -rlZ -iE 'charset=euc-kr|charset=iso-8859-1' "$WWW" 2>/dev/null \
+    | xargs -0 -r sed -i -E 's/charset=euc-kr/charset=utf-8/Ig; s/charset=iso-8859-1/charset=utf-8/Ig'
+grep -rlZ 'cursor:hand' "$WWW" 2>/dev/null \
+    | xargs -0 -r sed -i 's/cursor:hand/cursor:pointer/g'
+
 # 2) Modern auth service at /auth/
 if [ -d "$AUTH_SRC" ]; then
     echo "[web] installing auth service at /auth/"
