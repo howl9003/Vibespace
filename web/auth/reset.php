@@ -74,127 +74,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ---------------------------------------------------------------------------
 // Output
 // ---------------------------------------------------------------------------
-$safeError = htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-$safeToken = htmlspecialchars($token, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $tokenValid = ($account !== null);
+
+// Output — set-new-password form (original Archspace styling)
+require_once __DIR__ . '/theme.php';
+
+auth_page_start('Set New Password');
+echo auth_title('Set New Password');
+echo auth_error($error);
+
+if ($tokenValid):
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archspace — Set New Password</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; }
-        body {
-            margin: 0;
-            background: #000;
-            color: #c8c8c8;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .card {
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            padding: 2rem 2.5rem;
-            width: 100%;
-            max-width: 380px;
-        }
-        h1 {
-            margin: 0 0 1.5rem;
-            font-size: 1.4rem;
-            color: #5a9fd4;
-            letter-spacing: .05em;
-            text-transform: uppercase;
-        }
-        label {
-            display: block;
-            margin-bottom: .25rem;
-            font-size: .85rem;
-            color: #888;
-        }
-        input[type=password] {
-            display: block;
-            width: 100%;
-            padding: .45rem .6rem;
-            margin-bottom: 1rem;
-            background: #111;
-            border: 1px solid #333;
-            color: #ddd;
-            font-family: inherit;
-            font-size: .95rem;
-            outline: none;
-        }
-        input:focus { border-color: #5a9fd4; }
-        .error {
-            background: #2a0a0a;
-            border-left: 3px solid #c0392b;
-            color: #e74c3c;
-            padding: .5rem .75rem;
-            margin-bottom: 1rem;
-            font-size: .875rem;
-        }
-        button {
-            width: 100%;
-            padding: .55rem;
-            background: #1a3a5c;
-            color: #9ecfed;
-            border: 1px solid #2e6da4;
-            font-family: inherit;
-            font-size: 1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: .08em;
-        }
-        button:hover { background: #234e7a; }
-        .footer-link {
-            margin-top: 1.25rem;
-            text-align: center;
-            font-size: .8rem;
-            color: #666;
-        }
-        .footer-link a { color: #5a9fd4; text-decoration: none; }
-        .footer-link a:hover { text-decoration: underline; }
-        .invalid-msg { color: #e74c3c; margin-bottom: 1rem; }
-    </style>
-</head>
-<body>
-<div class="card">
-    <h1>Set New Password</h1>
-
-    <?php if ($safeError !== ''): ?>
-        <div class="error"><?= $safeError ?></div>
-    <?php endif; ?>
-
-    <?php if ($tokenValid): ?>
-        <form method="post" action="/auth/reset.php">
-            <input type="hidden" name="token" value="<?= $safeToken ?>">
-
-            <label for="password">New password <small>(min. 8 characters)</small></label>
-            <input type="password" id="password" name="password" required
-                   autocomplete="new-password">
-
-            <label for="password2">Confirm new password</label>
-            <input type="password" id="password2" name="password2" required
-                   autocomplete="new-password">
-
-            <button type="submit">Set Password</button>
-        </form>
-    <?php else: ?>
-        <p class="invalid-msg">
-            This reset link is invalid or has expired.
-        </p>
-        <a href="/auth/forgot.php">
-            <button type="button">Request a new reset link</button>
-        </a>
-    <?php endif; ?>
-
-    <div class="footer-link">
-        <a href="/auth/login.php">Back to sign in</a>
-    </div>
-</div>
-</body>
-</html>
+<form method="post" action="/auth/reset.php">
+<input type="hidden" name="token" value="<?= h($token) ?>">
+<?= auth_input('New password (min. 8)', 'password', 'password', '', 'new-password') ?>
+<?= auth_input('Confirm new password', 'password2', 'password', '', 'new-password') ?>
+<?= auth_submit('bu_ok.gif', 'set password', 120, 20) ?>
+</form>
+<?php else: ?>
+<p style="color:#e88">This reset link is invalid or has expired.</p>
+<a href="/auth/forgot.php"><img src="/image/as_login/bu_reset.gif" width="120" height="17" border="0" alt="request a new link"></a>
+<?php endif;
+auth_page_end('<a href="/auth/login.php">Back to sign in</a>');
