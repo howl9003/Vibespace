@@ -1,0 +1,534 @@
+# Horde Simplified Chinese Translation
+# Copyright (C) 2001 WangHengWen, Wenzhuo Zhang
+# WangHengWen <whw@my169.com>, 2001.
+# Wenzhuo Zhang <wenzhuo@zhmail.com>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.1\n"
+"POT-Creation-Date: 2002-04-18 22:09+0800\n"
+"PO-Revision-Date: 2001-06-18 22:05+0800\n"
+"Last-Translator: Wenzhuo Zhang <wenzhuo@zhmail.com>\n"
+"Language-Team: Simplified Chinese <dev@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=GB2312\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s 维护操作 - 确认"
+
+#, c-format
+msgid "%s is ready to perform the maintenance operations checked below."
+msgstr "%s 已准备好执行如下选中的维护操作。"
+
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s'没有在 Horde 注册表中配置。"
+
+msgid "24 hours"
+msgstr "24 小时制"
+
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>发生了一个致命错误：</b>"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Add pair"
+msgstr "添加配对"
+
+msgid "Address"
+msgstr "地址"
+
+msgid "Addressbook"
+msgstr "地址簿"
+
+msgid "Alias"
+msgstr "别名"
+
+msgid "An illegal value was specified."
+msgstr "指定了非法值。"
+
+msgid "Available fields:"
+msgstr "可用字段:"
+
+#, c-format
+msgid "Bind to server %s:%d with DN %s failed: [%d] %s"
+msgstr "以 DN %3$s 绑定到服务器 %1$s:%2$d 失败：[%4$d] %5$s"
+
+msgid "Birthday"
+msgstr "生日"
+
+msgid "CVS"
+msgstr "CSV"
+
+msgid "Calendar"
+msgstr "日历"
+
+msgid "Cancel Problem Report"
+msgstr "取消问题报告"
+
+msgid "Cell Phone"
+msgstr "移动电话"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "请选择此时你想要执行的操作。"
+
+msgid "Close Help Window"
+msgstr "关闭帮助窗口"
+
+msgid "Close Help"
+msgstr "关闭帮助"
+
+msgid "Close Window"
+msgstr "关闭窗口"
+
+msgid "Company"
+msgstr "公司"
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "'%s'的内容"
+
+msgid "Contents of the RAR archive"
+msgstr "RAR 文档的内容"
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Maintenance_Task 模块 %s 打不开"
+
+msgid "DD"
+msgstr "DD"
+
+msgid "Daily"
+msgstr "每天"
+
+msgid "Database query failed."
+msgstr "数据库查询失败。"
+
+msgid "Default Identity"
+msgstr "缺省身份"
+
+msgid "Describe the Problem"
+msgstr "描述该问题"
+
+msgid "Details have been logged for the administrator."
+msgstr "详细情况已为管理员录入日志。"
+
+msgid "Do not directly access maintenance.php"
+msgstr "请不要直接访问 maintenance.php"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Empty result."
+msgstr "空的结果。"
+
+msgid "Error"
+msgstr "错误"
+
+msgid "Every Login"
+msgstr "每次登录"
+
+msgid "Example values:"
+msgstr "数据范例:"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "在第%d行期待\"BEGIN\"。"
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "在第%2$d行期待\"END:%1$s\"。"
+
+msgid "Failed to connect to LDAP preferences server."
+msgstr "连接到LDAP首选项服务器失败。"
+
+msgid "Failed to connect to LDAP server."
+msgstr "连接到LDAP服务器失败。"
+
+#, c-format
+msgid "Failed to open an LDAP connection to %s."
+msgstr "打开到%s的LDAP连接失败."
+
+#, c-format
+msgid "Failed to retrieve user's DN: [%d] %s"
+msgstr "获取用户的 DN 失败：[%d] %s"
+
+msgid "Fax"
+msgstr "传真"
+
+msgid "Full Description:"
+msgstr "完整描述"
+
+msgid "Help"
+msgstr "帮助"
+
+msgid "Home Address"
+msgstr "家庭地址"
+
+msgid "Home Phone"
+msgstr "家庭电话"
+
+msgid "Horde Login"
+msgstr "Horde 登录"
+
+msgid "Horde Summary"
+msgstr "Horde 摘要"
+
+msgid "Horde System"
+msgstr "Horde 系统"
+
+msgid "Horde Wireless"
+msgstr "Horde 无线"
+
+msgid "Horde is not properly configured"
+msgstr "Horde 没有配置好"
+
+msgid "Horde"
+msgstr "Horde"
+
+msgid "Import Error: "
+msgstr "导入错误："
+
+msgid "Import"
+msgstr "导入"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "导入的字段：%s"
+
+msgid "Imported fields:"
+msgstr "导入的字段："
+
+msgid "Language"
+msgstr "语言"
+
+msgid "List Help Topics"
+msgstr "列出帮助主题"
+
+msgid "Log in"
+msgstr "登录"
+
+msgid "Log out"
+msgstr "注销"
+
+msgid "MM"
+msgstr "MM"
+
+msgid "Mail"
+msgstr "邮件"
+
+msgid "Map Date and Time Fields"
+msgstr "映射日期和时间字段"
+
+msgid "Map Import Fields"
+msgstr "映射导入字段"
+
+msgid "Matching fields"
+msgstr "匹配字段"
+
+msgid "Message"
+msgstr "消息"
+
+msgid "Monthly"
+msgstr "每月"
+
+msgid "Name"
+msgstr "名字"
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "未设置LDAP首选项的配置信息。"
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "未设置SQL分类的配置信息。"
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "未设置SQL首选项的配置信息。"
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "未设置SQL认证的配置信息。"
+
+msgid "No preferences are available."
+msgstr "没有可用的首选项。"
+
+msgid "No preferences were retrieved."
+msgstr "未找到首选项。"
+
+msgid "Notes"
+msgstr "备注"
+
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "没找到提示接听程序 %s。"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Perform Maintenance Operations"
+msgstr "执行维护操作"
+
+msgid "Phone"
+msgstr "电话"
+
+msgid "Please provide a summary of the problem."
+msgstr "请提供问题的摘要。"
+
+msgid "Please provide your username and password"
+msgstr "请提供你的用户名与密码"
+
+msgid "Problem Description"
+msgstr "问题描述"
+
+msgid "Remove pair"
+msgstr "删除配对"
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "必须的'basedn'未在认证配置中指定。"
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "必须的'basedn'未在首选项配置中指定。"
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "必须的'database'未在认证配置中指定。"
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "必须的'database'未在分类配置中指定。"
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "必须的'database'未在首选项配置中指定。"
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "必须的'hostspec'未在认证配置中指定。"
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "必须的'hostspec'未在分类配置中指定。"
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "必须的'hostspec'未在首选项配置中指定。"
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "必须的'password'未在认证配置中指定。"
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "必须的'password'未在分类配置中指定。"
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "必须的'password'未在首选项配置中指定。"
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "必须的'phptype'未在认证配置中指定。"
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "必须的'phptype'未在分类配置中指定。"
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "必须的'phptype'未在首选项配置中指定。"
+
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "必须的'table'未在认证配置中指定。"
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "必须的'table'未在分类配置中指定。"
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "必须的'table'未在首选项配置中指定。"
+
+msgid "Required 'tableRelations' not specified in categories configuration."
+msgstr "必须的'tableRelations'未在分类配置中指定。"
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "必须的'uid'未在认证配置中指定。"
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "必须的'uid'未在首选项配置中指定。"
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "必须的'username'未在认证配置中指定。"
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "必须的'username'未在分类配置中指定。"
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "必须的'username'未在首选项配置中指定。"
+
+msgid "Return to Options"
+msgstr "返回到选项"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Save Options"
+msgstr "保存选项"
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr "请从下面的方框中选择你需要的字符；然后你可以从文本区域拷贝和粘贴字串。"
+
+msgid "Select the date delimiter:"
+msgstr "选择日期分格符："
+
+msgid "Select the date format:"
+msgstr "选择日期格式:"
+
+msgid "Select the time format:"
+msgstr "选择时间格式:"
+
+msgid "Select two matching fields."
+msgstr "选择两个匹配字段。"
+
+msgid "Select your preferred language:"
+msgstr "选择你喜欢的语言"
+
+msgid "Send Problem Report"
+msgstr "发送问题报告"
+
+msgid "Set your preferred display language."
+msgstr "设置你喜欢的显示语言。"
+
+msgid "Short Summary:"
+msgstr "简短摘要："
+
+msgid "Skip Maintenance"
+msgstr "跳过维护操作"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "部分Horde配置文件丢失："
+
+msgid "Special Character Input"
+msgstr "特殊字符输入"
+
+msgid "Success"
+msgstr "成功"
+
+msgid "Tasks"
+msgstr "任务"
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"注册表定义Horde应用之间如何相互联系。你应该在此列出所有已安装的Horde应用。"
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"此文件控制Horde框架内的全局性的MIME驱动程序集，它们使Horde应用得以利用外部程"
+"序，如enscript, mswordview等，将内容转换成 HTML，以便在浏览器中查看。"
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"此文件控制样式单，它为Horde框架和自己不提供设置的所有应用设置字体和颜色。"
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"此文件将文件扩展名映射到MIME逻辑类型，使Horde应用能够找到处理诸如邮件附件和"
+"CVS checkout等内容的方法。"
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"这是Horde的主配置文件。它包含对于框架核心和所有Horde应用有效的路径和其他基本"
+"项目。"
+
+msgid "This number must be at least one."
+msgstr "此数字必须大于等于一。"
+
+msgid "This value must be a number."
+msgstr "此值必须是一个数字。"
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Type mismatch."
+msgstr "类型不匹配。"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "未能连接到SQL服务器."
+
+#, c-format
+msgid "Unable to modify preferences: [%d] %s"
+msgstr "未能修改首选项：[%d] %s。"
+
+msgid "Unable to register preferences in session."
+msgstr "未能在会话中登记首选项。"
+
+msgid "Unable to translate this Word document"
+msgstr "未能翻译此Word文档"
+
+msgid "Undo Changes"
+msgstr "撤消更改"
+
+msgid "Unexpected end of file."
+msgstr "意外的文件结尾。"
+
+msgid "Use Default Value"
+msgstr "使用缺省值"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "Warning!"
+msgstr "警告！"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Weekly"
+msgstr "每周"
+
+#, c-format
+msgid "Welcome to %s"
+msgstr "欢迎来到 %s"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "欢迎，%s"
+
+msgid "Work Address"
+msgstr "工作地址"
+
+msgid "Work Phone"
+msgstr "工作电话"
+
+msgid "YY"
+msgstr "YY"
+
+msgid "Yearly"
+msgstr "每年"
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "在发送问题报告之前你必需详细描述该问题"
+
+msgid "Your Email Address:"
+msgstr "你的EMail地址："
+
+msgid "Your Information"
+msgstr "你的信息"
+
+msgid "Your Name:"
+msgstr "你的名字:"
+
+msgid "Your options have been updated."
+msgstr "你的选项已被更新。"
+
+msgid "[Problem Report]"
+msgstr "[问题报告]"
+
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[第%s行 共%s行]"

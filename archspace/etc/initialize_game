@@ -1,0 +1,44 @@
+#!/bin/sh
+#set -x
+
+echo "Initializing Archspace DB (Ctrl+C to CANCEL)"
+mysqladmin -p create Archspace
+mysql -p Archspace < /usr/src/archspace/apps/archspace/DB/all.sql
+
+# Initialize data file directory
+
+rm -rf /var/archspace/data
+mkdir /var/archspace/data
+mkdir /var/archspace/data/admin
+mkdir /var/archspace/data/crontab
+mkdir /var/archspace/data/battle
+
+i=0
+while [ "$i" -le 7 ]
+do
+	mkdir /var/archspace/data/battle/$i
+
+	i=$(($i+1))
+done
+
+mkdir /var/archspace/data/news
+
+i=1
+while [ "$i" -le 9 ]
+do
+	mkdir /var/archspace/data/news/$i
+
+	j=0
+	while [ "$j" -le 9 ]
+	do
+		mkdir /var/archspace/data/news/$i/$j
+		j=$(($j+1));
+	done
+
+	i=$(($i+1));
+done
+
+mkdir /var/archspace/data/event
+mkdir /var/archspace/data/diplomatic_message
+mkdir /var/archspace/data/council_message
+

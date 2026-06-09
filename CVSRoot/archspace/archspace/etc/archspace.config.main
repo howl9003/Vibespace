@@ -1,0 +1,163 @@
+[Server]
+ConfigFile = /etc/archspace/archspace.config
+ConfigTempFile = /etc/archspace/archspace.config.tmp
+SystemLogFile = /var/log/archspace/systemlog
+PIDLogfile = /etc/archspace/archspace.pid
+Port = 12350
+
+[Key]
+Server = localhost
+Port = 4000
+
+[Game]
+Language = en
+StartGame = yes
+ImageServerURL = http://archspace.org
+ForumServerURL = http://archspace.org/board/
+MaxUser = 300
+IRCPHPScript = /usr/src/archspace/IRCPHP.php
+TechScript = /etc/archspace/script/tech
+RaceScript = /etc/archspace/script/race
+ProjectScript = /etc/archspace/script/project
+SecretProjectScript = /etc/archspace/script/secret_project
+EndingScript = /etc/archspace/script/ending
+EndingProjectScript = /etc/archspace/script/ending_project
+ComponentScript = /etc/archspace/script/component
+ShipScript = /etc/archspace/script/ship
+EmpireShipDesignScript = /etc/archspace/script/empire_ship_design
+SpyScript = /etc/archspace/script/spy
+EventScript = /etc/archspace/script/event
+ClusterNames = /etc/archspace/script/cluster
+AdmiralNameScript = /etc/archspace/script/admiral_name
+WebPath = /usr/src/archspace/web
+LogPath = /var/log/archspace
+WWWPath = /usr/local/www/archspace
+EncyclopediaFormPath = /usr/src/archspace/form/encyclopedia
+EncyclopediaPath = /usr/local/www/archspace/encyclopedia
+EncyclopediaWebPath = /encyclopedia
+IPBanFile = /etc/archspace/ip_ban
+BattleLogDir = /var/archspace/data/battle
+ExecDir = /usr/local/sbin
+CronTabDir = /var/archspace/data/crontab
+EventDir = /var/archspace/data/event
+NewsFileDir = /var/archspace/data/news
+NPCFleetDesignScript = /etc/archspace/script/empire_fleet
+DiplomaticMessageDir = /var/archspace/data/diplomatic_message
+CouncilMessageDir = /var/archspace/data/council_message
+
+MinAvailableCluster = 4 # originally 7
+MinCouncilCount = 3 # originally 3
+
+SecondPerTurn = 300 # original 900, This number should be a multiple of 
+SecondPerTick
+TrainMissionTime = 24 # Original 24 turns = 6 hours
+PatrolMissionTime = 96 # Original 96 turns = 24 hours
+DispatchToAllyMissionTime = 864 # Original 288 turns = 72 hours
+ExpeditionMissionTime = 24 # Original 24 turns = 6 hours
+ReturningWithPlanetMissionTime = 24 # Original 24 turns = 6 hours
+
+BlackMarketItemRegen = 1800 # in secs
+BidExpireTime = 15 # in mins
+
+PeriodCreateAdmiral = 26
+AdmiralMilitaryBonus = 4
+MaxPeriodCreateAdmiral = 2
+MaxAdmirals = 150
+FleetExpTrain = 100
+AdmiralExpTrain = 1000
+MinAdmiralExpPrivateer = 200
+MaxAdmiralExpPrivateer = 1000
+MaxPrivateerCapacity = 70
+AdmiralExpExpedition = 1000
+AdmiralExpRaid = 0
+AdmiralExpRaidMultiplier = 20
+AdmiralExpStation = 5
+AdmiralExpPatrol = 10
+AdmiralExpBattle = 0
+AdmiralExpDetect = 0
+ResourceMultiplierUltraPoor = 50
+ResourceMultiplierPoor = 75
+ResourceMultiplierNormal = 100
+ResourceMultiplierRich = 175
+ResourceMultiplierUltraRich = 250
+
+# in turns
+PeriodPlayerCouncilDonation = 96; 	# 4*24
+PeriodPlayerBreakPact = 288; 		# 4*72
+PeriodPlayerBreakAlly = 288; 		# 4*72
+PeriodCouncilDeclareTotalWar = 288; 	# 4*72
+PeriodCouncilDeclareWar = 576; 		# 48 hours w/ 5 minute turns
+PeriodCouncilBreakPact = 288; 		# 4*72
+PeriodCouncilBreakAlly = 288; 		# 4*72
+PeriodCouncilImproveRelation = 288; 	# 4*72
+PeriodPlayerDeclareHostile = 288 # 288 turns
+
+# in seconds
+PeriodCouncilMergingOffer = 86400; 	# 24*60*60second
+
+# in seconds
+FusionTimeLimit = 43200 # 12 hours
+AdmissionTimeLimit = 43200 # 12 hours
+
+[Empire]
+InitialNumberOfMagistratePlanet = 100
+InitialNumberOfEmpirePlanet = 500
+FleetRegenCycleInTurn = 1
+AmountOfMagistrateShipRegen = 2
+AmountOfFortress1ShipRegen = 3
+AmountOfFortress2ShipRegen = 3
+AmountOfFortress3ShipRegen = 4
+AmountOfFortress4ShipRegen = 4
+AmountOfCapitalPlanetShipRegen = 5
+Fortress1AdmiralFleetCommandingBonus = 10
+Fortress2AdmiralFleetCommandingBonus = 10
+Fortress3AdmiralFleetCommandingBonus = 20
+Fortress4AdmiralFleetCommandingBonus = 30
+CapitalPlanetAdmiralFleetCommandingBonus = 45
+
+[Global Ending Score]
+ScorePerPlanet = 100
+PopulationPerScore = 1000 # in k
+ScorePerTechLevel = 10
+AdmiralExpPerScore = 100
+ProjectPricePerScore = 1000000
+ScorePerSecretProject = 1000
+ScorePerUsedTurn = -1
+
+MultiplierForPersonalEnding = 10 # in %
+MultiplierForAllKnownTechs = 10 # in %
+MultiplierForTitle = 5 # in %
+MultiplierForSpeaker = 5 # in %
+# The multiplier for HONOR is calculated by this formula :
+# ((HONOR - MultiplierForHonor1) / MultiplierForHonor2) %
+MultiplierForHonor1 = 50
+MultiplierForHonor2 = 5
+
+ScorePerFortressForPlayer = 1000
+ScorePerFortressForCouncilLayer1 = 9000
+ScorePerFortressForCouncilLayer2 = 12000
+ScorePerFortressForCouncilLayer3 = 15000
+ScorePerFortressForCouncilLayer4 = 18000
+ScorePerEmpireCapitalPlanet = 21000
+
+[Banner]
+BannerPath = /etc/archspace/banner
+TopBanner = YES
+BottomBanner = YES
+
+[Database]
+Connection = /var/archspace/db.fifo
+Host = localhost
+Database = Archspace
+PortalUserTable = asbb_users
+PortalUserDB = Archspace
+User = root
+Password = comconq1
+SystemLogFile = /var/log/archspace/dblog
+
+[Customer Support]
+AdminListFile = /etc/archspace/admin_list
+AdminToolFileDir = /var/archspace/data/admin
+CSMailAddress = briankearney@gmail.com
+AccuseMailName = ACCUSE
+SEDPath = /usr/bin/sed

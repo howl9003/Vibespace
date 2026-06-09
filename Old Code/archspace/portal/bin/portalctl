@@ -1,0 +1,86 @@
+#!/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/bin:/usr/X11R6/bin:/bbs/jejak/bin:/u/local/bin:/usr/ucb
+
+if [ "x`whoami`" != "xspace" ]; then
+	echo " !!! Your ID have to be space."
+	exit 2
+fi
+
+ServerRun() {
+	cmd=$1
+	option="$2 $3 $4 $5 $6 $7 $8 $9"
+
+	PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/bin:/usr/X11R6/bin:/bbs/jejak/bin:/u/local/bin
+
+	while [ "x$cmd" != "x" ]
+	do
+		$cmd $option
+
+		while [ "x`ps | grep -v grep | grep \ $cmd\ $option`" != "x" ]
+		do
+			sleep 10
+		done
+
+		echo RUN again: $cmd $option
+
+	done
+}
+
+
+pidLDIR=/space/portal/log
+
+case "$1" in
+	start)
+		echo Check mutual exclusion
+		for pid_tmp in x $pidLDIR/*.pid
+		do
+			if [ -f $pid_tmp ]; then
+				echo !!! Portal control script already running. check it.
+				exit 2
+			fi
+		done
+
+		echo Archspace Auth server starting...
+		ServerRun /space/portal/bin/as_auth_server  /space/portal/etc/config &
+		echo $! > $pidLDIR/as_auth_server_script.pid
+		sleep 3
+
+	;;
+	stop)
+		echo kill running servers...
+		for pidFN in x $pidLDIR/*.pid
+		do
+			if [ -f $pidFN ]
+			then
+				pid=`cat $pidFN`
+				#	echo "kill: $pidFN ($pid)"
+				kill $pid
+				rm -f $pidFN
+			fi
+		done
+
+		# have to kill key_serve before others.
+		/usr/bin/killall    as_auth_server 2> /dev/null
+		/bin/sleep 5
+		/usr/bin/killall -9 as_auth_server 2> /dev/null
+	;;
+    restart)
+        $0 stop 
+        $0 start
+    ;;
+    "")
+        echo "type '$0 help' to see how to use" 
+        $0 restart 
+    ;;
+    *)
+        echo "Usage of portalctl script:"
+        echo "$0 start   : starting"
+        echo "$0 stop    : stopping"
+        echo "$0 restart : restarting"
+        echo "$0         : restarting"
+    ;;
+esac
+
+exit
+
+

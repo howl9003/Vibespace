@@ -1,0 +1,12 @@
+/README////*///
+/auth.sql////*///
+/category.sql////*///
+/category_mysql.sql////*///
+/mysql_create.sql////*///
+/mysql_drop.sql////*///
+/pgsql_create.sql////*///
+/pgsql_drop.sql////*///
+/prefs.sql////*///
+/sessionhandler.sql////*///
+/sessionhandler_sapdb.sql////*///
+/vfs.sql////*///

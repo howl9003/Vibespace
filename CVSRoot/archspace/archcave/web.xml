@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3c.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+<!--<servlet>
+		<servlet-name>archcave</servlet-name>
+		<servlet-class>org.archcave.server.ArchcaveServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet> -->
+
+<!--<servlet>
+		<servlet-name>archcave</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>-->
+
+<!--<servlet-mapping>
+		<servlet-name>archcave</servlet-name>
+		<url-pattern>*.ac</url-pattern>
+	</servlet-mapping>-->
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+</web-app>

@@ -1,0 +1,564 @@
+# HORDE ESTONIAN TRANSLATION 
+#
+# Toomas Aas <toomas.aas@mail.ee>, 2002 
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.1\n"
+"POT-Creation-Date: 2002-01-30 16:15+0200\n"
+"PO-Revision-Date: 2002-02-03 17:31+0200\n"
+"Last-Translator: Toomas Aas <toomas.aas@mail.ee>\n"
+"Language-Team: Estonian <dev@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-13\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s Hooldust&ouml;&ouml;d - kinnitus"
+
+#, c-format
+msgid "%s is ready to perform the maintenance operations checked below."
+msgstr "%s on valmis k&auml;ivitama j&auml;rgmised hooldust&ouml;&ouml;d"
+
+msgid "24 hours"
+msgstr "24 tundi"
+
+msgid "AM/PM"
+msgstr "EL/PL"
+
+msgid "Add a new user:"
+msgstr "Lisa uus kasutaja:"
+
+msgid "Add pair"
+msgstr "Lisa paar"
+
+msgid "Add user"
+msgstr "Lisa kasutaja"
+
+msgid "Adding users is disabled."
+msgstr "Kasutajate lisamine pole lubatud."
+
+msgid "Address"
+msgstr "Aadress"
+
+msgid "Addressbook"
+msgstr "Aadressid"
+
+msgid "Administration"
+msgstr "Haldus"
+
+msgid "Alias"
+msgstr "Alias"
+
+#, c-format
+msgid "Attempt to bind failed: no entry found for %s."
+msgstr "&Uuml;hendus eba&otilde;nnestus; %s ei leitud."
+
+msgid "Attempt to bind without a valid connection."
+msgstr "&Uuml;hendus puudub."
+
+msgid "Available fields:"
+msgstr "Kasutatavad v&auml;ljad"
+
+#, c-format
+msgid "Bind to server %s, dn %s as %s failed: [%d] %s"
+msgstr "&Uuml;hendus serveriga %s, dn %s kasutajana %s eba&otilde;nnestus: [%d] %s"
+
+msgid "Birthday"
+msgstr "S&uuml;nnip&auml;ev"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Cancel Problem Report"
+msgstr "Loobu"
+
+msgid "Cell Phone"
+msgstr "Mobiiltelefon"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "M&auml;rgi k&otilde;ik t&ouml;&ouml;d mida soovid praegu teha."
+
+msgid "Close Help Window"
+msgstr "Sule abiaken"
+
+msgid "Close Help"
+msgstr "Sule abi"
+
+msgid "Close Window"
+msgstr "Sule aken"
+
+msgid "Company"
+msgstr "Firma"
+
+msgid "Confirm Password"
+msgstr "Kinnita salas&otilde;na"
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "'%s' sisu"
+
+msgid "Contents of the RAR archive"
+msgstr "RAR arhiivi sisu"
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Ei suuda k&auml;ivitada hooldust&ouml;&ouml; moodulit %s"
+
+msgid "DD"
+msgstr "DD"
+
+msgid "Daily"
+msgstr "Iga p&auml;ev"
+
+msgid "Database query failed."
+msgstr "Andmebaasip&auml;ring eba&otilde;nnestus."
+
+msgid "Default Identity"
+msgstr "Vaikeidentiteet"
+
+msgid "Delete"
+msgstr "Kustuta"
+
+msgid "Describe the Problem"
+msgstr "Kirjelda probleemi"
+
+msgid "Do not directly access maintenance.php"
+msgstr "&Auml;ra &uuml;rita maintenance.php faili otse k&auml;ivitada"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Empty result."
+msgstr "Tulemus on t&uuml;hi."
+
+msgid "Error"
+msgstr "Viga"
+
+msgid "Every Login"
+msgstr "Igal sisselogimisel"
+
+msgid "Example values:"
+msgstr "N&auml;idisv&auml;&auml;rtused"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "Real %d puudub \"BEGIN\"."
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "\"END:%s\" on puudu real %d."
+
+msgid "Failed to connect to LDAP preferences server."
+msgstr "Ei saanud &uuml;hendust LDAP h&auml;&auml;lestusserveriga."
+
+msgid "Failed to connect to LDAP server."
+msgstr "Ei saanud &uuml;hendust LDAP serveriga."
+
+#, c-format
+msgid "Failed to open an LDAP connection to %s."
+msgstr "Ei saanud LDAP &uuml;hendust %s'ga."
+
+msgid "Fax"
+msgstr "Faks"
+
+msgid "Full Description:"
+msgstr "Kirjeldus:"
+
+msgid "Help"
+msgstr "Abi"
+
+msgid "Home Address"
+msgstr "Kodune aadress"
+
+msgid "Home Phone"
+msgstr "Kodune telefon"
+
+msgid "Horde Login"
+msgstr "Horde Login"
+
+msgid "Horde System"
+msgstr "Horde S&uuml;steem"
+
+msgid "Horde User Administration"
+msgstr "Horde kasutajahaldus"
+
+msgid "Horde Wireless"
+msgstr "Horde Wireless"
+
+msgid "Horde is not properly configured"
+msgstr "Horde ei ole korralikult h&auml&auml;lestatud"
+
+msgid "Horde"
+msgstr "Horde"
+
+msgid "Import Error: "
+msgstr "Viga impordil: "
+
+msgid "Import"
+msgstr "Import"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "Imporditud v&auml;li: %s"
+
+msgid "Imported fields:"
+msgstr "Imporditud v&auml;ljad:"
+
+msgid "List Help Topics"
+msgstr "Abiinfo teemade nimekiri"
+
+msgid "Listing users is disabled."
+msgstr "Kasutajate nimekirja pole lubatud n&auml;ha."
+
+msgid "Log in"
+msgstr "Logi sisse"
+
+msgid "Log out"
+msgstr "Logi v&auml;lja"
+
+msgid "MM"
+msgstr "MM"
+
+msgid "Mail"
+msgstr "IMP"
+
+msgid "Map Date and Time Fields"
+msgstr "Kuup&auml;eva ja kellaaja v&auml;ljad"
+
+msgid "Map Import Fields"
+msgstr "Impordiv&auml;ljad"
+
+msgid "Matching fields"
+msgstr "Sobivad v&auml;ljad"
+
+msgid "Message"
+msgstr "Teade"
+
+msgid "Monthly"
+msgstr "Kord kuus"
+
+msgid "Name"
+msgstr "Nimi"
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "LDAP h&auml&auml;lestusinfo puudub."
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "SQL kategooriate h&auml;&auml;lestusinfo puudub."
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "SQL seadete h&auml;&auml;lestusinfo puudub."
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "SQL autentimise h&auml&auml;lestusinfo puudub."
+
+#, c-format
+msgid "No entry found for %s."
+msgstr "Puudub sissekanne %s kohta."
+
+msgid "No preferences are available."
+msgstr "H&auml;&auml;lestusinfo ei ole k&auml;ttesaadav."
+
+msgid "No preferences were retrieved."
+msgstr "H&auml&auml;lestusinfot ei saanud."
+
+msgid "Notes"
+msgstr "M&auml;rkmed"
+
+msgid "Password"
+msgstr "Salas&otilde;na"
+
+msgid "Passwords cannot be blank."
+msgstr "Salas&otilde;na ei saa olla t&uuml;hi."
+
+msgid "Passwords must match."
+msgstr "Salas&otilde;nad peavad klappima."
+
+msgid "Perform Maintenance Operations"
+msgstr "K&auml;ivita hooldust&ouml;&ouml;d"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please log in"
+msgstr "Palun logi sisse"
+
+msgid "Please provide a summary of the problem."
+msgstr "Kirjelda probleemi."
+
+msgid "Please provide your username and password"
+msgstr "Sisesta oma kasutajanimi ja salas&otilde;na"
+
+msgid "Problem Description"
+msgstr "Probleemi kirjeldus"
+
+msgid "Remove pair"
+msgstr "Eemalda paar"
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'basedn'."
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'basedn'."
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'database'."
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'database'."
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'database'."
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "Autentimise h&auml&auml;lestuses puudub vajalik 'hostspec'."
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'hostspec'."
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'hostspec'."
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'password'."
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'password'."
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'password'."
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'phptype'."
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'phptype'."
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'phptype'."
+
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'table'."
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'table'."
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'table'."
+
+msgid "Required 'tableRelations' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'tableRelations'."
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'uid'."
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'uid'."
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "Autentimise h&auml;&auml;lestuses puudub vajalik 'username'."
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "Kategooriate h&auml;&auml;lestuses puudub vajalik 'username'."
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "Seadete h&auml;&auml;lestuses puudub vajalik 'username'."
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Return to Options"
+msgstr "Tagasi h&auml;&auml;lestusse"
+
+msgid "Role"
+msgstr "Roll"
+
+msgid "Save Options"
+msgstr "Salvesta h&auml;&auml;lestus"
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Vali vajalikud m&auml;rgid kastidest. Siis saad need kopeerida kirja sisse."
+
+msgid "Select the date delimiter:"
+msgstr "Vali kuup&auml;eva eraldaja:"
+
+msgid "Select the date format:"
+msgstr "Vali kuup&auml;eva formaat:"
+
+msgid "Select the time format:"
+msgstr "Vali kellaaja formaat:"
+
+msgid "Select two matching fields."
+msgstr "Vali kaks sobivat v&auml;lja."
+
+msgid "Send Problem Report"
+msgstr "Saada probleemi kirjeldus"
+
+msgid "Short Summary:"
+msgstr "L&uuml;hikokkuv&otilde;te:"
+
+msgid "Skip Maintenance"
+msgstr "J&auml;ta hooldus vahele"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "M&otilde;ned Horde konfiguratsioonifailid on puudu:"
+
+msgid "Special Character Input"
+msgstr "Erim&auml;rkide sisestus"
+
+msgid "Success"
+msgstr "L&auml;ks korda"
+
+#, c-format
+msgid "Successfully added '%s' to the system."
+msgstr "%s on s&uuml;steemi edukalt lisatud."
+
+#, c-format
+msgid "Successfully removed '%s' from the system."
+msgstr "%s on s&uuml;steemist edukalt eemaldatud."
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Registry abil teavad Horde rakendused kuidas &uuml;ksteisega suhelda. "
+"Siia peaksid kirjutama k&otilde;ik Horde rakendused mis sul installitud on."
+
+#, c-format
+msgid "There was a problem adding '%s' to the system."
+msgstr "%s lisamisel s&uuml;steemi tekkis probleem."
+
+#, c-format
+msgid "There was a problem removing '%s' from the system."
+msgstr "%s eemaldamisel s&uuml;steemist tekkis probleem."
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"See fail m&auml;&auml;rab MIME draiverid mida kasutavad k&otilde;ik Horde"
+"rakendused ja t&anu millele saavad nad kasutada v&auml;liseid programme nagu"
+"enscript ja mswordview erinevate failide esitamiseks browseris HTMLina."  
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings.."
+msgstr ""
+"See fail m&auml;&auml;rab v&auml;rvid ja kirjastiilid Horde ja k&otilde;igi"
+"Horde rakenduste jaoks millel ei ole vastavat h&auml;&auml;lestust"
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"See fail m&auml;&auml;rab faililaienditele vastavad MIME t&uuml;&uuml;bid,"
+"t&auml;nu millele oskab Horde k&auml;sitleda m&otilde;ningaid failit&uuml;&uuml;pe."
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"See on peamine Horde konfiguratsioonifail. See sisaldab failide asukohti ja"
+"t&auml;htsamaid h&auml;&auml;lestusi mis kehtivad k&otilde;igile Horde rakendustele."
+
+msgid "Title"
+msgstr "Pealkiri"
+
+msgid "Type mismatch."
+msgstr "Sobimatu t&uuml;&uuml;p"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "Ei saa &uuml;hendust SQL serveriga."
+
+msgid "Unable to modified preferences."
+msgstr "Ei saa salvestada muudetud h&auml;&auml;lestust."
+
+msgid "Unable to register preferences in session."
+msgstr "Ei suuda h&auml;&auml;lestust registreerida."
+
+msgid "Unable to translate this Word document"
+msgstr "Seda Wordi dokumenti on v&otilde;imatu t&otilde;lgendada"
+
+msgid "Undo Changes"
+msgstr "T&uuml;hista muutused"
+
+msgid "Unexpected end of file."
+msgstr "Faili ootamatu l&otilde;pp"
+
+msgid "Use Default Value"
+msgstr "Kasuta vaikev&auml;&auml;rtust"
+
+msgid "Username"
+msgstr "Kasutajanimi"
+
+msgid "Users in the system:"
+msgstr "Kasutajad s&uuml;steemis:"
+
+msgid "Warning!"
+msgstr "Hoiatus!"
+
+msgid "Warning"
+msgstr "Hoiatus"
+
+msgid "Weekly"
+msgstr "Kord n&auml;dalas"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "Tere tulemast, %s"
+
+msgid "Work Address"
+msgstr "T&ouml;&ouml;koha aadress"
+
+msgid "Work Phone"
+msgstr "T&ouml;&ouml;telefon"
+
+msgid "YY"
+msgstr "AA"
+
+msgid "Yearly"
+msgstr "Kord aastas"
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "Enne saatmist oleks tark probleemi kirjeldada."
+
+msgid "You must specify a username to remove."
+msgstr "Pead m&auml;&auml;rama kasutajanime mida eemaldada."
+
+msgid "You must specify the username to add."
+msgstr "Pead m&auml;&auml;rama kasutajanime mida lisada."
+
+msgid "Your Email Address:"
+msgstr "Sinu e-maili aadress:"
+
+msgid "Your Name:"
+msgstr "Sinu nimi:"
+
+msgid ""
+"Your authentication backend does not support adding users, or the feature "
+"has been disabled for some other reason."
+msgstr ""
+"Sinu autentimiss&uuml;steem ei v&otilde;imalda kasutajaid lisada, v&otilde;i"
+"on see v&otilde;imalus mingil muul p&otilde;hjusel v&auml;lja l&uuml;litatud."
+
+msgid ""
+"Your authentication backend does not support listing users, or the feature "
+"has been disabled for some other reason."
+msgstr ""
+"Sinu autentimiss&uuml;steem ei v&otilde;imalda kasutajate nimekirja n&auml;ha,"
+"v&otilde;i on see v&otilde;imalus mingil muul p&otilde;hjusel v&auml;lja l&uuml;litatud."
+
+msgid "[Problem Report]"
+msgstr "[IMPi probleem]"
+

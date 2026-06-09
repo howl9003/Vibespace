@@ -1,0 +1,1395 @@
+# Horde Slovak translation.
+# Copyright (C) 2002 Leo Mrafko <leo@oel.sk>
+# (C) 2002 Ivan Noris <vix@vazka.sk>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.5\n"
+"POT-Creation-Date: 2004-03-04 21:53+0100\n"
+"PO-Revision-Date: 2004-03-04 21:53+0200\n"
+"Last-Translator: Ivan Noris <vix@vazka.sk>\n"
+"Language-Team: Slovak <vix@vazka.sk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: po/translation.php:65
+msgid ""
+"  -M, --message=MESSAGE  Use this commit message instead of the default ones."
+msgstr ""
+"  -M, --message=MESSAGE  Pou¾i» túto správu pri vkladaní namiesto prednastavenej."
+
+#: po/translation.php:69
+msgid ""
+"  -a, --add=FILE        Add this PO file to the compendium. Useful to\n"
+"                        include a compendium from a different branch to\n"
+"                        the generated compendium."
+msgstr ""
+"  -a, --add=FILE        Prida» tento PO súbor do compendia. Vhodné na vlo¾enie\n"
+"                        compendia z inej vývojovej vetvy do generovaného\n"
+"                        compendia."
+
+#: po/translation.php:125
+msgid ""
+"  -b, --base=/PATH  Full path to the (Horde) base directory that should be\n"
+"                    used."
+msgstr ""
+"  -b, --base=/PATH  Plná cesta k základnému adresáru Horde,\n"
+"                    ktorá sa má pou¾i»."
+
+#: po/translation.php:83
+msgid ""
+"  -c, --compendium=FILE  Merge new translations to this compendium file\n"
+"                         instead of the default one (compendium.po in the\n"
+"                         horde/po directory."
+msgstr ""
+"  -c, --compendium=FILE  Prida» nové preklady do tohto súbora compendia\n"
+"                         namiesto prednastaveného súboru (compendium.po\n"
+"                         v adresári horde/po."
+
+#: po/translation.php:94 po/translation.php:100
+msgid ""
+"  -c, --compendium=FILE  Use this compendium file instead of the default\n"
+"                         one (compendium.po in the horde/po directory)."
+msgstr ""
+"  -c, --compendium=FILE  Pou¾i» tento súbor compendium namiesto prednastaveného\n"
+"                         (compendium.po v adresári horde/po)."
+
+#: po/translation.php:126
+msgid "  -d, --debug       Show error messages from the executed binaries."
+msgstr "  -d, --debug       Zobrazova» chybové hlásenia spú¹»aných programov."
+
+#: po/translation.php:70
+msgid "  -d, --directory=DIR   Create compendium in this directory."
+msgstr "  -d, --directory=DIR   Vytvori» compendium v tomto adresári."
+
+#: po/translation.php:127
+msgid "  -h, --help        Show this help message."
+msgstr "  -h, --help        Zobrazi» tento help."
+
+#: po/translation.php:81 po/translation.php:88
+msgid "  -l, --locale=ll_CC     Use only this locale."
+msgstr "  -l, --locale=ll_CC     Pou¾i» iba túto lokalizáciu."
+
+#: po/translation.php:63 po/translation.php:92 po/translation.php:98
+msgid "  -l, --locale=ll_CC     Use this locale."
+msgstr "  -l, --locale=ll_CC     Pou¾i» túto lokalizáciu."
+
+#: po/translation.php:71 po/translation.php:77
+msgid "  -l, --locale=ll_CC    Use this locale."
+msgstr "  -l, --locale=ll_CC     Pou¾i» túto lokalizáciu."
+
+#: po/translation.php:82
+msgid "  -m, --module=MODULE    Build MO files only for this (Horde) module."
+msgstr "  -m, --modul=MODULE     Vytvori» MO súbory iba pre tento modul Horde."
+
+#: po/translation.php:64
+msgid ""
+"  -m, --module=MODULE    Commit translations only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    Vlo¾i» preklad iba pre tento modul Horde."
+
+#: po/translation.php:93
+msgid "  -m, --module=MODULE    Merge PO files only for this (Horde) module."
+msgstr "  -m, --module=MODULE    Zlúèi» PO súbory iba pre tento modul Horde."
+
+#: po/translation.php:89
+msgid ""
+"  -m, --module=MODULE    Update help files only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    Aktualizova» súbor pomocníka iba pre tento modul Horde."
+
+#: po/translation.php:99
+msgid "  -m, --module=MODULE    Update only this (Horde) module."
+msgstr "  -m, --module=MODULE    Aktualizova» iba tento modul Horde."
+
+#: po/translation.php:78
+msgid "  -m, --module=MODULE   Create a PO file only for this (Horde) module."
+msgstr "  -m, --module=MODULE   Vytvori» PO súbor iba pre tento modul Horde."
+
+#: po/translation.php:74
+msgid "  -m, --module=MODULE  Generate POT file only for this (Horde) module."
+msgstr "  -m, --module=MODULE  Generova» POT súbor iba pre tento modul Horde."
+
+#: po/translation.php:66
+msgid ""
+"  -n, --new              This is a new translation, commit also CREDITS,\n"
+"                         CHANGES and lang.php.dist."
+msgstr ""
+"  -n, --new              Nový preklad, vlo¾i» aj súbory CREDITS,\n"
+"                         CHANGES a lang.php.dist."
+
+#: po/translation.php:84
+msgid ""
+"  -n, --no-compendium    Don't merge new translations to the compendium."
+msgstr ""
+"  -n, --no-compendium    Nepridáva» nové preklady do compendia."
+
+#: po/translation.php:95 po/translation.php:101
+msgid "  -n, --no-compendium    Don't use a compendium."
+msgstr "  -n, --no-compendium    Nepou¾íva» compendium."
+
+#: po/translation.php:128
+msgid "  -t, --test        Show the executed commands but don't run anything."
+msgstr "  -t, --test        Zobrazi» spú¹»ané príkazy bez spú¹»ania."
+
+#: po/translation.php:120
+msgid "  commit      Commit translations to the CVS server."
+msgstr "  commit      Odosla» preklady na CVS server."
+
+#: po/translation.php:121
+msgid "  commit-help Commit help files to the CVS server."
+msgstr "  commit-help Odosla» súbory pomocníka na CVS server."
+
+#: po/translation.php:112
+msgid ""
+"  compendium  Rebuild the compendium file. Warning: This overwrites the\n"
+"              current compendium."
+msgstr ""
+"  compendium  Znovu vytvori» súbor compendium. Upozornenie: týmto prepí¹ete\n"
+"              aktuálne compendium."
+
+#: po/translation.php:113
+msgid "  extract     Generate PO template (.pot) files."
+msgstr "  extract     Generova» ¹ablóny Po súborov (.pot)."
+
+#: po/translation.php:111
+msgid "  help        Show this help message."
+msgstr "  help        Zobrazi» túto správu."
+
+#: po/translation.php:114
+msgid ""
+"  init        Create one or more PO files for a new locale. Warning: This\n"
+"              overwrites the existing PO files of this locale."
+msgstr ""
+"  init        Vytvori» jeden alebo viac PO súborov pre túto lokalizáciý.\n"
+"              Upozornenie: týmto prepí¹ete existujúce PO súbory pre tútu lokalizáciu."
+
+#: po/translation.php:118
+msgid "  make        Build binary MO files from the specified PO files."
+msgstr "  make        Vytvori» binárne MO súbory z urèených PO súborov."
+
+#: po/translation.php:119
+msgid ""
+"  make-help   Mark all entries in the XML help file being up-to-date and\n"
+"              prepare the file for the next execution of update-help. You\n"
+"              should only run make-help AFTER update-help and revising the\n"
+"              help file."
+msgstr ""
+"  make-help   Oznaèi» v¹etky polo¾ky v XML súbore pomocníka ako aktuálne\n"
+"              a pripravi» súbor na nasledujúce spustenie update-help.\n"
+"              make-help by ste mali spú¹»a» a¾ PO update-help a kontrole\n"
+"              súboru pomocníka."
+
+#: po/translation.php:115
+msgid ""
+"  merge       Merge the current PO file with the current PO template file."
+msgstr ""
+"  merge       Zlúèi» aktuálny PO súbor s aktuálnym ¹ablónovým PO súborom."
+
+#: po/translation.php:116
+msgid "  update      Run extract and merge sequent."
+msgstr "  update      Spusti» extract a merge za sebou."
+
+#: po/translation.php:117
+msgid ""
+"  update-help Extract all new and changed entries from the English XML help\n"
+"              file and merge them with the existing ones."
+msgstr ""
+"  update-help Vybra» v¹etky nové a zmenené polo¾ky z anglického XML súboru pomocníka\n"
+"              a zlúèi» ich s existujúcimi."
+
+#: templates/maintenance/confirm_top.inc:14
+#, c-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr ""
+" &#151; Aplikácia %s je pripravená na vykonanie nasledujúcich operácií "
+"údr¾by."
+
+#: po/translation.php:860
+#, c-format
+msgid "%d bytes written."
+msgstr "zapísaných %d bajtov."
+
+#: po/translation.php:961
+#, c-format
+msgid "%d of %d entries marked as up-to-date"
+msgstr "%d z %d polo¾iek bolo oznaèených za aktuálne."
+
+#: templates/maintenance/confirm_top.inc:7
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "Operácie údr¾by pre aplikáciu %s - Potvrdenie"
+
+#: po/translation.php:370
+#, c-format
+msgid "%s not found. Run 'translation extract' first."
+msgstr "Nemo¾no nájs» %s. Spustite najprv 'translation extract'."
+
+#: po/translation.php:155
+#, c-format
+msgid ""
+"%sWarning:%s This program was only tested on gettext 0.11. There is no\n"
+"guarantee that it will work with your version of gettext."
+msgstr ""
+"%sUpozornenie:%s Tento program bol testovaný iba s gettext 0.11. Nemo¾no\n"
+"zaruèi», ¾e bude fungova» s Va¹ou verziou gettext-u."
+
+#: po/translation.php:140
+#, c-format
+msgid "%sfound:%s %s"
+msgstr "%snájdené:%s %s"
+
+#: lib/Registry.php:457 lib/Registry.php:753
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "V Registroch Horde chýba konfigurácia '%s'"
+
+#: po/translation.php:169
+msgid ", trying C++ instead"
+msgstr ", skú¹am C++"
+
+#: po/translation.php:1016 po/translation.php:1018
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: templates/data/datemap.inc:102
+msgid "24 hours"
+msgstr "24 hodín"
+
+#: lib/Horde.php:235
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Vyskytla sa záva¾ná chyba:</b>"
+
+#: templates/data/datemap.inc:103
+msgid "AM/PM"
+msgstr "12 hodín"
+
+#: po/translation.php:649
+msgid "Adding new files to repository:"
+msgstr "Pridávam nové súbory do úlo¾iska:"
+
+#: lib/MIME/Viewer/vcard.php:86
+msgid "Address"
+msgstr "Adresa"
+
+#: config/registry.php.dist:137
+msgid "Address Book"
+msgstr "Kniha adries"
+
+#: lib/MIME/Viewer/vcard.php:64
+msgid "Alias"
+msgstr "Alias"
+
+#: lib/Prefs/UI.php:100 lib/PrefsUI.php:100
+msgid "An illegal value was specified."
+msgstr "Zadali ste neplatnú hodnotu."
+
+#: config/prefs.php.dist:70
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "Vy¾adova» potvrdenie pred vykonaním operácií údr¾by?"
+
+#: lib/Auth/radius.php:206
+msgid "Authentication rejected by RADIUS server."
+msgstr "Autentifikácia zamietnutá RADIUS serverom."
+
+#: templates/data/csvmap.inc:84
+msgid "Available fields:"
+msgstr "Dostupné polo¾ky:"
+
+#: lib/Auth/krb5.php:81
+msgid "Bad kerberos password."
+msgstr "Nesprávne heslo pre kerberos."
+
+#: lib/Auth/krb5.php:83
+msgid "Bad kerberos username."
+msgstr "Nesprávne pou¾ívateµské meno pre kerberos."
+
+#: lib/MIME/Viewer/vcard.php:71
+msgid "Birthday"
+msgstr "Narodeniny"
+
+#: po/translation.php:443
+#, c-format
+msgid "Building MO files for module %s%s%s..."
+msgstr "Vytváram MO súbory pre modul %s%s%s..."
+
+#: po/translation.php:460
+#, c-format
+msgid "Building locale %s%s%s... "
+msgstr "Vytváram lokalizáciu %s%s%s..."
+
+#: config/registry.php.dist:173
+msgid "CVS"
+msgstr "CVS"
+
+#: config/registry.php.dist:146
+msgid "Calendar"
+msgstr "Kalendár"
+
+#: lib/MIME/Viewer/vcard.php:103
+msgid "Cell Phone"
+msgstr "Mobilný telefón"
+
+#: templates/maintenance/confirm_top.inc:16
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Oznaète ¹tvorèek pri operáciách, ktoré chcete vykona» teraz."
+
+#: templates/help/menu.inc:12
+msgid "Close Help"
+msgstr "Zatvori» Pomocníka"
+
+#: templates/help/menu.inc:12
+msgid "Close Help Window"
+msgstr "Zatvori» okno Pomocníka"
+
+#: config/registry.php.dist:182
+msgid "Comics"
+msgstr "Comics"
+
+#: po/translation.php:58
+msgid "Command options:"
+msgstr "Parametre príkazu"
+
+#: po/translation.php:110
+msgid "Commands:"
+msgstr "Príkazy:"
+
+#: po/translation.php:687
+msgid "Committing:"
+msgstr "Odosielam:"
+
+#: lib/MIME/Viewer/vcard.php:152
+msgid "Company"
+msgstr "Firma"
+
+#: lib/VFS/ftp.php:422
+msgid "Connection to ftp server failed."
+msgstr "Nepodarilo sa nadviaza» spojenie s ftp serverom."
+
+#: po/translation.php:1034
+msgid "Console_Getopt not found."
+msgstr "Console_Getopt sa nepodarilo nájs»."
+
+#: lib/MIME/Viewer/zip.php:45 lib/MIME/Viewer/tgz.php:50
+#, c-format
+msgid "Contents of '%s'"
+msgstr "Obsah '%s'"
+
+#: lib/MIME/Viewer/rar.php:46
+msgid "Contents of the RAR archive"
+msgstr "Obsah archívu RAR"
+
+#: po/translation.php:768
+#, c-format
+msgid "Copying %s to %s"
+msgstr "Kopírujem %s do %s"
+
+#: lib/SessionHandler/mysql.php:270
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr "Nepodarilo sa nadviaza» spojenie s databázou pre SQL SessionHandler."
+
+#: lib/SessionHandler/mysql.php:274
+#, c-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr ""
+"Nepodarilo sa nadviaza» spojenie s tabuµkou '%s' pre SQL SessionHandler."
+
+#: po/translation.php:771
+#, c-format
+msgid "Could not copy %s to %s"
+msgstr "Nemo¾no skopírova» %s do %s"
+
+#: po/translation.php:469 po/translation.php:761
+#, c-format
+msgid "Could not create locale directory for locale %s:"
+msgstr "Nemo¾no vytvori» adresár pre lokalizáciu %s:"
+
+#: lib/Maintenance.php:397
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Nemo¾no otvori» modul Operácií pre údr¾bu : %s"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "DD"
+msgstr "DD"
+
+#: lib/Maintenance.php:30
+msgid "Daily"
+msgstr "Denne"
+
+#: lib/Auth/sql.php:207 lib/Auth/sql.php:235 lib/Auth/sql.php:260
+msgid "Database query failed."
+msgstr "Neúspe¹ná databázová po¾iadavka"
+
+#: lib/Identity.php:73
+msgid "Default Identity"
+msgstr "Prednastavená identita"
+
+#: problem.php:92 problem.php:96 problem.php:107
+msgid "Describe the Problem"
+msgstr "Opí¹te problém"
+
+#: lib/Horde.php:243
+msgid "Details have been logged for the administrator."
+msgstr "Detaily boli zaznamenané pre administrátora."
+
+#: config/prefs.php.dist:12
+msgid "Display Options"
+msgstr "Nastavenie zobrazenia"
+
+#: maintenance.php:26
+msgid "Do not directly access maintenance.php"
+msgstr "Nepristupujte priamo k súboru maintenance.php!"
+
+#: lib/MIME/Viewer/vcard.php:137
+msgid "Email"
+msgstr "Email"
+
+#: lib/Auth/ldap.php:113
+msgid "Empty result."
+msgstr "Prázdny výsledok"
+
+#: po/translation.php:847
+#, c-format
+msgid "Entries: %d total, %d up-to-date, %d new, %d changed, %d unknown"
+msgstr "Polo¾ky: %d celkovo, %d aktuálnych, %d nových, %d zmenených, %d neznámych"
+
+#: status.php:16 lib/Notification/status.php:53
+msgid "Error"
+msgstr "Chyba"
+
+#: po/translation.php:262 po/translation.php:307 po/translation.php:1056
+#: po/translation.php:1113 po/translation.php:1178
+msgid "Error: "
+msgstr "Chyba:"
+
+#: config/prefs.php.dist:41
+msgid "Every 15 minutes"
+msgstr "Ka¾dých 15 minút"
+
+#: config/prefs.php.dist:38
+msgid "Every 30 seconds"
+msgstr "Ka¾dých 30 sekúnd"
+
+#: config/prefs.php.dist:40
+msgid "Every 5 minutes"
+msgstr "Ka¾dých 5 minút"
+
+#: lib/Maintenance.php:31
+msgid "Every Login"
+msgstr "Pri ka¾dom prihlásení"
+
+#: config/prefs.php.dist:42
+msgid "Every half hour"
+msgstr "Ka¾dú polhodinu"
+
+#: config/prefs.php.dist:39
+msgid "Every minute"
+msgstr "Ka¾dú minútu"
+
+#: templates/data/datemap.inc:28
+msgid "Example values:"
+msgstr "Napríklad:"
+
+#: po/translation.php:212 po/translation.php:223 po/translation.php:273
+#: po/translation.php:326 po/translation.php:385 po/translation.php:396
+#: po/translation.php:447 po/translation.php:480 po/translation.php:489
+#: po/translation.php:497 po/translation.php:526 po/translation.php:555
+#: po/translation.php:567 po/translation.php:624 po/translation.php:681
+#: po/translation.php:703 po/translation.php:736 po/translation.php:892
+#: po/translation.php:1126
+msgid "Executing:"
+msgstr "Spú¹»a sa:"
+
+#: lib/Data.php:273
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "Oèakávaný \"BEGIN\" na riadku %d."
+
+#: lib/Data.php:297
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "Oèakávaný \"END:%s\" na riadku %d."
+
+#: po/translation.php:198
+#, c-format
+msgid "Extracting from %s... "
+msgstr "Vyberá sa z %s..."
+
+#: lib/Prefs/sql.php:316
+msgid "Failed retrieving preferences."
+msgstr "Nepodarilo sa naèíta» nastavenia."
+
+#: lib/Auth/ldap.php:103
+msgid "Failed to connect to LDAP server."
+msgstr "Nepodarilo sa pripoji» k LDAP serveru."
+
+#: lib/Auth/smb.php:108
+msgid "Failed to connect to SMB server."
+msgstr "Nepodarilo sa pripoji» k SMB serveru."
+
+#: lib/MIME/Viewer/vcard.php:108
+msgid "Fax"
+msgstr "Fax"
+
+#: config/registry.php.dist:128
+msgid "Filters"
+msgstr "Filtre"
+
+#: po/translation.php:1141
+#, c-format
+msgid "Found applications: %s"
+msgstr "Nájdené aplikácie: %s"
+
+#: po/translation.php:1133
+msgid "Found directories:"
+msgstr "Nájdené adresáre:"
+
+#: templates/problem/problem.inc:26
+msgid "Full Description:"
+msgstr "Úplný popis:"
+
+#: po/translation.php:1050
+msgid "Getopt Error: "
+msgstr "Chyba kni¾nice Getopt: "
+
+#: help.php:15 lib/Help.php:426 lib/Help.php:427 templates/help/index.inc:13
+#: templates/navbar/menu.inc:19
+msgid "Help"
+msgstr "Pomocník"
+
+#: po/translation.php:108
+msgid ""
+"Helper application to create and maintain translations for the Horde\n"
+"framework and its applications.\n"
+"For an introduction read the file README in this directory."
+msgstr ""
+"Pomocná aplikácia na vytvorenie a údr¾bu prekladov pre systém Horde\n"
+"a jeho aplikácie.\n"
+"Pre bli¾¹ie informácie si preèítajte súbor README v tomto adresári."
+
+#: templates/navbar/menu.inc:8
+msgid "Home"
+msgstr "Domov"
+
+#: lib/MIME/Viewer/vcard.php:82
+msgid "Home Address"
+msgstr "Domáca adresa"
+
+#: lib/MIME/Viewer/vcard.php:99
+msgid "Home Phone"
+msgstr "Telefón domov"
+
+#: config/registry.php.dist:91
+msgid "Horde"
+msgstr "Horde"
+
+#: login.php:101
+msgid "Horde Login"
+msgstr "Prihlásenie do Horde"
+
+#: menu.php:20
+msgid "Horde System"
+msgstr "Systém Horde"
+
+#: templates/index/wap.inc:13
+msgid "Horde Wireless"
+msgstr "Horde pre bezdrôtové systémy"
+
+#: templates/index/notconfigured.inc:4
+msgid "Horde is not properly configured"
+msgstr "Systém Horde nie je správne nakonfigurovaný"
+
+#: po/translation.php:1017
+msgid "Horde translation generator"
+msgstr "Generátor prekladov Horde"
+
+#: config/prefs.php.dist:51
+msgid "Icons Only"
+msgstr "Iba ikony"
+
+#: config/prefs.php.dist:52
+msgid "Icons with text"
+msgstr "Ikony a text"
+
+#: lib/Data.php:273 lib/Data.php:293 lib/Data.php:297
+msgid "Import Error: "
+msgstr "Chyba pri importe: "
+
+#: templates/data/datemap.inc:20
+#, c-format
+msgid "Imported field: %s"
+msgstr "Importované pole: %s"
+
+#: templates/data/csvmap.inc:74
+msgid "Imported fields:"
+msgstr "Importované polia:"
+
+#: po/translation.php:367
+#, c-format
+msgid "Initializing module %s... "
+msgstr "Inicialuzujem modul %s..."
+
+#: lib/Auth/krb5.php:85
+msgid "Kerberos server rejected authentication."
+msgstr "Kerberos server zamietol autentifikáciu."
+
+#: config/prefs.php.dist:6
+msgid "Language"
+msgstr "Jazyk"
+
+#: templates/help/menu.inc:9
+msgid "List Help Topics"
+msgstr "Zoznam tém Pomocníka"
+
+#: po/translation.php:1028
+msgid "Loading libraries..."
+msgstr "Nahrávajú sa kni¾nice..."
+
+#: templates/navbar/menu.inc:14
+msgid "Log in"
+msgstr "Prihlásenie"
+
+#: menu.php:47 templates/login/user.inc:9
+msgid "Log out"
+msgstr "Odhlásenie"
+
+#: login.php:66
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Prihlásenie do systému zlyhalo. Pravdepodobne ste zadali nesprávne "
+"pou¾ívateµské meno alebo heslo."
+
+#: config/registry.php.dist:110
+msgid "Logout"
+msgstr "Odhlásenie"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "MM"
+msgstr "MM"
+
+#: config/registry.php.dist:119
+msgid "Mail"
+msgstr "Po¹ta"
+
+#: po/translation.php:1036
+msgid "Make sure that you have PEAR installed and in your include path."
+msgstr
+"Skontrolujte, èi máte nain¹talovaný PEAR"
+"a èi sú správne nakonfigurované cesty."
+
+#: po/translation.php:466 po/translation.php:758
+#, c-format
+msgid "Making directory %s"
+msgstr "Vytvára sa adresár %s"
+
+#: templates/data/datemap.inc:10
+msgid "Map Date and Time Fields"
+msgstr "Mapuj polia dátumu a èasu"
+
+#: templates/data/csvmap.inc:57
+msgid "Map Import Fields"
+msgstr "Mapuj polia pre import"
+
+#: templates/data/csvmap.inc:102
+msgid "Matching fields"
+msgstr "Zhodné polia"
+
+#: config/registry.php.dist:155
+msgid "Memos"
+msgstr "Poznámky"
+
+#: config/prefs.php.dist:53
+msgid "Menu mode:"
+msgstr "Zobrazenie menu:"
+
+#: po/translation.php:312
+#, c-format
+msgid "Merging all %s.po files to the compendium... "
+msgstr "Zluèujem v¹etky %s.po súbory s compendiom..."
+
+#: po/translation.php:545
+#, c-format
+msgid "Merging the PO file for %s%s%s to the compendium... "
+msgstr "Zluèujem PO súbor pre %s%s%s s compendiom."
+
+#: po/translation.php:269
+#, c-format
+msgid "Merging translation for module %s..."
+msgstr "Zluèujem preklad pre modul %s..."
+
+#: status.php:29 lib/Notification/status.php:66
+msgid "Message"
+msgstr "Správa"
+
+#: lib/Maintenance.php:28
+msgid "Monthly"
+msgstr "Mesaène"
+
+#: login.php:69
+msgid "My Summary"
+msgstr "Súhrnné informácie"
+
+#: lib/MIME/Viewer/vcard.php:56
+msgid "Name"
+msgstr "Meno"
+
+#: config/prefs.php.dist:37
+msgid "Never"
+msgstr "Nikdy"
+
+#: po/translation.php:169
+msgid "No"
+msgstr "Nie"
+
+#: lib/VFS/ftp.php:402
+msgid "No configuration information specified for FTP VFS."
+msgstr "Neexistuje konfigurácia pre FTP VFS."
+
+#: lib/Prefs/ldap.php:100
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "Nebol nakonfigurovaný server LDAP pre ulo¾enie nastavení."
+
+#: lib/Category/sql.php:73
+msgid "No configuration information specified for SQL Categories."
+msgstr "Nebol nakonfigurovaný server SQL pre ulo¾enie kategórií."
+
+#: lib/Prefs/sql.php:83
+msgid "No configuration information specified for SQL Preferences."
+msgstr "Nebol nakonfigurovaný server SQL pre ulo¾enie mo¾ností."
+
+#: lib/SessionHandler/sql.php:186 lib/SessionHandler/pgsql.php:216
+#: lib/SessionHandler/mysql.php:247
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr "Neexistuje konfigurácia pre SQL SessionHandler."
+
+#: lib/VFS/sql.php:450
+msgid "No configuration information specified for SQL VFS."
+msgstr "Neexistuje konfigurácia pre SQL VFS."
+
+#: lib/Auth/sql.php:94
+msgid "No configuration information specified for SQL authentication."
+msgstr "Nebol nakonfigurovaný server SQL pre autentifikáciu."
+
+#: lib/VFS/sql_file.php:471
+msgid "No configuration information specified for SQL-File VFS."
+msgstr "Neexistuje konfigurácia pre SQL-File VFS."
+
+#: po/translation.php:948
+#, c-format
+msgid "No entry with the id '%s' exists in the original help file."
+msgstr "V originálnom súbore pomocníka neexistuje polo¾ka s id '%s'."
+
+#: po/translation.php:262 po/translation.php:307
+msgid "No locale specified."
+msgstr "Nebola urèená lokalizácia (locale)."
+
+#: lib/Prefs/ldap.php:322 lib/Prefs/ldap.php:430 lib/Prefs/sql.php:197
+#: lib/Prefs/sql.php:273 lib/Prefs/session.php:53
+msgid "No preferences are available."
+msgstr "Nie sú dostupné ¾iadne nastavenia."
+
+#: lib/MIME/Viewer/vcard.php:157
+msgid "Notes"
+msgstr "Poznámky"
+
+#: templates/maintenance/confirm_top.inc:13
+msgid "Notice"
+msgstr "Poznámka"
+
+#: lib/Notification.php:105
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "Notification listener %s nebol nájdený."
+
+#: config/prefs.php.dist:30
+msgid "Number of columns in the summary view:"
+msgstr "Poèet ståpcov na stránke so súhrnnými informáciami:"
+
+#: po/translation.php:157 po/translation.php:1032
+msgid "OK"
+msgstr "OK"
+
+#: templates/login/user.inc:7 templates/navbar/menu.inc:11
+msgid "Options"
+msgstr "Nastavenia"
+
+#: po/translation.php:124
+msgid "Options:"
+msgstr "Nastavenia:"
+
+#: config/prefs.php.dist:11
+msgid "Other Information"
+msgstr "Ïal¹ie informácie"
+
+#: po/translation.php:160
+msgid "PHP support in xgettext: "
+msgstr "Podpora PHP v xgettext: "
+
+#: templates/login/login.inc:71
+msgid "Password"
+msgstr "Heslo"
+
+#: lib/MIME/Viewer/vcard.php:105
+msgid "Phone"
+msgstr "Telefón"
+
+#: po/translation.php:39
+msgid "Please report any bugs to i18n@lists.horde.org."
+msgstr "Prosíme, nahláste akékoµvek chyby na i18n@lists.horde.org."
+
+#: problem.php:110
+msgid "Problem Description"
+msgstr "Popis problému"
+
+#: config/prefs.php.dist:43
+msgid "Refresh Summary View:"
+msgstr "Obnovi» stránku so súhrnnými informáciami:"
+
+# c-format
+#: lib/SessionHandler/mysql.php:253
+#, c-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "V konfigurácii SessionHandler nie je ¹pecifikovaná polo¾ka '%s'."
+
+#: lib/Auth/ldap.php:91
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'basedn'."
+
+#: lib/Prefs/ldap.php:106
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'basedn'."
+
+#: lib/Auth/smb.php:92
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'bdc_hostspec'."
+
+#: lib/SessionHandler/sql.php:201 lib/SessionHandler/pgsql.php:228
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr "V konfigurácii SessionHandler nie je ¹pecifikovaná polo¾ka 'database'."
+
+#: lib/VFS/sql.php:465 lib/VFS/sql_file.php:486
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'database'."
+
+#: lib/Auth/sql.php:109
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'database'."
+
+#: lib/Category/sql.php:88
+msgid "Required 'database' not specified in categories configuration."
+msgstr "V konfigurácii kategórii nie je ¹pecifikovaná polo¾ka 'database'."
+
+#: lib/Prefs/sql.php:98
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'database'."
+
+#: lib/Auth/smb.php:95
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'domain'."
+
+#: lib/SessionHandler/sql.php:192 lib/SessionHandler/pgsql.php:219
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr "V konfigurácii SessionHandler nie je ¹pecifikovaná polo¾ka 'hostspec'."
+
+#: lib/VFS/sql.php:456 lib/VFS/ftp.php:411 lib/VFS/sql_file.php:477
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'hostspec'."
+
+#: lib/Auth/ldap.php:88 lib/Auth/sql.php:100
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'hostspec'."
+
+#: lib/Category/sql.php:79
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "V konfigurácii kategórií nie je ¹pecifikovaná polo¾ka 'hostspec'."
+
+#: lib/Prefs/ldap.php:103 lib/Prefs/sql.php:89
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'hostspec'."
+
+#: lib/SessionHandler/sql.php:198 lib/SessionHandler/pgsql.php:225
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr "V konfigurácii SessionHandler nie je ¹pecifikovaná polo¾ka 'password'."
+
+#: lib/VFS/sql.php:462 lib/VFS/ftp.php:408 lib/VFS/sql_file.php:483
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'password'."
+
+#: lib/Auth/ldap.php:97 lib/Auth/sql.php:106
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'password'."
+
+#: lib/Category/sql.php:85
+msgid "Required 'password' not specified in categories configuration."
+msgstr "V konfigurácii kategórií nie je ¹pecifikovaná polo¾ka 'password'."
+
+#: lib/Prefs/ldap.php:115 lib/Prefs/sql.php:95
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'password'."
+
+#: lib/Auth/smb.php:89
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'pdc_hostspec'."
+
+#: lib/SessionHandler/sql.php:189
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr "V konfigurácii SessionHandler nie je ¹pecifikovaná polo¾ka 'phptype'."
+
+#: lib/VFS/sql.php:453 lib/VFS/sql_file.php:474
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'phptype'."
+
+#: lib/Auth/sql.php:97
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'phptype'."
+
+#: lib/Category/sql.php:76
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "V konfigurácii kategórií nie je ¹pecifikovaná polo¾ka 'phptype'."
+
+#: lib/Prefs/sql.php:86
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'phptype'."
+
+#: lib/VFS/ftp.php:414
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'port'."
+
+#: lib/Category/sql.php:91
+msgid "Required 'table' not specified in categories configuration."
+msgstr "V konfigurácii kategórií nie je ¹pecifikovaná polo¾ka 'table'."
+
+#: lib/Prefs/sql.php:101
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'table'."
+
+#: lib/Auth/ldap.php:94
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'uid'."
+
+#: lib/Prefs/ldap.php:109
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'uid'."
+
+#: lib/SessionHandler/sql.php:195 lib/SessionHandler/pgsql.php:222
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr "V konfigurácii SessionHandler nie je ¹pecifikovaná polo¾ka 'username'."
+
+#: lib/VFS/sql.php:459 lib/VFS/ftp.php:405 lib/VFS/sql_file.php:480
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'username'."
+
+#: lib/Auth/sql.php:103
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'username'."
+
+#: lib/Category/sql.php:82
+msgid "Required 'username' not specified in categories configuration."
+msgstr "V konfigurácii kategórií nie je ¹pecifikovaná polo¾ka 'username'."
+
+#: lib/Prefs/ldap.php:112 lib/Prefs/sql.php:92
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "V konfigurácii nastavení nie je ¹pecifikovaná polo¾ka 'username'."
+
+#: lib/VFS/sql_file.php:489
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "V konfigurácii VFS nie je ¹pecifikovaná polo¾ka 'vfsroot'."
+
+#: lib/MIME/Viewer/vcard.php:147
+msgid "Role"
+msgstr "Úloha"
+
+#: po/translation.php:1123
+msgid "Searching Horde applications..."
+msgstr "Hµadajú sa aplikácie Horde..."
+
+#: po/translation.php:135
+msgid "Searching gettext binaries..."
+msgstr "Hµadajú sa programy gettext..."
+
+#: util/special_characters.php:38
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Vyberte znaky, ktoré potrebujete. Potom si ich mô¾ete skopírova» z tohto "
+"okna do textu správy."
+
+#: templates/data/datemap.inc:54
+msgid "Select the date delimiter:"
+msgstr "Vyberte oddeµovaè vo formáte dátumu:"
+
+#: templates/data/datemap.inc:64
+msgid "Select the date format:"
+msgstr "Vyberte formát dátumu:"
+
+#: templates/data/datemap.inc:90
+msgid "Select the time delimiter:"
+msgstr "Vyberte oddeµovaè vo formáte èasu:"
+
+#: templates/data/datemap.inc:99
+msgid "Select the time format:"
+msgstr "Vyberte formát èasu:"
+
+#: templates/data/csvmap.inc:65
+msgid "Select two matching fields."
+msgstr "Vyberte dve zhodné polia."
+
+#: config/prefs.php.dist:23
+msgid "Select your preferred language:"
+msgstr "Vyberte jazyk:"
+
+#: config/prefs.php.dist:13
+msgid "Set your page refreshing, and other display options."
+msgstr ""
+"Nastavenie intervalu obnovovania stránky a iných vlastností zobrazenia."
+
+#: config/prefs.php.dist:7
+msgid "Set your preferred display language."
+msgstr "Nastavenie preferovaného jazyka"
+
+#: templates/problem/problem.inc:21
+msgid "Short Summary:"
+msgstr "Krátky súhrn:"
+
+#: po/translation.php:453
+msgid "Skipped..."
+msgstr "Preskoèené..."
+
+#: templates/index/notconfigured.inc:9
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Chýbajú niektoré konfiguraèné súbory systému Horde:"
+
+#: util/special_characters.php:14
+msgid "Special Character Input"
+msgstr "Vlo¾i» ¹peciálne znaky"
+
+#: status.php:20 lib/Notification/status.php:57
+msgid "Success"
+msgstr "Úspech"
+
+#: config/registry.php.dist:164
+msgid "Tasks"
+msgstr "Úlohy"
+
+#: config/prefs.php.dist:50
+msgid "Text Only"
+msgstr "Iba text"
+
+#: po/translation.php:754
+#, c-format
+msgid "The %s help file for %s doesn't yet exist. Creating a new one."
+msgstr "Súbor pomocníka %s pre %s e¹te neexistuje. Vytvára sa nový."
+
+#: po/translation.php:781 po/translation.php:912
+#, c-format
+msgid "The help file %s didn't start with <?xml"
+msgstr "Súbor pomocníka %s nezaèína s <?xml"
+
+#: lib/MIME/Viewer/deb.php:33 lib/MIME/Viewer/rar.php:35
+#: lib/MIME/Viewer/enscript.php:34 lib/MIME/Viewer/mspowerpoint.php:34
+#: lib/MIME/Viewer/msword.php:35 lib/MIME/Viewer/rpm.php:33
+#: lib/MIME/Viewer/zip.php:35 lib/MIME/Viewer/tgz.php:35
+#: lib/MIME/Viewer/msexcel.php:34
+#, c-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr "Program na zobrazenie tohto typu správy (%s) sa nepodarilo nájs»."
+
+#: templates/index/notconfigured.inc:42
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Aplikácie Horde komunikujú prostredníctvom Registry. Mali by ste sem vypísa» "
+"v¹etky aplikácie Horde, ktoré chcete pou¾íva»."
+
+#: po/translation.php:745
+#, c-format
+msgid "There doesn't yet exist a help file for %s."
+msgstr "Súbor pomocníka pre %s e¹te neexistuje."
+
+#: po/translation.php:791 po/translation.php:797 po/translation.php:922
+#: po/translation.php:928
+#, c-format
+msgid ""
+"There was an error opening the file %s. Try running translation.php with the "
+"flag -d to see any error messages from the xml parser."
+msgstr ""
+"Nastala chyba pri otváraní súboru %s. Skúste spusti» translation.php"
+"s parametrom -d, èi uvidíte chybové hlásenia xml parsera."
+
+#: templates/index/notconfigured.inc:28
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"Tento súbor obsahuje nastavenia MIME ovládaèov pre systém Horde, a umo¾òuje "
+"aplikáciám vyu¾íva» programy ako enscript alebo mswordview na konverziu "
+"dokumentov do HTML pre prezeranie v prehliadaèi."
+
+#: templates/index/notconfigured.inc:21
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"Tento súbor obsahuje nastavenia ¹týlov s farbami a typmi písma pre systém "
+"Horde a v¹etky aplikácie, ktoré nemajú vlastné nastavenia."
+
+#: templates/index/notconfigured.inc:35
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"Tento súbor vytvára vz»ahy medzi príponami súborov a MIME typmi a umo¾òuje "
+"aplikáciám urèi», ako majú obslú¾i» daný obsah, napr. prílohy emailov alebo "
+"súbory z CVS."
+
+#: templates/index/notconfigured.inc:14
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"Toto je hlavný konfiguraèný súbor Horde. Obsahuje cesty a základné polo¾ky, "
+"ktoré sa týkajú systému Horde a ostatných aplikácií."
+
+#: lib/Prefs/UI.php:109 lib/PrefsUI.php:109
+msgid "This number must be at least one."
+msgstr "Èíslo musí by» najmenej 1."
+
+#: lib/Prefs/UI.php:107 lib/PrefsUI.php:107
+msgid "This value must be a number."
+msgstr "Táto hodnota musí by» èíselná"
+
+#: lib/MIME/Viewer/vcard.php:142
+msgid "Title"
+msgstr "Titulok"
+
+#: lib/Data.php:297
+msgid "Type mismatch."
+msgstr "Nesprávny typ."
+
+#: lib/MIME/Viewer/vcard.php:162
+msgid "URL"
+msgstr "URL"
+
+#: lib/Auth/sql.php:119
+msgid "Unable to connect to SQL server."
+msgstr "Chyba pri pokuse o pripojenie na SQL server."
+
+#: lib/VFS/file.php:452
+msgid "Unable to read the vfsroot directory."
+msgstr "Nemo¾no èíta» z adresára vfsroot."
+
+#: lib/Prefs/session.php:92
+msgid "Unable to register preferences in session."
+msgstr "Nepodarilo sa ulo¾i» nastavenia v relácii."
+
+#: lib/MIME/Viewer/msword.php:57
+msgid "Unable to translate this Word document"
+msgstr "Nepodarilo sa prelo¾i» tento dokument Wordu"
+
+#: lib/Data.php:293
+msgid "Unexpected end of file."
+msgstr "Neoèakávaný koniec súboru."
+
+#: po/translation.php:1178
+#, c-format
+msgid "Unknown command: %s"
+msgstr "Neznámy príkaz: %s"
+
+#: po/translation.php:776 po/translation.php:907
+#, c-format
+msgid "Updating %s help file for %s."
+msgstr "Aktualizuje sa súbor pomocníka %s pre %s."
+
+#: po/translation.php:55 po/translation.php:105 po/translation.php:106
+msgid "Usage:"
+msgstr "Pou¾itie:"
+
+#: templates/prefs/select.inc:3
+msgid "Use Default Value"
+msgstr "Pou¾i» prednastavenú hodnotu"
+
+#: prefs.php:61
+msgid "User Options"
+msgstr "Pou¾ívateµské nastavenia"
+
+#: templates/login/login.inc:67
+msgid "Username"
+msgstr "Pou¾ívateµské meno"
+
+#: status.php:24 lib/Notification/status.php:61
+msgid "Warning"
+msgstr "Varovanie"
+
+#: po/translation.php:469 po/translation.php:506 po/translation.php:515
+#: po/translation.php:745 po/translation.php:754 po/translation.php:761
+#: po/translation.php:771 po/translation.php:781 po/translation.php:791
+#: po/translation.php:797 po/translation.php:912 po/translation.php:922
+#: po/translation.php:928 po/translation.php:948
+msgid "Warning: "
+msgstr "Varovanie:"
+
+#: lib/Maintenance.php:29
+msgid "Weekly"
+msgstr "Tý¾denne"
+
+#: templates/login/login.inc:59
+#, c-format
+msgid "Welcome to %s"
+msgstr "Vitajte, %s"
+
+#: templates/wml/login/user.inc:1 templates/login/user.inc:4
+#, c-format
+msgid "Welcome, %s"
+msgstr "Vitajte, %s"
+
+#: config/prefs.php.dist:61
+msgid "What application should Horde display after login?"
+msgstr "Ktorú aplikáciu má Horde zobrazi» po prihlásení?"
+
+#: lib/MIME/Viewer/vcard.php:84
+msgid "Work Address"
+msgstr "Adresa do práce"
+
+#: lib/MIME/Viewer/vcard.php:101
+msgid "Work Phone"
+msgstr "Telefón do práce"
+
+#: po/translation.php:853
+#, c-format
+msgid "Writing updated help file to %s."
+msgstr "Aktualizovaný súbor pomocníka sa zapisuje do %s."
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "YY"
+msgstr "YY"
+
+#: lib/Maintenance.php:27
+msgid "Yearly"
+msgstr "Roène"
+
+#: po/translation.php:166
+msgid "Yes"
+msgstr "Áno"
+
+#: login.php:65
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "Práve ste sa odhlásili.<br />Ïakujeme, ¾e pou¾ívate ná¹ systém."
+
+#: login.php:64
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "Platnos» va¹ej relácie '%s' vypr¹ala. Prosím, prihláste sa znovu."
+
+#: templates/problem/problem.inc:16
+msgid "Your Email Address:"
+msgstr "Va¹a Emailová adresa:"
+
+#: config/prefs.php.dist:5
+msgid "Your Information"
+msgstr "Va¹e informácie"
+
+#: templates/problem/problem.inc:11
+msgid "Your Name:"
+msgstr "Va¹e meno:"
+
+#: lib/Prefs/UI.php:146 lib/PrefsUI.php:146
+msgid "Your options have been updated."
+msgstr "Va¹e nastavenia boli aktualizované."
+
+#: problem.php:67
+msgid "[Problem Report]"
+msgstr "[Sprava o probleme]"
+
+#: lib/Horde.php:239
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[riadok %s v %s]"
+
+#: po/translation.php:506
+msgid "an error has occured:"
+msgstr "vyskytla sa chyba:"
+
+#: po/translation.php:228 po/translation.php:335 po/translation.php:405
+#: po/translation.php:536 po/translation.php:576
+msgid "done"
+msgstr "hotovo"
+
+#: po/translation.php:337 po/translation.php:369 po/translation.php:407
+#: po/translation.php:538 po/translation.php:578
+msgid "failed"
+msgstr "chyba"
+
+#: po/translation.php:142
+msgid "not found"
+msgstr "nenájdené"
+
+#: po/translation.php:515
+#, c-format
+msgid "the Horde PO file for the locale %s does not exist:"
+msgstr "súbor PO pre lokalizáciu Horde %s neexistuje:"
+
+#: lib/MIME/Viewer/vcard.php:36
+msgid "vCard"
+msgstr "vCard"
+
+#~ msgid "Add pair"
+#~ msgstr "Prida» pár"
+
+#~ msgid "Cancel Problem Report"
+#~ msgstr "Zru¹i» správu o probléme"
+
+#~ msgid "Close Window"
+#~ msgstr "Zatvori» okno"
+
+#~ msgid "Import"
+#~ msgstr "Import"
+
+#~ msgid "Perform Maintenance Operations"
+#~ msgstr "Vykona» operácie údr¾by"
+
+#~ msgid "Please provide a summary of the problem."
+#~ msgstr "Prosím uveïte zhrnutie problému."
+
+#~ msgid "Please provide your username and password"
+#~ msgstr "Prosím zadajte svoje pou¾ívateµské meno a heslo"
+
+#~ msgid "Remove pair"
+#~ msgstr "Odstráni» pár"
+
+#~ msgid "Return to Options"
+#~ msgstr "Návrat na nastavenia"
+
+#~ msgid "Save Options"
+#~ msgstr "Ulo¾i» nastavenia"
+
+#~ msgid "Send Problem Report"
+#~ msgstr "Posla» správu o probléme"
+
+#~ msgid "Skip Maintenance"
+#~ msgstr "Preskoèi» údr¾bu"
+
+#~ msgid "Undo Changes"
+#~ msgstr "Zru¹i» zmeny"
+
+#~ msgid ""
+#~ "You must describe the problem before you can send the problem report."
+#~ msgstr "Musíte popísa» problém predtým, ako odo¹lete správu o probléme."
+
+#~ msgid "Required 'table' not specified in authentication configuration."
+#~ msgstr "V konfigurácii autentifikácie nie je ¹pecifikovaná polo¾ka 'table'."

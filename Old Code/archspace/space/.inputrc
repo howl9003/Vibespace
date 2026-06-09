@@ -1,0 +1,11 @@
+# inputrc for bash
+#
+# for input hangul
+#
+# 3 Apr 1997, Choi Jun Ho <junker@jazz.snu.ac.kr>
+#
+set meta-flag On
+set convert-meta Off
+set output-meta On
+set editing-mode emacs
+set show-all-if-ambiguous on

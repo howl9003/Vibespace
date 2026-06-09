@@ -1,0 +1,8 @@
+/Makefile.FreeBSD////
+/Makefile.Linux////
+/Makefile.Mindwarper////
+/Makefile.Optimized////
+/Makefile.Solaris////
+/bsdport.h////
+/crypt.conn.cc////
+/key.cc////

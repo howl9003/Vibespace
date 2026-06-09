@@ -1,0 +1,1256 @@
+# Finnish translation for Horde.
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Leena Heino <liinu@uta.fi>, 2001.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.5-cvs\n"
+"POT-Creation-Date: 2001-11-27 10:37+0200\n"
+"PO-Revision-Date: 2004-03-03 12:59+0200\n"
+"Last-Translator: Leena Heino <linu@uta.fi>\n"
+"Language-Team: Finnish <i18n@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+msgid ""
+"  -M, --message=MESSAGE  Use this commit message instead of the default ones."
+msgstr ""
+"  -M, --message=MESSAGE  K‰yt‰ t‰t‰ commit-viestin‰ normaalin viestin tilalla"
+
+msgid ""
+"  -a, --add=FILE        Add this PO file to the compendium. Useful to\n"
+"                        include a compendium from a different branch to\n"
+"                        the generated compendium."
+msgstr ""
+"  -a, --add=FILE        Lis‰‰ t‰m‰ PO-tiedosto kompendiin.\n"
+"                        T‰t‰ voi k‰ytt‰‰ silloin kun lis‰‰t toisen haaran\n"
+"                        kompendin luotuun kompendiin."
+
+msgid ""
+"  -b, --base=/PATH  Full path to the (Horde) base directory that should be\n"
+"                    used."
+msgstr ""
+"  -b, --base=/PATH  Polku k‰ytett‰v‰‰n (Horde) perushakemistoon."
+
+msgid ""
+"  -c, --compendium=FILE  Merge new translations to this compendium file\n"
+"                         instead of the default one (compendium.po in the\n"
+"                         horde/po directory."
+msgstr ""
+"  -c, --compendium=FILE  Yhdist‰ k‰‰nnˆkset t‰h‰n kompendiin.\n"
+"                         Jos ei haluta k‰ytt‰‰ oletustiedostoa \n"
+"                         (compendium.po horde/po hakemistossa)."
+
+msgid ""
+"  -c, --compendium=FILE  Use this compendium file instead of the default\n"
+"                         one (compendium.po in the horde/po directory)."
+msgstr ""
+"  -c, --compendium=FILE  K‰yt‰ t‰t‰ kompendia oletuksen sijasta\n"
+"                         (compendium.po horde/po hakemistossa)."
+
+msgid "  -d, --debug       Show error messages from the executed binaries."
+msgstr "  -d, --debug       N‰yt‰ virheilmoitukset k‰ynnistett‰vist‰ ohjelmista."
+
+msgid "  -d, --directory=DIR   Create compendium in this directory."
+msgstr "  -d, --directory=DIR   Luo kompendi t‰h‰n hakemistoon."
+
+msgid "  -h, --help        Show this help message."
+msgstr "  -h, --help        N‰yt‰ t‰m‰ ohje."
+
+msgid "  -l, --locale=ll_CC     Use only this locale."
+msgstr "  -l, --locale=ll_CC     K‰yt‰ vain t‰t‰ lokalisointia."
+
+msgid "  -l, --locale=ll_CC     Use this locale."
+msgstr "  -l, --locale=ll_CC     K‰yt‰ t‰t‰ lokalisointia."
+
+msgid "  -l, --locale=ll_CC    Use this locale."
+msgstr "  -l, --locale=ll_CC    K‰yt‰ t‰t‰ lokalisointia."
+
+msgid "  -m, --module=MODULE    Build MO files only for this (Horde) module."
+msgstr "  -m, --module=MODULE    Tee MO-tiedostot vain t‰lle (Horde) moduulille."
+
+msgid ""
+"  -m, --module=MODULE    Commit translations only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    Commitoi k‰‰nnˆkset vain t‰lle (Horde) moduulille."
+
+msgid "  -m, --module=MODULE    Merge PO files only for this (Horde) module."
+msgstr "  -m, --module=MODULE    Yhdist‰ PO-tiedosto vain t‰lle (Horde) moduulille."
+
+msgid ""
+"  -m, --module=MODULE    Update help files only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    P‰iv‰t ohjetiedostot vain t‰lle (Horde) moduulille."
+
+msgid "  -m, --module=MODULE    Update only this (Horde) module."
+msgstr "  -m, --module=MODULE    P‰ivit‰ vain t‰m‰ (Horde) moduuli."
+
+msgid "  -m, --module=MODULE   Create a PO file only for this (Horde) module."
+msgstr "  -m, --module=MODULE   Luo PO-tiedostot vain t‰lle (Horde) moduulille."
+
+msgid "  -m, --module=MODULE  Generate POT file only for this (Horde) module."
+msgstr "  -m, --module=MODULE  Tee POT-tiedosto vain t‰lle (Horde) moduulille."
+
+msgid ""
+"  -n, --new              This is a new translation, commit also CREDITS,\n"
+"                         CHANGES and lang.php.dist."
+msgstr ""
+"  -n, --new              T‰m‰ on uusi k‰‰nnˆs, commitoi myˆs CREDITS,\n"
+"                         CHANGES ja lang.php.dist."
+
+msgid ""
+"  -n, --no-compendium    Don't merge new translations to the compendium."
+msgstr ""
+"  -n, --no-compendium    ƒl‰ yhdist‰ k‰‰nnˆksi‰ kompendiin."
+
+msgid "  -n, --no-compendium    Don't use a compendium."
+msgstr "  -n, --no-compendium    ƒl‰ k‰yt‰ kompendia."
+
+msgid "  -t, --test        Show the executed commands but don't run anything."
+msgstr "  -t, --test        N‰yt‰ suoritettavat ohjelmat, mutta ‰l‰ aja niit‰."
+
+msgid "  commit      Commit translations to the CVS server."
+msgstr "  commit      Kommitoi k‰‰nnˆkset CVS-palvelimelle."
+
+msgid "  commit-help Commit help files to the CVS server."
+msgstr "  commit-help Kommitoi ohjetiedostot CVS-palvelimelle."
+
+msgid ""
+"  compendium  Rebuild the compendium file. Warning: This overwrites the\n"
+"              current compendium."
+msgstr ""
+"  compendium  Tee kompendi uudestaan. Varoitus: T‰m‰ kirjoittaa\n"
+"              uuden kompendin vanhan p‰‰lle."
+
+msgid "  extract     Generate PO template (.pot) files."
+msgstr "  extract     Tee PO-kaavatiedosto (.pot)."
+
+msgid "  help        Show this help message."
+msgstr "  help        N‰yt‰ t‰m‰ ohje."
+
+msgid ""
+"  init        Create one or more PO files for a new locale. Warning: This\n"
+"              overwrites the existing PO files of this locale."
+msgstr ""
+"  init        Luo yksi tai useampi PO-tiedosto uudelle lokalisoinnille.\n"
+"              Varoitus: T‰m‰ kirjoittaa lokalisoinnin uuden PO-tiedoston\n"
+"              vanhan p‰‰lle"
+
+msgid "  make        Build binary MO files from the specified PO files."
+msgstr "  make        Tee bin‰‰rinen MO-tiedosto PO-tiedostoista."
+
+msgid ""
+"  make-help   Mark all entries in the XML help file being up-to-date and\n"
+"              prepare the file for the next execution of update-help. You\n"
+"              should only run make-help AFTER update-help and revising the\n"
+"              help file."
+msgstr ""
+"  make-help   Merkitse kaikki osiot XML-muotoisesta ohjetiedostosta \n"
+"              p‰ivitetyksi ja valmistele tiedosto update-help komennon\n"
+"              ajoa varten. Sinun pit‰‰ ajaa make-help sen j‰lkeen kun olet\n"
+"              p‰ivitt‰nyt ohjetiedostoa ja ajanut update-help komennon."
+
+msgid ""
+"  merge       Merge the current PO file with the current PO template file."
+msgstr ""
+"  merge       Yhdist‰ nykyinen PO-tiedosto ja PO-kaavatiedosto."
+
+msgid "  update      Run extract and merge sequent."
+msgstr "  update      Aja extract ja merge yhdistelm‰."
+
+msgid ""
+"  update-help Extract all new and changed entries from the English XML help\n"
+"              file and merge them with the existing ones."
+msgstr ""
+"  update-help Hae kaikki uudet ja p‰ivitetyt osiot englanninkielisesta\n"
+"              XML-muotoisesta ohjetiedostosta ja yhdist‰ ne olemassaolevien\n"
+"              osioiden kanssa."
+
+#, c-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr ""
+" &#151; %s on valmis suorittamaan valitut yll‰pitotoimenpiteet."
+
+#, c-format
+msgid "%d bytes written."
+msgstr "kirjoitettiin %d tavua."
+
+#, c-format
+msgid "%d of %d entries marked as up-to-date"
+msgstr "%d tietuetta %d:st‰ merkittiin p‰ivitetyksi"
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s Yll‰pitotoimenpiteet - Varmistus"
+
+#, c-format
+msgid "%s is ready to perform the maintenance operations checked below."
+msgstr "%s on valmis suorittamaan valitut yll‰pitotoimenpiteet."
+
+#, c-format
+msgid "%s not found. Run 'translation extract' first."
+msgstr "%s ei lˆytynyt. Aja ensin 'translation extract'."
+
+#, c-format
+msgid ""
+"%sWarning:%s This program was only tested on gettext 0.11. There is no\n"
+"guarantee that it will work with your version of gettext."
+msgstr ""
+"%sVaroitus:%s T‰m‰ ohjelma on testattu vain gettext versiolla 0.11. Ei ole\n"
+"mit‰‰n takeita siit‰, itt‰ se toimisi myˆs k‰ytˆss‰si olevalla gettext-versioilla."
+
+#, c-format
+msgid "%sfound:%s %s"
+msgstr "%slˆytyi:%s %s"
+
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' ei ole asennettu Horden rekisteriss‰."
+
+msgid ", trying C++ instead"
+msgstr ", kokeillaan sen sijaan C++:aa"
+
+msgid "---------------------------"
+msgstr "---------------------------"
+
+msgid "24 hours"
+msgstr "24 tuntia"
+
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Vakava virhe tapahtui:</b>"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Account Manager"
+msgstr "Tunnuksen hallinta"
+
+msgid "Add a new user:"
+msgstr "Lis‰‰ uusi k‰ytt‰j‰:"
+
+msgid "Add pair"
+msgstr "Lis‰‰ pari"
+
+msgid "Add user"
+msgstr "Lis‰‰ k‰ytt‰j‰"
+
+msgid "Adding new files to repository:"
+msgstr "Lis‰t‰‰n uusia tiedostoja varastoon:"
+
+msgid "Adding users is disabled."
+msgstr "K‰ytt‰jien lis‰‰minen on estetty."
+
+msgid "Address Book"
+msgstr "Osoitekirja"
+
+msgid "Address"
+msgstr "Osoite"
+
+msgid "Addressbook"
+msgstr "Osoitekirja"
+
+msgid "Administration"
+msgstr "Yll‰pito"
+
+msgid "Alias"
+msgstr "Alias"
+
+msgid "An illegal value was specified."
+msgstr "Annettu arvo ei kelpaa."
+
+#, c-format
+msgid "Attempt to bind failed: no entry found for %s."
+msgstr "Kysely ep‰onnistui: ei ole olemassa kentt‰‰: %s"
+
+msgid "Attempt to bind without a valid connection."
+msgstr "Kysely‰ ei voida suorittaa ilman toimivaa yhteytt‰."
+
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "Kysy varmistus ennenkuin tehd‰‰n yll‰pitotoimenpiteet."
+
+msgid "Authentication rejected by RADIUS server."
+msgstr "Autentikointi ep‰onnistui RADIUS-palvelimelta."
+
+msgid "Available fields:"
+msgstr "K‰ytett‰viss‰olevat kent‰t:"
+
+msgid "Bad kerberos password."
+msgstr "V‰‰r‰ kerberos salasana."
+
+msgid "Bad kerberos username."
+msgstr "V‰‰r‰ kerberos k‰ytt‰j‰tunnus."
+
+#, c-format
+msgid "Bind to server %s:%d with DN %s failed: [%d] %s"
+msgstr "Kysely palvelimelle %s:%d kun DN on %s ep‰onnistui: [%d] %s"
+
+msgid "Birthday"
+msgstr "Syntym‰p‰iv‰"
+
+msgid "Bugs"
+msgstr "Virheet"
+
+#, c-format
+msgid "Building MO files for module %s%s%s..."
+msgstr "Muodostetaan MO-tiedostoja moduulille %s%s%s..."
+
+#, c-format
+msgid "Building locale %s%s%s... "
+msgstr "Muodostetaan lokalisointi %s%s%s... "
+
+msgid "CVS"
+msgstr "CVS-versiohallinta"
+
+msgid "Calendar"
+msgstr "Kalenteri"
+
+msgid "Cancel Problem Report"
+msgstr "Peru ongelmaviesti"
+
+msgid "Cell Phone"
+msgstr "Matkapuhelin"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Valitse valintaruuduista suoritettavat toimenpiteet."
+
+msgid "Close Help Window"
+msgstr "Sulje ohjeikkuna"
+
+msgid "Close Help"
+msgstr "Sulje ohje"
+
+msgid "Close Window"
+msgstr "Sulje ikkuna"
+
+msgid "Comics"
+msgstr "Sarjakuvat"
+
+msgid "Command options:"
+msgstr "Komentojen optiot:"
+
+msgid "Commands:"
+msgstr "Komennot"
+
+msgid "Committing:"
+msgstr "Kommitoidaan:"
+
+msgid "Company"
+msgstr "Yritys"
+
+msgid "Confirm Password"
+msgstr "Vahvista kirjoittamalla salasana uudestaan"
+
+msgid "Connection to ftp server failed."
+msgstr "Yhteys ftp-palvelimelle ep‰onnistui."
+
+msgid "Console_Getopt not found."
+msgstr "Console_Getopt ei lˆytynyt."
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "'%s':n sis‰ltˆ"
+
+msgid "Contents of the GZipped Tarball"
+msgstr "GZip-tiivistetyn Tar-paketin sis‰ltˆ"
+
+msgid "Contents of the RAR archive"
+msgstr "RAR-paketin sis‰ltˆ"
+
+#, c-format
+msgid "Copying %s to %s"
+msgstr "Kopioidaan %s %s:ksi"
+
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr "SQL SessionHandler ei saanut yhteytt‰ tietokantaan."
+
+#, c-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr "SQL SessionHandler ei saanut tietokannan taulun '%s' tietoja."
+
+#, c-format
+msgid "Could not copy %s to %s"
+msgstr "Ei voitu kopioida %s:‰‰ %s:ksi"
+
+#, c-format
+msgid "Could not create locale directory for locale %s:"
+msgstr "Ei voitu luoda hakemistoa lokalisoinnille %s:"
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Yll‰pitomoduulin %s aukaisu ep‰onnistui"
+
+msgid "DD"
+msgstr "PP"
+
+msgid "Daily"
+msgstr "P‰ivitt‰in"
+
+msgid "Database query failed."
+msgstr "Tietokantakysely ep‰onnistui."
+
+msgid "Default Identity"
+msgstr "Oletusprofiili"
+
+msgid "Delete"
+msgstr "Poista"
+
+msgid "Describe the Problem"
+msgstr "Ongelman kuvaus"
+
+msgid "Details have been logged for the administrator."
+msgstr "Tarkemmat tiedot on talletettu yll‰pidon k‰sitelt‰v‰ksi."
+
+msgid "Display Options"
+msgstr "N‰kym‰n asetukset"
+
+msgid "Do not directly access maintenance.php"
+msgstr "ƒl‰ k‰yt‰ suoraan maintenance.php:t‰"
+
+msgid "Email"
+msgstr "S‰hkˆposti"
+
+msgid "Empty result."
+msgstr "Tyhj‰ vastaus."
+
+#, c-format
+msgid "Entries: %d total, %d up-to-date, %d new, %d changed, %d unknown"
+msgstr "Tietueita: %d yhteens‰, %d p‰ivitetty, %d uutta, %d muutettua, %d tuntematonta"
+
+msgid "Error"
+msgstr "Virhe"
+
+msgid "Error: "
+msgstr "Virhe: "
+
+msgid "Every 15 minutes"
+msgstr "15 minuutin v‰lein"
+
+msgid "Every 30 seconds"
+msgstr "30 sekunnin v‰lein"
+
+msgid "Every 5 minutes"
+msgstr "5 minuutin v‰lein"
+
+msgid "Every Login"
+msgstr "Jokaisella sis‰‰nkirjautumisella"
+
+msgid "Every half hour"
+msgstr "Puolen tunnin v‰lein"
+
+msgid "Every minute"
+msgstr "Minuutin v‰lein"
+
+msgid "Example values:"
+msgstr "Esimerkkiarvot:"
+
+msgid "Executing:"
+msgstr "Suoritetaan:"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "Odotettua merkkijonoa \"BEGIN\" ei lˆytynyt rivilt‰ %d."
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "Odotettua merkkijonoa \"END:%s\" ei lˆytynyt rivilt‰ %d."
+
+#, c-format
+msgid "Extracting from %s... "
+msgstr "Haetaan %s:st‰..."
+
+msgid "FTP"
+msgstr "FTP-tiedonsiirto"
+
+msgid "Failed retrieving prefs for "
+msgstr "Asetusten haku ep‰onnistui n‰ille "
+
+msgid "Failed retrieving preferences."
+msgstr "Asetusten haku ep‰onnistui."
+
+msgid "Failed to connect to LDAP preferences server."
+msgstr "Yhteys preferences-asetuksien LDAP-palvelimeen ep‰onnistui."
+
+msgid "Failed to connect to LDAP server."
+msgstr "Yhteys LDAP-palvelimeen ep‰onnistui."
+
+msgid "Failed to connect to SMB server."
+msgstr "Yhteys SMB-palvelimeen ep‰onnistui."
+
+#, c-format
+msgid "Failed to open an LDAP connection to %s."
+msgstr "LDAP-yhteys ep‰onnistui palvelimeen %s."
+
+#, c-format
+msgid "Failed to retrieve user's DN: [%d] %s"
+msgstr "K‰ytt‰j‰n DN-tietojen haku ep‰onnistui: [%d] %s"
+
+msgid "Fax"
+msgstr "Faksi"
+
+msgid "Forwards"
+msgstr "S‰hkˆpostin uudelleenohjaukset"
+
+msgid "Filters"
+msgstr "Suodattimet"
+
+#, c-format
+msgid "Found applications: %s"
+msgstr "Lˆydettiin ohjelmat: %s"
+
+msgid "Found directories:"
+msgstr "Lˆydettiin hakemistot:"
+
+msgid "Full Description:"
+msgstr "Pidempi kuvaus:"
+
+msgid "Getopt Error: "
+msgstr "Getopt-virhe: "
+
+msgid "Headlines"
+msgstr "Otsikot"
+
+msgid "Help"
+msgstr "Ohje"
+
+msgid ""
+"Helper application to create and maintain translations for the Horde\n"
+"framework and its applications.\n"
+"For an introduction read the file README in this directory."
+msgstr ""
+"Apuohjelma, jolla voi luoda ja yll‰pit‰‰ k‰‰nnˆksia‰ Horde ymp‰ristˆˆn ja\n"
+"sit‰ k‰ytt‰viin ohjelmiin.\n"
+"Johdannoksi sinun olisi syyt‰ lukea t‰ss‰ hakemistossa sijaitseva\n"
+"README tiedosto."
+
+msgid "Home Address"
+msgstr "Kotiosoite"
+
+msgid "Home Phone"
+msgstr "Puhelin(koti)"
+
+msgid "Home"
+msgstr "Koti"
+
+msgid "Horde Login"
+msgstr "Horde sis‰‰nkirjautuminen"
+
+msgid "Horde Summary"
+msgstr "Horde yhteenveto"
+
+msgid "Horde System"
+msgstr "Horde j‰rjestelm‰"
+
+msgid "Horde User Administration"
+msgstr "Horde k‰ytt‰j‰hallinta"
+
+msgid "Horde Wireless"
+msgstr "Horde langaton yhteys"
+
+msgid "Horde is not properly configured"
+msgstr "Horde-ohjelmisto ei ole asennettu oikein"
+
+msgid "Horde translation generator"
+msgstr "Horde lokalisointiohjelma"
+
+msgid "Horde"
+msgstr "Horde"
+
+msgid "Icons Only"
+msgstr "Vain ikonit"
+
+msgid "Icons with text"
+msgstr "Ikonit ja teksti"
+
+msgid "Import Error: "
+msgstr "Virhe tuonnissa: "
+
+msgid "Import"
+msgstr "Tuo"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "Tuotu kentt‰: %s"
+
+msgid "Imported fields:"
+msgstr "Tuodut kent‰t:"
+
+#, c-format
+msgid "Initializing module %s... "
+msgstr "Alustetaan moduulia %s... "
+
+msgid "Kerberos server rejected authentication."
+msgstr "Autentikointi ep‰onnistui Kerberos-palvelimelle."
+
+msgid "Language"
+msgstr "Kieli"
+
+msgid "List Help Topics"
+msgstr "N‰yt‰ ohjeiden aiheet"
+
+msgid "Listing users is disabled."
+msgstr "K‰ytt‰j‰tietojen n‰ytt‰minen on estetty."
+
+msgid "Loading libraries..."
+msgstr "Ladataan kirjastoja..."
+
+msgid "Log in"
+msgstr "Kirjaudu sis‰‰n"
+
+msgid "Log out"
+msgstr "Kirjaudu ulos"
+
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Sis‰‰nkirjautumisesi ep‰onnistui. Todenn‰kˆisesti kirjoitit v‰‰rin"
+"k‰ytt‰j‰tunnuksesi tai salasanasi."
+
+msgid "Logout"
+msgstr "Kirjaudu ulos"
+
+msgid "MM"
+msgstr "KK"
+
+msgid "Mail"
+msgstr "Posti"
+
+msgid "Make sure that you have PEAR installed and in your include path."
+msgstr "Tarkista ett‰ sinulla on PEAR asennettuja ja se lˆytyy polustasi."
+
+#, c-format
+msgid "Making directory %s"
+msgstr "Luodaan hakemisto %s"
+
+msgid "Map Date and Time Fields"
+msgstr "Muunna p‰iv‰ys- ja aikakent‰t"
+
+msgid "Map Import Fields"
+msgstr "Muunna tuodut kent‰t"
+
+msgid "Matching fields"
+msgstr "T‰sm‰‰v‰t kent‰t"
+
+msgid "Memos"
+msgstr "Muistiinpanot"
+
+msgid "Menu mode:"
+msgstr "Menun muoto:"
+
+#, c-format
+msgid "Merging all %s.po files to the compendium... "
+msgstr "Yhdistetaan kaikki %s.po tiedostot kompendiin..."
+
+#, c-format
+msgid "Merging the PO file for %s%s%s to the compendium... "
+msgstr "Yhdistet‰‰n PO-tiedosto lokalisoinnille %s%s%s kompendiin... "
+
+#, c-format
+msgid "Merging translation for module %s..."
+msgstr "Yhdistet‰‰n k‰‰nnˆkset moduulille %s..."
+
+msgid "Message"
+msgstr "Viesti"
+
+msgid "Monthly"
+msgstr "Kuukausittain"
+
+msgid "My Summary"
+msgstr "Yhteenvetoni"
+
+msgid "Name"
+msgstr "Nimi"
+
+msgid "Network"
+msgstr "Verkko"
+
+msgid "News"
+msgstr "Uutiset"
+
+msgid "Never"
+msgstr "Ei koskaan"
+
+msgid "No configuration information specified for FTP VFS."
+msgstr "Asetuksia ei lˆytynyt FTP VFS:lle."
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "Asetuksia ei lˆytynyt LDAP preferences:lle."
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "Asetuksia ei lˆytynyt SQL Categories:lle."
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "Asetuksia ei lˆytynyt SQL Preferences:lle."
+
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr "Asetuksia ei lˆytynyt SQL SessionHandler:lle."
+
+msgid "No configuration information specified for SQL VFS."
+msgstr "Asetuksia ei lˆytynyt SQL VFS:lle."
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "Asetuksia ei lˆytynyt SQL authentication:lle."
+
+msgid "No configuration information specified for SQL-File VFS."
+msgstr "Asetuksia ei lˆytynyt SQL-File VFS:lle."
+
+#, c-format
+msgid "No entry found for %s."
+msgstr "Ei lˆytynyt tietoja %s:lle."
+
+#, c-format
+msgid "No entry with the id '%s' exists in the original help file."
+msgstr "Alkuper‰isest‰ ohjetiedostosta ei lˆytynyt tietuetta id:ll‰ '%s'."
+
+msgid "No locale specified."
+msgstr "Lokalisointia ei ole m‰‰ritelty."
+
+msgid "No preferences are available."
+msgstr "Asetukset eiv‰t ole saatavilla."
+
+msgid "No preferences were retrieved."
+msgstr "Asetuksia ei voitu hakea."
+
+msgid "No"
+msgstr "Ei"
+
+msgid "Notes"
+msgstr "Muistiinpanot"
+
+msgid "Notice"
+msgstr "Ilmoitus"
+
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "Ilmoituskuuntelijaa %s ei lˆytynyt."
+
+msgid "Number of columns in the summary view:"
+msgstr "Sarakkeiden lukum‰‰r‰ yhteenveton‰kym‰ss‰:"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Options"
+msgstr "Asetukset"
+
+msgid "Options:"
+msgstr "Optiot:"
+
+msgid "Other Information"
+msgstr "Muut tiedot"
+
+msgid "PHP support in xgettext: "
+msgstr "PHP-tuki xgettext:ss‰: "
+
+msgid "Password"
+msgstr "Salasana"
+
+msgid "Passwords cannot be blank."
+msgstr "Salasana ei saa olla tyhj‰."
+
+msgid "Passwords must match."
+msgstr "Salasanojen pit‰‰ olla samat."
+
+msgid "Perform Maintenance Operations"
+msgstr "Suorita yll‰pitotoimenpiteet"
+
+msgid "Phone"
+msgstr "Puhelin"
+
+msgid "Please log in"
+msgstr "Kirjaudu sis‰‰n"
+
+msgid "Please provide a summary of the problem."
+msgstr "Anna lyhyt kuvaus ongelmasta."
+
+msgid "Please provide your username and password"
+msgstr "Anna k‰ytt‰j‰tunnuksesi ja salasanasi"
+
+msgid "Please report any bugs to i18n@lists.horde.org."
+msgstr "Raportoi ohjelmavirheist‰ osoitteeseen i18n@lists.horde.org."
+
+msgid "Presentations"
+msgstr "Esitykset"
+
+msgid "Problem Description"
+msgstr "Ongelman kuvaus"
+
+#, c-format
+msgid "Rebind to server %s:%d with DN %s failed: [%d] %s"
+msgstr "Yhteyden uudelleenmuodostus palvelimelle %s:%d kun DN on %s ep‰onnistui: [%d] %s"
+
+#, c-format
+msgid "Referral target %s for DN %s is not in the authorized server list!"
+msgstr "Viittauskohde %s kun DN %s ei ole sallittujen palvelimien listalla!"
+
+msgid "Refresh Summary View:"
+msgstr "P‰ivit‰ yhteenveton‰kym‰‰:"
+
+msgid "Remove pair"
+msgstr "Poista pari"
+
+#, c-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "Tarvittavaa '%s'-tietoa ei ollut m‰‰ritelty SessionHandler asetuksissa."
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "Tarvittavaa 'basedn'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "Tarvittavaa 'basedn'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr "Tarvittavaa 'bdc_hostspec'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr "Tarvittavaa 'database'-tietoa ei ollut m‰‰ritelty SessionHandler asetuksissa."
+
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "Tarvittavaa 'database'-tietoa ei ollut m‰‰ritelty VFS asetuksissa"
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "Tarvittavaa 'database'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "Tarvittavaa 'database'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "Tarvittavaa 'database'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr "Tarvittavaa 'domain'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr "Tarvittavaa 'hostspec'-tietoa ei ollut m‰‰ritelty SessionHandler asetuksissa."
+
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "Tarvittavaa 'hostspec'-tietoa ei ollut m‰‰ritelty VFS asetuksissa"
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "Tarvittavaa 'hostspec'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "Tarvittavaa 'hostspec'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "Tarvittavaa 'hostspec'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr "Tarvittavaa 'password'-tietoa ei ollut m‰‰ritelty SessionHandler asetuksissa."
+
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "Tarvittavaa 'password'-tietoa ei ollut m‰‰ritelty VFS asetuksissa"
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "Tarvittavaa 'password'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "Tarvittavaa 'password'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "Tarvittavaa 'password'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr "Tarvittavaa 'pdc_hostspec'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr "Tarvittavaa 'phptype'-tietoa ei ollut m‰‰ritelty SessionHandler asetuksissa."
+
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "Tarvittavaa 'phptype'-tietoa ei ollut m‰‰ritelty VFS asetuksissa"
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "Tarvittavaa 'phptype'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "Tarvittavaa 'phptype'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "Tarvittavaa 'phptype'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "Tarvittavaa 'port'-tietoa ei ollut m‰‰ritelty VFS asetuksissa"
+
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "Tarvittavaa 'table'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "Tarvittavaa 'table'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "Tarvittavaa 'table'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'tableRelations' not specified in categories configuration."
+msgstr "Tarvittavaa 'tableRelations'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "Tarvittavaa 'uid'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "Tarvittavaa 'uid'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr "Tarvittavaa 'username'-tietoa ei ollut m‰‰ritelty SessionHandler asetuksissa."
+
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "Tarvittavaa 'username'-tietoa ei ollut m‰‰ritelty VFS asetuksissa"
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "Tarvittavaa 'username'-tietoa ei ollut m‰‰ritelty authentication asetuksissa."
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "Tarvittavaa 'username'-tietoa ei ollut m‰‰ritelty categories asetuksissa."
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "Tarvittavaa 'username'-tietoa ei ollut m‰‰ritelty preferences asetuksissa."
+
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "Tarvittavaa 'vfsroot'-tietoa ei ollut m‰‰ritelty VFS asetuksissa."
+
+msgid "Reset"
+msgstr "Tyhjenn‰"
+
+msgid "Return to Options"
+msgstr "Palaa asetuksiin"
+
+msgid "Role"
+msgstr "Rooli"
+
+msgid "Save Options"
+msgstr "Talleta asetukset"
+
+msgid "Searching Horde applications..."
+msgstr "Etsit‰‰n Horde ohjelmia..."
+
+msgid "Searching gettext binaries..."
+msgstr "Etsit‰‰n gettext bin‰‰reit‰..."
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Valitse tarvittavat merkit alla olevista valikoista. "
+"Voit sen j‰lkeen kopioida ja liitt‰‰ merkit tekstiin."
+
+msgid "Select the date delimiter:"
+msgstr "Valitse p‰iv‰yksen erotinmerkki:"
+
+msgid "Select the date format:"
+msgstr "Valitse p‰iv‰yksen esitystapa:"
+
+msgid "Select the time delimiter:"
+msgstr "Valitse ajan erotinmerkki:"
+
+msgid "Select the time format:"
+msgstr "Valitse ajan esitystapa:"
+
+msgid "Select two matching fields."
+msgstr "Valitse kaksi yhteensopivaa kentt‰‰."
+
+msgid "Select your preferred language:"
+msgstr "Valitse k‰ytett‰v‰ kieli:"
+
+msgid "Send Problem Report"
+msgstr "L‰het‰ ongelmaviesti"
+
+#, c-format
+msgid "Set rebind proc failed: [%d] %s"
+msgstr "Yhteyden uudelleenmuodostamisohjelman asettaminen ep‰onnistui: [%d] %s"
+
+msgid "Set your page refreshing, and other display options."
+msgstr "Voit muuttaa sivun p‰ivityst‰ ja muita n‰kym‰‰n liittyvi‰ asetuksia."
+
+msgid "Set your preferred display language."
+msgstr "Voit asettaa ohjelmassa k‰ytett‰v‰n kielen."
+
+msgid "Short Summary:"
+msgstr "Lyhyt kuvaus:"
+
+msgid "Skip Maintenance"
+msgstr "Ohita yll‰pitoteht‰v‰t"
+
+msgid "Skipped..."
+msgstr "Ohitettiin..."
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Joitakin Horden asetustiedostoja puuttuu:"
+
+msgid "Special Character Input"
+msgstr "Erikoismerkkien syˆttˆ"
+
+msgid "Subject"
+msgstr "Otsikko"
+
+msgid "Success"
+msgstr "Onnistui"
+
+#, c-format
+msgid "Successfully added '%s' to the system."
+msgstr "'%s': lis‰‰minen j‰rjestelm‰‰n onnistui."
+
+#, c-format
+msgid "Successfully removed '%s' from the system."
+msgstr "'%s': onnistuttiin poistamaan j‰rjestelm‰st‰."
+
+msgid "Tasks"
+msgstr "Teht‰v‰t"
+
+msgid "Text Only"
+msgstr "Vain teksti"
+
+#, c-format
+msgid "The %s help file for %s doesn't yet exist. Creating a new one."
+msgstr "%s ohjetiedosto ohjelmalle %s ei ole olemassa. Luodaan uusi tiedosto."
+
+#, c-format
+msgid "The help file %s didn't start with <?xml"
+msgstr "Ohjetiedosto %s ei alkanut merkkijonolla <?xml"
+
+#, c-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr ""
+"Ohjelmaa, jolla voi katsoa viestityyppi‰ (%s), ei lˆytynyt j‰rjestelm‰st‰."
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Rekisteriss‰ m‰‰ritell‰‰n miten Horde-ohjelmat viestitt‰v‰t kesken‰‰n. "
+"Sinun pit‰‰ m‰‰ritell‰ t‰h‰n kaikki k‰ytett‰v‰t Horde-ohjelmat."
+
+#, c-format
+msgid "There doesn't yet exist a help file for %s."
+msgstr "Ohjetiedostoa ohjelmalle %s ei ole viel‰ olemassa."
+
+#, c-format
+msgid "There was a problem adding '%s' to the system."
+msgstr "Joitakin ongelmia '%s' lis‰‰misess‰ j‰rjestelm‰‰n."
+
+#, c-format
+msgid "There was a problem removing '%s' from the system."
+msgstr "Joitakin ongelmia '%s' poistamisessa j‰rjestelm‰st‰."
+
+#, c-format
+msgid ""
+"There was an error opening the file %s. Try running translation.php with the "
+"flag -d to see any error messages from the xml parser."
+msgstr ""
+"Tapahtui virhe avattaessa tiedostoa %s. Koita ajaa translation.php "
+"parametrill‰ -d ja tarkista tuleeko xml-tulkilta virheilmoituksia."
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"T‰ss‰ tiedostossa m‰‰ritell‰‰n yhteiset asetukset MIME-ajureille Horde-j‰rjestelm‰ss‰. "
+"N‰m‰ ajurit mahdollistavat ulkoisten ohjelmien, kuten enscript tai mswordview, k‰ytˆn Horde-j‰rjestelm‰ss‰ sis‰llˆn muuttamiseksi sopivaan muotoon WWW-selaimilla katselua varten."
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"T‰ss‰ tiedostossa asetetaan tyylitiedot, jotka m‰‰rittelev‰t k‰ytett‰v‰t v‰rit ja kirjasimet Horde-j‰rjestelm‰ss‰ ja niille ohjelmille jotka eiv‰t m‰‰rittele omia vastaavia asetuksia."
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"T‰ss‰ tiedostossa m‰‰ritell‰‰n tiedostop‰‰tteet tietyille MIME-tyypeille. "
+"T‰m‰ mahdollista sen, ett‰ Horde-j‰rjestelm‰ss‰ voidaa k‰ytt‰‰ apuohjelmia esimerkiksi s‰hkˆpostin liitteiden tai CVS-versionhallinnan k‰sittelyyn."
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"T‰m‰ on Horden p‰‰asetustiedosto. T‰ss‰ tiedostossa m‰‰ritell‰‰n koko Horde-j‰rjestelm‰‰ koskevia polkuja ja peruspalikoita."
+
+msgid "This number must be at least one."
+msgstr "Numeron pit‰‰ olla v‰hint‰‰n yksi."
+
+msgid "This value must be a number."
+msgstr "Arvon pit‰‰ olla numero."
+
+msgid "Title"
+msgstr "Titteli"
+
+msgid "Type mismatch."
+msgstr "Tyypit eiv‰t ole samat."
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "SQL-palvelimeen ei saada yhteytt‰."
+
+msgid "Unable to list users."
+msgstr "K‰ytt‰j‰tietoja ei voida n‰ytt‰‰."
+
+msgid "Unable to modified preferences."
+msgstr "Asetuksia ei voida muuttaa."
+
+#, c-format
+msgid "Unable to modify preferences: [%d] %s"
+msgstr "Asetuksia ei voitu muuttaa: [%d] %s"
+
+msgid "Unable to read the vfsroot directory."
+msgstr "vfsroot juurihakemistoa ei voitu lukea."
+
+msgid "Unable to register preferences in session."
+msgstr "T‰ss‰ istunnossa ei voida tallettaa asetuksia."
+
+msgid "Unable to translate this Word document"
+msgstr "Word-dokumenttia ei voitu k‰‰nt‰‰"
+
+msgid "Unable to update preferences."
+msgstr "Asetusten p‰ivitys ep‰onnistui."
+
+msgid "Undo Changes"
+msgstr "Peru muutokset"
+
+msgid "Unexpected end of file."
+msgstr "Tiedosto p‰‰ttyi odottamattomasti keskener‰isen‰."
+
+#, c-format
+msgid "Unknown command: %s"
+msgstr "Tuntematon komento: %s"
+
+#, c-format
+msgid "Updating %s help file for %s."
+msgstr "P‰ivitet‰‰n %s ohjetiedostoa ohjelmalle %s."
+
+msgid "Usage:"
+msgstr "K‰yttˆ:"
+
+msgid "Unsupported"
+msgstr "Ei tuettu"
+
+msgid "Use Default Value"
+msgstr "K‰yt‰ oletusarvoa"
+
+msgid "User Options"
+msgstr "K‰ytt‰j‰n asetukset"
+
+msgid "Username"
+msgstr "K‰ytt‰j‰tunnus"
+
+msgid "Users in the system:"
+msgstr "J‰rjestelm‰n k‰ytt‰j‰t:"
+
+msgid "Vacation Notices"
+msgstr "Poissaoloviestit"
+
+msgid "Warning!"
+msgstr "Varoitus!"
+
+msgid "Warning"
+msgstr "Varoitus"
+
+msgid "Warning: "
+msgstr "Varoitus: "
+
+msgid "Weekly"
+msgstr "Viikoittain"
+
+#, c-format
+msgid "Welcome to %s"
+msgstr "Tervetuloa ohjelmaan %s"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "Tervetuloa, %s"
+
+msgid "What application should Horde display after login?"
+msgstr "Mink‰ ohjelman Horde k‰ynnist‰‰ sis‰‰nkirjautumisen j‰lkeen."
+
+msgid "Work Address"
+msgstr "Tyˆosoite"
+
+msgid "Work Phone"
+msgstr "Puhelin(tyˆ)"
+
+#, c-format
+msgid "Writing updated help file to %s."
+msgstr "Kirjoitetaan p‰ivitetty‰ ohjetiedostoa ohjelmalle %s."
+
+msgid "YY"
+msgstr "VV"
+
+msgid "Yearly"
+msgstr "Vuosittain"
+
+msgid "Yes"
+msgstr "Kyll‰"
+
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "Olet kirjautunut ulos j‰rjestelm‰st‰.<br />Kiitos k‰ynnist‰."
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "Sinun tulee kuvailla ongelmatilannetta ennenkuin voit l‰hett‰‰ ongelmaviestin."
+
+msgid "You must specify a username to remove."
+msgstr "Sinun pit‰‰ antaa poistettava k‰ytt‰j‰tunnus."
+
+msgid "You must specify the username to add."
+msgstr "Sinun pit‰‰ antaa lis‰tt‰v‰ k‰ytt‰j‰tunnus."
+
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "Istuntosi %s on vanhentunut. Kirjaudu uudelleen sis‰‰n."
+
+msgid "Your Email Address:"
+msgstr "S‰hkˆpostiosoitteesi:"
+
+msgid "Your Information"
+msgstr "Omat tietosi"
+
+msgid "Your Name:"
+msgstr "Nimesi:"
+
+msgid "Your options have been updated."
+msgstr "Asetuksesi on p‰ivitetty."
+
+msgid ""
+"Your authentication backend does not support adding users, or the feature "
+"has been disabled for some other reason."
+msgstr ""
+"K‰ytt‰m‰si authentication taustaj‰rjestelm‰ ei tue k‰ytt‰jien lis‰‰mist‰ "
+"tai t‰m‰ piirre ei ole jostakin syyst‰ k‰ytett‰viss‰."
+
+msgid ""
+"Your authentication backend does not support listing users, or the feature "
+"has been disabled for some other reason."
+msgstr ""
+"K‰ytt‰m‰si authentication taustaj‰rjestelm‰ ei tue k‰ytt‰j‰tietojen "
+"n‰ytt‰mist‰ tai t‰m‰ piirre ei ole jostakin syyst‰ k‰ytett‰viss‰."
+
+msgid "[Problem Report]"
+msgstr "[Ongelma]"
+
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[rivill‰ %s/%s]"
+
+msgid "an error has occured:"
+msgstr "tapahtui virhe:"
+
+msgid "done"
+msgstr "valmis"
+
+msgid "failed"
+msgstr "ep‰onnistui"
+
+msgid "not found"
+msgstr "ei lˆytynyt"
+
+#, c-format
+msgid "the Horde PO file for the locale %s does not exist:"
+msgstr "Horde PO-tiedostoa ei ole olemassa lokalisoinnille %s:"
+
+msgid "vCard"
+msgstr "vCard-k‰yntikortti"

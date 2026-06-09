@@ -1,0 +1,39 @@
+production_cm, aPlayer.getControlModel().getProduction()
+trade_cm, aPlayer.getControlModel().getTrade()
+research_cm, aPlayer.getControlModel().getResearch()
+military_cm, aPlayer.getControlModel().getMilitary()
+resource_cm, aPlayer.getControlModel().getResource()
+nature_cm, aPlayer.getControlModel().getNature()
+mysticism_cm, aPlayer.getControlModel().getMysticism()
+morale_cm, aPlayer.getControlModel().getMorale()
+agriculture_cm, aPlayer.getControlModel().getAgriculture()
+development_cm, aPlayer.getControlModel().getDevelopment()
+spy_cm, aPlayer.getControlModel().getSpy()
+tactics_cm, aPlayer.getControlModel().getTactics()
+tech, aPlayer.getTechs().hasTech(mValue), boolean_only raw_eval
+choice, aPlayer.getChoices().hasChoice(mValue), boolean_only raw_eval
+policy, aPlayer.getPolicies().hasPolicy(mValue), boolean_only raw_eval
+ability, aPlayer.getAbilities().hasAbility(mValue), boolean_only raw_eval
+inhabitants, aPlayer.getInhabitants().length()
+honor, aPlayer.getHonor()
+power, aPlayer.getPower()
+population, aPlayer.getInhabitants().getPopulation()
+currency, aPlayer.getCurrency()
+rp, aPlayer.getResearchPoints()
+current_research, aPlayer.getCurrentResearchId(), boolean_only
+security_level, aPlayer.getSecurityLevel()
+alertness, aPlayer.getAlertness()
+domestic_improvement, aPlayer.getInhabitants().hasDomesticImprovement(mValue), boolean_only raw_eval
+units, aPlayer.getUnits().length()
+squads,  aPlayer.getSquads().length()
+armies, aPlayer.getArmies().length()
+commanders, aPlayer.getCommanders().length()
+heros, aPlayer.getHeros().length()
+has_hero, aPlayer.getHeros().hasHero(mValue), boolean_only raw_eval
+wars, aPlayer.getRelations().getNumberOfWars()
+has_peace, aPlayer.getRelations().hasCompletePeace(), boolean_only raw_eval
+pacts, aPlayer.getRelations().getNumberOfPacts()
+alliances, aPlayer.getRelations().getNumberOfAlliances()
+turn, JTime.getCurrentTurn()
+era, aPlayer.getEra()
+event, aPlayer.getEvents.hasEvent(mValue), boolean_only raw_eval

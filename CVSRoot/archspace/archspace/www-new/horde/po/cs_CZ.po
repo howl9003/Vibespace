@@ -1,0 +1,615 @@
+# Horde 2.0 Czech Translation.
+# Copyright (C) 2001 Pavel Chytil.
+# Pavel Chytil <pavel@chytil.org>, 2001
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.0\n"
+"POT-Creation-Date: 2002-05-29 12:07-0700\n"
+"PO-Revision-Date:  2001-07-26 14:56-0900\n"
+"Last-Translator: Pavel Chytil <pavel@chytil.org>\n"
+"Language-Team: Czech <dev@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s Operace Údr¾by - Potvrzení"
+
+#, c-format
+msgid "%s is ready to perform the maintenance operations checked below."
+msgstr "%s je pøipraven provést ní¾e oznaèené operace údr¾by."
+
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' není nakonfigurován v Horde Registrech."
+
+msgid "24 hours"
+msgstr "24 hodin"
+
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Objevila se záva¾ná chybai:</b>"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Add pair"
+msgstr "Pøidej pár"
+
+msgid "Address"
+msgstr "Adresa"
+
+msgid "Addressbook"
+msgstr "Kontakty"
+
+msgid "Alias"
+msgstr "Alias"
+
+msgid "An illegal value was specified."
+msgstr "Byla zadána nepovolená hodnota."
+
+msgid "Available fields:"
+msgstr "Dostupné pole:"
+
+#, c-format
+msgid "Bind to server %s:%d with DN %s failed: [%d] %s"
+msgstr "Spojení na server %s:%d s DN %s selhalo: [%d] %s"
+
+msgid "Birthday"
+msgstr "Narozeniny"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Calendar"
+msgstr "Kalendáø"
+
+msgid "Cancel Problem Report"
+msgstr "Zru¹ Hlá¹ení Problému"
+
+msgid "Cell Phone"
+msgstr "Mobilní Telefon"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Oznaète ètvereøek pokud si pøejete nyní provést operace údr¾by."
+
+msgid "Close Help Window"
+msgstr "Zavøi Okno s Nápovìdou"
+
+msgid "Close Help"
+msgstr "Zavøi Nápovìdu"
+
+msgid "Close Window"
+msgstr "Zavøi Okno"
+
+msgid "Company"
+msgstr "Firma"
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "Obsahuje '%s'"
+
+msgid "Contents of the RAR archive"
+msgstr "Obsah archívu typu RAR"
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Nemù¾e otevøít modul %s pro Operace Údr¾by"
+
+msgid "DD"
+msgstr "DD"
+
+msgid "Daily"
+msgstr "Dennì"
+
+msgid "Database query failed."
+msgstr "Databázová ¾ádost selhala."
+
+msgid "Default Identity"
+msgstr "Implicitní Identita"
+
+msgid "Describe the Problem"
+msgstr "Popi¹te Problém"
+
+msgid "Details have been logged for the administrator."
+msgstr "Detaily byly zaznamenány pro systémového administrátora."
+
+msgid "Display Options"
+msgstr "Zobrazit Mo¾nosti"
+
+msgid "Do not directly access maintenance.php"
+msgstr "Neu¾ívejte pøímo maintenance.php"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Empty result."
+msgstr "Prázdný výsledek."
+
+msgid "Error"
+msgstr "Chyba"
+
+msgid "Every 15 minutes"
+msgstr "Ka¾dých 15 minut"
+
+msgid "Every 30 seconds"
+msgstr "Ka¾dých 30 sekund"
+
+msgid "Every 5 minutes"
+msgstr "Ka¾dých 5 minut"
+
+msgid "Every Login"
+msgstr "Ka¾dé pøihlá¹ení do systému"
+
+msgid "Every half hour"
+msgstr "Ka¾dou pùlhodinu"
+
+msgid "Every minute"
+msgstr "Ka¾dou minutu"
+
+msgid "Example values:"
+msgstr "Pøíkladové Hodnoty:"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "Oèekávaný \"ZAÈÁTEK\" na øádku %d."
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "Oèekávaný \"KONEC:%s\" na øádku %d."
+
+msgid "Failed retrieving prefs for "
+msgstr "Selhalo obdr¾ení nastavení pro "
+
+msgid "Failed retrieving preferences."
+msgstr "Obdr¾ení nastavení selhalo."
+
+msgid "Failed to connect to LDAP preferences server."
+msgstr "Selhalo spojení na LDAP server s mo¾nostmi."
+
+msgid "Failed to connect to LDAP server."
+msgstr "Selhalo spojení na LDAP server."
+
+#, c-format
+msgid "Failed to open an LDAP connection to %s."
+msgstr "Selhalo otevøení LDAP spojení na %s."
+
+#, c-format
+msgid "Failed to retrieve user's DN: [%d] %s"
+msgstr "Obdr¾ení u¾ivatelova DN: [%d] %s selhalo"
+
+msgid "Fax"
+msgstr "Fax"
+
+msgid "Full Description:"
+msgstr "Podrobný Popis:"
+
+msgid "Help"
+msgstr "Nápovìda"
+
+msgid "Home Address"
+msgstr "Adresa Domù:"
+
+msgid "Home Phone"
+msgstr "Telefon Domù"
+
+msgid "Horde Login"
+msgstr "Pøihlá¹ení do systému Horde"
+
+msgid "Horde System"
+msgstr "Horde Systém"
+
+msgid "Horde Wireless"
+msgstr "Horde Bezdrátovì"
+
+msgid "Horde is not properly configured"
+msgstr "Horde není správnì konfigurován"
+
+msgid "Horde"
+msgstr "Horde"
+
+msgid "Import Error: "
+msgstr "Chyba pøi Importování: "
+
+msgid "Import"
+msgstr "Importovat"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "Importované Pole: %s"
+
+msgid "Imported fields:"
+msgstr "Importovaná Pole:"
+
+msgid "Language"
+msgstr "Jazyk"
+
+msgid "List Help Topics"
+msgstr "Výpis Mo¾ností pro Nápovìdu"
+
+msgid "Log in"
+msgstr "Pøihlá¹ení do systému"
+
+msgid "Log out"
+msgstr "Odlá¹ení se ze systému"
+
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Pøihlá¹ení do systému selhalo. Pravdìpodobnì jste zadali nesprávné heslo "
+"nebo u¾ivatelské jméno."
+
+msgid "MM"
+msgstr "MM"
+
+msgid "Mail"
+msgstr "Po¹ta"
+
+msgid "Map Date and Time Fields"
+msgstr "Mapuj pole pro Datum a Èas"
+
+msgid "Map Import Fields"
+msgstr "Mapuj Importované Pole"
+
+msgid "Matching fields"
+msgstr "Pole, která se shodují"
+
+msgid "Memos"
+msgstr "Poznámky"
+
+msgid "Message"
+msgstr "Zpráva"
+
+msgid "Monthly"
+msgstr "Mìsíènì"
+
+msgid "My Summary"
+msgstr "Moje Shrnutí"
+
+msgid "Name"
+msgstr "Jméno"
+
+msgid "Never"
+msgstr "Nikdy"
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "®ádné konfiguraèní informace nebyli specifikovány pro LDAP mo¾nosti "
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "®ádné konfiguraèní informace nebyli specifikovány pro SQL Kategorie."
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "®ádné konfiguraèní informace nebyli specifikovány pro SQL Mo¾nosti."
+
+msgid "No configuration information specified for SQL authentication."
+msgstr ""
+"®ádné konfiguraèní informace nebyli specifikovány pro SQL Prokázání Identity."
+
+msgid "No preferences are available."
+msgstr "®ádné nastavení není k dispozici."
+
+msgid "No preferences were retrieved."
+msgstr "Nastavení nebylo obdr¾eno."
+
+msgid "Notes"
+msgstr "Poznámky"
+
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "Upozoròení, posluchaè %s nebyl nalezen."
+
+msgid "Options"
+msgstr "Mo¾nosti"
+
+msgid "Other Information"
+msgstr "Dal¹í Informace"
+
+msgid "Password"
+msgstr "Heslo"
+
+msgid "Perform Maintenance Operations"
+msgstr "Proveï Operace Údr¾by"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please provide a summary of the problem."
+msgstr "Prosím poskytnìte shrnutí problému."
+
+msgid "Please provide your username and password"
+msgstr "Prosím zadejte své u¾ivatelské jméno a heslo"
+
+msgid "Problem Description"
+msgstr "Popi¹te Svùj Problém"
+
+#, c-format
+msgid "Rebind to server %s:%d with DN %s failed: [%d] %s"
+msgstr "Opìtovné spojení na server %s:%d s DN %s selhalo: [%d] %s"
+
+#, c-format
+msgid "Referral target %s for DN %s is not in the authorized server list!"
+msgstr "Referovaný cíl %s pro DN %s není v seznamu autorizovaných serverù"
+
+msgid "Refresh Summary View:"
+msgstr "Obnov Zobrazeni Shrnutí:"
+
+msgid "Remove pair"
+msgstr "Odstraò pár"
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "Po¾adované 'basedn' není urèené v konfiguraci identifikace."
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "Po¾adované 'basedn' není urèené v konfiguraci mo¾ností."
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "Po¾adovaná 'database' není urèená v konfiguraci identifikace."
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "Po¾adovaná 'database' není urèená v konfiguraci kategorií."
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "Po¾adovaná 'database' není urèená v konfiguraci mo¾ností."
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "Po¾adovaný 'hostspec' není urèen v konfiguraci identifikace."
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "Po¾adovaný 'hostspec' není urèen v konfiguraci kategorií."
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "Po¾adovaný 'hostspec' není urèen v konfiguraci mo¾ností."
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "Po¾adovaný 'password' není urèen v konfiguraci identifikace."
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "Po¾adovaný 'password' není urèen v konfiguraci kategorií."
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "Po¾adovaný 'password' není urèen v konfiguraci mo¾ností."
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "Po¾adovaný 'phptype' není urèen v konfiguraci identifikace."
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "Po¾adovaný 'phptype' není urèen v konfiguraci kategorií."
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "Po¾adovaný 'phptype' není urèen v konfiguraci mo¾ností."
+
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "Po¾adovaná 'table' není urèená v konfiguraci identifikace."
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "Po¾adovaná 'table' není urèená v konfiguraci kategorií."
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "Po¾adovaná 'table' není urèená v konfiguraci mo¾ností."
+
+msgid "Required 'tableRelations' not specified in categories configuration."
+msgstr "Po¾adovaná 'tableRelations' není urèená v konfiguraci kategorií."
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "Po¾adované 'uid' není urèeno v konfiguraci identifikace."
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "Po¾adované 'uid' není urèeno v konfiguraci mo¾ností."
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "Po¾adovaný 'username' není urèen v konfiguraci identifikace."
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "Po¾adovaný 'username' není urèen v konfiguraci kategorií."
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "Po¾adovaný 'username' není urèen v konfiguraci mo¾ností."
+
+msgid "Return to Options"
+msgstr "Zpìt k Mo¾nostem"
+
+msgid "Role"
+msgstr "Role"
+
+msgid "Save Options"
+msgstr "Ulo¾te Mo¾nosti"
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Vyberte si písmena, které potøebujete. Mù¾ete pou¾ít kopíruj a Vlo¾ z "
+"textové oblasti."
+
+msgid "Select the date delimiter:"
+msgstr "Vyberte si èasový oddìlovaè:"
+
+msgid "Select the date format:"
+msgstr "Vyberte si formát datumu:"
+
+msgid "Select the time format:"
+msgstr "Vyberte si formát èasu:"
+
+msgid "Select two matching fields."
+msgstr "Vyberte dvì pole, která se shodují."
+
+msgid "Select your preferred language:"
+msgstr "Vyberte si Vá¹ upøednostòovaný jazyk:"
+
+msgid "Send Problem Report"
+msgstr "Po¹lete Vá¹ Problém"
+
+#, c-format
+msgid "Set rebind proc failed: [%d] %s"
+msgstr "Nastavení opìtovného spojení proc selhalo: [%d] %s"
+
+msgid "Set your page refreshing, and other display options."
+msgstr "Nastavte obnovování stránky a dal¹í mo¾nosti zobrazení."
+
+msgid "Set your preferred display language."
+msgstr "Nastavte Vá¹ upøednostòovaný jazyk pro zobrazení."
+
+msgid "Short Summary:"
+msgstr "Krátké Shrnutí"
+
+msgid "Skip Maintenance"
+msgstr "Pøeskoèit Údr¾bu"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Chybí nìkteré z konfiguraèních souborù pro Horde:"
+
+msgid "Special Character Input"
+msgstr "Vklad Speciálních Znakù"
+
+msgid "Success"
+msgstr "Úspìch"
+
+msgid "Tasks"
+msgstr "Úkoly"
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Horde aplikace pou¾ívají Registry jako komunikaèní prostøedek mezi sebou. "
+"Zde byste mìli vypsat v¹echny naistalované aplikace."
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"Tento soubor øídí globální nastavení MIME driverù pro Horde systém, umo¾òuje "
+"aplikacím pou¾ít programy jako enscript nebo mswordview k zobrazení obsahu v "
+"HTML ve Va¹em prohlí¾eèi."
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"Tento soubor urèuje styly, které jsou pou¾ity k nastavení barev a typù písma "
+"pro Horde Framework a také v¹ech ostatnich aplikací, které nemají vlastní "
+"nastavení."
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"Tento soubor mapuje extensions souborù k logickým MIME typùm, z dùvodu "
+"umo¾nìní aplikacím provedení úkonù jako zobrazení pøíloh k emailùm, nebo CVS "
+"kontrolám."
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"Toto je hlavní konfiguraèní soubor pro Horde. Obsahuje cesty a základní "
+"polo¾ky, které se pou¾ívají v Horde a jeho aplikacích."
+
+msgid "This number must be at least one."
+msgstr "Toto èíslo musí být nejménì jedna."
+
+msgid "This value must be a number."
+msgstr "Tato hodnota musí být èíslo."
+
+msgid "Title"
+msgstr "Titul"
+
+msgid "Type mismatch."
+msgstr "Nespravný Typ."
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "Neschopný pøipojeni na SQL server."
+
+#, c-format
+msgid "Unable to modify preferences: [%d] %s"
+msgstr "Neschopen obmìnit mo¾nosti: [%d] %s"
+
+msgid "Unable to register preferences in session."
+msgstr "Neschopen registrovat mo¾nosti v relaci."
+
+msgid "Unable to translate this Word document"
+msgstr "Tento Word dokument nelze pøelo¾it."
+
+msgid "Undo Changes"
+msgstr "Zru¹ Zmìny"
+
+msgid "Unexpected end of file."
+msgstr "Neoèekávaný konec souboru."
+
+msgid "Use Default Value"
+msgstr "Pou¾ij Implicitní Hodnotu"
+
+msgid "User Options"
+msgstr "U¾ivatelské Mo¾nosti"
+
+msgid "Username"
+msgstr "U¾ivatelské Jméno"
+
+msgid "Warning!"
+msgstr "Upozornìní!"
+
+msgid "Warning"
+msgstr "Upozornìní"
+
+msgid "Weekly"
+msgstr "Týdnì"
+
+#, c-format
+msgid "Welcome to %s"
+msgstr "Vítejte v %s"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "Vítejte, %s"
+
+msgid "Work Address"
+msgstr "Adresa do Práce"
+
+msgid "Work Phone"
+msgstr "Telefon do Práce"
+
+msgid "YY"
+msgstr "RR"
+
+msgid "Yearly"
+msgstr "Roènì"
+
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "Byli jste odhlá¹eni.<br />Dìkujeme za pou¾ívání systému."
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "Musíte vysvìtlit Svùj problém pøedtím, ne¾ ho po¹lete."
+
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "Va¹e relace %s zanikla. Prosím opìt se pøihlaste."
+
+msgid "Your Email Address:"
+msgstr "Va¹e Emailová Adresa:"
+
+msgid "Your Information"
+msgstr "Va¹e Informace"
+
+msgid "Your Name:"
+msgstr "Va¹e Jméno:"
+
+msgid "Your options have been updated."
+msgstr "Va¹e nastavení mo¾ností bylo aktualizováno."
+
+msgid "[Problem Report]"
+msgstr "[Problémové Hlá¹ení]"
+
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[øádek %s z %s]"
+
+msgid "vCard"
+msgstr "vCard"

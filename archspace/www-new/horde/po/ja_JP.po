@@ -1,0 +1,564 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.0\n"
+"POT-Creation-Date: 2002-01-14 10:32-0800\n"
+"PO-Revision-Date: 2002-03-05 12:00-0800\n"
+"Last-Translator: B.J. Black <william.black@sun.com>\n"
+"Language-Team: Japanese <william.black@sun.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=SHIFT_JIS\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s 保守操作の確認"
+
+#, c-format
+msgid "%s is ready to perform the maintenance operations checked below."
+msgstr "%s では、指定されている次の保守操作を実行する準備が整いました。"
+
+msgid "24 hours"
+msgstr "24 時間"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Add a new user:"
+msgstr "新規ユーザを追加："
+
+msgid "Add pair"
+msgstr "ペアを追加"
+
+msgid "Add user"
+msgstr "ユーザを追加"
+
+msgid "Adding users is disabled."
+msgstr "ユーザの追加は無効になっています。"
+
+msgid "Address"
+msgstr "住所"
+
+msgid "Addressbook"
+msgstr "アドレス帳"
+
+msgid "Administration"
+msgstr "管理"
+
+msgid "Alias"
+msgstr "エイリアス"
+
+#, c-format
+msgid "Attempt to bind failed: no entry found for %s."
+msgstr "バインドに失敗しました：%s のエントリが見つかりません。"
+
+msgid "Attempt to bind without a valid connection."
+msgstr "有効な接続なしにバインドしようとしています。"
+
+msgid "Available fields:"
+msgstr "使用可能なフィールド："
+
+#, c-format
+msgid "Bind to server %s, dn %s as %s failed: [%d] %s"
+msgstr "%s サーバへバインドできませんでした (dn = %s、user = %s)： [%d] %s"
+
+msgid "Birthday"
+msgstr "誕生日"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Cancel Problem Report"
+msgstr "障害レポートをキャンセルする"
+
+msgid "Cell Phone"
+msgstr "携帯電話"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "実行したい操作のボックスをチェックしてください。"
+
+msgid "Close Help Window"
+msgstr "ヘルプウィンドウを閉じる"
+
+msgid "Close Help"
+msgstr "ヘルプを閉じる"
+
+msgid "Close Window"
+msgstr "ウィンドウを閉じる"
+
+msgid "Company"
+msgstr "会社"
+
+msgid "Confirm Password"
+msgstr "パスワードを確認"
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "'%s' の内容"
+
+msgid "Contents of the RAR archive"
+msgstr "RAR アーカイブの内容"
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Maintenance_Task モジュール %s を開けませんでした。"
+
+msgid "DD"
+msgstr "日"
+
+msgid "Daily"
+msgstr "毎日"
+
+msgid "Database query failed."
+msgstr "データベース照会に失敗しました。"
+
+msgid "Default Identity"
+msgstr "デフォルト ID"
+
+msgid "Delete"
+msgstr "削除"
+
+msgid "Describe the Problem"
+msgstr "障害内容の説明"
+
+msgid "Do not directly access maintenance.php"
+msgstr "maintenance.php に直接アクセスしない"
+
+msgid "Email"
+msgstr "電子メール"
+
+msgid "Empty result."
+msgstr "何も見つかりません。"
+
+msgid "Error"
+msgstr "エラー"
+
+msgid "Every Login"
+msgstr "ログイン毎"
+
+msgid "Example values:"
+msgstr "指定値の例："
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "%d 行に \"BEGIN\" が抜けています。"
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "%2$d 行に \"END:%1$s\" が抜けています。"
+
+msgid "Failed to connect to LDAP preferences server."
+msgstr "LDAP 設定サーバに接続できませんでした。"
+
+msgid "Failed to connect to LDAP server."
+msgstr "LDAP サーバに接続できませんでした。"
+
+#, c-format
+msgid "Failed to open an LDAP connection to %s."
+msgstr "%s への LDAP 接続を開けませんでした。"
+
+msgid "Fax"
+msgstr "ファックス"
+
+msgid "Full Description:"
+msgstr "詳しい説明："
+
+msgid "Help"
+msgstr "ヘルプ"
+
+msgid "Home Address"
+msgstr "自宅の住所"
+
+msgid "Home Phone"
+msgstr "自宅の電話番号"
+
+msgid "Horde Login"
+msgstr "Horde ログイン"
+
+msgid "Horde System"
+msgstr "Horde システム"
+
+msgid "Horde User Administration"
+msgstr "Horde ユーザの管理"
+
+msgid "Horde Wireless"
+msgstr "Horde ワイヤレス"
+
+msgid "Horde is not properly configured"
+msgstr "Horde が正しく設定されていません。"
+
+msgid "Horde"
+msgstr "Horde"
+
+msgid "Import Error: "
+msgstr "インポートエラー："
+
+msgid "Import"
+msgstr "インポート"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "インポートされたフィールド： %s"
+
+msgid "Imported fields:"
+msgstr "インポートされたフィールド："
+
+msgid "List Help Topics"
+msgstr "ヘルプ項目を表示する"
+
+msgid "Listing users is disabled."
+msgstr "ユーザのリストは無効になっています。"
+
+msgid "Log in"
+msgstr "ログイン"
+
+msgid "Log out"
+msgstr "ログアウト"
+
+msgid "MM"
+msgstr "月"
+
+msgid "Mail"
+msgstr "電子メール"
+
+msgid "Map Date and Time Fields"
+msgstr "日付と時刻フィールドのマップ"
+
+msgid "Map Import Fields"
+msgstr "インポートフィールドのマップ"
+
+msgid "Matching fields"
+msgstr "フィールドを一致させています"
+
+msgid "Message"
+msgstr "本文"
+
+msgid "Monthly"
+msgstr "毎月"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "LDAP 設定に設定情報が指定されていません。"
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "SQL カテゴリに設定情報が指定されていません。"
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "SQL 設定に設定情報が指定されていません。"
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "SQL 認証に設定情報が指定されていません。"
+
+#, c-format
+msgid "No entry found for %s."
+msgstr "%s のエントリが見つかりません。"
+
+msgid "No preferences are available."
+msgstr "設定情報はありません。"
+
+msgid "No preferences were retrieved."
+msgstr "設定を取得できませんでした。"
+
+msgid "Notes"
+msgstr "注記"
+
+msgid "Password"
+msgstr "パスワード"
+
+msgid "Passwords cannot be blank."
+msgstr "パスワードの入力は必須です。"
+
+msgid "Passwords must match."
+msgstr "パスワードが一致しません。"
+
+msgid "Perform Maintenance Operations"
+msgstr "保守操作を実行する"
+
+msgid "Phone"
+msgstr "電話"
+
+msgid "Please log in"
+msgstr "ログインしてください"
+
+msgid "Please provide a summary of the problem."
+msgstr "障害内容を要約してご記入ください。"
+
+msgid "Please provide your username and password"
+msgstr "ユーザ名とパスワードを入力してください。"
+
+msgid "Problem Description"
+msgstr "障害内容の説明"
+
+msgid "Remove pair"
+msgstr "ペアを削除"
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "認証設定に'basedn'が指定されていません。"
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "オプション設定に'basedn'が指定されていません。"
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "認証設定に'database'が指定されていません。"
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "カテゴリ設定に'database'が指定されていません。"
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "オプション設定に'database'が指定されていません。"
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "認証設定に'hostspec'が指定されていません。"
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "カテゴリ設定に'hostspec'が指定されていません。"
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "オプション設定に'hostspec'が指定されていません。"
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "認証設定に'password'が指定されていません。"
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "カテゴリ設定に'password'が指定されていません。"
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "オプション設定に'password'が指定されていません。"
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "認証設定に'phptype'が指定されていません。"
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "カテゴリ設定に'phptype'が指定されていません。"
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "オプション設定に'phptype'が指定されていません。"
+
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "認証設定に'table'が指定されていません。"
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "カテゴリ設定に'table'が指定されていません。"
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "オプション設定に'table'が指定されていません。"
+
+msgid "Required 'tableRelations' not specified in categories configuration."
+msgstr "カテゴリ設定に'tableRelations'が指定されていません。"
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "認証設定に'uid'が指定されていません。"
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "オプション設定に'uid'が指定されていません。"
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "認証設定に'username'が指定されていません。"
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "カテゴリ設定に'username'が指定されていません。"
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "オプション設定に'username'が指定されていません。"
+
+msgid "Reset"
+msgstr "リセット"
+
+msgid "Return to Options"
+msgstr "オプションに戻る"
+
+msgid "Role"
+msgstr "役割"
+
+msgid "Save Options"
+msgstr "オプションを保存"
+
+msgid 
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr 
+"必要な文字を下のボックスから選んでコピーすると、テキストエリアへ"
+"ペーストできます。"
+
+msgid "Select the date delimiter:"
+msgstr "日付の区切り文字を指定してください："
+
+msgid "Select the date format:"
+msgstr "日付の形式を指定してください："
+
+msgid "Select the time format:"
+msgstr "時刻の形式を指定してください："
+
+msgid "Select two matching fields."
+msgstr "一致する２つのフィールドを選んでください。"
+
+msgid "Send Problem Report"
+msgstr "障害レポートを送信する"
+
+msgid "Short Summary:"
+msgstr "簡単なサマリー："
+
+msgid "Skip Maintenance"
+msgstr "保守をスキップする"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Horde 設定ファイルの中に、足りないファイルがあります："
+
+msgid "Special Character Input"
+msgstr "特殊文字の入力"
+
+msgid "Success"
+msgstr "成功"
+
+#, c-format
+msgid "Successfully added '%s' to the system."
+msgstr "'%s' がシステムに追加されました。"
+
+#, c-format
+msgid "Successfully removed '%s' from the system."
+msgstr "'%s' がシステムから削除されました。"
+
+msgid 
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr 
+"各 Horde アプリケーションは、レジストリを参照して相互に通信する方法を決定します。"
+"ここに、インストールしてある Horde アプリケーションを全てリストしてください。"
+
+#, c-format
+msgid "There was a problem adding '%s' to the system."
+msgstr "'%s' をシステムへ追加中に問題が発生しました。"
+
+#, c-format
+msgid "There was a problem removing '%s' from the system."
+msgstr "'%s' をシステムから削除中に問題が発生しました。"
+
+msgid 
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr 
+"このファイルは、Horde フレームワーク用の MIME ドライバを一括制御することにより、"
+"アプリケーションが、enscript や mswordview などのプログラムを利用して、"
+"コンテンツをブラウザ上で HTML 表示できるようにします。"
+
+msgid 
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings.."
+msgstr 
+"このファイルは、Horde フレームワーク （および独自の設定を持たないアプリケーション） の"
+"色とフォントを設定するスタイルシートを"
+"制御します.."
+
+msgid 
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr 
+"このファイルは、ファイルの拡張子を論理 MIME タイプにマッピングすることにより、"
+"Horde アプリケーションが電子メール添付ファイルや CVS チェックアウトなどのコンテンツの処理方法を"
+"決定できるようにします。"
+
+msgid 
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr 
+"これは、メインの Horde 設定ファイルで、コアフレームワークおよび全 Horde アプリケーションに適用される"
+"パスと基本的な項目が含まれています。"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Type mismatch."
+msgstr "タイプが一致しません。"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "SQL サーバに接続できません。"
+
+msgid "Unable to modified preferences."
+msgstr "設定を変更できません。"
+
+msgid "Unable to register preferences in session."
+msgstr "セッションに設定を登録できません。"
+
+msgid "Unable to translate this Word document"
+msgstr "この Word 文書を翻訳できません。"
+
+msgid "Undo Changes"
+msgstr "変更を取り消す"
+
+msgid "Unexpected end of file."
+msgstr "ファイルが予期せず終了しています。"
+
+msgid "Use Default Value"
+msgstr "デフォルト値を使用"
+
+msgid "Username"
+msgstr "ユーザ名"
+
+msgid "Users in the system:"
+msgstr "システム中のユーザ："
+
+msgid "Warning!"
+msgstr "警告！"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Weekly"
+msgstr "毎週"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "%s さん、ようこそ"
+
+msgid "Work Address"
+msgstr "勤務先の住所"
+
+msgid "Work Phone"
+msgstr "勤務先の電話番号"
+
+msgid "YY"
+msgstr "年"
+
+msgid "Yearly"
+msgstr "毎年"
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "障害の内容を記述してから、障害レポートを送信してください。"
+
+msgid "You must specify a username to remove."
+msgstr "削除するユーザ名を指定してください。"
+
+msgid "You must specify the username to add."
+msgstr "追加するユーザ名を指定してください。"
+
+msgid "Your Email Address:"
+msgstr "電子メールアドレス："
+
+msgid "Your Name:"
+msgstr "ご氏名："
+
+msgid 
+"Your authentication backend does not support adding users, or the feature "
+"has been disabled for some other reason."
+msgstr 
+"この認証バックエンドでは、ユーザの追加がサポートされていないか、あるいは"
+"何らかの理由でこの機能が無効になっています。"
+
+msgid 
+"Your authentication backend does not support listing users, or the feature "
+"has been disabled for some other reason."
+msgstr 
+"この認証バックエンドでは、ユーザのリストがサポートされていないか、あるいは"
+"何らかの理由でこの機能が無効になっています。"
+
+msgid "[Problem Report]"
+msgstr "［障害レポート］"
+
+

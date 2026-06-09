@@ -1,0 +1,70 @@
+Notes for Creating New language files and dealing with language issues.
+
+The current translation system in phpBB is not perfect. Some errors and/or 
+discrepancies are bound to exist. Each language file has been done by 
+someone different so if you find any errors please report them to 
+bugs@phpbb.com, it would also be preferable if you submitted a fix along 
+with the report.
+
+To create a new language for your forums is a very simple operation. Open up
+one of the other language files that you can read and understand and simply
+translate all of the strings with in the file. For example:
+
+$l_username = "Username";
+
+in english would become:
+
+$l_username = "Nom d'Utilisateur";
+
+in French and so on. If you find any string that have variables in them (any
+text starting with a $) DO NOT translate the variable name! For example
+
+In english:
+$l_noposts  = "No $l_posts";
+
+Would become:
+$l_noposts  = "Pas de $l_posts";
+in the french languge file.
+
+Once the file is done, save it as lang_<language>.<your phpBB extention> in
+the languages dir under you phpBB dir.
+
+For example if you create a language file for Japanese, and your forum uses
+the .php3 extention you would save it as:
+
+lang_japanese.php3
+
+Also, the FAQ has not been translated. In order to get phpBB version 1.2 out 
+in a timely manner we did not have time to create separate FAQ's. However, 
+we did put a very simple system in place for you to add new FAQ's in 
+different languages to your forum. To add a new FAQ in a language currently 
+in use on your forum simple drop a file called faq-<your forums default 
+language>.<your forums file extension> into your phpBB dir.
+
+For example, if you are using the German language on your forum and you use 
+the .php extension you would add a faq of this name:
+
+faq-german.php
+
+If you are using Big5 Chinese and you are using .html extensions you would 
+drop a in file named like this:
+
+faq-big5_chinese.html
+
+This also works for Translated images. For example if you are using German 
+on your forum and you want someone who selects English to see a different, 
+English, header image you would drop a file into the images dir like this:
+
+header_image-german.jpg
+
+Based on what your header image is called in the current theme.
+
+This all probably sounds pretty complicated but we are always available to 
+help at http://www.phpbb.com/phpBB
+
+If you create a new language file, or a FAQ translation we would ask that
+you send it to use so we can post it on phpBB.com for others to download.
+
+Thanks,
+
+The phpBB Group

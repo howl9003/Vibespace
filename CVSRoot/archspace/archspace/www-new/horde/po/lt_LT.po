@@ -1,0 +1,1090 @@
+# Horde Lithuanian translation
+# Copyright (C) 2002 Darius Matuliauskas
+# This file is distributed under the same license as the horde package.
+# Darius Matuliauskas <darius@lnk.lt>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: horde-3-cvs\n"
+"POT-Creation-Date: 2002-07-22 15:15+0200\n"
+"PO-Revision-Date: 2002-07-22 18:00+0200\n"
+"Last-Translator: Darius Matuliauskas <darius@lnk.lt>\n"
+"Language-Team: Lithuanian <darius@lnk.lt>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-13\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid " (%s days ago)"
+msgstr " (prieð %s dienas)"
+
+msgid " (today)"
+msgstr " (ðiandien)"
+
+msgid " (yesterday)"
+msgstr " (vakar)"
+
+#, c-format
+msgid "%s - Notice"
+msgstr "%s - Pastaba"
+
+#, c-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s. Profilaktika - Patvirtinimas"
+
+#, c-format
+msgid "%s Standard"
+msgstr "%s standartas"
+
+#, c-format
+msgid "%s Terms of Agreement"
+msgstr "%s Nuostatos"
+
+#, c-format
+msgid "%s is ready to perform the maintenance operations checked below."
+msgstr "%s. Sistema pasirengusi atlikti nurodytus profilaktinius veiksmus."
+
+#, c-format
+msgid "%s is required"
+msgstr "%s privalomas"
+
+#, c-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' nesukonfigûruota Registre."
+
+#, c-format
+msgid "'%s' was added to the groups system."
+msgstr "'%s' pridëta grupiø sistemoje."
+
+#, c-format
+msgid "'%s' was added to the permissions system."
+msgstr "'%s' pridëta teisiø sistemoje."
+
+#, c-format
+msgid "'%s' was not created: %s."
+msgstr "'%s' nesukurta: %s."
+
+msgid "24 hours"
+msgstr "24 valandos"
+
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Ávyko klaida:</b>"
+
+msgid "A public PGP key is required to encrypt a message."
+msgstr "Vieðasis PGP raktas reikalingas norint uþkoduoti laiðkà."
+
+msgid "A public PGP key is required to verify a signed message."
+msgstr "Vieðasis PGP raktas reikalingas norint patikrinti pasiraðytà raktà."
+
+msgid ""
+"A public PGP key, private PGP key, and passphrase are required to decrypt a "
+"message."
+msgstr "Norint atkoduoti laiðkà, reikalingi vieðasis bei slaptasis raktai."
+
+msgid ""
+"A public PGP key, private PGP key, and passphrase are required to sign a "
+"message."
+msgstr "Norint pasiraðyti laiðkà, reikalingi vieðasis bei slaptasis raktai."
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+msgid "Add Child"
+msgstr "Sukurti"
+
+#, c-format
+msgid "Add a child group to '%s'"
+msgstr "Sukurti áraðà grupei '%s'"
+
+#, c-format
+msgid "Add a child permission to '%s'"
+msgstr "Sukurti teisæ '%s'"
+
+msgid "Add a new member"
+msgstr "Pridëti nará"
+
+msgid "Add a new user:"
+msgstr "Sukurti naujà vartotojà:"
+
+msgid "Add pair"
+msgstr "Sukurti porà"
+
+msgid "Add user"
+msgstr "Sukurti vartotojà"
+
+msgid "Add"
+msgstr "Pridëti"
+
+msgid "Adding users is disabled."
+msgstr "Vartotojø kûrimas iðjungtas."
+
+msgid "Address Book"
+msgstr "Adresai"
+
+msgid "Address"
+msgstr "Adresas"
+
+msgid "Administration"
+msgstr "Administravimas"
+
+msgid "Alias"
+msgstr "Pravardë"
+
+msgid "An illegal value was specified."
+msgstr "Nurodyta negalima reikðmë"
+
+msgid "Archive File Size"
+msgstr "Archyvo failo dydis"
+
+msgid "Archive Name"
+msgstr "Archyvo vardas"
+
+#, c-format
+msgid "Are you sure you wish to delete '%s'?"
+msgstr "Ar tikrai norite iðtrinti '%s'?"
+
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "Ar praðyti patvirtinti profilaktikos veiksmus?"
+
+msgid "Attempt to delete a non-existent group."
+msgstr "Bandote iðtrinti neegzistuojanèià grupæ."
+
+msgid "Attempt to delete a non-existent permission."
+msgstr "Bandote iðtrinti neegzistuojanèià teisæ."
+
+msgid "Attempt to edit a non-existent permission."
+msgstr "Bandote redaguoti neegzistuojanèià teisæ."
+
+msgid "Attributes"
+msgstr "Atributai"
+
+msgid "Available fields:"
+msgstr "Galimi laukai:"
+
+msgid "Barbie"
+msgstr "Barbë"
+
+msgid "Birthday"
+msgstr "Gimtadienis"
+
+msgid "Bold"
+msgstr "Pastorintas"
+
+msgid "Brown"
+msgstr "Rudas"
+
+msgid "Bugs"
+msgstr "Klaidos"
+
+msgid "Burnt Orange"
+msgstr "Tamsus apelsinas"
+
+msgid "CRC"
+msgstr "CRC"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "Calendar"
+msgstr "Kalendorius"
+
+msgid "Camouflage"
+msgstr "Kamufliaþas"
+
+msgid "Cancel Problem Report"
+msgstr "Atsisakyti"
+
+msgid "Cancel"
+msgstr "Atðaukti"
+
+msgid "Cell Phone"
+msgstr "Mobilus telefonas"
+
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Paþymëkite kurias operacijas norite atlikti"
+
+msgid "Cherry"
+msgstr "Vyðnia"
+
+msgid "Click to Continue"
+msgstr "Spustelkite norëdami tæsti"
+
+msgid "Close Help Window"
+msgstr "Uþdaryti Pagalbos langà"
+
+msgid "Close Help"
+msgstr "Uþdaryti Pagalbà"
+
+msgid "Close Window"
+msgstr "Uþdaryti langà"
+
+msgid "Comics"
+msgstr "Komiksai"
+
+msgid "Company"
+msgstr "Firma"
+
+msgid "Confirm Password"
+msgstr "Pakartokite slaptaþodá"
+
+msgid "Connection refused to the public keyserver."
+msgstr "Nepavyko prisijungti prie vieðø raktø serverio."
+
+msgid "Connection to ftp server failed."
+msgstr "Nepavyko prisijungti prie ftp serverio."
+
+#, c-format
+msgid "Contents of '%s'"
+msgstr "'%s' turinys"
+
+msgid "Could not PGP encrypt message."
+msgstr "Neámanome uþkoduoti PGP laiðko."
+
+msgid "Could not PGP sign message."
+msgstr "Neámanoma pasiraðyti PGP laiðko."
+
+msgid "Could not decrypt PGP data."
+msgstr "Neámanoma atkoduoti PGP duomenø."
+
+msgid "Could not determine the recipient's e-mail address."
+msgstr "Neámanoma nustatyti adresato el.paðto adreso."
+
+msgid "Could not obtain public key from the keyserver."
+msgstr "Nepavyksta gauti rakto ið raktø serverio."
+
+#, c-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Negaliu atidaryti Maintenanve_Task modulio %s"
+
+msgid "DD"
+msgstr "DD"
+
+msgid "DHTML Rich Text Editor"
+msgstr "DHTML Patobulintas teksto redaktorius"
+
+msgid "Daily"
+msgstr "Kasdien"
+
+msgid "Database query failed."
+msgstr "Duomenø bazës uþklausa klaidinga."
+
+msgid "Default Identity"
+msgstr "Standartinis apraðas"
+
+msgid "Delete"
+msgstr "Iðtrinti"
+
+msgid "Deny"
+msgstr "Uþdrausti"
+
+msgid "Describe the Problem"
+msgstr "Apraðykite problemà"
+
+msgid "Details have been logged for the administrator."
+msgstr "Apraðymas iðsiøstas administratoriui."
+
+msgid "Discussions"
+msgstr "Diskusijos"
+
+msgid "Display Options"
+msgstr "Vaizdavimo nustatymai"
+
+msgid "Do not directly access maintenance.php"
+msgstr "Tiesiogiai nesikreipkite á maintenance.php"
+
+#, c-format
+msgid "Edit permissions for '%s'"
+msgstr "Redaguoti teises '%s'"
+
+msgid "Edit"
+msgstr "Redaguoti"
+
+msgid "Email addresses must match."
+msgstr "El.paðto adresai turi sutapti."
+
+msgid "Email"
+msgstr "El.paðtas"
+
+msgid "Empty result."
+msgstr "Tuðèias rezultatas."
+
+msgid "Error"
+msgstr "Klaida"
+
+msgid "Every 15 minutes"
+msgstr "Kas 15 minuèiø"
+
+msgid "Every 30 seconds"
+msgstr "Kas 30 sekundþiø"
+
+msgid "Every 5 minutes"
+msgstr "Kas 5 minutes"
+
+msgid "Every Login"
+msgstr "Kiekvieno prisijungimo metu"
+
+msgid "Every half hour"
+msgstr "Kas pusvalandá"
+
+msgid "Every minute"
+msgstr "Kas minutæ"
+
+msgid "Example values:"
+msgstr "Pavyzdþiui:"
+
+msgid "Execute"
+msgstr "Vykdyti"
+
+#, c-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "%d eilutëje turi bûti \"BEGIN\"."
+
+#, c-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "\"END:%s\" turi bûti %d eilutëje."
+
+msgid "Failed retrieving preferences."
+msgstr "Klaida nuskaitant nustatymus"
+
+msgid "Failed to connect to LDAP server."
+msgstr "Neámanoma prisijungti prie LDAP serverio."
+
+msgid "Fax"
+msgstr "Faksas"
+
+#, c-format
+msgid "File Count: %s file"
+msgstr "Failø skaièius: %s failas"
+
+#, c-format
+msgid "File Count: %s files"
+msgstr "Failø skaièius: %s failø"
+
+msgid "File Manager"
+msgstr "Failø tvarkymas"
+
+msgid "File Name"
+msgstr "Failo Vardas"
+
+msgid "Full Description:"
+msgstr "Pilnas apraðymas:"
+
+msgid "Green"
+msgstr "Þalia"
+
+msgid "Grey"
+msgstr "Pilka"
+
+msgid "Group Administration"
+msgstr "Grupiø administravimas"
+
+msgid "Groups"
+msgstr "Grupës"
+
+msgid "Headlines"
+msgstr "Naujienos"
+
+msgid "Help"
+msgstr "Pagalba"
+
+msgid "Home Address"
+msgstr "Namø adresas"
+
+msgid "Home Phone"
+msgstr "Namø telefonas"
+
+msgid "Horde Administration"
+msgstr "Administravimas"
+
+msgid "Horde Group Administration"
+msgstr "Grupiø administravimas"
+
+msgid "Horde Login"
+msgstr "Prisijungimas"
+
+msgid "Horde Permissions Administration"
+msgstr "Teisiø administravimas"
+
+msgid "Horde User Administration"
+msgstr "Vartotojø administravimas"
+
+msgid "Horde Wireless"
+msgstr "Horde Wireless"
+
+msgid "Horde is not properly configured"
+msgstr "Horde tinkamai nesukonfigûruota"
+
+msgid "Horde"
+msgstr "Pagrindinis puslapis"
+
+msgid "Icons Only"
+msgstr "Tik piktogramos"
+
+msgid "Icons with text"
+msgstr "Piktogramos su tekstu"
+
+msgid "Import Error: "
+msgstr "Importavimo klaida: "
+
+msgid "Import"
+msgstr "Importas"
+
+#, c-format
+msgid "Imported field: %s"
+msgstr "Importuotas laukas: %s"
+
+msgid "Imported fields:"
+msgstr "Importuoti laukai:"
+
+msgid "Invalid data submitted."
+msgstr "Ávesti neteisingi duomenys."
+
+msgid "Invalid response from server"
+msgstr "Klaidingas serverio atsakymas"
+
+msgid "Italic"
+msgstr "Kursyvas"
+
+msgid "Key already exists on the public keyserver."
+msgstr "Raktas jau yra raktø serveryje."
+
+msgid "Language"
+msgstr "Kalba"
+
+msgid "Light Blue"
+msgstr "Þydra"
+
+msgid "List Help Topics"
+msgstr "Parodyti pagalbos temas"
+
+msgid "Listing users is disabled."
+msgstr "Vartotojø sàraðas uþdraustas."
+
+msgid "Log in"
+msgstr "Prisijungti"
+
+msgid "Log out"
+msgstr "Atsijungti"
+
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Dël nenustatytos klaidos neámanoma prisijungti. Greièiausiai netinka Jûsø "
+"nurodytas vardas ar slaptaþodis."
+
+msgid "MM"
+msgstr "MM"
+
+msgid "MS-TNEF Attachment contained no data."
+msgstr "Nëra duomenø MS-TNEF faile."
+
+msgid "Mail"
+msgstr "Paðtas"
+
+msgid "Map Date and Time Fields"
+msgstr "Susieti Datos ir Laiko laukus"
+
+msgid "Map Import Fields"
+msgstr "Susieti importuojamus laukus"
+
+msgid "Matching fields"
+msgstr "Naudojami laukai"
+
+msgid "Members"
+msgstr "Nariai"
+
+msgid "Memos"
+msgstr "Uþraðai"
+
+msgid "Menu mode:"
+msgstr "Meniu reþimas:"
+
+msgid "Message"
+msgstr "Laiðkas"
+
+#, c-format
+msgid "Method '%s' is not defined"
+msgstr "Metodas '%s' neapraðytas"
+
+msgid "Method"
+msgstr "Metodas"
+
+msgid "Mime Type"
+msgstr "MIME Tipas"
+
+msgid "Modified Date"
+msgstr "Redagavimo data"
+
+msgid "Monthly"
+msgstr "Kas mënesá"
+
+msgid "Mozilla"
+msgstr "Mozilla"
+
+msgid "My Summary"
+msgstr "Turinys"
+
+msgid "NO, I Do NOT Agree"
+msgstr "NE, NESUTINKU"
+
+msgid "Name"
+msgstr "Vardas"
+
+msgid "Network"
+msgstr "Tinklas"
+
+msgid "Never"
+msgstr "Niekada"
+
+msgid "No configuration information specified for FTP VFS."
+msgstr "FTP VFS nustatymams nenustatyta konfigûracija."
+
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "LDAP nustatymams nenustatyta konfigûracija."
+
+msgid "No configuration information specified for SQL Categories."
+msgstr "SQL kategorijoms nenustatyta konfigûracija."
+
+msgid "No configuration information specified for SQL Preferences."
+msgstr "SQL nustatymams nenurodyta konfigûracija."
+
+msgid "No configuration information specified for SQL VFS."
+msgstr "SQL VFS nustatymams nenustatyta konfigûracija."
+
+msgid "No configuration information specified for SQL authentication."
+msgstr "SQL autentifikavimui nenustatyta konfigûracija."
+
+msgid "No preferences are available."
+msgstr "Nëra nustatymø."
+
+msgid "No valid XML data returned"
+msgstr "Nëra teisingø XML duomenø"
+
+msgid "No values"
+msgstr "Nëra reikðmiø"
+
+msgid "Notes"
+msgstr "Þinutës"
+
+#, c-format
+msgid "Notification listener %s not found."
+msgstr "Praneðimo gavëjas %s nerastas."
+
+msgid "Off"
+msgstr "Ájungta"
+
+msgid "On"
+msgstr "Iðjungta"
+
+msgid "Options"
+msgstr "Nustatymai"
+
+msgid "Orange"
+msgstr "Oranþinë"
+
+msgid "Other Information"
+msgstr "Kita informacija"
+
+msgid "PHP Shell"
+msgstr "PHP Shell"
+
+msgid "Password"
+msgstr "Slaptaþodis"
+
+msgid "Passwords cannot be blank."
+msgstr "Slaptaþodþiai negali bûti tuðti."
+
+msgid "Passwords must match."
+msgstr "Slaptaþodþiai turi sutapti."
+
+msgid "Perform Maintenance Operations"
+msgstr "Atlikti Profilaktines operacijas"
+
+msgid "Perform maintenance operations on login?"
+msgstr "Ar atlikti Profilaktines operacijas prisijungiant?"
+
+msgid "Permissions Administration"
+msgstr "Teisiø administravimas"
+
+msgid "Permissions"
+msgstr "Teisës"
+
+msgid "Phone"
+msgstr "Telefonas"
+
+msgid "Please enter a month and a year."
+msgstr "Áveskite mënesá ir metus."
+
+msgid "Please enter a month, day, and year."
+msgstr "Áveskite mënesá, dienà ir metus."
+
+msgid "Please provide a summary of the problem."
+msgstr "Apraðykite problemà."
+
+msgid "Please provide your username and password"
+msgstr "Nurodykite savo vartotojo vardà bei slaptaþodá"
+
+msgid ""
+"Please read the following text.  You MUST agree with the terms to use the "
+"system."
+msgstr ""
+"Praðome perskaityti ðá tekstà. Jûs PRIVALOTE sutikti su sàlygomis jei norite "
+"naudotis sistema."
+
+msgid "Presentations"
+msgstr "Prezentacijos"
+
+msgid "Problem Description"
+msgstr "Problemos apraðymas"
+
+msgid "Public/Private keypair not generated successfully."
+msgstr "Privataus/Vieðo rakto pora nesugeneruota."
+
+msgid "Ratio"
+msgstr "Santykis"
+
+msgid "Read"
+msgstr "Skaityta"
+
+msgid "Refresh Summary View:"
+msgstr "Atnaujinti turiná:"
+
+msgid "Remove pair"
+msgstr "Iðtrinti porà"
+
+msgid "Remove"
+msgstr "Iðtrinti"
+
+msgid "Request couldn't be answered"
+msgstr "Uþklausa neatsakyta"
+
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "Required 'basedn' not specified in authentication configuration."
+
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "Required 'basedn' not specified in preferences configuration."
+
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "Required 'database' not specified in VFS configuration."
+
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "Required 'database' not specified in authentication configuration."
+
+msgid "Required 'database' not specified in categories configuration."
+msgstr "Required 'database' not specified in categories configuration."
+
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "Required 'database' not specified in preferences configuration."
+
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "Required 'hostspec' not specified in VFS configuration."
+
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "Required 'hostspec' not specified in authentication configuration."
+
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "Required 'hostspec' not specified in categories configuration."
+
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "Required 'hostspec' not specified in preferences configuration."
+
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "Required 'password' not specified in VFS configuration."
+
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "Required 'password' not specified in authentication configuration."
+
+msgid "Required 'password' not specified in categories configuration."
+msgstr "Required 'password' not specified in categories configuration."
+
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "Required 'password' not specified in preferences configuration."
+
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "Required 'phptype' not specified in VFS configuration."
+
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "Required 'phptype' not specified in authentication configuration."
+
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "Required 'phptype' not specified in categories configuration."
+
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "Required 'phptype' not specified in preferences configuration."
+
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "Required 'port' not specified in VFS configuration."
+
+msgid "Required 'table' not specified in VFS configuration."
+msgstr "Required 'table' not specified in VFS configuration."
+
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "Required 'table' not specified in authentication configuration."
+
+msgid "Required 'table' not specified in categories configuration."
+msgstr "Required 'table' not specified in categories configuration."
+
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "Required 'table' not specified in preferences configuration."
+
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "Required 'uid' not specified in authentication configuration."
+
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "Required 'uid' not specified in preferences configuration."
+
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "Required 'username' not specified in VFS configuration."
+
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "Required 'username' not specified in authentication configuration."
+
+msgid "Required 'username' not specified in categories configuration."
+msgstr "Required 'username' not specified in categories configuration."
+
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "Required 'username' not specified in preferences configuration."
+
+msgid "Reset"
+msgstr "Iðvalyti"
+
+msgid "Return to Options"
+msgstr "Gráþti á nustatymus"
+
+msgid "Role"
+msgstr "Rolë"
+
+#, c-format
+msgid "Save '%s'"
+msgstr "Iðsaugoti '%s'"
+
+msgid "Save Options"
+msgstr "Iðsaugoti nustatymus"
+
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Pasirinkite reikiamà simbolá ið þemiau esanèiø sàraðø. Vëliau galite juos "
+"nukopijuoti á laiðkà."
+
+msgid "Select the date delimiter:"
+msgstr "Pasirinkite datos skirtukà:"
+
+msgid "Select the date format:"
+msgstr "Pasirinkite datos formatà:"
+
+msgid "Select the time format:"
+msgstr "Pasirinkite laiko formatà:"
+
+msgid "Select two matching fields."
+msgstr "Pasirinkite du atitinkanèius laukus."
+
+msgid "Select your color scheme."
+msgstr "Pasirinkite spalvø deriná."
+
+msgid "Select your preferred language:"
+msgstr "Pasirinkite norimà kalbà:"
+
+msgid "Send Problem Report"
+msgstr "Nusiøsti problemos apraðymà"
+
+msgid "Set your color scheme, page refreshing, and other display options."
+msgstr "Nurodyti puslapio spalvas, atsinaujinimo daþnumà ir kitus parametrus."
+
+msgid "Set your preferred display language."
+msgstr "Pasirinkite norimà kalbà."
+
+msgid "Short Summary:"
+msgstr "Trumpas turinys:"
+
+msgid "Show"
+msgstr "Rodyti"
+
+msgid "Size"
+msgstr "Dydis"
+
+msgid "Skip Maintenance"
+msgstr "Praleisti profilaktikà"
+
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Trûksta ðiø Horde konfigûraciniø failø:"
+
+msgid "SpamAssassin"
+msgstr "SpamAssassin"
+
+msgid "Special Character Input"
+msgstr "Specifiniø simboliø áterpimas"
+
+msgid "Submit"
+msgstr "Ávesti"
+
+msgid "Success"
+msgstr "Sëkmë"
+
+#, c-format
+msgid "Successfully added '%s' to the system."
+msgstr "'%s' sëkmingai ávestas á sistemà"
+
+#, c-format
+msgid "Successfully deleted '%s'."
+msgstr "'%s' sëkmingai iðtrintas."
+
+#, c-format
+msgid "Successfully removed '%s' from the system."
+msgstr "'%s' sëkmingai iðtrintas."
+
+msgid "Sun"
+msgstr "Saulë"
+
+msgid "Tasks"
+msgstr "Darbai"
+
+msgid "Text Only"
+msgstr "Tik tekstas"
+
+msgid "The Maintenance:: class did not load successfully"
+msgstr "Maintenance:: klasës nepavyko uþkrauti"
+
+msgid ""
+"The detached PGP signature block is required to verify the signed message."
+msgstr "Norint patikrinti laiðkà reikalingas PGP paraðo blokas."
+
+msgid "The encryption features require a secure web connection."
+msgstr ""
+"PGP Uþkodavimo galimybës reikalauja saugaus prisijungimo. Bandykite raðyti "
+"https:// adreso pradþioje."
+
+#, c-format
+msgid ""
+"The program used to view this data type (%s) was not found on the system."
+msgstr "Programa, skirta perþiûrëti ðá duomenø tipà (%s), nerasta sistemoje."
+
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"Registras skirtas sujungti visus sistemos komponentus á vienà darniai "
+"veikianèià visumà.Èia reikia apraðyti visas instaliuotas programas."
+
+#, c-format
+msgid ""
+"There are too many characters in this field. You have entered %s characters; "
+"you must enter less than %s."
+msgstr ""
+"Ðiame lauke ávesta per daug simboliø. Jûs ávedëte %s, o maksimalus skaièius - %s simboliai."
+
+#, c-format
+msgid "There was a problem adding '%s' to the system."
+msgstr "Nepavyko sukurti '%s'."
+
+#, c-format
+msgid "There was a problem removing '%s' from the system."
+msgstr "Nepavyko iðtrinti '%s'."
+
+msgid "This does not appear to be a valid rar archive."
+msgstr "Atrodo, kad tai neteisingas rar archyvas."
+
+msgid "This does not appear to be a valid zip file."
+msgstr "Atrodo, kad tai netvarkingas ZIP archyvas."
+
+msgid "This field is required."
+msgstr "Ðis laukas privalomas."
+
+msgid "This field may only contain integers."
+msgstr "Ðiame lauke gali bûti tik sveikieji skaièiai."
+
+msgid "This field may only contain numbers."
+msgstr "Ðiame lauke gali bûti tik skaitmenys."
+
+msgid "This field must be a comma or space separated list of integers"
+msgstr "Ðiame lauke turi bûti kableliais arba tarpais atskirti skaièiai"
+
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr "Ðiame faile apraðomi globalûs MIME draiveriai."
+
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr "Ðiame faile apraðoma standartinë sistemos iðvaizda, spalvos, ðriftai."
+
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"Ðiame faile failø iðplëtimai sujungiami su loginiais MIME tipais tam, kad "
+"galima bûtø apraðyti kaip elgtis su skirtingais failais."
+
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"Tai pagrindinis Horde konfigûracinis failas. Jame apraðomi esminiai "
+"nustatymai."
+
+msgid "This number must be at least one."
+msgstr "Ðis skaièius turi bûti didesnis uþ nulá."
+
+msgid "This server can't uncompress zip and gzip files."
+msgstr "Ðis serveris negali iðarchyvuoti zip ir gzip failø."
+
+msgid "This value must be a number."
+msgstr "Reikðmë turi bûti skaièius."
+
+msgid "Time Tracking"
+msgstr "Laiko apskaita"
+
+msgid "Title"
+msgstr "Pareigos"
+
+msgid "Type mismatch."
+msgstr "Tipø nesuderinamumas."
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to connect to SQL server."
+msgstr "Negaliu prisijungti prie SQL serverio."
+
+#, c-format
+msgid "Unable to delete '%s': %s."
+msgstr "Negalima iðtrinti '%s': %s."
+
+msgid "Unable to open compressed archive."
+msgstr "Negaliu atidaryti suspausto archyvo."
+
+msgid "Unable to translate this Word document"
+msgstr "Negaliu iðversti Word dokumento"
+
+msgid "Underline"
+msgstr "Pabraukti"
+
+msgid "Undo Changes"
+msgstr "Atðaukti pakeitimus"
+
+msgid "Unexpected end of file."
+msgstr "Netikëta failo pabaiga."
+
+msgid "Update"
+msgstr "Iðsaugoti"
+
+#, c-format
+msgid "Updated '%s'."
+msgstr "Iðsaugota '%s'."
+
+msgid "Use Default Value"
+msgstr "Naudoti standartinæ reikðmæ"
+
+msgid "User Administration"
+msgstr "Vartotojø administravimas"
+
+msgid "User Options"
+msgstr "Vartotojo nustatymai"
+
+msgid "Username"
+msgstr "Vartotojo vardas"
+
+msgid "Users in the system:"
+msgstr "Vartotojai ðioje sistemoje:"
+
+msgid "Users"
+msgstr "Vartotojai"
+
+msgid "Warning!"
+msgstr "Dëmesio!"
+
+msgid "Warning"
+msgstr "Dëmesio"
+
+msgid "Weekly"
+msgstr "Kas savaitæ"
+
+#, c-format
+msgid "Welcome to %s"
+msgstr "%s"
+
+#, c-format
+msgid "Welcome, %s"
+msgstr "Labas, %s"
+
+msgid "Work Address"
+msgstr "Darbo adresas"
+
+msgid "Work Phone"
+msgstr "Darbo telefonas"
+
+msgid "YY"
+msgstr "YY"
+
+msgid "Yearly"
+msgstr "Kasmet"
+
+msgid "Yes, I Agree"
+msgstr "Taip, að sutinku"
+
+msgid "You did not enter a valid email address."
+msgstr "Neávedëte teisingo el.paðto adreso."
+
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "Jûs atsijungëte.<br />Aèiû kad naudojatës paðto sistema."
+
+msgid "You must describe the problem before you can send the problem report."
+msgstr "Prieð siøsdami praneðimà, apraðykite problemà."
+
+msgid "You must specify a username to remove."
+msgstr "Nurodykite vartotojo vardà trynimui."
+
+msgid "You must specify the username to add."
+msgstr "Nurodykite kuriamo vartotojo vardà."
+
+#, c-format
+msgid "Your %s session has expired. Please login again."
+msgstr "%s. Sesija nutrûko. Praðome prisijungti ið naujo."
+
+msgid "Your Email Address:"
+msgstr "Jûsø el.paðto adresas:"
+
+msgid "Your Information"
+msgstr "Informacija apie Jus"
+
+msgid "Your Name:"
+msgstr "Jûsø vardas:"
+
+msgid ""
+"Your authentication backend does not support adding users, or the feature "
+"has been disabled for some other reason."
+msgstr ""
+"Jûsø sistemos autentifikavimo posistemë nepalaiko vartotojø kûrimo arba ði "
+"galimybë iðjungta dël tam tikrø prieþasèiø."
+
+msgid ""
+"Your authentication backend does not support listing users, or the feature "
+"has been disabled for some other reason."
+msgstr ""
+"Jûsø autentifikavimo sistema nepalaiko vartotojø sàraðo, arba ði funkcija "
+"uþdrausta dël tam tikros prieþasties."
+
+msgid "Your options have been updated."
+msgstr "Jûsø nustatymai pakeisti."
+
+msgid "[Problem Report]"
+msgstr "[Problemos praneðimas]"
+
+#, c-format
+msgid "[line %s of %s]"
+msgstr "[eilutë %s ið %s]"
+
+msgid "i18n"
+msgstr "i18n"
+
+msgid "unnamed"
+msgstr "dalis"
+
+msgid "vCard"
+msgstr "vCard"

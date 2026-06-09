@@ -1,0 +1,31 @@
+<?php
+if (!$config_include)
+{
+$config_include = true;
+
+$null = 0;
+$key_server_con = "localhost 4000";
+$key_server = "Key Server";
+
+$entry_server_con = "localhost 6000";
+$entry_server = "Entry Server";
+
+$auth_server_con = "localhost 5000";
+$auth_server = "Auth Server";
+
+$as_auth_server_con = "localhost 11114";
+$as_auth_server = "Archspace Auth Server";
+
+$logfile = "/var/log/archspace/portal.log";
+$KeyFile = "/var/log/archspace/portal.key";
+
+$PortalHost = "localhost";
+$PortalUser = "root";
+$PortalPassword = "comconq1";
+$PortalDatabase = "Archspace";
+$PortalUserTable = "Users";
+
+// portal user table MUST have id, name, password, user_level
+// so that users can even login to the portal!!!
+}
+?>

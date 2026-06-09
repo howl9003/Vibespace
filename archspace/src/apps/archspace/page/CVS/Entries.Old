@@ -1,0 +1,31 @@
+/answer_event.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/bot.cc/1.1/Thu Aug 26 22:57:36 2004//
+/common.cc/1.13/Fri Aug 27 19:48:57 2004//
+/council.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/create.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/create2.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/death_main.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/death_menu.cc/1.2/Sat Aug 21 21:33:58 2004//
+/game.cc/1.2/Sun Aug 22 16:40:32 2004//
+/head_title.cc/1.2/Sat Aug 21 21:33:58 2004//
+/login.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/logout.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/main.cc/1.9/Fri Jul 22 11:56:12 2005//
+/menu.cc/1.31/Wed Aug 17 00:25:26 2005//
+/notfound.cc/1.3/Sat Aug 21 21:33:58 2004//
+/preference.cc/1.15/Mon Aug  9 12:06:15 2004//
+/quit.cc/1.1.1.1/Thu May 13 07:51:57 2004//
+/restart.cc/1.9/Fri Dec 24 04:52:05 2004//
+/retire.cc/1.10/Sat Aug  6 06:48:33 2005//
+/show_event.cc/1.5/Sat Nov  6 04:31:31 2004//
+D/a0s////
+D/admin////
+D/blackmarket////
+D/council////
+D/diplomacy////
+D/domestic////
+D/empire////
+D/fleet////
+D/info////
+D/war////
+/retire_result.cc/1.10/Sat Aug 27 05:02:26 2005//

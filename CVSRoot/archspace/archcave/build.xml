@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+	Sample Build File
+-->
+<project name="Archcave" default="package" basedir=".">
+	<!-- Customize these -->
+	<property name="webapps" value="/opt/tomcat/webapps/"/>
+	<property name="containerlib" value="/opt/tomcat/common/lib"/>
+
+	<!-- Don't customize these -->
+	<property name="src" value="src"/>
+	<property name="websrc" value="websrc"/>
+	<property name="webinf" value="webinf"/>
+	<property name="webxml" value="web.xml"/>
+	<property name="lib" value="lib"/>
+	<property name="warfile" value="archcave.war"/>
+	<property name="build" value="build"/>
+    <target name="clean" description="remove intermediate files">
+        <delete dir="${build}"/>
+	<delete file="${warfile}"/>
+    </target>
+
+    <target name="compile" description="Compile all source code">
+	<available property="containerlib.customized" file="${containerlib}"/>
+	<fail unless="containerlib.customized">
+	You must edit the build.xml and customize the containerlib property.
+	It is currently set to: ${containerlib}
+	</fail>
+        <mkdir dir="${build}"/>
+        <javac srcdir="${src}" destdir="${build}" debug="on">
+		<classpath>
+<!--			<fileset file="${containerlib}/servlet-api.jar" />-->
+			<fileset dir="${lib}">
+				<include name="*.jar"/>
+			</fileset>
+		</classpath>
+	</javac>
+    </target>
+    <target name="package" depends="compile" description="Package war file.">
+        <war destfile="${warfile}" webxml="${webxml}">
+		<!-- JSP and HTML files -->
+		<fileset dir="${websrc}" />	
+		<!-- Server Classes TODO: should it use zipfileset? -->
+		<classes dir="${build}" />
+		<!-- WEB-INF -->
+		<webinf dir="${webinf}"/>
+		<!-- Server Libraries -->
+		<!-- <lib dir="${lib}"/> -->
+            <!-- fileset dir="classes" includes="**/*.java" /> -->
+            <!-- <manifest>
+                <attribute name="Main-Class" value="HelloProgram"/>
+            </manifest> -->
+        </war>
+    </target>
+    <target name="deploy" depends="package" description="Deploy war file.">
+	<available property="webapps.customized" file="${webapps}"/>
+	<fail unless="webapps.customized">
+	You must edit the build.xml and customize the webapps property.
+	It is currently set to: ${webapps}
+	</fail>
+	<unwar src="${warfile}" dest="${webapps}/archcave"/>
+    </target>
+</project>

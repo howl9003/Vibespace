@@ -1,0 +1,4 @@
+<?
+	readfile($LOG_URL);
+?>
+

@@ -1,0 +1,556 @@
+# MySQL dump 7.1
+#
+# Host: localhost    Database: CouncilForum
+#--------------------------------------------------------
+# Server version	3.22.32
+
+#
+# Table structure for table 'access'
+#
+CREATE TABLE access (
+  access_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  access_title varchar(20),
+  PRIMARY KEY (access_id)
+);
+
+#
+# Dumping data for table 'access'
+#
+
+INSERT INTO access VALUES (-1,'Deleted');
+INSERT INTO access VALUES (1,'User');
+INSERT INTO access VALUES (2,'Moderator');
+INSERT INTO access VALUES (3,'Super Moderator');
+INSERT INTO access VALUES (4,'Administrator');
+
+#
+# Table structure for table 'banlist'
+#
+CREATE TABLE banlist (
+  ban_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  ban_userid int(10),
+  ban_ip varchar(16),
+  ban_start int(32),
+  ban_end int(50),
+  ban_time_type int(10),
+  KEY ban_id (ban_id),
+  PRIMARY KEY (ban_id)
+);
+
+#
+# Dumping data for table 'banlist'
+#
+
+
+#
+# Table structure for table 'catagories'
+#
+CREATE TABLE catagories (
+  cat_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  cat_title varchar(100),
+  cat_order varchar(10),
+  PRIMARY KEY (cat_id)
+);
+
+#
+# Dumping data for table 'catagories'
+#
+
+INSERT INTO catagories VALUES (16,'GloomyCouncil7','1');
+INSERT INTO catagories VALUES (17,'Tourists','1');
+INSERT INTO catagories VALUES (1,'Untitled','1');
+INSERT INTO catagories VALUES (2,'','1');
+INSERT INTO catagories VALUES (3,'','1');
+INSERT INTO catagories VALUES (4,'','1');
+INSERT INTO catagories VALUES (5,'','1');
+INSERT INTO catagories VALUES (6,'','1');
+INSERT INTO catagories VALUES (8,'','1');
+INSERT INTO catagories VALUES (9,'','1');
+INSERT INTO catagories VALUES (10,'','1');
+INSERT INTO catagories VALUES (11,'','1');
+INSERT INTO catagories VALUES (12,'','1');
+INSERT INTO catagories VALUES (13,'','1');
+INSERT INTO catagories VALUES (14,'','1');
+INSERT INTO catagories VALUES (18,'test','1');
+INSERT INTO catagories VALUES (1039,'New!','1');
+INSERT INTO catagories VALUES (304,'Dark+Paladins','1');
+INSERT INTO catagories VALUES (41,'AS-Inquisition','1');
+
+#
+# Table structure for table 'config'
+#
+CREATE TABLE config (
+  config_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  sitename varchar(100),
+  allow_html int(2),
+  allow_bbcode int(2),
+  allow_sig int(2),
+  allow_namechange int(2) DEFAULT '0',
+  admin_passwd varchar(32),
+  selected int(2) DEFAULT '0' NOT NULL,
+  posts_per_page int(10),
+  hot_threshold int(10),
+  topics_per_page int(10),
+  allow_theme_create int(10),
+  override_themes int(2) DEFAULT '0',
+  email_sig varchar(255),
+  email_from varchar(100),
+  default_lang varchar(255),
+  UNIQUE selected (selected),
+  PRIMARY KEY (config_id)
+);
+
+#
+# Dumping data for table 'config'
+#
+
+INSERT INTO config VALUES (1,'Council Forum (in dev)',1,1,1,0,NULL,1,15,15,50,NULL,0,'Yours Truely,\r\n	\r\nThe Site Admin','thedaz@maritel.com','english');
+
+#
+# Table structure for table 'disallow'
+#
+CREATE TABLE disallow (
+  disallow_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  disallow_username varchar(50),
+  PRIMARY KEY (disallow_id)
+);
+
+#
+# Dumping data for table 'disallow'
+#
+
+
+#
+# Table structure for table 'forum_access'
+#
+CREATE TABLE forum_access (
+  forum_id int(10) DEFAULT '0' NOT NULL,
+  user_id int(10) DEFAULT '0' NOT NULL,
+  can_post tinyint(1) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (forum_id,user_id)
+);
+
+#
+# Dumping data for table 'forum_access'
+#
+
+
+#
+# Table structure for table 'forum_mods'
+#
+CREATE TABLE forum_mods (
+  forum_id int(10) DEFAULT '0' NOT NULL,
+  user_id int(10) DEFAULT '0' NOT NULL,
+  cat_id int(10) DEFAULT '0' NOT NULL
+);
+
+#
+# Dumping data for table 'forum_mods'
+#
+
+INSERT INTO forum_mods VALUES (18,4,18);
+INSERT INTO forum_mods VALUES (16,79,16);
+INSERT INTO forum_mods VALUES (14,30,14);
+INSERT INTO forum_mods VALUES (13,29,13);
+INSERT INTO forum_mods VALUES (12,82,12);
+INSERT INTO forum_mods VALUES (11,8,11);
+INSERT INTO forum_mods VALUES (10,1,10);
+INSERT INTO forum_mods VALUES (9,13,9);
+INSERT INTO forum_mods VALUES (8,4,8);
+INSERT INTO forum_mods VALUES (6,6,6);
+INSERT INTO forum_mods VALUES (5,0,5);
+INSERT INTO forum_mods VALUES (4,4,4);
+INSERT INTO forum_mods VALUES (3,3,3);
+INSERT INTO forum_mods VALUES (2,69,2);
+INSERT INTO forum_mods VALUES (1,-1,1);
+INSERT INTO forum_mods VALUES (17,81,17);
+INSERT INTO forum_mods VALUES (18,4,18);
+INSERT INTO forum_mods VALUES (1039,1,1039);
+INSERT INTO forum_mods VALUES (304,8709,304);
+INSERT INTO forum_mods VALUES (1,-1,1);
+INSERT INTO forum_mods VALUES (2,-1,2);
+INSERT INTO forum_mods VALUES (3,-1,3);
+INSERT INTO forum_mods VALUES (41,-1,41);
+
+#
+# Table structure for table 'forums'
+#
+CREATE TABLE forums (
+  forum_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  forum_name varchar(150),
+  forum_desc text,
+  forum_access int(10) DEFAULT '1',
+  forum_moderator int(10),
+  cat_id int(10),
+  forum_type int(10) DEFAULT '0',
+  PRIMARY KEY (forum_id)
+);
+
+#
+# Dumping data for table 'forums'
+#
+
+INSERT INTO forums VALUES (16,'free board',NULL,1,NULL,16,0);
+INSERT INTO forums VALUES (17,'free board',NULL,1,NULL,17,0);
+INSERT INTO forums VALUES (1,'free board',NULL,1,3,1,0);
+INSERT INTO forums VALUES (2,'free board',NULL,1,69,2,0);
+INSERT INTO forums VALUES (3,'free board',NULL,1,3,3,0);
+INSERT INTO forums VALUES (4,'free board',NULL,1,4,4,0);
+INSERT INTO forums VALUES (5,'free board',NULL,1,0,5,0);
+INSERT INTO forums VALUES (6,'free board',NULL,1,6,6,0);
+INSERT INTO forums VALUES (8,'free board',NULL,1,4,8,0);
+INSERT INTO forums VALUES (9,'free board',NULL,1,13,9,0);
+INSERT INTO forums VALUES (10,'free board',NULL,1,1,10,0);
+INSERT INTO forums VALUES (11,'free board',NULL,1,8,11,0);
+INSERT INTO forums VALUES (12,'free board',NULL,1,82,12,0);
+INSERT INTO forums VALUES (13,'free board',NULL,1,0,13,0);
+INSERT INTO forums VALUES (14,'free board',NULL,1,0,14,0);
+INSERT INTO forums VALUES (18,'free board',NULL,1,NULL,18,0);
+INSERT INTO forums VALUES (1039,'free board',NULL,1,NULL,1039,0);
+INSERT INTO forums VALUES (304,'free board',NULL,1,NULL,304,0);
+INSERT INTO forums VALUES (41,'free board','',1,0,41,0);
+
+#
+# Table structure for table 'headermetafooter'
+#
+CREATE TABLE headermetafooter (
+  header text,
+  meta text,
+  footer text
+);
+
+#
+# Dumping data for table 'headermetafooter'
+#
+
+
+#
+# Table structure for table 'posts'
+#
+CREATE TABLE posts (
+  post_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  topic_id int(10) DEFAULT '0' NOT NULL,
+  forum_id int(10) DEFAULT '0' NOT NULL,
+  poster_id int(10) DEFAULT '0' NOT NULL,
+  post_text text,
+  post_time varchar(20),
+  poster_ip varchar(16),
+  poster_name varchar(16) DEFAULT '' NOT NULL,
+  KEY post_id (post_id),
+  KEY forum_id (forum_id),
+  KEY topic_id (topic_id),
+  KEY poster_id (poster_id),
+  PRIMARY KEY (post_id)
+);
+
+#
+# Dumping data for table 'posts'
+#
+
+INSERT INTO posts VALUES (1,1,16,79,'À½³Ä·ò','2001-03-30 14:07','211.40.85.157','');
+INSERT INTO posts VALUES (2,1,16,79,'<!-- BBCode Quote Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD><font size=-1>Quote:</font><HR></TD></TR><TR><TD><FONT SIZE=-1><BLOCKQUOTE>\r<BR>On 2001-03-30 14:07, HIVANCE wrote:\r<BR>À½³Ä·ò\r<BR></BLOCKQUOTE></FONT></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode Quote End -->\r<BR>\r<BR>Å×½ºÆ® test','2001-04-02 11:33','211.40.85.157','');
+INSERT INTO posts VALUES (3,1,16,67,'test','2001-04-02 11:48','211.40.85.157','');
+INSERT INTO posts VALUES (4,1,16,79,'<!-- BBCode Quote Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD><font size=-1>Quote:</font><HR></TD></TR><TR><TD><FONT SIZE=-1><BLOCKQUOTE>\r<BR>On 2001-04-02 11:48, thedaz11 wrote:\r<BR>test\r<BR></BLOCKQUOTE></FONT></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode Quote End -->\r<BR>\r<BR>Å×½ºÆ®','2001-04-02 11:49','211.40.85.157','');
+INSERT INTO posts VALUES (5,2,16,67,'Å×½ºÆ®','2001-04-02 17:47','211.40.85.157','');
+INSERT INTO posts VALUES (6,3,16,79,'test','2001-04-17 10:58','211.40.85.157','');
+INSERT INTO posts VALUES (7,4,16,79,'test','2001-04-17 10:59','211.40.85.157','');
+INSERT INTO posts VALUES (8,5,17,0,'test','2001-05-04 11:41','211.40.85.157','');
+INSERT INTO posts VALUES (9,6,17,0,'test','2001-05-04 11:50','211.40.85.157','');
+INSERT INTO posts VALUES (10,7,17,0,'test','2001-05-04 11:51','211.40.85.157','');
+INSERT INTO posts VALUES (11,8,17,0,'test','2001-05-04 15:03','211.40.85.157','');
+INSERT INTO posts VALUES (12,9,17,0,'test','2001-05-07 11:06','211.40.85.157','');
+INSERT INTO posts VALUES (13,10,17,0,'test','2001-05-07 11:08','211.40.85.157','');
+INSERT INTO posts VALUES (14,11,1,0,'test','2001-05-22 12:41','211.40.85.148','');
+INSERT INTO posts VALUES (15,12,41,0,'test','2001-05-23 09:55','211.40.85.148','');
+INSERT INTO posts VALUES (16,13,41,0,'TESTTEST','2001-05-23 10:17','211.40.85.148','');
+INSERT INTO posts VALUES (17,14,41,0,'TESTTEST','2001-05-23 10:19','211.40.85.148','');
+INSERT INTO posts VALUES (18,15,41,0,'TESTTEST','2001-05-23 10:20','211.40.85.148','');
+INSERT INTO posts VALUES (19,16,41,5037,'TESTTEST','2001-05-23 10:23','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (20,17,41,5037,'TESTTEST','2001-05-23 10:32','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (21,17,41,0,'test','2001-05-23 13:08','211.40.85.148','');
+INSERT INTO posts VALUES (22,17,41,0,'test','2001-05-23 13:10','211.40.85.148','');
+INSERT INTO posts VALUES (23,17,41,0,'test','2001-05-23 13:11','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (24,18,41,5037,'test','2001-05-23 15:30','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (25,18,41,0,'test','2001-05-23 15:31','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (26,19,41,5037,'tesset','2001-05-23 16:23','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (27,19,41,0,'testtest','2001-05-23 17:26','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (28,17,41,0,'testest','2001-05-23 17:26','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (29,17,41,0,'poster_name ¿¡ GAME_NAME','2001-05-24 11:37','211.40.85.148','hivance');
+INSERT INTO posts VALUES (30,17,41,0,'asdasd','2001-05-24 13:19','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (31,17,41,0,'°¡³ª´Ù¶ó\r<BR>\r<BR>µÆÀ»±î.\r<BR>\r<BR>À½³Ä¸®²á\r<BR>\r<BR>¾Æ½Î²Ù½Ã·Õ!!!','2001-05-24 13:19','211.40.85.148','thedaz!');
+INSERT INTO posts VALUES (32,20,41,5037,'µÆ³Ä.\r<BR>\r<BR>¾ÈµÆ³Ä.\r<BR>\r<BR>³ª¿¡°Ô ¸»ÇØÁà~ ¾Æ½Î²Ù½Ã·Õ!\r<BR>\r<BR>- TheDAZ\r<BR>','2001-05-24 13:24','211.40.85.148','thedaz!');
+
+#
+# Table structure for table 'priv_msgs'
+#
+CREATE TABLE priv_msgs (
+  msg_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  from_userid int(10) DEFAULT '0' NOT NULL,
+  to_userid int(10) DEFAULT '0' NOT NULL,
+  msg_time varchar(20),
+  poster_ip varchar(16),
+  msg_status int(10) DEFAULT '0',
+  msg_text text,
+  PRIMARY KEY (msg_id),
+  KEY msg_id (msg_id),
+  KEY to_userid (to_userid)
+);
+
+#
+# Dumping data for table 'priv_msgs'
+#
+
+
+#
+# Table structure for table 'ranks'
+#
+CREATE TABLE ranks (
+  rank_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  rank_title varchar(50) DEFAULT '' NOT NULL,
+  rank_min int(10) DEFAULT '0' NOT NULL,
+  rank_max int(10) DEFAULT '0' NOT NULL,
+  rank_special int(2) DEFAULT '0',
+  rank_image varchar(255),
+  PRIMARY KEY (rank_id),
+  KEY rank_min (rank_min),
+  KEY rank_max (rank_max)
+);
+
+#
+# Dumping data for table 'ranks'
+#
+
+
+#
+# Table structure for table 'sessions'
+#
+CREATE TABLE sessions (
+  sess_id int(10) unsigned DEFAULT '0' NOT NULL,
+  user_id int(10) DEFAULT '0' NOT NULL,
+  start_time int(10) unsigned DEFAULT '0' NOT NULL,
+  remote_ip varchar(15) DEFAULT '' NOT NULL,
+  PRIMARY KEY (sess_id),
+  KEY sess_id (sess_id),
+  KEY start_time (start_time),
+  KEY remote_ip (remote_ip)
+);
+
+#
+# Dumping data for table 'sessions'
+#
+
+INSERT INTO sessions VALUES (1467298084,79,987473142,'211.40.85.157');
+INSERT INTO sessions VALUES (117517532,79,987472718,'211.40.85.157');
+INSERT INTO sessions VALUES (1408502708,79,987473143,'211.40.85.157');
+INSERT INTO sessions VALUES (1212001413,79,987473237,'211.40.85.157');
+INSERT INTO sessions VALUES (277824442,79,987473315,'211.40.85.157');
+INSERT INTO sessions VALUES (1447377471,79,987473322,'211.40.85.157');
+INSERT INTO sessions VALUES (1182097870,79,987473561,'211.40.85.157');
+
+#
+# Table structure for table 'smiles'
+#
+CREATE TABLE smiles (
+  id int(10) DEFAULT '0' NOT NULL auto_increment,
+  code varchar(50),
+  smile_url varchar(100),
+  emotion varchar(75),
+  PRIMARY KEY (id)
+);
+
+#
+# Dumping data for table 'smiles'
+#
+
+INSERT INTO smiles VALUES (1,':D','icon_biggrin.gif','Very Happy');
+INSERT INTO smiles VALUES (2,':-D','icon_biggrin.gif','Very Happy');
+INSERT INTO smiles VALUES (3,':grin:','icon_biggrin.gif','Very Happy');
+INSERT INTO smiles VALUES (4,':)','icon_smile.gif','Smile');
+INSERT INTO smiles VALUES (5,':-)','icon_smile.gif','Smile');
+INSERT INTO smiles VALUES (6,':smile:','icon_smile.gif','Smile');
+INSERT INTO smiles VALUES (7,':(','icon_frown.gif','Sad');
+INSERT INTO smiles VALUES (8,':-(','icon_frown.gif','Sad');
+INSERT INTO smiles VALUES (9,':sad:','icon_frown.gif','Sad');
+INSERT INTO smiles VALUES (10,':o','icon_eek.gif','Surprised');
+INSERT INTO smiles VALUES (11,':-o','icon_eek.gif','Surprised');
+INSERT INTO smiles VALUES (12,':eek:','icon_eek.gif','Suprised');
+INSERT INTO smiles VALUES (13,':-?','icon_confused.gif','Confused');
+INSERT INTO smiles VALUES (14,':???:','icon_confused.gif','Confused');
+INSERT INTO smiles VALUES (15,'8)','icon_cool.gif','Cool');
+INSERT INTO smiles VALUES (16,'8-)','icon_cool.gif','Cool');
+INSERT INTO smiles VALUES (17,':cool:','icon_cool.gif','Cool');
+INSERT INTO smiles VALUES (18,':lol:','icon_lol.gif','Laughing');
+INSERT INTO smiles VALUES (19,':x','icon_mad.gif','Mad');
+INSERT INTO smiles VALUES (20,':-x','icon_mad.gif','Mad');
+INSERT INTO smiles VALUES (21,':mad:','icon_mad.gif','Mad');
+INSERT INTO smiles VALUES (22,':P','icon_razz.gif','Razz');
+INSERT INTO smiles VALUES (23,':-P','icon_razz.gif','Razz');
+INSERT INTO smiles VALUES (24,':razz:','icon_razz.gif','Razz');
+INSERT INTO smiles VALUES (25,':oops:','icon_redface.gif','Embaressed');
+INSERT INTO smiles VALUES (26,':cry:','icon_cry.gif','Crying (very sad)');
+INSERT INTO smiles VALUES (27,':evil:','icon_evil.gif','Evil or Very Mad');
+INSERT INTO smiles VALUES (28,':roll:','icon_rolleyes.gif','Rolling Eyes');
+INSERT INTO smiles VALUES (29,':wink:','icon_wink.gif','Wink');
+INSERT INTO smiles VALUES (30,';)','icon_wink.gif','Wink');
+INSERT INTO smiles VALUES (31,';-)','icon_wink.gif','Wink');
+
+#
+# Table structure for table 'themes'
+#
+CREATE TABLE themes (
+  theme_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  theme_name varchar(35),
+  bgcolor varchar(10),
+  textcolor varchar(10),
+  color1 varchar(10),
+  color2 varchar(10),
+  table_bgcolor varchar(10),
+  header_image varchar(50),
+  newtopic_image varchar(50),
+  reply_image varchar(50),
+  linkcolor varchar(15),
+  vlinkcolor varchar(15),
+  theme_default int(2) DEFAULT '0',
+  fontface varchar(100),
+  fontsize1 varchar(5),
+  fontsize2 varchar(5),
+  fontsize3 varchar(5),
+  fontsize4 varchar(5),
+  tablewidth varchar(10),
+  replylocked_image varchar(255),
+  PRIMARY KEY (theme_id)
+);
+
+#
+# Dumping data for table 'themes'
+#
+
+INSERT INTO themes VALUES (1,'Default','#000000','#999999','#242040','#242040','#001100','images/header-dark.jpg','images/new_topic-dark.jpg','images/reply-dark.jpg','#999999','#999999',1,'sans-serif','1','2','-2','+1','95%','images/reply_locked-dark.jpg');
+INSERT INTO themes VALUES (2,'Ocean','#FFFFFF','#000000','#CCCCCC','#9BB6DA','#000000','images/header.jpg','images/new_topic.jpg','images/reply.jpg','#011001','#2100cc',0,'sans-serif','1','2','-2','+1','95%','images/reply_locked-dark.jpg');
+INSERT INTO themes VALUES (3,'OCPrices.com','#FFFFFF','#000000','#efefef','#cdcdcd','#001100','images/header.jpg','images/new_topic.jpg','images/reply.jpg','#000000','#000000',0,'sans-serif','1','2','-2','+1','95%','images/reply_locked-dark.jpg');
+
+#
+# Table structure for table 'topics'
+#
+CREATE TABLE topics (
+  topic_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  topic_title varchar(100),
+  topic_poster int(10),
+  topic_time varchar(20),
+  topic_views int(10) DEFAULT '0' NOT NULL,
+  forum_id int(10) DEFAULT '0' NOT NULL,
+  topic_status int(10) DEFAULT '0' NOT NULL,
+  topic_notify int(2) DEFAULT '0',
+  topic_poster_name varchar(10) DEFAULT '' NOT NULL,
+  KEY topic_id (topic_id),
+  KEY forum_id (forum_id),
+  PRIMARY KEY (topic_id)
+);
+
+#
+# Dumping data for table 'topics'
+#
+
+INSERT INTO topics VALUES (1,'Å×½ºÆ®',79,'2001-04-02 11:49',68,16,0,0,'');
+INSERT INTO topics VALUES (2,'´ÙÁî11 Å×½ºÆ®',67,'2001-04-02 17:47',11,16,0,0,'');
+INSERT INTO topics VALUES (3,'test',79,'2001-04-17 10:58',1,16,0,0,'');
+INSERT INTO topics VALUES (4,'test',79,'2001-04-17 10:59',2,16,0,0,'');
+INSERT INTO topics VALUES (5,'test',0,'2001-05-04 11:41',0,17,0,0,'');
+INSERT INTO topics VALUES (6,'test',0,'2001-05-04 11:50',0,17,0,0,'');
+INSERT INTO topics VALUES (7,'test',0,'2001-05-04 11:51',0,17,0,0,'');
+INSERT INTO topics VALUES (8,'test',0,'2001-05-04 15:03',0,17,0,0,'');
+INSERT INTO topics VALUES (9,'test',0,'2001-05-07 11:06',0,17,0,0,'');
+INSERT INTO topics VALUES (10,'test',0,'2001-05-07 11:08',0,17,0,0,'');
+INSERT INTO topics VALUES (11,'test',0,'2001-05-22 12:41',0,1,0,0,'');
+INSERT INTO topics VALUES (12,'test',0,'2001-05-23 09:55',0,41,0,0,'');
+INSERT INTO topics VALUES (13,'TEST',0,'2001-05-23 10:17',0,41,0,0,'');
+INSERT INTO topics VALUES (14,'test',0,'2001-05-23 10:19',0,41,0,0,'');
+INSERT INTO topics VALUES (15,'test',0,'2001-05-23 10:20',0,41,0,0,'');
+INSERT INTO topics VALUES (16,'test',5037,'2001-05-23 10:23',15,41,0,0,'');
+INSERT INTO topics VALUES (17,'test2',5037,'2001-05-24 13:19',34,41,0,0,'');
+INSERT INTO topics VALUES (18,'test',5037,'2001-05-23 15:31',7,41,0,0,'');
+INSERT INTO topics VALUES (19,'test',5037,'2001-05-23 17:26',6,41,0,0,'thedaz!');
+INSERT INTO topics VALUES (20,'µÆÀ¸¸é ÀÀ´äÇÏ¶ó',5037,'2001-05-24 13:24',3,41,0,0,'thedaz!');
+
+#
+# Table structure for table 'users'
+#
+CREATE TABLE users (
+  user_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  username varchar(40) DEFAULT '' NOT NULL,
+  user_regdate varchar(20) DEFAULT '' NOT NULL,
+  user_password varchar(32) DEFAULT '' NOT NULL,
+  user_email varchar(50),
+  user_icq varchar(15),
+  user_website varchar(100),
+  user_occ varchar(100),
+  user_from varchar(100),
+  user_intrest varchar(150),
+  user_sig varchar(255),
+  user_viewemail tinyint(2),
+  user_theme int(10),
+  user_aim varchar(18),
+  user_yim varchar(25),
+  user_msnm varchar(25),
+  user_posts int(10) DEFAULT '0',
+  user_attachsig int(2) DEFAULT '0',
+  user_desmile int(2) DEFAULT '0',
+  user_html int(2) DEFAULT '0',
+  user_bbcode int(2) DEFAULT '0',
+  user_rank int(10) DEFAULT '0',
+  user_level int(10) DEFAULT '1',
+  user_lang varchar(255),
+  user_actkey varchar(32),
+  user_newpasswd varchar(32),
+  cat_id int(10) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (user_id)
+);
+
+#
+# Dumping data for table 'users'
+#
+
+INSERT INTO users VALUES (-1,'No speaker','May 12, 1978','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,0,0,1,NULL,NULL,NULL,0);
+INSERT INTO users VALUES (79,'HIVANCE','','c5fe25896e49ddfe996db7508cf00534',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,4,0,0,0,0,0,2,NULL,NULL,NULL,16);
+INSERT INTO users VALUES (67,'thedaz11','','c5fe25896e49ddfe996db7508cf00534',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,2,0,0,0,0,0,1,NULL,NULL,NULL,17);
+INSERT INTO users VALUES (81,'','','c5fe25896e49ddfe996db7508cf00534',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,0,0,0,0,0,0,2,NULL,NULL,NULL,17);
+INSERT INTO users VALUES (4,'','','c5fe25896e49ddfe996db7508cf00534',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,0,0,0,0,0,0,2,NULL,NULL,NULL,18);
+INSERT INTO users VALUES (1,'','','c5fe25896e49ddfe996db7508cf00534',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,0,0,0,0,0,0,2,NULL,NULL,NULL,1039);
+INSERT INTO users VALUES (5037,'thedaz%21','','c5fe25896e49ddfe996db7508cf00534',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,0,0,0,0,0,0,1,NULL,NULL,NULL,41);
+INSERT INTO users VALUES (8709,'','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,0,0,0,0,0,0,2,NULL,NULL,NULL,304);
+
+#
+# Table structure for table 'whosonline'
+#
+CREATE TABLE whosonline (
+  id int(3) DEFAULT '0' NOT NULL auto_increment,
+  ip varchar(255),
+  name varchar(255),
+  count varchar(255),
+  date varchar(255),
+  username varchar(40),
+  forum int(10),
+  PRIMARY KEY (id)
+);
+
+#
+# Dumping data for table 'whosonline'
+#
+
+INSERT INTO whosonline VALUES (1,'211.40.85.148',NULL,NULL,'990693994','Guest',0);
+
+#
+# Table structure for table 'words'
+#
+CREATE TABLE words (
+  word_id int(10) DEFAULT '0' NOT NULL auto_increment,
+  word varchar(100),
+  replacement varchar(100),
+  PRIMARY KEY (word_id)
+);
+
+#
+# Dumping data for table 'words'
+#
+
+

@@ -1,0 +1,383 @@
+<?php
+include('/var/www/localhost/htdocs/notice/lib.php');
+
+$mtime = microtime();
+$mtime = explode(" ",$mtime);
+$mtime = $mtime[1] + $mtime[0];
+$starttime = $mtime;
+
+// global 변수 초기화
+$GAME_ID = "-1";
+$GAME_NAME = "-1";
+$COUNCIL_ID = "-1";
+$COUNCIL_NAME = "-1";
+$IS_SPEAKER = "-1";
+$HAS_SPEAKER = "-1";
+
+// AS_STRING 파싱
+if (as_get_string() == -1)
+{
+  header("Location: $as_url");
+}
+
+// viewcat 에 입력이 있으면
+if ($viewcat != "")
+{
+  // viewcat 과 AS_STRING 의 COUNCIL_ID 가 다르면
+  if ($viewcat != $COUNCIL_ID)
+  {
+    // 게임의 로그아웃 페이지로 이동
+    header("Location: $as_url/game_logout.phtml");
+  }
+}
+
+// 스피커가 있다면
+if ($HAS_SPEAKER == "YES")
+{
+  // 스피커라면
+  if ($IS_SPEAKER == "YES")
+  {
+    mysql_pconnect("localhost", "space", "rlaclrnr");
+    @mysql_select_db("CouncilForum") or die("Unable to connect to the Database");
+    mysql_query("LOCK TABLES forum_mods, users WRITE");
+
+    $query = mysql_query("SELECT user_id FROM forum_mods WHERE cat_id=$COUNCIL_ID");
+    $row = mysql_fetch_array($query);
+    mysql_free_result($query);
+
+    $query1 = mysql_query("SELECT user_id FROM users WHERE cat_id=$COUNCIL_ID");
+    $row1 = mysql_fetch_array($query1);
+    mysql_free_result($query1);
+
+    $user_id = $row["user_id"];
+    $user_id1 = $row1["user_id"];
+
+    // GAME_ID 와 forum_mods 의 user_id 가 다르면
+    if ($user_id != $GAME_ID)
+    {
+      // user_id 를 GAME_ID 로 변경
+      if (!mysql_query("UPDATE forum_mods SET user_id=$GAME_ID WHERE cat_id=$COUNCIL_ID"))
+      {
+        log_("THEDAZ: Error: cannot update forum_mods table (HAS_SPEAKER/IS_SPEAKER)");
+      }
+    }
+
+    // GAME_ID 와 users 의 user_id 가 다르면
+    if ($user_id1 != $GAME_ID)
+    {
+      // user_id 를 GAME_ID 로 변경
+      if (!mysql_query("UPDATE users SET user_id=$GAME_ID WHERE cat_id=$COUNCIL_ID"))
+      {
+        log_("THEDAZ: Error: cannot update users table (HAS_SPEAKER/IS_SPEAKER)");
+      }
+    }
+
+    mysql_query("UNLOCK TABLES");
+    mysql_close();
+  }
+  // 스피커가 아니면
+  else if ($IS_SPEAKER == "NO")
+  {
+    mysql_pconnect("localhost", "space", "rlaclrnr");
+    @mysql_select_db("CouncilForum") or die("Unable to connect to the Database");
+    mysql_query("LOCK TABLES users WRITE");
+
+    $query = mysql_query("SELECT count(*) FROM users WHERE user_id=$GAME_ID");
+    $result = mysql_fetch_array($query);
+    mysql_free_result($query);
+
+    $query1 = mysql_query("SELECT cat_id FROM users WHERE user_id=$GAME_ID");
+    $result1 = mysql_fetch_array($query1);
+    mysql_free_result($queryr1);
+
+    // users 에 가입되어 있지 않으면
+    if ($result["count(*)"] == 0)
+    {
+      // users 에 추가
+      if (!mysql_query("INSERT INTO users (user_id, username, user_password, user_viewemail, user_level, cat_id) VALUES ('$GAME_ID', '$GAME_NAME', 'c5fe25896e49ddfe996db7508cf00534', '0', '1', '$COUNCIL_ID')"))
+      {
+        log_("THEDAZ: Error: cannot insert users table (HAS_SPEAKER)");
+      }
+    }
+
+    // DB 의 cat_id 와 COUNCIL_ID 가 다르면
+    if ($result1["cat_id"] != $COUNCIL_NAME)
+    {
+      // cat_id 를 COUNCIL_ID 로 변경
+      if (!mysql_query("UPDATE users SET cat_id=$COUNCIL_ID WHERE user_id=$GAME_ID"))
+      {
+        log_("THEDAZ: Error: cannot update users table (HAS_SPEAKER)");
+      }
+    }
+
+    mysql_query("UNLOCK TABLES");
+    mysql_close();
+  }
+}
+// 카운실에 스피커가 없으면
+else if ($HAS_SPEAKER == "NO")
+{
+  mysql_pconnect("localhost", "space", "rlaclrnr");
+  @mysql_select_db("CouncilForum") or die("Unable to connect to the Database");
+  mysql_query("LOCK TABLES forum_mods, users WRITE");
+
+  // forum_mods 에 user_id 를 -1 로 변경
+  if (!mysql_query("UPDATE forum_mods SET user_id=-1 WHERE cat_id=$COUNCIL_ID"))
+  {
+    log_("THEDAZ: Error: cannot update forum_mods table");
+  } 
+
+  // users 에 user_id 를 -1, username 을 No speaker 로 변경
+  if (!mysql_query("UPDATE users SET user_id=-1, username=\"No speaker\" WHERE cat_id=$COUNCIL_ID"))
+  {
+    log_("THEDAZ: Error: cannot update users table");
+  }
+
+  mysql_query("UNLOCK TABLES");
+  mysql_close();
+}
+
+mysql_pconnect("localhost", "space", "rlaclrnr");
+@mysql_select_db("CouncilForum") or die("Unable to connect to the Database");
+mysql_query("LOCK TABLES catagories WRITE");
+
+$query = mysql_query("SELECT cat_title FROM catagories WHERE cat_id=$COUNCIL_ID");
+$row = mysql_fetch_array($query);
+mysql_free_result($query);
+
+$cat_title = $row["cat_title"];
+
+// AS_STRING 의 COUNCIL_NAME 와 DB 의 cat_title 이 다르면
+if ($cat_title != $COUNCIL_NAME)
+{
+  // cat_title 을 COUNCIL_NAME 으로 변경
+  if (!mysql_query("UPDATE catagories SET cat_title=\"$COUNCIL_NAME\" WHERE cat_id=$COUNCIL_ID"))
+  {
+    log_("THEDAZ: Error: cannot update catagories table");
+  }
+}
+
+mysql_query("UNLOCK TABLES");
+mysql_close();
+
+/* Who's Online Hack */
+$IP=$REMOTE_ADDR;
+
+if($pagetype == "index")
+{
+//  $users_online = get_whosonline($IP, $userdata[username], 0, $db);
+}
+
+if($pagetype == "viewforum" || $pagetype == "viewtopic")
+{
+//  $users_online = get_whosonline($IP, $userdata[username], $forum, $db);
+}
+
+if($pagetype == "admin")
+{
+  $header_image = "../$header_image";
+}
+
+
+$login_logout_link = make_login_logout_link($user_logged_in, $url_phpbb);
+
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE><?php echo "$sitename $l_forums - $pagetitle" ?></TITLE>
+<?php
+if($l_special_meta)
+{
+  echo $l_special_meta . "\n";
+}
+if($forward)
+{
+  echo "<META HTTP-EQUIV=\"refresh\" content=\"3;URL=$url_phpbb/viewtopic.$phpEx?topic=$topic&forum=$forum&$total_topic\">";
+}
+$meta = showmeta($db);
+?>
+<?php echo $meta?>
+</HEAD>
+<BODY BGCOLOR="<?php echo $bgcolor?>" TEXT="<?php echo $textcolor?>" LINK="<?php echo $linkcolor?>" VLINK="<?php echo $vlinkcolor?>">
+<font face="<?php echo $FontFace?>">
+<?php
+
+showheader($db);
+
+//  Table layout (col and rowspans are marked with '*' and '-')
+//  *one*   | two
+//  *three* | four
+//  -five-  | -six-
+
+// cell one and three in the first TD with rowspan (logo)
+?>
+<TABLE BORDER=0 WIDTH="<?php echo $TableWidth?>" CELLPADDING="5" ALIGN="CENTER">
+<TR>                    
+  <TD COLSPAN=2 ALIGN="CENTER" WIDTH="50%"><a href="<?php echo $url_phpbb?>/index.<?php echo $phpEx ?>"><IMG SRC="<?php echo $FORUM_TITLE_IMAGE?>" border="0"></a></TD>
+</TR>
+<TR>
+<?php
+// Switch for cell two  (posts buttons)
+switch($pagetype)
+{
+  // 'index' is covered by default
+  case 'newtopic':
+?>
+  <TD ALIGN="CENTER">
+  <FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize2?>" COLOR="<?php echo $textcolor?>"><b>Post New Topic in:<BR>
+  <a href="<?php echo $url_phpbb?>/viewforum.<?php echo $phpEx ?>?forum=<?php echo $forum?>"><?php echo $forum_name?></a></b>
+  </font>
+  </TD>
+<?php
+  break;
+  case 'viewforum':
+?>
+  <TD ALIGN="LEFT">
+  <FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize2?>" COLOR="<?php echo $textcolor?>">
+  <b><?php echo $forum_name?></b>
+  <BR>
+  <FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize1?>" COLOR="<?php echo $textcolor?>">
+<?php // echo $l_moderatedby ?> <!-- : -->
+<?php
+$count = 0;
+$forum_moderators = get_moderators($forum, $db);
+/*
+while(list($null, $mods) = each($forum_moderators))
+{
+  while(list($mod_id, $mod_name) = each($mods))
+  {
+    if($count > 0)
+    {
+      echo ", ";
+    }
+    echo "<a href=\"bb_profile.$phpEx?mode=view&user=$mod_id\">".trim($mod_name)."</a>";
+    echo $mod_name;
+    $count++;
+  }
+}
+*/
+?>
+  </font>
+  </TD>
+
+
+
+
+
+  <TD ALIGN="RIGHT">
+  <a href="<?php echo $url_phpbb?>/newtopic.<?php echo $phpEx ?>?forum=<?php echo $forum?>"><IMG SRC="<?php echo $NEW_TOPIC_IMAGE?>" BORDER="0"></a>
+  </TD>
+</TR>
+<TR>
+<?php
+  break;
+  case 'viewtopic':
+?>
+  <TD ALIGN="LEFT">
+  <FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize2?>" COLOR="<?php echo $textcolor?>">
+  <b> <?php echo $forum_name ?> </b>
+  <BR>
+  <FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize1?>" COLOR="<?php echo $textcolor?>">
+<?php // echo $l_moderatedby ?> <!-- : -->
+?>
+  </font>
+  </TD>
+
+
+
+
+
+
+	<TD ALIGN="RIGHT">
+		<a href="<?php echo $url_phpbb?>/newtopic.<?php echo $phpEx ?>?forum=<?php echo $forum?>">
+			<IMG SRC="<?php echo $NEW_TOPIC_IMAGE?>" BORDER="0"></a>&nbsp;&nbsp;
+<?php
+	if($lock_state != 1) {
+?>
+		<a href="<?php echo $url_phpbb?>/reply.<?php echo $phpEx ?>?topic=<?php echo $topic?>&forum=<?php echo $forum?>">
+			<IMG SRC="<?php echo $REPLY_IMAGE?>" BORDER="0"></a></TD>
+<?php
+	}
+	else
+			echo "<img src=\"$reply_locked_image\" BORDER=0>\n";
+?>
+	</TD>
+<?php
+	break;
+	// 'Register' is covered by default
+	case '':
+?>
+<?php
+        default:
+?>
+	<TD ALIGN="CENTER">
+		<FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize4?>" COLOR="<?php echo $textcolor?>"><?php echo "$sitename $l_forums"?></font>
+	</TD>
+<?php
+	break;
+}  // End for switch cell two
+// Cell four (block with links)
+?>
+</TR>
+
+<?php
+//Third row with cell five and six (misc. information)
+switch($pagetype) {
+	case 'index':
+	$total_posts = get_total_posts("0", $db, "all");
+	$total_users = get_total_posts("0", $db, "users");
+	$sql = "SELECT username, user_id FROM users ORDER BY user_id DESC";
+	$res = mysql_query($sql, $db);
+	$row = mysql_fetch_array($res);
+    mysql_free_result($res);
+	$newest_user = $row["username"];
+	$newest_user_id = $row["user_id"];
+	$profile_url = "$url_phpbb/bb_profile.$phpEx?mode=view&user=$newest_user_id";
+	$online_url = "$url_phpbb/whosonline.$phpEx";
+
+?>
+<!-- INDEX_HEADER_END -->
+<?php
+	break;
+	case 'newforum':
+	// No third row
+	break;
+	case 'viewforum':
+?>
+<!-- VIEW_FORM_END -->
+<?php
+	case 'viewtopic':
+	$total_forum = get_total_posts($forum, $db, 'forum');
+?>
+<TR>
+	<TD COLSPAN="2" ALIGN="LEFT">
+	<FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize1?>" COLOR="<?php echo $textcolor?>">
+		<a href="<?php echo $url_phpbb?>/index.<?php echo $phpEx ?>"><?php echo $sitename?> Forum Index</a>
+		<b><?php echo $l_separator?></b>
+		<a href="<?php echo "$url_phpbb/viewforum.$phpEx?forum=$forum&$total_forum"?>"><?php echo stripslashes($forum_name)?></a>
+<?php
+        if($pagetype != "viewforum")
+		echo "<b>$l_separator</b>";
+?>
+		<?php echo $topic_subject?>
+	</TD>
+</TR>
+<?php
+	break;
+	case 'privmsgs':
+?>
+<TR>
+        <TD COLSPAN="2" ALIGN="CENTER">
+	<FONT FACE="<?php echo $FontFace?>" SIZE="<?php echo $FontSize2?>" COLOR="<?php echo $textcolor?>">
+		[<a href="<?php echo $url_phpbb?>/sendpmsg.<?php echo $phpEx ?>"><?php echo $l_sendpmsg?></a>]
+	<br>
+        </TD>
+</TR>
+<?php
+	break;
+}
+?>
+</TABLE>
+
+<!-- COMMON_PAGE_HEADER_END -->

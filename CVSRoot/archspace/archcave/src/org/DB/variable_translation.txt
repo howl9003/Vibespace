@@ -1,0 +1,35 @@
+Mysql type		Java type
+
+char(n) suffix:_hash	org.archcave.libs.Jhash
+
+char
+blob
+text
+enum
+set
+varchar			java.lang.String
+
+date			java.sql.Date
+
+timestamp		java.sql.Timestamp
+
+float
+double			java.lang.Double
+
+decimal
+double precision	java.math.BigDecimal
+
+tinyint			byte
+unsigned tinyint	short
+
+smallint		short
+unsigned smallint	int
+
+mediumint
+unsigned mediumint	int
+
+bigint			long
+unsigned bigint		java.math.BigInteger
+
+int			int
+unsigned int		long

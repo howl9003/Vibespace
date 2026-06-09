@@ -1,0 +1,8 @@
+DIV.clTop {position:absolute; width:140}
+DIV.clSub {position:absolute; left:10; width:130; line-height: 10pt}
+
+A.clMain {font-size: 11pt; color: #999999; line-height: 10pt; text-decoration: none; font-family: "Times New Roman", "Times", "πŸ≈¡√º"}
+A.clSubb {font-size: 9pt; color: #5E6A6C; line-height: 12pt; text-decoration: none; font-family: "Times New Roman", "Times", "πŸ≈¡√º"}
+#divMain{position:absolute}
+
+#divCont  {position:relative; left:0; top:0; height:100}

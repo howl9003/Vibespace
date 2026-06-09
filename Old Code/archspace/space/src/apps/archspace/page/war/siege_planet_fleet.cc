@@ -1,0 +1,142 @@
+#include <libintl.h>
+#include "../../pages.h"
+#include "../../archspace.h"
+#include "../../game.h"
+
+bool
+CPageSiegePlanetFleet::handler(CPlayer *aPlayer)
+{
+//	system_log( "start page handler %s", get_name() );
+
+	if (aPlayer->has_siege_blockade_restriction() == true)
+	{
+		ITEM("ERROR_MESSAGE",
+				GETTEXT("Your officers are too busy to plan a new offensive, because your newly conquered colony needs much management to be settled down."));
+
+		return output("war/war_error.html");
+	}
+
+	QUERY("TARGET_PLAYER_ID", TargetPlayerIDString);
+	CHECK(TargetPlayerIDString == NULL,
+			GETTEXT("You didn't enter a target player's ID."));
+
+	int
+		TargetPlayerID = as_atoi(TargetPlayerIDString);
+
+	CPlayer *
+		TargetPlayer = PLAYER_TABLE->get_by_game_id(TargetPlayerID);
+
+	CHECK(!TargetPlayer,GETTEXT("There's no such a player."));
+
+	CHECK(TargetPlayer->get_game_id() == EMPIRE_GAME_ID,
+			GETTEXT("You can't attack the Empire in this menu."));
+
+	CHECK(TargetPlayer->get_game_id() == aPlayer->get_game_id(),
+			GETTEXT("You can't attack yourself."));
+
+	CHECK(TargetPlayer->is_dead(), 
+                format(GETTEXT("%1$s is dead."), TargetPlayer->get_nick()));
+
+	if (TargetPlayer->has_siege_blockade_protection() == true)
+	{
+		ITEM("ERROR_MESSAGE",
+				(char *)format(GETTEXT("Recently the player %1$s had a planetary siege battle in his/her domain. You decided not to move your armada there until you get a clear information."),
+								TargetPlayer->get_nick()));
+
+		return output("war/war_error.html");
+	}
+
+    CString Attack; 
+    Attack = aPlayer->check_attackable(TargetPlayer);
+    CHECK(Attack.length(), Attack);
+
+	CCouncil *
+		TargetPlayerCouncil = TargetPlayer->get_council();
+
+	CRelation *
+		Relation;
+	CString
+		RelationDescription;
+
+	if (aPlayer->get_council() == TargetPlayerCouncil)
+	{
+		Relation = aPlayer->get_relation(TargetPlayer);
+		CHECK(!Relation, 
+			(char*)format(GETTEXT("You have no relation with %1$s."), 
+								TargetPlayer->get_nick()));
+
+		CHECK(Relation->get_relation() != CRelation::RELATION_WAR,
+			(char*)format(GETTEXT("You are not at war with %1$s."), 
+								TargetPlayer->get_nick()));
+		RelationDescription = GETTEXT("Personal War");
+	}
+	else
+	{
+		Relation = TargetPlayerCouncil->get_relation(aPlayer->get_council());
+
+		CHECK(!Relation, 
+			(char *)format(GETTEXT("Your council has no relationship with %1$s's council."), 
+							TargetPlayer->get_nick()));
+
+		CHECK(Relation->get_relation() != CRelation::RELATION_WAR &&
+				Relation->get_relation() != CRelation::RELATION_TOTAL_WAR,
+			(char *)format(GETTEXT("Your council is not at war or total war with %1$s's council."), 
+								TargetPlayer->get_nick()));
+		if (Relation->get_relation() == CRelation::RELATION_WAR)
+			RelationDescription = GETTEXT("Council War");
+		else 
+			RelationDescription = GETTEXT("Council Total War");
+	}
+
+	CFleetList *
+		FleetList = aPlayer->get_fleet_list();
+	CHECK(FleetList->fleet_number_by_status(CFleet::FLEET_STAND_BY) == 0,
+			GETTEXT("You don't have any stand-by fleets."));
+
+	CPlanetList *
+		TargetPlanetList = TargetPlayer->get_planet_list();
+	CFleetList *
+		TargetFleetList = TargetPlayer->get_fleet_list();
+
+
+	ITEM("STRING_FLEET_DEPLOYMENT", GETTEXT("Fleet Deployment"));
+
+	ITEM("TARGET_PLAYER",
+			(char *)format(GETTEXT("Target Selected - %1$s"), 
+					TargetPlayer->get_nick()));
+
+	ITEM("STRING_RANKING", GETTEXT("Ranking"));
+
+	CRankTable *
+		RankTable = PLAYER_TABLE->get_overall_rank_table();
+	int
+		Rank = RankTable->get_rank_by_id(TargetPlayer->get_game_id());
+	ITEM("RANKING", dec2unit(Rank));
+
+	ITEM("STRING_POWER", GETTEXT("Power"));
+	ITEM("POWER", dec2unit(TargetPlayer->get_power()));
+
+	ITEM("STRING_NUMBER_OF_PLANET_S_", GETTEXT("Number of Planet(s)"));
+	ITEM("NUMBER_OF_PLANETS", dec2unit(TargetPlanetList->length()));
+
+	ITEM("STRING_NUMBER_OF_FLEET_S_", GETTEXT("Number of Fleet(s)"));
+	ITEM("NUMBER_OF_FLEET_S_", dec2unit(TargetFleetList->length()));
+
+	ITEM("STRING_RELATION", GETTEXT("Relation"));
+	ITEM("RELATION", RelationDescription);
+
+	ITEM("STRING_COUNCIL", GETTEXT("Council"));
+	ITEM("COUNCIL_NICK", TargetPlayerCouncil->get_nick());
+
+	ITEM("SELECT_FLEET_MESSAGE", 
+			GETTEXT("Select fleets to deploy(up to 20 fleets)."));
+
+	ITEM("FLEETS_TO_SEND", FleetList->siege_planet_fleet_list_html(aPlayer));
+
+	ITEM("TARGET_PLAYER_ID", TargetPlayerID);
+
+//	system_log( "end page handler %s", get_name() );
+
+	return output("war/siege_planet_fleet.html");
+}
+

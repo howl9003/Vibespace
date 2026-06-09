@@ -1,0 +1,133 @@
+#!/sbin/runscript
+
+#
+# Archspace Portal Servers Init Script
+#
+
+#
+# Global Variable Section
+#
+
+# Customize the below to the proper paths
+AS_PATH="/etc/archspace"
+PORTAL_LOG_PATH="/var/log/archspace/"
+
+# These variables should stay standard/not edited
+PORTAL_KEY_LOG="${PORTAL_LOG_PATH}portal.key"
+PORTAL_LOG="${PORTAL_LOG_PATH}portal.log"
+
+# Addition functions for command line
+opts="${opts} clean"
+
+
+#
+# Process Dependencies
+#
+depend() {
+	need net mysql apache
+	use logger
+}
+
+#
+# Starts the whole batch
+#
+start() {
+	ebegin "Starting Archspace Portal"
+
+	einfo "Key server starting..."
+	/sbin/start-stop-daemon --start --quiet \
+	--exec /usr/sbin/key_server $AS_PATH/config \
+	--background --pidfile $AS_PATH/key_server_script.pid \
+	--make-pidfile
+	sleep 5
+		
+	einfo "Auth server starting..."
+	/sbin/start-stop-daemon --start --quiet \
+	--exec /usr/sbin/auth_server $AS_PATH/config \
+	--background --pidfile $AS_PATH/auth_server_script.pid \
+	--make-pidfile
+	sleep 3		
+
+	einfo "Entry server starting..."
+	/sbin/start-stop-daemon --start --quiet \
+	--exec /usr/sbin/entry_server $AS_PATH/config \
+	--background --pidfile $AS_PATH/entry_server_script.pid \
+	--make-pidfile
+	sleep 3	
+
+	einfo "Archspace Auth server starting..."
+	/sbin/start-stop-daemon --start --quiet \
+	--exec /usr/sbin/as_auth_server $AS_PATH/config \
+	--background --pidfile $AS_PATH/as_auth_server_script.pid \
+	--make-pidfile
+	sleep 3
+	
+	eend $?
+}
+
+#
+# Stops the whole batch
+#
+stop() {
+	ebegin "Shutting down ArchspacePortal"
+
+	einfo "Key server stopping..."
+	/sbin/start-stop-daemon -o --stop --quiet \
+	--pidfile $AS_PATH/key_server_script.pid \
+	--signal 15 --retry 15/0/KILL/0
+	sleep 5
+		
+	einfo "Auth server stopping..."
+	/sbin/start-stop-daemon -o --stop --quiet \
+	--pidfile $AS_PATH/auth_server_script.pid \
+	--signal 15 --retry 15/0/KILL/0	/usr/bin/sleep 3		
+
+	einfo "Entry server stopping..."
+	/sbin/start-stop-daemon -o --stop --quiet \
+	--pidfile $AS_PATH/entry_server_script.pid \
+	--signal 15 --retry 15/0/KILL/0	/usr/bin/sleep 3	
+
+	einfo "Archspace Auth server stopping..."
+	/sbin/start-stop-daemon -o --stop --quiet \
+	--pidfile $AS_PATH/as_auth_server_script.pid \
+	--signal 15 --retry 15/0/KILL/0	/usr/bin/sleep 3	
+	/usr/bin/sleep 3
+	eend $?	
+}
+
+#
+# Cleans portal related logs
+#
+
+clean() {
+        ebegin "Cleaning Archspace Portal Logs"
+	# for some reason just plain stop wasn't working right
+        /etc/init.d/ArchspacePortal stop
+
+        # Remove the portal log
+        if [ -f ${PORTAL_LOG} ]
+        then
+                einfo "Removing ${PORTAL_LOG}"
+                rm  ${PORTAL_LOG}
+                if [ -f ${PORTAL_LOG} ]
+                then
+                        eerror "Could not remove ${PORTAL_LOG}"
+                fi
+        else
+                einfo "${PORTAL_LOG} was already clean"
+        fi
+
+        # Remove the portal key log
+        if [ -f ${PORTAL_KEY_LOG} ]
+        then
+                einfo "Removing ${PORTAL_KEY_LOG}"
+                rm  ${PORTAL_KEY_LOG}
+                if [ -f ${PORTAL_KEY_LOG} ]
+                then
+                        eerror "Could not remove ${PORTAL_KEY_LOG}"
+                fi
+        else
+                einfo "${PORTAL_KEY_LOG} was already clean"
+        fi
+	eend $?
+}

@@ -1,0 +1,1 @@
+<a href="<?php echo Horde::applicationUrl($_prefs[$pref]['url']) ?>"><?php if (isset($_prefs[$pref]['img'])) Horde::pimg($_prefs[$pref]['img'], 'alt="' . $_prefs[$pref]['desc'] . '" hspace="3"') ?><b><?php echo $_prefs[$pref]['desc'] ?></b></a><br />

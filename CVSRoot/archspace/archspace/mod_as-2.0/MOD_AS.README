@@ -1,0 +1,28 @@
+In your apache install directory (ex. /usr/ports/apache13/work/apache_1.3.x/):
+
+untar as.tar to /src/modules
+you should then have all the files and such under /src/modules/as
+
+then you just go up back to the install directory (cd .. and cd .. and cd .. or w/e)
+do a:
+./configure --activate-module=src/modules/as/libas.a --enable-shared=as
+make
+cp src/modules/as/libas.so to your modules directory for apache
+on bsd for me its
+cp src/modules/as/libas.so /usr/local/libexec/apache/
+
+then edit your httpd.conf (or other apache conf file for module loading) as these
+to the bottom of the already existant lists:
+
+LoadModule as_module  libexec/apache/libas.so  # or appropriate location
+
+# a little it down some text
+
+AddModule mod_as.c
+
+then anywhere in the config...
+<Location "/archspace">
+ SetHandler archspace-handler
+ SetHandler archspace-script
+ SetHandler application/x-archspace
+</Location>

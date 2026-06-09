@@ -1,0 +1,69 @@
+#!/bin/sh
+#set -x
+
+config_file="/etc/archspace/archspace.config"
+
+case "$1" in
+	en)
+		echo "Setting script files for English....."
+
+		#/bin/rm -rf /etc/archspace/script
+		#/bin/mkdir /etc/archspace/script
+
+		/bin/ln -s /etc/archspace/script/admiral_name.en /etc/archspace/script/admiral_name
+		/bin/ln -s /etc/archspace/script/cluster.en /etc/archspace/script/cluster
+		/bin/ln -s /etc/archspace/script/component.en /etc/archspace/script/component
+		/bin/ln -s /etc/archspace/script/empire_ship_design /etc/archspace/script/empire_ship_design
+		/bin/ln -s /etc/archspace/script/ending.en /etc/archspace/script/ending
+		/bin/ln -s /etc/archspace/script/ending_project /etc/archspace/script/ending_project
+		/bin/ln -s /etc/archspace/script/event.en /etc/archspace/script/event
+		/bin/ln -s /etc/archspace/script/project.en /etc/archspace/script/project
+		/bin/ln -s /etc/archspace/script/race.en /etc/archspace/script/race
+		/bin/ln -s /etc/archspace/script/secret_project.en /etc/archspace/script/secret_project
+		/bin/ln -s /etc/archspace/script/ship.en /etc/archspace/script/ship
+		/bin/ln -s /etc/archspace/script/spy.en /etc/archspace/script/spy
+		/bin/ln -s /etc/archspace/script/tech.en /etc/archspace/script/tech
+
+		sed 1,'$'s/'Language = en'/'Language = en'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+		sed 1,'$'s/'Language = ko'/'Language = en'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+
+		echo "The job has finished"
+	;;
+
+	ko)
+		echo "Setting script files for Korean....."
+
+		#/bin/rm -rf /etc/archspace/script
+		#/bin/mkdir /etc/archspace/script
+
+		/bin/ln -s /etc/archspace/script/admiral_name.ko /etc/archspace/script/admiral_name
+		/bin/ln -s /etc/archspace/script/cluster.ko /etc/archspace/script/cluster
+		/bin/ln -s /etc/archspace/script/component.ko /etc/archspace/script/component
+		/bin/ln -s /etc/archspace/script/empire_ship_design /etc/archspace/script/empire_ship_design
+		/bin/ln -s /etc/archspace/script/ending.ko /etc/archspace/script/ending
+		/bin/ln -s /etc/archspace/script/ending_project /etc/archspace/script/ending_project
+		/bin/ln -s /etc/archspace/script/event.ko /etc/archspace/script/event
+		/bin/ln -s /etc/archspace/script/project.ko /etc/archspace/script/project
+		/bin/ln -s /etc/archspace/script/race.ko /etc/archspace/script/race
+		/bin/ln -s /etc/archspace/script/secret_project.ko /etc/archspace/script/secret_project
+		/bin/ln -s /etc/archspace/script/ship.ko /etc/archspace/script/ship
+		/bin/ln -s /etc/archspace/script/spy.ko /etc/archspace/script/spy
+		/bin/ln -s /etc/archspace/script/tech.ko /etc/archspace/script/tech
+
+		sed 1,'$'s/'Language = en'/'Language = ko'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+		sed 1,'$'s/'Language = ko'/'Language = ko'/g $config_file > $config_file.new
+		mv $config_file.new $config_file
+
+		echo "The job has finished"
+	;;
+
+	*)
+		echo "Unknown language symbol!"
+	;;
+esac
+
+exit 
+

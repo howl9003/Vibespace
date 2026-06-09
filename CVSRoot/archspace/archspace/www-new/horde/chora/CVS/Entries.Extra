@@ -1,0 +1,16 @@
+/.htaccess////*///
+/annotate.php////*///
+/co.php////*///
+/cvs.php////*///
+/diff.php////*///
+/history.php////*///
+/index.php////*///
+/menu.php////*///
+/prefs.php////*///
+/status.php////*///
+D/config///////
+D/graphics///////
+D/lib///////
+D/locale///////
+D/po///////
+D/templates///////

@@ -1,0 +1,33 @@
+#
+#     Makefile
+#
+
+CC = gcc
+CFLAGS = -g -Wall -DFreeBSD -O6
+#CFLAGS = -Wall -DSOLARIS -O2
+# solaris
+LIBS = -lc #-lsocket -lisam #-DSOLARIS
+# linux
+#LIBS = -lc -lsocket -lnsl -lisam -DLINUX
+
+HEADERFILES = comm_high.h comm_low.h comm_mid.h define.h descriptor.h flib.h \
+	include.h macro.h memory.h message.h txt.h utils.h rlimit.h select.h \
+	sighandle.h
+
+SOURCEFILES = comm_high.c comm_low.c comm_mid.c descriptor.c flib.c message.c \
+	txt.c utils.c rlimit.c select.c sighandle.c
+
+OBJECTFILES = comm_high.o comm_low.o comm_mid.o descriptor.o flib.o message.o \
+	txt.o utils.o rlimit.o select.o sighandle.o
+
+all : libdbbs
+
+.c.o : $(SOURCEFILES) $(HEADERFILES)
+	$(CC) $(CFLAGS) -c $<
+
+libdbbs : $(OBJECTFILES)
+	ar r libdbbs.a $(OBJECTFILES)
+	ranlib libdbbs.a
+
+clean :
+	rm -rf *.o

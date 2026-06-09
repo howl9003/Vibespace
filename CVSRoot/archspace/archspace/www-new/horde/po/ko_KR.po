@@ -1,0 +1,844 @@
+# Horde Korean translation.
+# Copyright (C) 2001 J.I Kim.
+# J.I Kim <aporie@netian.com>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 3.0-cvs\n"
+"POT-Creation-Date: 2002-12-21 20:45+0100\n"
+"PO-Revision-Date: 2002-12-27 16:34+0100\n"
+"Last-Translator: J.I Kim <aporie@netian.com>\n"
+"Language-Team: Korean <dev@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=EUC-KR\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: templates/maintenance/confirm_top.inc:14
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr ""
+" &#151; %s은(는) 아래에 설정된 유지관리 작업을 수행할 준비가 되었습니다."
+
+#: templates/maintenance/confirm_top.inc:7
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s 유지관리 작업 - 확인"
+
+#: lib/Registry.php:453 lib/Registry.php:752
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "%s'이(가) Horde 레지스트리에서 설정되어 있지 않습니다."
+
+#: templates/data/datemap.inc:102
+msgid "24 hours"
+msgstr "24 시간"
+
+#: lib/Horde.php:231
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>치명적인 오류 발생:</b>"
+
+#: templates/data/datemap.inc:103
+msgid "AM/PM"
+msgstr "오전/오후"
+
+#: templates/data/csvmap.inc:94
+msgid "Add pair"
+msgstr "페어(pair) 추가"
+
+#: lib/MIME/Viewer/vcard.php:86
+msgid "Address"
+msgstr "주소"
+
+#: config/registry.php.dist:117
+msgid "Address Book"
+msgstr "주소록"
+
+#: lib/MIME/Viewer/vcard.php:64
+msgid "Alias"
+msgstr "얼라이어스"
+
+#: lib/PrefsUI.php:98
+msgid "An illegal value was specified."
+msgstr "잘못된 문자가 있습니다."
+
+#: config/prefs.php.dist:70
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "유지관리실행전 확인하기"
+
+#: templates/data/csvmap.inc:84
+msgid "Available fields:"
+msgstr "가능한 필드:"
+
+#: lib/MIME/Viewer/vcard.php:71
+msgid "Birthday"
+msgstr "생일"
+
+#: config/registry.php.dist:153
+msgid "CVS"
+msgstr "CVS"
+
+#: config/registry.php.dist:126
+msgid "Calendar"
+msgstr "달력"
+
+#: templates/problem/problem.inc:35
+msgid "Cancel Problem Report"
+msgstr "오류 보고하기 취소"
+
+#: lib/MIME/Viewer/vcard.php:103
+msgid "Cell Phone"
+msgstr "휴대폰"
+
+#: templates/maintenance/confirm_top.inc:16
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "지금 수행할 작업을 선택하세요."
+
+#: templates/help/menu.inc:12
+msgid "Close Help"
+msgstr "도움말 닫기"
+
+#: templates/help/menu.inc:12
+msgid "Close Help Window"
+msgstr "도움말 창 닫기"
+
+#: util/special_characters.php:147
+msgid "Close Window"
+msgstr "창 닫기"
+
+#: config/registry.php.dist:162
+msgid "Comics"
+msgstr "Comics"
+
+#: lib/MIME/Viewer/vcard.php:152
+msgid "Company"
+msgstr "회사"
+
+#: lib/VFS/ftp.php:422
+msgid "Connection to ftp server failed."
+msgstr "ftp 서버 연결 오류."
+
+#: lib/MIME/Viewer/zip.php:45 lib/MIME/Viewer/tgz.php:50
+msgid "Contents of '%s'"
+msgstr "'%s'의 내용"
+
+#: lib/MIME/Viewer/rar.php:46
+msgid "Contents of the RAR archive"
+msgstr "RAR 압축"
+
+#: lib/Maintenance.php:394
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Maintenance_Task 모듈 %s을(를) 열 수 없습니다."
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "DD"
+msgstr "DD"
+
+#: lib/Maintenance.php:30
+msgid "Daily"
+msgstr "일별"
+
+#: lib/Auth/sql.php:206 lib/Auth/sql.php:234 lib/Auth/sql.php:259
+msgid "Database query failed."
+msgstr "데이타베이스 검색 오류"
+
+#: lib/Identity.php:75
+msgid "Default Identity"
+msgstr "기본 식별자"
+
+#: problem.php:88 problem.php:92 problem.php:103
+msgid "Describe the Problem"
+msgstr "오류 설명"
+
+#: lib/Horde.php:239
+msgid "Details have been logged for the administrator."
+msgstr "세부정보가 관리자를 위해 기록되어졌습니다."
+
+#: config/prefs.php.dist:12
+msgid "Display Options"
+msgstr "화면 설정"
+
+#: maintenance.php:26
+msgid "Do not directly access maintenance.php"
+msgstr "maintenance.php에 직접 접근하지 마세요."
+
+#: lib/MIME/Viewer/vcard.php:137
+msgid "Email"
+msgstr "이메일"
+
+#: lib/Auth/ldap.php:113
+msgid "Empty result."
+msgstr "결과 없음"
+
+#: status.php:16 lib/Notification/status.php:41
+msgid "Error"
+msgstr "오류"
+
+#: config/prefs.php.dist:41
+msgid "Every 15 minutes"
+msgstr "15분 마다"
+
+#: config/prefs.php.dist:38
+msgid "Every 30 seconds"
+msgstr "30초 마다"
+
+#: config/prefs.php.dist:40
+msgid "Every 5 minutes"
+msgstr "5분 마다"
+
+#: lib/Maintenance.php:31
+msgid "Every Login"
+msgstr "모두 로그인"
+
+#: config/prefs.php.dist:42
+msgid "Every half hour"
+msgstr "30분 마다"
+
+#: config/prefs.php.dist:39
+msgid "Every minute"
+msgstr "매분"
+
+#: templates/data/datemap.inc:28
+msgid "Example values:"
+msgstr "예:"
+
+#: lib/Data.php:265
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "%d 라인에 \"BEGIN\"이 있어야 합니다."
+
+#: lib/Data.php:286
+msgid "Expected \"END:%s\" in line %d."
+msgstr "\"END:%s\"이(가) %d라인에 없습니다."
+
+#: lib/Prefs/sql.php:312
+msgid "Failed retrieving preferences."
+msgstr "환경설정 읽기 오류."
+
+#: lib/Auth/ldap.php:103
+msgid "Failed to connect to LDAP server."
+msgstr "LDAP 서버 접속 실패"
+
+#: lib/MIME/Viewer/vcard.php:108
+msgid "Fax"
+msgstr "팩스"
+
+#: templates/problem/problem.inc:26
+msgid "Full Description:"
+msgstr "전체 설명:"
+
+#: help.php:15 lib/Help.php:426 lib/Help.php:427 templates/help/index.inc:13
+msgid "Help"
+msgstr "도움말"
+
+#: lib/MIME/Viewer/vcard.php:82
+msgid "Home Address"
+msgstr "집 주소"
+
+#: lib/MIME/Viewer/vcard.php:99
+msgid "Home Phone"
+msgstr "집 전화번호"
+
+#: templates/index/wap.inc:7 config/registry.php.dist:84
+msgid "Horde"
+msgstr "Horde"
+
+#: login.php:96
+msgid "Horde Login"
+msgstr "Horde 로그인"
+
+#: menu.php:20
+msgid "Horde System"
+msgstr "Horde 시스템"
+
+#: templates/index/wap.inc:13
+msgid "Horde Wireless"
+msgstr "Horde 무선"
+
+#: templates/index/notconfigured.inc:4
+msgid "Horde is not properly configured"
+msgstr "Horde가 바르게 설정되지 않았습니다."
+
+#: config/prefs.php.dist:51
+msgid "Icons Only"
+msgstr "아이콘"
+
+#: config/prefs.php.dist:52
+msgid "Icons with text"
+msgstr "아이콘과 문자"
+
+#: templates/data/datemap.inc:117 templates/data/csvmap.inc:128
+msgid "Import"
+msgstr "읽어오기(임포트)"
+
+#: lib/Data.php:265 lib/Data.php:282 lib/Data.php:286
+msgid "Import Error: "
+msgstr "읽어오기(임포트) 오류: "
+
+#: templates/data/datemap.inc:20
+msgid "Imported field: %s"
+msgstr "읽어오기 항목: %s"
+
+#: templates/data/csvmap.inc:74
+msgid "Imported fields:"
+msgstr "임포트된 항목:"
+
+#: config/prefs.php.dist:6
+msgid "Language"
+msgstr "언어"
+
+#: templates/help/menu.inc:9
+msgid "List Help Topics"
+msgstr "도움말 목차"
+
+#: templates/login/login.inc:76
+msgid "Log in"
+msgstr "로그인"
+
+#: menu.php:47 templates/login/user.inc:9
+msgid "Log out"
+msgstr "로그아웃"
+
+#: login.php:61
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"어떤 이유로 로그인이 실패했습니다. 대부분의 경우 사용자 이름 또는 암호가 잘"
+"못 입력된 경우 발생합니다."
+
+#: config/registry.php.dist:99
+msgid "Logout"
+msgstr "로그아웃"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "MM"
+msgstr "MM"
+
+#: config/registry.php.dist:108
+msgid "Mail"
+msgstr "웹메일"
+
+#: templates/data/datemap.inc:10
+msgid "Map Date and Time Fields"
+msgstr "날자 및 시간 항목 맵"
+
+#: templates/data/csvmap.inc:57
+msgid "Map Import Fields"
+msgstr "임포트 항목 맵"
+
+#: templates/data/csvmap.inc:102
+msgid "Matching fields"
+msgstr "일치하는 항목"
+
+#: config/registry.php.dist:135
+msgid "Memos"
+msgstr "메모"
+
+#: config/prefs.php.dist:53
+msgid "Menu mode:"
+msgstr "메뉴 모드"
+
+#: status.php:29 lib/Notification/status.php:54
+msgid "Message"
+msgstr "메세지"
+
+#: lib/Maintenance.php:28
+msgid "Monthly"
+msgstr "매월"
+
+#: login.php:64
+msgid "My Summary"
+msgstr "나의 요약:"
+
+#: lib/MIME/Viewer/vcard.php:56
+msgid "Name"
+msgstr "이름"
+
+#: config/prefs.php.dist:37
+msgid "Never"
+msgstr "사용안함"
+
+#: lib/VFS/ftp.php:402
+msgid "No configuration information specified for FTP VFS."
+msgstr "FTP VFS를 위한 설정정보가 없습니다."
+
+#: lib/Prefs/ldap.php:100
+msgid "No configuration information specified for LDAP Preferences."
+msgstr "LDAP환경 설정정보가 없습니다."
+
+#: lib/Category/sql.php:73
+msgid "No configuration information specified for SQL Categories."
+msgstr "SQL 카테고리 설정정보가 없습니다."
+
+#: lib/Prefs/sql.php:83
+msgid "No configuration information specified for SQL Preferences."
+msgstr "SQL 환경 설정정보가 없습니다."
+
+#: lib/VFS/sql.php:450
+msgid "No configuration information specified for SQL VFS."
+msgstr "SQL VFS 설정정보가 없습니다."
+
+#: lib/Auth/sql.php:93
+msgid "No configuration information specified for SQL authentication."
+msgstr "SQL 인증 설정정보가 없습니다."
+
+#: lib/VFS/sql_file.php:471
+msgid "No configuration information specified for SQL-File VFS."
+msgstr "SQL-File VFS 설정정보가 없습니다."
+
+#: lib/Prefs/ldap.php:311 lib/Prefs/ldap.php:413 lib/Prefs/sql.php:193
+#: lib/Prefs/sql.php:269 lib/Prefs/session.php:53
+msgid "No preferences are available."
+msgstr "환경설정이 올바르지 않음"
+
+#: lib/MIME/Viewer/vcard.php:157
+msgid "Notes"
+msgstr "참조"
+
+#: templates/maintenance/confirm_top.inc:13
+msgid "Notice"
+msgstr "참조"
+
+#: lib/Notification.php:105
+msgid "Notification listener %s not found."
+msgstr "통지 리스너 %s을(를) 찾을 수 없습니다."
+
+#: config/prefs.php.dist:30
+msgid "Number of columns in the summary view:"
+msgstr "요약화면에서 칼럼의 수"
+
+#: templates/login/user.inc:7
+msgid "Options"
+msgstr "옵션"
+
+#: config/prefs.php.dist:11
+msgid "Other Information"
+msgstr "기타 정보"
+
+#: templates/login/login.inc:71
+msgid "Password"
+msgstr "암호"
+
+#: templates/maintenance/confirm_bottom.inc:6
+msgid "Perform Maintenance Operations"
+msgstr "유지 관리 작업 실행"
+
+#: lib/MIME/Viewer/vcard.php:105
+msgid "Phone"
+msgstr "전화번호"
+
+#: templates/problem/javascript.inc:7
+msgid "Please provide a summary of the problem."
+msgstr "문제에 대한 요약을 입력해 주세요."
+
+#: templates/login/login.inc:14 templates/login/login.inc:18
+msgid "Please provide your username and password"
+msgstr "사용자이름과 암호를 입력하세요"
+
+#: problem.php:106
+msgid "Problem Description"
+msgstr "문제 설명"
+
+#: config/prefs.php.dist:43
+msgid "Refresh Summary View:"
+msgstr "요약 보기 갱신:"
+
+#: templates/data/csvmap.inc:127
+msgid "Remove pair"
+msgstr "페어(pair) 삭제"
+
+#: lib/Auth/ldap.php:91
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "인증설정에서 'basedn'이 없습니다."
+
+#: lib/Prefs/ldap.php:106
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr "환경설정에서 'basedn'이 없습니다."
+
+#: lib/VFS/sql.php:465 lib/VFS/sql_file.php:486
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "VFS 설정 정보에서 'database'가 없습니다."
+
+#: lib/Auth/sql.php:108
+msgid "Required 'database' not specified in authentication configuration."
+msgstr "인증설정에서 'database'가 없습니다."
+
+#: lib/Category/sql.php:88
+msgid "Required 'database' not specified in categories configuration."
+msgstr "설정 카테고리에서 'database'가 없습니다."
+
+#: lib/Prefs/sql.php:98
+msgid "Required 'database' not specified in preferences configuration."
+msgstr "환경설정에서 'database'가 없습니다."
+
+#: lib/VFS/sql.php:456 lib/VFS/ftp.php:411 lib/VFS/sql_file.php:477
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "VFS 설정 정보에서 'hostspec'가 없습니다."
+
+#: lib/Auth/ldap.php:88 lib/Auth/sql.php:99
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr "인증설정에서 'hostspec'이 없습니다."
+
+#: lib/Category/sql.php:79
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr "설정 카테고리에서 'hostspec'이 없습니다."
+
+#: lib/Prefs/ldap.php:103 lib/Prefs/sql.php:89
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr "환경설정에서 'hostspec'이 없습니다."
+
+#: lib/VFS/sql.php:462 lib/VFS/ftp.php:408 lib/VFS/sql_file.php:483
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "VFS 설정 정보에서 'password'가 없습니다."
+
+#: lib/Auth/ldap.php:97 lib/Auth/sql.php:105
+msgid "Required 'password' not specified in authentication configuration."
+msgstr "인증설정에서 'password'가 없습니다."
+
+#: lib/Category/sql.php:85
+msgid "Required 'password' not specified in categories configuration."
+msgstr "설정 카테고리에서 'password'가 없습니다."
+
+#: lib/Prefs/ldap.php:115 lib/Prefs/sql.php:95
+msgid "Required 'password' not specified in preferences configuration."
+msgstr "환경설정에서 'password'가 없습니다."
+
+#: lib/VFS/sql.php:453 lib/VFS/sql_file.php:474
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "VFS 설정 정보에서 'phptypw'이 없습니다."
+
+#: lib/Auth/sql.php:96
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr "인증설정에서 'phptypw'이 없습니다."
+
+#: lib/Category/sql.php:76
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr "설정 카테고리에서 'phptypw'이 없습니다."
+
+#: lib/Prefs/sql.php:86
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr "환경설정에서 'phptypw'이 없습니다."
+
+#: lib/VFS/ftp.php:414
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "VFS 설정 정보에서 'port'이 없습니다."
+
+#: lib/Auth/sql.php:111
+msgid "Required 'table' not specified in authentication configuration."
+msgstr "인증설정에서 'table'이 없습니다."
+
+#: lib/Category/sql.php:91
+msgid "Required 'table' not specified in categories configuration."
+msgstr "설정 카테고리에서 'table'이 없습니다."
+
+#: lib/Prefs/sql.php:101
+msgid "Required 'table' not specified in preferences configuration."
+msgstr "환경설정에서 'table'이 없습니다."
+
+#: lib/Auth/ldap.php:94
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "인증설정에서 'uid'가 없습니다."
+
+#: lib/Prefs/ldap.php:109
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr "환경설정에서 'uid'가 없습니다."
+
+#: lib/VFS/sql.php:459 lib/VFS/ftp.php:405 lib/VFS/sql_file.php:480
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "VFS 설정정보에서 'username'이 없습니다."
+
+#: lib/Auth/sql.php:102
+msgid "Required 'username' not specified in authentication configuration."
+msgstr "인증설정에서 'username'이 없습니다."
+
+#: lib/Category/sql.php:82
+msgid "Required 'username' not specified in categories configuration."
+msgstr "설정 카테고리에서 'username'이 없습니다."
+
+#: lib/Prefs/ldap.php:112 lib/Prefs/sql.php:92
+msgid "Required 'username' not specified in preferences configuration."
+msgstr "환경설정에서 'username'이 없습니다."
+
+#: lib/VFS/sql_file.php:489
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "VFS 설정 정보에서 'table'이 없습니다."
+
+#: templates/prefs/end.inc:7
+msgid "Return to Options"
+msgstr "옵션으로 돌아가기"
+
+#: lib/MIME/Viewer/vcard.php:147
+msgid "Role"
+msgstr "역할"
+
+#: templates/prefs/end.inc:5
+msgid "Save Options"
+msgstr "옵션 저장"
+
+#: util/special_characters.php:38
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"아래 상자에서 필요한 문자를 선택하세요. 그리고나서 복사후 텍스트영역에 붙여넣"
+"기하면 됩니다."
+
+#: templates/data/datemap.inc:54 templates/data/datemap.inc:90
+msgid "Select the date delimiter:"
+msgstr "날자 구분표시 선택:"
+
+#: templates/data/datemap.inc:64
+msgid "Select the date format:"
+msgstr "날자 형식 선택"
+
+#: templates/data/datemap.inc:99
+msgid "Select the time format:"
+msgstr "시간 형식 선택"
+
+#: templates/data/csvmap.inc:65
+msgid "Select two matching fields."
+msgstr "두개의 일치하는 항목 선택"
+
+#: config/prefs.php.dist:23
+msgid "Select your preferred language:"
+msgstr "자주사용하는 언어를 선택하세요."
+
+#: templates/problem/problem.inc:34
+msgid "Send Problem Report"
+msgstr "문제발생 보고서 전송하기"
+
+#: config/prefs.php.dist:13
+msgid "Set your page refreshing, and other display options."
+msgstr "페이지 갱신주기 및 기타 화면 설정을 하세요."
+
+#: config/prefs.php.dist:7
+msgid "Set your preferred display language."
+msgstr "자주사용하는 언어를 선택하세요."
+
+#: templates/problem/problem.inc:21
+msgid "Short Summary:"
+msgstr "간단한 요약:"
+
+#: templates/maintenance/confirm_bottom.inc:9
+msgid "Skip Maintenance"
+msgstr "유지관리 생략"
+
+#: templates/index/notconfigured.inc:9
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Horde의 일부 설정파일이 없습니다:"
+
+#: util/special_characters.php:14
+msgid "Special Character Input"
+msgstr "특수 문자 입력"
+
+#: status.php:20 lib/Notification/status.php:45
+msgid "Success"
+msgstr "성공"
+
+#: config/registry.php.dist:144
+msgid "Tasks"
+msgstr "작업"
+
+#: config/prefs.php.dist:50
+msgid "Text Only"
+msgstr "문자"
+
+#: lib/MIME/Viewer/deb.php:33 lib/MIME/Viewer/rar.php:35
+#: lib/MIME/Viewer/enscript.php:34 lib/MIME/Viewer/mspowerpoint.php:34
+#: lib/MIME/Viewer/msword.php:35 lib/MIME/Viewer/rpm.php:33
+#: lib/MIME/Viewer/zip.php:35 lib/MIME/Viewer/tgz.php:35
+#: lib/MIME/Viewer/msexcel.php:34
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr ""
+"이 메세지 형태(%s)를 보기 위한 프로그램을 찾을 수 없습니다."
+
+#: templates/index/notconfigured.inc:42
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"레지스트리(registry)는 Horde 응용프로그램간의 동작방식을 설정합니다. 여기에"
+"서 설치된 Horde 응용프로그램을 열거해야 합니다."
+
+#: templates/index/notconfigured.inc:28
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"이파일은 Horde프레임워크와 응용프로그램이 브라우저에서 HTML로 내용을 볼 때 "
+"enscript또는 mswordview같은 프로그램을 사용하도록 하기 위한 전역 MIME 드라이"
+"버를 설정합니다. "
+
+#: templates/index/notconfigured.inc:21
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"이 파일은 Horde 프레임워크와 모든 응용프로그램에서 사용되는 색상과 글꼴에 사"
+"용되는 스타일쉬트를 제어합니다. 하지만 응용프로그램 각자의 스타일쉬트는 제공"
+"하지 않습니다."
+
+#: templates/index/notconfigured.inc:35
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"이 파일은 논리적인 MIME형식의 파일 확장자를 지정하여, Horde 응용프로그램이 이"
+"메일 첨부파일 또는 CVS 체크아웃(co)에서 내용을 어떻게 다루어야 하는지를 알려"
+"줍니다."
+
+#: templates/index/notconfigured.inc:14
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"이것은 기본 Horde 설정파일입니다. 모든 Horde 응용 프로그램과 핵심적인 프레임 "
+"워크사이에 적용되는 기본 경로와 내용을 갖고 있습니다."
+
+#: lib/PrefsUI.php:107
+msgid "This number must be at least one."
+msgstr "이 숫자는 최소한 1자리 이상이어야 합니다."
+
+#: lib/PrefsUI.php:105
+msgid "This value must be a number."
+msgstr "이 값은 숫자여야 합니다."
+
+#: lib/MIME/Viewer/vcard.php:142
+msgid "Title"
+msgstr "제목"
+
+#: lib/Data.php:286
+msgid "Type mismatch."
+msgstr "형식 오류."
+
+#: lib/MIME/Viewer/vcard.php:162
+msgid "URL"
+msgstr "URL"
+
+#: lib/VFS/file.php:208 lib/VFS/musql.php:430 lib/VFS/ftp.php:254
+msgid "Unable to change permission for VFS file %s/%s."
+msgstr "VFS 파일 %s/%s의 퍼미션을 변경할 수 없습니다."
+
+#: lib/Auth/sql.php:118
+msgid "Unable to connect to SQL server."
+msgstr "SQL 서버에 접속할 수 없습니다."
+
+#: lib/VFS/file.php:452
+msgid "Unable to read the vfsroot directory."
+msgstr "vfsroot 디렉토리를 읽을 수 없습니다."
+
+#: lib/Prefs/session.php:92
+msgid "Unable to register preferences in session."
+msgstr "세션에서 환경설정을 등록할 수 없습니다."
+
+#: lib/VFS/file.php:379 lib/VFS/musql.php:215 lib/VFS/ftp.php:210
+msgid "Unable to rename VFS file %s/%s."
+msgstr "VFS 파일 %s/%s을(를) 변경할 수 없습니다."
+
+#: lib/MIME/Viewer/msword.php:57
+msgid "Unable to translate this Word document"
+msgstr "이 워드문서를 변경할 수 없습니다."
+
+#: templates/prefs/end.inc:6
+msgid "Undo Changes"
+msgstr "변경사항 되돌리기"
+
+#: lib/Data.php:282
+msgid "Unexpected end of file."
+msgstr "파일의 끝이 잘못되었습니다."
+
+#: templates/prefs/select.inc:3
+msgid "Use Default Value"
+msgstr "기본값 사용"
+
+#: prefs.php:61
+msgid "User Options"
+msgstr "사용자 옵션"
+
+#: templates/login/login.inc:67
+msgid "Username"
+msgstr "사용자명"
+
+#: status.php:24 lib/Notification/status.php:49
+msgid "Warning"
+msgstr "경고"
+
+#: lib/Maintenance.php:29
+msgid "Weekly"
+msgstr "매주"
+
+#: templates/login/login.inc:59
+msgid "Welcome to %s"
+msgstr "환영합니다! %s 입니다."
+
+#: templates/wml/login/user.inc:1 templates/login/user.inc:4
+msgid "Welcome, %s"
+msgstr "환영합니다, %s 입니다."
+
+#: config/prefs.php.dist:61
+msgid "What application should Horde display after login?"
+msgstr ""
+
+#: lib/MIME/Viewer/vcard.php:84
+msgid "Work Address"
+msgstr "직장 주소"
+
+#: lib/MIME/Viewer/vcard.php:101
+msgid "Work Phone"
+msgstr "직장 전화번호"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "YY"
+msgstr "YY"
+
+#: lib/Maintenance.php:27
+msgid "Yearly"
+msgstr "매년"
+
+#: login.php:60
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr "로그아웃하셨습니다.<br />사용해주셔서 감사합니다."
+
+#: templates/problem/javascript.inc:11
+msgid "You must describe the problem before you can send the problem report."
+msgstr "문제 보고서를 보내기전에 이문제에 대한 설명을 입력해야 합니다."
+
+#: login.php:59
+msgid "Your %s session has expired. Please login again."
+msgstr "%s 세션이 만료되었습니다. 다시 로그인하세요."
+
+#: templates/problem/problem.inc:16
+msgid "Your Email Address:"
+msgstr "이메일 주소:"
+
+#: config/prefs.php.dist:5
+msgid "Your Information"
+msgstr "정보"
+
+#: templates/problem/problem.inc:11
+msgid "Your Name:"
+msgstr "이름:"
+
+#: lib/PrefsUI.php:144
+msgid "Your options have been updated."
+msgstr "옵션이 저장되었습니다."
+
+#: problem.php:66
+msgid "[Problem Report]"
+msgstr "[오류 보고하기]"
+
+#: lib/Horde.php:235
+msgid "[line %s of %s]"
+msgstr "[라인 %s / %s]"
+
+#: menu.php:37 menu.php:39
+msgid "name"
+msgstr "이름"
+
+#: lib/MIME/Viewer/vcard.php:36
+msgid "vCard"
+msgstr "vCard"

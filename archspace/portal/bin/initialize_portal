@@ -1,0 +1,11 @@
+#!/bin/sh
+#echo "Removing EntryServer DB....."
+#mysqladmin -p drop EntryServer
+#
+#echo "Creating EntryServer DB....."
+#mysqladmin -p create EntryServer
+mysqladmin -p create Archspace
+echo "Initializing EntryServer DB....."
+mysql -p Archspace < ../src/DB/EntryServer.sql
+
+echo "Done"

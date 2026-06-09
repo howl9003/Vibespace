@@ -1,0 +1,1490 @@
+# Horde German translation.
+# Copyright (C) 2001-2003 Jan Schneider.
+# Jan Schneider <jan@horde.org>, 2001-2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Horde 2.2.1\n"
+"Report-Msgid-Bugs-To: dev@lists.horde.org\n"
+"POT-Creation-Date: 2003-08-23 01:14+0200\n"
+"PO-Revision-Date: 2003-02-03 22:24+0100\n"
+"Last-Translator: Jan Schneider <jan@horde.org>\n"
+"Language-Team: German <dev@lists.horde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: po/translation.php:65
+msgid ""
+"  -M, --message=MESSAGE  Use this commit message instead of the default ones."
+msgstr ""
+"  -M, --message=MESSAGE  Diese Nachricht anstelle der Standardnachricht\n"
+"                         verwenden."
+
+#: po/translation.php:69
+msgid ""
+"  -a, --add=FILE        Add this PO file to the compendium. Useful to\n"
+"                        include a compendium from a different branch to\n"
+"                        the generated compendium."
+msgstr ""
+"  -a, --add=FILE        Diese PO-Datei zum Kompendium hinzufügen. Nützlich,\n"
+"                        um ein Kompendium aus einem anderen Branch in das\n"
+"                        generierte Kompendium einzufügen."
+
+#: po/translation.php:125
+msgid ""
+"  -b, --base=/PATH  Full path to the (Horde) base directory that should be\n"
+"                    used."
+msgstr ""
+"  -b, --base=/PATH  Vollständiger Pfad zu dem (Horde-) Verzeichnis, das\n"
+"                    benutzt werden soll."
+
+#: po/translation.php:83
+msgid ""
+"  -c, --compendium=FILE  Merge new translations to this compendium file\n"
+"                         instead of the default one (compendium.po in the\n"
+"                         horde/po directory."
+msgstr ""
+"  -c, --compendium=FILE  Neue Übersetzungen in dieses Kompendium einfügen\n"
+"                         anstatt in das Standard-Kompendium (compendium.po\n"
+"                         im horde/po Verzeichnis."
+
+#: po/translation.php:94 po/translation.php:100
+msgid ""
+"  -c, --compendium=FILE  Use this compendium file instead of the default\n"
+"                         one (compendium.po in the horde/po directory)."
+msgstr ""
+"  -c, --compendium=FILE  Dieses an Stelle des Standard-Kompendiums\n"
+"                         (compendium.po im horde/po Verzeichnis) verwenden."
+
+#: po/translation.php:126
+msgid "  -d, --debug       Show error messages from the executed binaries."
+msgstr ""
+"  -d, --debug       Fehlermeldungen der ausgeführten Programme anzeigen."
+
+#: po/translation.php:70
+msgid "  -d, --directory=DIR   Create compendium in this directory."
+msgstr "  -d, --directory=DIR   Kompendium in diesem Verzeichnis erzeugen."
+
+#: po/translation.php:127
+msgid "  -h, --help        Show this help message."
+msgstr "  -h, --help        Diese Hilfe anzeigen."
+
+#: po/translation.php:81 po/translation.php:88
+msgid "  -l, --locale=ll_CC     Use only this locale."
+msgstr "  -l, --locale=ll_CC     Nur dieses Locale verwenden."
+
+#: po/translation.php:63 po/translation.php:92 po/translation.php:98
+msgid "  -l, --locale=ll_CC     Use this locale."
+msgstr "  -l, --locale=ll_CC     Dieses Locale verwenden."
+
+#: po/translation.php:71 po/translation.php:77
+msgid "  -l, --locale=ll_CC    Use this locale."
+msgstr "  -l, --locale=ll_CC    Dieses Locale verwenden."
+
+#: po/translation.php:82
+msgid "  -m, --module=MODULE    Build MO files only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    Nur MO-Dateien für dieses (Horde-) Modul erzeugen."
+
+#: po/translation.php:64
+msgid ""
+"  -m, --module=MODULE    Commit translations only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    Nur Übersetzungen für dieses (Horde-) Modul\n"
+"                         einchecken."
+
+#: po/translation.php:93
+msgid "  -m, --module=MODULE    Merge PO files only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    PO-Dateien nur für dieses (Horde-) Modul\n"
+"                         zusammenführen."
+
+#: po/translation.php:89
+msgid ""
+"  -m, --module=MODULE    Update help files only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE    Nur Hilfe-Dateien für dieses (Horde-) Modul "
+"aktualisieren."
+
+#: po/translation.php:99
+msgid "  -m, --module=MODULE    Update only this (Horde) module."
+msgstr "  -m, --module=MODULE    Nur dieses (Horde-) Modul aktualisieren."
+
+#: po/translation.php:78
+msgid "  -m, --module=MODULE   Create a PO file only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE   Nur PO-Dateien für dieses (Horde-) Modul erzeugen."
+
+#: po/translation.php:74
+msgid "  -m, --module=MODULE  Generate POT file only for this (Horde) module."
+msgstr ""
+"  -m, --module=MODULE  Nur eine POT-Datei für dieses (Horde-) Modul erzeugen."
+
+#: po/translation.php:66
+msgid ""
+"  -n, --new              This is a new translation, commit also CREDITS,\n"
+"                         CHANGES and lang.php.dist."
+msgstr ""
+"  -n, --new              Es handelt sich um eine neue Übersetzung, auch\n"
+"                         CREDITS, CHANGES und lang.php.dist einchecken."
+
+#: po/translation.php:84
+msgid ""
+"  -n, --no-compendium    Don't merge new translations to the compendium."
+msgstr ""
+"  -n, --no-compendium    Keine neuen Übersetzungen in das Kompendium "
+"einfügen."
+
+#: po/translation.php:95 po/translation.php:101
+msgid "  -n, --no-compendium    Don't use a compendium."
+msgstr "  -n, --no-compendium    Kein Kompendium verwenden."
+
+#: po/translation.php:128
+msgid "  -t, --test        Show the executed commands but don't run anything."
+msgstr ""
+"  -t, --test        Die auszuführenden Befehle anzeigen aber nicht ausführen."
+
+#: po/translation.php:120
+msgid "  commit      Commit translations to the CVS server."
+msgstr "  commit      Übersetzungen auf dem CVS-Server einchecken."
+
+#: po/translation.php:121
+msgid "  commit-help Commit help files to the CVS server."
+msgstr "  commit-help Hilfedateien auf dem CVS-Server einchecken."
+
+#: po/translation.php:112
+msgid ""
+"  compendium  Rebuild the compendium file. Warning: This overwrites the\n"
+"              current compendium."
+msgstr ""
+"  compendium  Kompendium neu erstellen. Warnung: Damit wird das aktuelle\n"
+"              Kompendium überschrieben."
+
+#: po/translation.php:113
+msgid "  extract     Generate PO template (.pot) files."
+msgstr "  extract     PO Vorlagen (.pot Dateien) erzeugen."
+
+#: po/translation.php:111
+msgid "  help        Show this help message."
+msgstr "  help        Diese Hilfe anzeigen."
+
+#: po/translation.php:114
+msgid ""
+"  init        Create one or more PO files for a new locale. Warning: This\n"
+"              overwrites the existing PO files of this locale."
+msgstr ""
+"  init        Ein oder mehrere PO-Dateien für ein neues Locale erzeugen.\n"
+"              Warnung: Damit werden bestehende PO-Dateien für dieses Locale\n"
+"              überschrieben."
+
+#: po/translation.php:118
+msgid "  make        Build binary MO files from the specified PO files."
+msgstr ""
+"  make        Kompilierte MO-Dateien aus den angegebenen PO-Dateien erzeugen."
+
+#: po/translation.php:119
+msgid ""
+"  make-help   Mark all entries in the XML help file being up-to-date and\n"
+"              prepare the file for the next execution of update-help. You\n"
+"              should only run make-help AFTER update-help and revising the\n"
+"              help file."
+msgstr ""
+"  make-help   Alle Einträge in der XML-Hilfedatei als aktuell markieren und\n"
+"              die Datei für die nächste Ausführung von update-help\n"
+"              vorbereiten. Sie sollten make-help nur NACH update-help und "
+"der\n"
+"              Überarbeitung der Hilfedatei ausführen."
+
+#: po/translation.php:115
+msgid ""
+"  merge       Merge the current PO file with the current PO template file."
+msgstr ""
+"  merge       Aktuelle PO-Datei mit der aktuellen PO-Vorlage zusammenführen."
+
+#: po/translation.php:116
+msgid "  update      Run extract and merge sequent."
+msgstr "  update      extract und merge nacheinander ausführen."
+
+#: po/translation.php:117
+msgid ""
+"  update-help Extract all new and changed entries from the English XML help\n"
+"              file and merge them with the existing ones."
+msgstr ""
+"  update-help Alle neuen und geänderten Einträge aus der englischen XML-\n"
+"              Hilfedatei extrahieren und mit der bestehenden Datei\n"
+"              zusammenführen."
+
+#: templates/maintenance/confirm_top.inc:14
+#, php-format
+msgid ""
+" &#151; %s is ready to perform the maintenance operations checked below."
+msgstr ""
+" &#151; %s wird die Wartungsarbeiten durchführen, die unten markiert sind."
+
+#: po/translation.php:858
+#, php-format
+msgid "%d bytes written."
+msgstr "%d Bytes geschrieben."
+
+#: po/translation.php:959
+#, php-format
+msgid "%d of %d entries marked as up-to-date"
+msgstr "%d von %d Einträgen als aktuell markiert"
+
+#: templates/maintenance/confirm_top.inc:7
+#, php-format
+msgid "%s Maintenance Operations - Confirmation"
+msgstr "%s Wartungsarbeiten - Bestätigung"
+
+#: po/translation.php:368
+#, php-format
+msgid "%s not found. Run 'translation extract' first."
+msgstr "%s nicht gefunden. Führen Sie erst 'translation extract' aus."
+
+#: po/translation.php:155
+#, php-format
+msgid ""
+"%sWarning:%s This program was only tested on gettext 0.11. There is no\n"
+"guarantee that it will work with your version of gettext."
+msgstr ""
+"%sWarnung:%s Diese Programm wurde nur mit gettext 0.11 getestet. Es gibt "
+"keine\n"
+"Garantie, dass es mit Ihrer gettext Version funktionieren wird."
+
+#: po/translation.php:140
+#, php-format
+msgid "%sfound:%s %s"
+msgstr "%sgefunden:%s %s"
+
+#: lib/Registry.php:457 lib/Registry.php:753
+#, php-format
+msgid "'%s' is not configured in the Horde Registry."
+msgstr "'%s' ist in der Horde Registry nicht konfiguriert."
+
+#: po/translation.php:167
+msgid ", trying C++ instead"
+msgstr ", versuche stattdessen C++"
+
+#: po/translation.php:1014 po/translation.php:1016
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: templates/data/datemap.inc:102
+msgid "24 hours"
+msgstr "24 Stunden"
+
+#: lib/Horde.php:235
+msgid "<b>A fatal error has occurred:</b>"
+msgstr "<b>Ein schwerer Fehler ist aufgetreten:</b>"
+
+#: templates/data/datemap.inc:103
+msgid "AM/PM"
+msgstr "AM/PM"
+
+#: templates/data/csvmap.inc:94
+msgid "Add pair"
+msgstr "Paar hinzufügen"
+
+#: po/translation.php:647
+msgid "Adding new files to repository:"
+msgstr "Neue Dateien werden zum Repository hinzugefügt:"
+
+#: lib/MIME/Viewer/vcard.php:86
+msgid "Address"
+msgstr "Adresse"
+
+#: config/registry.php.dist:136
+msgid "Address Book"
+msgstr "Adressbuch"
+
+#: lib/MIME/Viewer/vcard.php:64
+msgid "Alias"
+msgstr "Spitzname"
+
+#: lib/PrefsUI.php:100
+msgid "An illegal value was specified."
+msgstr "Es wurde ein ungültiger Wert angegeben."
+
+#: config/prefs.php.dist:70
+msgid "Ask for confirmation before doing maintenance operations?"
+msgstr "Anstehende Wartungsarbeiten bestätigen lassen?"
+
+#: lib/Auth/radius.php:206
+msgid "Authentication rejected by RADIUS server."
+msgstr "Die Authentifizierung wurde vom RADIUS-Server zurückgewiesen."
+
+#: templates/data/csvmap.inc:84
+msgid "Available fields:"
+msgstr "Verfügbare Felder:"
+
+#: lib/Auth/krb5.php:81
+msgid "Bad kerberos password."
+msgstr "Falsches Kerberos-Kennwort."
+
+#: lib/Auth/krb5.php:83
+msgid "Bad kerberos username."
+msgstr "Falscher Kerberos-Benutzername."
+
+#: lib/MIME/Viewer/vcard.php:71
+msgid "Birthday"
+msgstr "Geburtstag"
+
+#: po/translation.php:441
+#, php-format
+msgid "Building MO files for module %s%s%s..."
+msgstr "MO-Dateien für das %s%s%s Modul werden erstellt..."
+
+#: po/translation.php:458
+#, php-format
+msgid "Building locale %s%s%s... "
+msgstr "Locale %s%s%s wird erstellt... "
+
+#: config/registry.php.dist:172
+msgid "CVS"
+msgstr "CVS"
+
+#: config/registry.php.dist:145
+msgid "Calendar"
+msgstr "Kalender"
+
+#: templates/problem/problem.inc:35
+msgid "Cancel Problem Report"
+msgstr "Problembericht Abbrechen"
+
+#: lib/MIME/Viewer/vcard.php:103
+msgid "Cell Phone"
+msgstr "Mobiltelefon"
+
+#: templates/maintenance/confirm_top.inc:16
+msgid "Check the box for any operation(s) you want to perform at this time."
+msgstr "Markieren Sie alle Aufgaben, die jetzt durchgeführt werden sollen."
+
+#: templates/help/menu.inc:12
+msgid "Close Help"
+msgstr "Hilfe schließen"
+
+#: templates/help/menu.inc:12
+msgid "Close Help Window"
+msgstr "Hilfefenster schließen"
+
+#: util/special_characters.php:147
+msgid "Close Window"
+msgstr "Fenster schließen"
+
+#: config/registry.php.dist:181
+msgid "Comics"
+msgstr "Comics"
+
+#: po/translation.php:58
+msgid "Command options:"
+msgstr "Befehlsoptionen"
+
+#: po/translation.php:110
+msgid "Commands:"
+msgstr "Befehle:"
+
+#: po/translation.php:685
+msgid "Committing:"
+msgstr "Checke ein:"
+
+#: lib/MIME/Viewer/vcard.php:152
+msgid "Company"
+msgstr "Firma"
+
+#: lib/VFS/ftp.php:422
+msgid "Connection to ftp server failed."
+msgstr "Verbindung zum FTP-Server fehlgeschlagen."
+
+#: po/translation.php:1032
+msgid "Console_Getopt not found."
+msgstr "Console_Getopt nicht gefunden."
+
+#: lib/MIME/Viewer/zip.php:45 lib/MIME/Viewer/tgz.php:50
+#, php-format
+msgid "Contents of '%s'"
+msgstr "Inhalt von '%s'"
+
+#: lib/MIME/Viewer/rar.php:46
+msgid "Contents of the RAR archive"
+msgstr "Inhalt des RAR-Archivs"
+
+#: po/translation.php:766
+#, php-format
+msgid "Copying %s to %s"
+msgstr "Kopiere %s nach %s"
+
+#: lib/SessionHandler/mysql.php:270
+msgid "Could not connect to database for SQL SessionHandler."
+msgstr "Verbindung zur Datenbank für den SQL-Session-Handler fehlgeschlagen."
+
+#: lib/SessionHandler/mysql.php:274
+#, php-format
+msgid "Could not connect to table '%s' for SQL SessionHandler."
+msgstr ""
+"Verbindung zur Tabelle '%s' für den SQL-Session-Handler fehlgeschlagen."
+
+#: po/translation.php:769
+#, php-format
+msgid "Could not copy %s to %s"
+msgstr "Konnte %s nicht nach %s kopieren"
+
+#: po/translation.php:467 po/translation.php:759
+#, php-format
+msgid "Could not create locale directory for locale %s:"
+msgstr "Das locale Verzeichnis für das Locale %s konnte nicht erstellt werden:"
+
+#: lib/Maintenance.php:397
+#, php-format
+msgid "Could not open Maintenance_Task module %s"
+msgstr "Das Maintenance_Task Modul %s konnte nicht geöffnet werden"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "DD"
+msgstr "TT"
+
+#: lib/Maintenance.php:30
+msgid "Daily"
+msgstr "Täglich"
+
+#: lib/Auth/sql.php:207 lib/Auth/sql.php:235 lib/Auth/sql.php:260
+msgid "Database query failed."
+msgstr "Datenbankabfrage gescheitert."
+
+#: lib/Identity.php:73
+msgid "Default Identity"
+msgstr "Standardidentität"
+
+#: problem.php:92 problem.php:96 problem.php:107
+msgid "Describe the Problem"
+msgstr "Beschreiben Sie das Problem"
+
+#: lib/Horde.php:243
+msgid "Details have been logged for the administrator."
+msgstr "Details wurden für den Administrator mitgeloggt."
+
+#: config/prefs.php.dist:12
+msgid "Display Options"
+msgstr "Anzeige-Einstellungen"
+
+#: maintenance.php:26
+msgid "Do not directly access maintenance.php"
+msgstr "Greifen Sie nicht direkt auf maintenance.php zu"
+
+#: lib/MIME/Viewer/vcard.php:137
+msgid "Email"
+msgstr "Email"
+
+#: lib/Auth/ldap.php:113
+msgid "Empty result."
+msgstr "Leeres Ergebnis."
+
+#: po/translation.php:845
+#, php-format
+msgid "Entries: %d total, %d up-to-date, %d new, %d changed, %d unknown"
+msgstr ""
+"Einträge: %d insgesamt, %d aktuelle, %d neue, %d geänderte, %d unbekannte"
+
+#: status.php:16 lib/Notification/status.php:41
+msgid "Error"
+msgstr "Fehler"
+
+#: po/translation.php:260 po/translation.php:305 po/translation.php:1054
+#: po/translation.php:1111 po/translation.php:1176
+msgid "Error: "
+msgstr "Fehler: "
+
+#: config/prefs.php.dist:41
+msgid "Every 15 minutes"
+msgstr "Alle 15 Minuten"
+
+#: config/prefs.php.dist:38
+msgid "Every 30 seconds"
+msgstr "Alle 30 Sekunden"
+
+#: config/prefs.php.dist:40
+msgid "Every 5 minutes"
+msgstr "Alle 5 Minuten"
+
+#: lib/Maintenance.php:31
+msgid "Every Login"
+msgstr "Bei jeder Anmeldung"
+
+#: config/prefs.php.dist:42
+msgid "Every half hour"
+msgstr "Alle halbe Stunde"
+
+#: config/prefs.php.dist:39
+msgid "Every minute"
+msgstr "Alle 60 Sekunden"
+
+#: templates/data/datemap.inc:28
+msgid "Example values:"
+msgstr "Beispielwerte:"
+
+#: po/translation.php:210 po/translation.php:221 po/translation.php:271
+#: po/translation.php:324 po/translation.php:383 po/translation.php:394
+#: po/translation.php:445 po/translation.php:478 po/translation.php:487
+#: po/translation.php:495 po/translation.php:524 po/translation.php:553
+#: po/translation.php:565 po/translation.php:622 po/translation.php:679
+#: po/translation.php:701 po/translation.php:734 po/translation.php:890
+#: po/translation.php:1124
+msgid "Executing:"
+msgstr "Führe aus:"
+
+#: lib/Data.php:264
+#, php-format
+msgid "Expected \"BEGIN\" in the line %d."
+msgstr "\"BEGIN\" in Zeile %d erwartet."
+
+#: lib/Data.php:285
+#, php-format
+msgid "Expected \"END:%s\" in line %d."
+msgstr "\"END:%s\" in Zeile %d erwartet."
+
+#: po/translation.php:196
+#, php-format
+msgid "Extracting from %s... "
+msgstr "Aus %s extrahieren... "
+
+#: lib/Prefs/sql.php:316
+msgid "Failed retrieving preferences."
+msgstr "Benutzereinstellungen konnten nicht geladen werden."
+
+#: lib/Auth/ldap.php:103
+msgid "Failed to connect to LDAP server."
+msgstr "Verbindung zum LDAP Server gescheitert."
+
+#: lib/Auth/smb.php:108
+msgid "Failed to connect to SMB server."
+msgstr "Verbindung zum SMB-Server gescheitert."
+
+#: lib/MIME/Viewer/vcard.php:108
+msgid "Fax"
+msgstr "Fax"
+
+#: config/registry.php.dist:127
+msgid "Filters"
+msgstr "Filter"
+
+#: po/translation.php:1139
+#, php-format
+msgid "Found applications: %s"
+msgstr "Anwendungen gefunden: %s"
+
+#: po/translation.php:1131
+msgid "Found directories:"
+msgstr "Gefundene Verzeichnisse: "
+
+#: templates/problem/problem.inc:26
+msgid "Full Description:"
+msgstr "Beschreibung:"
+
+#: po/translation.php:1048
+msgid "Getopt Error: "
+msgstr "Getopt Fehler: "
+
+#: help.php:15 lib/Help.php:426 lib/Help.php:427 templates/navbar/menu.inc:19
+#: templates/help/index.inc:13
+msgid "Help"
+msgstr "Hilfe"
+
+#: po/translation.php:108
+msgid ""
+"Helper application to create and maintain translations for the Horde\n"
+"framework and its applications.\n"
+"For an introduction read the file README in this directory."
+msgstr ""
+"Hilfsprogramm für die Erstellung und Wartung von Übersetzungen für das\n"
+"Horde Framework und seine Anwendungen.\n"
+"Für eine Einführung lesen Sie bitte die README-Datei in diesem Verzeichnis."
+
+#: templates/navbar/menu.inc:8
+msgid "Home"
+msgstr "Startseite"
+
+#: lib/MIME/Viewer/vcard.php:82
+msgid "Home Address"
+msgstr "Adresse privat"
+
+#: lib/MIME/Viewer/vcard.php:99
+msgid "Home Phone"
+msgstr "Telefon privat"
+
+#: templates/index/wap.inc:7 config/registry.php.dist:90
+msgid "Horde"
+msgstr "Horde"
+
+#: login.php:101
+msgid "Horde Login"
+msgstr "Horde Anmeldung"
+
+#: menu.php:20
+msgid "Horde System"
+msgstr "Horde System"
+
+#: templates/index/wap.inc:13
+msgid "Horde Wireless"
+msgstr "Horde Mobil"
+
+#: templates/index/notconfigured.inc:4
+msgid "Horde is not properly configured"
+msgstr "Horde ist nicht vollständig konfiguriert"
+
+#: po/translation.php:1015
+msgid "Horde translation generator"
+msgstr "Horde Übersetzungsgenerator"
+
+#: config/prefs.php.dist:51
+msgid "Icons Only"
+msgstr "Nur Bilder"
+
+#: config/prefs.php.dist:52
+msgid "Icons with text"
+msgstr "Bilder und Text"
+
+#: templates/data/datemap.inc:117 templates/data/csvmap.inc:128
+msgid "Import"
+msgstr "Importieren"
+
+#: lib/Data.php:264 lib/Data.php:281 lib/Data.php:285
+msgid "Import Error: "
+msgstr "Import Fehler: "
+
+#: templates/data/datemap.inc:20
+#, php-format
+msgid "Imported field: %s"
+msgstr "Importiertes Feld: %s"
+
+#: templates/data/csvmap.inc:74
+msgid "Imported fields:"
+msgstr "Importierte Felder:"
+
+#: po/translation.php:365
+#, php-format
+msgid "Initializing module %s... "
+msgstr "Initialisiere Modul %s... "
+
+#: lib/Auth/krb5.php:85
+msgid "Kerberos server rejected authentication."
+msgstr "Kerberos-Server hat Authentifizierung zurückgewiesen."
+
+#: config/prefs.php.dist:6
+msgid "Language"
+msgstr "Sprache"
+
+#: templates/help/menu.inc:9
+msgid "List Help Topics"
+msgstr "Hilfeeinträge anzeigen"
+
+#: po/translation.php:1026
+msgid "Loading libraries..."
+msgstr "Lade Bibliotheken..."
+
+#: templates/navbar/menu.inc:14 templates/login/login.inc:76
+msgid "Log in"
+msgstr "Anmelden"
+
+#: menu.php:47 templates/login/user.inc:9
+msgid "Log out"
+msgstr "Abmelden"
+
+#: login.php:66
+msgid ""
+"Login failed for some reason. Most likely your username or password was "
+"entered incorrectly."
+msgstr ""
+"Die Anmeldung ist fehlgeschlagen. Wahrscheinlich haben Sie Ihren "
+"Benutzernamen oder Ihr Passwort falsch eingegeben."
+
+#: config/registry.php.dist:109
+msgid "Logout"
+msgstr "Abmelden"
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "MM"
+msgstr "MM"
+
+#: config/registry.php.dist:118
+msgid "Mail"
+msgstr "Webmail"
+
+#: po/translation.php:1034
+msgid "Make sure that you have PEAR installed and in your include path."
+msgstr ""
+"Stellen Sie sicher, dass PEAR installiert ist und sich im Pfad befindet."
+
+#: po/translation.php:464 po/translation.php:756
+#, php-format
+msgid "Making directory %s"
+msgstr "Erstelle Verzeichnis %s"
+
+#: templates/data/datemap.inc:10
+msgid "Map Date and Time Fields"
+msgstr "Datums- und Zeitfelder zuordnen"
+
+#: templates/data/csvmap.inc:57
+msgid "Map Import Fields"
+msgstr "Importfelder zuordnen"
+
+#: templates/data/csvmap.inc:102
+msgid "Matching fields"
+msgstr "Zugeordnete Felder"
+
+#: config/registry.php.dist:154
+msgid "Memos"
+msgstr "Notizen"
+
+#: config/prefs.php.dist:53
+msgid "Menu mode:"
+msgstr "Menümodus:"
+
+#: po/translation.php:310
+#, php-format
+msgid "Merging all %s.po files to the compendium... "
+msgstr "Füge alle %s.po Dateien zum Kompendium hinzu..."
+
+#: po/translation.php:543
+#, php-format
+msgid "Merging the PO file for %s%s%s to the compendium... "
+msgstr "Füge die PO-Datei für %s%s%s zu dem Kompendium hinzu..."
+
+#: po/translation.php:267
+#, php-format
+msgid "Merging translation for module %s..."
+msgstr "Führe Übersetzungen für das %s-Modul zusammen..."
+
+#: status.php:29 lib/Notification/status.php:54
+msgid "Message"
+msgstr "Nachricht"
+
+#: lib/Maintenance.php:28
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: login.php:69
+msgid "My Summary"
+msgstr "Mein Portal"
+
+#: lib/MIME/Viewer/vcard.php:56
+msgid "Name"
+msgstr "Name"
+
+#: config/prefs.php.dist:37
+msgid "Never"
+msgstr "Nie"
+
+#: po/translation.php:167
+msgid "No"
+msgstr "Nein"
+
+#: lib/VFS/ftp.php:402
+msgid "No configuration information specified for FTP VFS."
+msgstr ""
+"Für den FTP-VFS-Treiber wurden keine Konfigurationsinformationen angegeben."
+
+#: lib/Prefs/ldap.php:100
+msgid "No configuration information specified for LDAP Preferences."
+msgstr ""
+"Für die LDAP Benutzereinstellungen wurden keine Konfigurationsinformationen "
+"angegeben."
+
+#: lib/Category/sql.php:73
+msgid "No configuration information specified for SQL Categories."
+msgstr ""
+"Für die SQL Kategorien wurden keine Konfigurationsinformationen angegeben."
+
+#: lib/Prefs/sql.php:83
+msgid "No configuration information specified for SQL Preferences."
+msgstr ""
+"Für die SQL Benutzereinstellungen wurden keine Konfigurationsinformationen "
+"angegeben."
+
+#: lib/SessionHandler/sql.php:186 lib/SessionHandler/pgsql.php:216
+#: lib/SessionHandler/mysql.php:247
+msgid "No configuration information specified for SQL SessionHandler."
+msgstr ""
+"Keine Konfigurations-Informationen für den SQL-Session-Handler angegeben."
+
+#: lib/VFS/sql.php:450
+msgid "No configuration information specified for SQL VFS."
+msgstr ""
+"Für den SQL-VFS-Treiber wurden keine Konfigurationsinformationen angegeben."
+
+#: lib/Auth/sql.php:94
+msgid "No configuration information specified for SQL authentication."
+msgstr ""
+"Für die SQL-Authentifikation wurden keine Konfigurationsinformationen "
+"angegeben."
+
+#: lib/VFS/sql_file.php:471
+msgid "No configuration information specified for SQL-File VFS."
+msgstr ""
+"Für den SQL-Datei-VFS-Treiber wurden keine Konfigurationsinformationen "
+"angegeben."
+
+#: po/translation.php:946
+#, php-format
+msgid "No entry with the id '%s' exists in the original help file."
+msgstr ""
+"Es existiert kein Eintrag mit der id '%s' in der ursprünglichen Hilfedatei."
+
+#: po/translation.php:260 po/translation.php:305
+msgid "No locale specified."
+msgstr "Kein locale angegeben."
+
+#: lib/Prefs/ldap.php:322 lib/Prefs/ldap.php:430 lib/Prefs/sql.php:197
+#: lib/Prefs/sql.php:273 lib/Prefs/session.php:53
+msgid "No preferences are available."
+msgstr "Es sind keine Benutzereinstellungen verfügbar."
+
+#: lib/MIME/Viewer/vcard.php:157
+msgid "Notes"
+msgstr "Bemerkungen"
+
+#: templates/maintenance/confirm_top.inc:13
+msgid "Notice"
+msgstr "Hinweis"
+
+#: lib/Notification.php:105
+#, php-format
+msgid "Notification listener %s not found."
+msgstr "Listener %s für das Notification-System konnte nicht gefunden werden."
+
+#: config/prefs.php.dist:30
+msgid "Number of columns in the summary view:"
+msgstr "Anzahl der Spalten auf der Portalseite:"
+
+#: po/translation.php:157 po/translation.php:1030
+msgid "OK"
+msgstr "OK"
+
+#: templates/navbar/menu.inc:11 templates/login/user.inc:7
+msgid "Options"
+msgstr "Einstellungen"
+
+#: po/translation.php:124
+msgid "Options:"
+msgstr "Optionen:"
+
+#: config/prefs.php.dist:11
+msgid "Other Information"
+msgstr "Andere Informationen"
+
+#: po/translation.php:160
+msgid "PHP support in xgettext: "
+msgstr "PHP-Unterstützung in xgettext: "
+
+#: templates/login/login.inc:71
+msgid "Password"
+msgstr "Passwort"
+
+#: templates/maintenance/confirm_bottom.inc:6
+msgid "Perform Maintenance Operations"
+msgstr "Wartungsarbeiten durchführen"
+
+#: lib/MIME/Viewer/vcard.php:105
+msgid "Phone"
+msgstr "Telefon"
+
+#: templates/problem/javascript.inc:7
+msgid "Please provide a summary of the problem."
+msgstr "Bitte geben Sie eine Zusammenfassung Ihres Problems an."
+
+#: templates/login/login.inc:14 templates/login/login.inc:18
+msgid "Please provide your username and password"
+msgstr "Bitte geben Sie Ihren Benutzernamen und Ihr Passwort an"
+
+#: po/translation.php:39
+msgid "Please report any bugs to i18n@lists.horde.org."
+msgstr "Bitte alle Fehler an i18n@lists.horde.org melden."
+
+#: problem.php:110
+msgid "Problem Description"
+msgstr "Problembeschreibung"
+
+#: config/prefs.php.dist:43
+msgid "Refresh Summary View:"
+msgstr "Portalseite aktualisieren:"
+
+#: templates/data/csvmap.inc:127
+msgid "Remove pair"
+msgstr "Paar löschen"
+
+#: lib/SessionHandler/mysql.php:253
+#, php-format
+msgid "Required '%s' not specified in SessionHandler configuration."
+msgstr "'%s' in der Konfiguration für den SQL-Session-Handler nicht angegeben."
+
+#: lib/Auth/ldap.php:91
+msgid "Required 'basedn' not specified in authentication configuration."
+msgstr "'basedn' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Prefs/ldap.php:106
+msgid "Required 'basedn' not specified in preferences configuration."
+msgstr ""
+"'basedn' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/Auth/smb.php:92
+msgid "Required 'bdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"'bdc_hostspec' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/SessionHandler/sql.php:201 lib/SessionHandler/pgsql.php:228
+msgid "Required 'database' not specified in SessionHandler configuration."
+msgstr ""
+"'database' in der Konfiguration für den SQL-Session-Handler nicht angegeben."
+
+#: lib/VFS/sql.php:465 lib/VFS/sql_file.php:486
+msgid "Required 'database' not specified in VFS configuration."
+msgstr "'database' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: lib/Auth/sql.php:109
+msgid "Required 'database' not specified in authentication configuration."
+msgstr ""
+"'database' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Category/sql.php:88
+msgid "Required 'database' not specified in categories configuration."
+msgstr ""
+"'database' wurde in der Konfiguration für die Kategorien nicht angegeben."
+
+#: lib/Prefs/sql.php:98
+msgid "Required 'database' not specified in preferences configuration."
+msgstr ""
+"'database' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/Auth/smb.php:95
+msgid "Required 'domain' not specified in authentication configuration."
+msgstr "'domain' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/SessionHandler/sql.php:192 lib/SessionHandler/pgsql.php:219
+msgid "Required 'hostspec' not specified in SessionHandler configuration."
+msgstr ""
+"'hostspec' wurde in der Konfiguration für den SQL-Session-Handler nicht "
+"angegeben."
+
+#: lib/VFS/sql.php:456 lib/VFS/ftp.php:411 lib/VFS/sql_file.php:477
+msgid "Required 'hostspec' not specified in VFS configuration."
+msgstr "'hostspec' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: lib/Auth/ldap.php:88 lib/Auth/sql.php:100
+msgid "Required 'hostspec' not specified in authentication configuration."
+msgstr ""
+"'hostspec' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Category/sql.php:79
+msgid "Required 'hostspec' not specified in categories configuration."
+msgstr ""
+"'hostspec' wurde in der Konfiguration für die Kategorien nicht angegeben."
+
+#: lib/Prefs/ldap.php:103 lib/Prefs/sql.php:89
+msgid "Required 'hostspec' not specified in preferences configuration."
+msgstr ""
+"'hostspec' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/SessionHandler/sql.php:198 lib/SessionHandler/pgsql.php:225
+msgid "Required 'password' not specified in SessionHandler configuration."
+msgstr ""
+"'password' wurde in der Konfiguration für den SQL-Session-Handler nicht "
+"angegeben."
+
+#: lib/VFS/sql.php:462 lib/VFS/ftp.php:408 lib/VFS/sql_file.php:483
+msgid "Required 'password' not specified in VFS configuration."
+msgstr "'password' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: lib/Auth/ldap.php:97 lib/Auth/sql.php:106
+msgid "Required 'password' not specified in authentication configuration."
+msgstr ""
+"'password' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Category/sql.php:85
+msgid "Required 'password' not specified in categories configuration."
+msgstr ""
+"'password' wurde in der Konfiguration für die Kategorien nicht angegeben."
+
+#: lib/Prefs/ldap.php:115 lib/Prefs/sql.php:95
+msgid "Required 'password' not specified in preferences configuration."
+msgstr ""
+"'password' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/Auth/smb.php:89
+msgid "Required 'pdc_hostspec' not specified in authentication configuration."
+msgstr ""
+"'pdc_hostspec' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/SessionHandler/sql.php:189
+msgid "Required 'phptype' not specified in SessionHandler configuration."
+msgstr ""
+"'phptype' wurde in der Konfiguration für den SQL-Session-Handler nicht "
+"angegeben."
+
+#: lib/VFS/sql.php:453 lib/VFS/sql_file.php:474
+msgid "Required 'phptype' not specified in VFS configuration."
+msgstr "'phptype' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: lib/Auth/sql.php:97
+msgid "Required 'phptype' not specified in authentication configuration."
+msgstr ""
+"'phptype' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Category/sql.php:76
+msgid "Required 'phptype' not specified in categories configuration."
+msgstr ""
+"'phptype' wurde in der Konfiguration für die Kategorien nicht angegeben."
+
+#: lib/Prefs/sql.php:86
+msgid "Required 'phptype' not specified in preferences configuration."
+msgstr ""
+"'phptype' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/VFS/ftp.php:414
+msgid "Required 'port' not specified in VFS configuration."
+msgstr "'port' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: lib/Category/sql.php:91
+msgid "Required 'table' not specified in categories configuration."
+msgstr "'table' wurde in der Konfiguration für die Kategorien nicht angegeben."
+
+#: lib/Prefs/sql.php:101
+msgid "Required 'table' not specified in preferences configuration."
+msgstr ""
+"'table' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/Auth/ldap.php:94
+msgid "Required 'uid' not specified in authentication configuration."
+msgstr "'uid' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Prefs/ldap.php:109
+msgid "Required 'uid' not specified in preferences configuration."
+msgstr ""
+"'uid' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/SessionHandler/sql.php:195 lib/SessionHandler/pgsql.php:222
+msgid "Required 'username' not specified in SessionHandler configuration."
+msgstr ""
+"'username' wurde in der Konfiguration für den SQL-Session-Handler nicht "
+"angegeben."
+
+#: lib/VFS/sql.php:459 lib/VFS/ftp.php:405 lib/VFS/sql_file.php:480
+msgid "Required 'username' not specified in VFS configuration."
+msgstr "'username' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: lib/Auth/sql.php:103
+msgid "Required 'username' not specified in authentication configuration."
+msgstr ""
+"'username' wurde in der Authentifikations-Konfiguration nicht angegeben."
+
+#: lib/Category/sql.php:82
+msgid "Required 'username' not specified in categories configuration."
+msgstr ""
+"'username' wurde in der Konfiguration für die Kategorien nicht angegeben."
+
+#: lib/Prefs/ldap.php:112 lib/Prefs/sql.php:92
+msgid "Required 'username' not specified in preferences configuration."
+msgstr ""
+"'username' wurde in der Konfiguration für die Benutzereinstellungen nicht "
+"angegeben."
+
+#: lib/VFS/sql_file.php:489
+msgid "Required 'vfsroot' not specified in VFS configuration."
+msgstr "'vfsroot' wurde in der VFS-Konfiguration nicht angegeben."
+
+#: templates/prefs/end.inc:7
+msgid "Return to Options"
+msgstr "Zurück zu Einstellungen"
+
+#: lib/MIME/Viewer/vcard.php:147
+msgid "Role"
+msgstr "Rolle"
+
+#: templates/prefs/end.inc:5
+msgid "Save Options"
+msgstr "Einstellungen speichern"
+
+#: po/translation.php:1121
+msgid "Searching Horde applications..."
+msgstr "Suche Horde-Anwendungen..."
+
+#: po/translation.php:135
+msgid "Searching gettext binaries..."
+msgstr "Suche gettext Programme..."
+
+#: util/special_characters.php:38
+msgid ""
+"Select the characters you need from the boxes below. You can then copy and "
+"paste them from the textarea."
+msgstr ""
+"Wählen Sie die benötigten Zeichen aus den jeweiligen Feldern aus. Dann "
+"können Sie diese aus dem Textfeld kopieren und in Ihre Nachricht einfügen."
+
+#: templates/data/datemap.inc:54
+msgid "Select the date delimiter:"
+msgstr "Wählen Sie das Datumstrennzeichen:"
+
+#: templates/data/datemap.inc:64
+msgid "Select the date format:"
+msgstr "Wählen Sie das Datumsformat:"
+
+#: templates/data/datemap.inc:90
+msgid "Select the time delimiter:"
+msgstr "Wählen Sie das Zeittrennzeichen:"
+
+#: templates/data/datemap.inc:99
+msgid "Select the time format:"
+msgstr "Wählen Sie das Zeitformat:"
+
+#: templates/data/csvmap.inc:65
+msgid "Select two matching fields."
+msgstr "Wählen Sie zwei zugehörige Felder aus."
+
+#: config/prefs.php.dist:23
+msgid "Select your preferred language:"
+msgstr "Wählen Sie Ihre bevorzugte Sprache:"
+
+#: templates/problem/problem.inc:34
+msgid "Send Problem Report"
+msgstr "Problembericht abschicken"
+
+#: config/prefs.php.dist:13
+msgid "Set your page refreshing, and other display options."
+msgstr ""
+"Legen Sie die Seitenaktualisierung und andere Anzeige-Einstellungen fest."
+
+#: config/prefs.php.dist:7
+msgid "Set your preferred display language."
+msgstr "Wählen Sie Ihre bevorzugte Sprache."
+
+#: templates/problem/problem.inc:21
+msgid "Short Summary:"
+msgstr "Kurze Zusammenfassung:"
+
+#: templates/maintenance/confirm_bottom.inc:9
+msgid "Skip Maintenance"
+msgstr "Wartungsarbeiten überspringen"
+
+#: po/translation.php:451
+msgid "Skipped..."
+msgstr "Übersprungen..."
+
+#: templates/index/notconfigured.inc:9
+msgid "Some of Horde's configuration files are missing:"
+msgstr "Einige Konfigurationsdateien fehlen:"
+
+#: util/special_characters.php:14
+msgid "Special Character Input"
+msgstr "Sonderzeichen-Eingabe"
+
+#: status.php:20 lib/Notification/status.php:45
+msgid "Success"
+msgstr "Erfolg"
+
+#: config/registry.php.dist:163
+msgid "Tasks"
+msgstr "Aufgaben"
+
+#: config/prefs.php.dist:50
+msgid "Text Only"
+msgstr "Nur Text"
+
+#: po/translation.php:752
+#, php-format
+msgid "The %s help file for %s doesn't yet exist. Creating a new one."
+msgstr "Die %s Hilfedatei für %s existiert noch nicht. Erstelle eine neue."
+
+#: po/translation.php:779 po/translation.php:910
+#, php-format
+msgid "The help file %s didn't start with <?xml"
+msgstr "Die Hilfedatei %s beginnt nicht mit <?xml"
+
+#: lib/MIME/Viewer/deb.php:33 lib/MIME/Viewer/rar.php:35
+#: lib/MIME/Viewer/enscript.php:34 lib/MIME/Viewer/mspowerpoint.php:34
+#: lib/MIME/Viewer/msword.php:35 lib/MIME/Viewer/rpm.php:33
+#: lib/MIME/Viewer/zip.php:35 lib/MIME/Viewer/tgz.php:35
+#: lib/MIME/Viewer/msexcel.php:34
+#, php-format
+msgid ""
+"The program used to view this message type (%s) was not found on the system."
+msgstr ""
+"Das Programm, das benötigt wird, um diesen Nachrichtentyp (%s) anzuzeigen, "
+"wurde nicht gefunden."
+
+#: templates/index/notconfigured.inc:42
+msgid ""
+"The registry is how Horde applications find out how to talk to each other. "
+"You should list any installed Horde applications that you have here."
+msgstr ""
+"In der Registry wird festgelegt, wie die Horde-Anwendungen miteinander "
+"kommunizieren. Sie sollte eine Liste aller installierten Horde-Anwendungen "
+"enthalten."
+
+#: po/translation.php:743
+#, php-format
+msgid "There doesn't yet exist a help file for %s."
+msgstr "Es existiert noch keine Hilfedatei für %s."
+
+#: po/translation.php:789 po/translation.php:795 po/translation.php:920
+#: po/translation.php:926
+#, php-format
+msgid ""
+"There was an error opening the file %s. Try running translation.php with the "
+"flag -d to see any error messages from the xml parser."
+msgstr ""
+"Beim Öffnen der Datei %s ist ein Fehler aufgetreten. Versuchen Sie, "
+"translation.php mit dem -d Schalter auszuführen und achten Sie auf "
+"Fehlermeldungen des XML-Parsers."
+
+#: templates/index/notconfigured.inc:28
+msgid ""
+"This file controls the global set of MIME drivers for the Horde framework, "
+"allowing applications to make use of programs such as enscript or mswordview "
+"to render content into HTML for viewing in a browser."
+msgstr ""
+"In dieser Datei werden die globalen MIME-Treiber für das Horde Framework "
+"festgelegt. Damit erhalten die Anwendungen die Möglichkeit, Programme wie "
+"enscript oder mswordview zu nutzen, um entsprechende Inhalte als HTML im "
+"Browser anzuzeigen."
+
+#: templates/index/notconfigured.inc:21
+msgid ""
+"This file controls the stylesheet that is used to set colors and fonts for "
+"the Horde framework and all applications that do not provide their own "
+"settings."
+msgstr ""
+"In dieser Datei werden die Stylesheets für Farben und Schriftarten des Horde-"
+"Systems und aller Anwendungen festgelegt, die keine eigenen Einstellungen "
+"vorweisen."
+
+#: templates/index/notconfigured.inc:35
+msgid ""
+"This file maps file extensions to logical MIME types, enabling Horde "
+"applications to figure out how to handle some content such as email "
+"attachments or CVS checkouts."
+msgstr ""
+"In dieser Datei werden Dateiendungen Mimetypen zugeordnet, so dass die Horde-"
+"Anwendungen Inhalte wie Emailanhänge oder CVS Dateien richtig darstellen "
+"können."
+
+#: templates/index/notconfigured.inc:14
+msgid ""
+"This is the main Horde configuration file. It contains paths and basic items "
+"that apply to the core framework and all Horde applications."
+msgstr ""
+"In dieser Datei werden die Pfade und andere grundlegenden Angaben für das "
+"Horde-System und die Horde-Anwendungen festgelegt."
+
+#: lib/PrefsUI.php:109
+msgid "This number must be at least one."
+msgstr "Diese Zahl muss 1 oder größer sein."
+
+#: lib/PrefsUI.php:107
+msgid "This value must be a number."
+msgstr "Dieser Wert muss eine Zahl sein."
+
+#: lib/MIME/Viewer/vcard.php:142
+msgid "Title"
+msgstr "Titel"
+
+#: lib/Data.php:285
+msgid "Type mismatch."
+msgstr "Falscher Typ."
+
+#: lib/MIME/Viewer/vcard.php:162
+msgid "URL"
+msgstr "Homepage"
+
+#: lib/VFS/file.php:208 lib/VFS/musql.php:430 lib/VFS/ftp.php:254
+#, php-format
+msgid "Unable to change permission for VFS file %s/%s."
+msgstr ""
+"Die Zugriffsrechte für die VFS-Datei %s/%s konnten nicht geändert werden."
+
+#: lib/Auth/sql.php:119
+msgid "Unable to connect to SQL server."
+msgstr "Verbindung zum SQL Server kann nicht hergestellt werden."
+
+#: lib/VFS/file.php:452
+msgid "Unable to read the vfsroot directory."
+msgstr "Das vfsroot-Verzeichnis konnte nicht gelesen werden."
+
+#: lib/Prefs/session.php:92
+msgid "Unable to register preferences in session."
+msgstr "Benutzereinstellungen können nicht in der Session gespeichert werden."
+
+#: lib/VFS/file.php:379 lib/VFS/musql.php:215 lib/VFS/ftp.php:210
+#, php-format
+msgid "Unable to rename VFS file %s/%s."
+msgstr "Die VFS-Datei %s/%s konnte nicht umbenannt werden."
+
+#: lib/MIME/Viewer/msword.php:57
+msgid "Unable to translate this Word document"
+msgstr "Dieses Word-Dokument lässt sich nicht anzeigen"
+
+#: templates/prefs/end.inc:6
+msgid "Undo Changes"
+msgstr "Änderungen rückgängig machen"
+
+#: lib/Data.php:281
+msgid "Unexpected end of file."
+msgstr "Unerwartetes Dateiende."
+
+#: po/translation.php:1176
+#, php-format
+msgid "Unknown command: %s"
+msgstr "Unbekannter Befehl: %s"
+
+#: po/translation.php:774 po/translation.php:905
+#, php-format
+msgid "Updating %s help file for %s."
+msgstr "Aktualisiere %s Hilfedatei für %s."
+
+#: po/translation.php:55 po/translation.php:105 po/translation.php:106
+msgid "Usage:"
+msgstr "Aufruf:"
+
+#: templates/prefs/select.inc:3
+msgid "Use Default Value"
+msgstr "Standardwert verwenden"
+
+#: prefs.php:61
+msgid "User Options"
+msgstr "Benutzereinstellungen"
+
+#: templates/login/login.inc:67
+msgid "Username"
+msgstr "Benutzername"
+
+#: status.php:24 lib/Notification/status.php:49
+msgid "Warning"
+msgstr "Warnung"
+
+#: po/translation.php:467 po/translation.php:504 po/translation.php:513
+#: po/translation.php:743 po/translation.php:752 po/translation.php:759
+#: po/translation.php:769 po/translation.php:779 po/translation.php:789
+#: po/translation.php:795 po/translation.php:910 po/translation.php:920
+#: po/translation.php:926 po/translation.php:946
+msgid "Warning: "
+msgstr "Warnung: "
+
+#: lib/Maintenance.php:29
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#: templates/login/login.inc:59
+#, php-format
+msgid "Welcome to %s"
+msgstr "Willkommen bei %s"
+
+#: templates/login/user.inc:4 templates/wml/login/user.inc:1
+#, php-format
+msgid "Welcome, %s"
+msgstr "Willkommen, %s"
+
+#: config/prefs.php.dist:61
+msgid "What application should Horde display after login?"
+msgstr "Welche Anwendung soll Horde nach der Anmeldung anzeigen?"
+
+#: lib/MIME/Viewer/vcard.php:84
+msgid "Work Address"
+msgstr "Adresse geschäftlich"
+
+#: lib/MIME/Viewer/vcard.php:101
+msgid "Work Phone"
+msgstr "Telefon geschäftlich"
+
+#: po/translation.php:851
+#, php-format
+msgid "Writing updated help file to %s."
+msgstr "Schreibe aktualisierte Hilfedatei nach %s."
+
+#: templates/data/datemap.inc:67 templates/data/datemap.inc:68
+#: templates/data/datemap.inc:69 templates/data/datemap.inc:70
+msgid "YY"
+msgstr "JJ"
+
+#: lib/Maintenance.php:27
+msgid "Yearly"
+msgstr "Jährlich"
+
+#: po/translation.php:164
+msgid "Yes"
+msgstr "Ja"
+
+#: login.php:65
+msgid "You have been logged out.<br />Thank you for using the system."
+msgstr ""
+"Sie haben sich abgemeldet.<br />Vielen Dank für die Benutzung dieses Systems."
+
+#: templates/problem/javascript.inc:11
+msgid "You must describe the problem before you can send the problem report."
+msgstr "Sie müssen das Problem beschreiben, um den Bericht abzuschicken."
+
+#: login.php:64
+#, php-format
+msgid "Your %s session has expired. Please login again."
+msgstr "Ihre %s-Session ist abgelaufen. Bitte melden Sie sich erneut an."
+
+#: templates/problem/problem.inc:16
+msgid "Your Email Address:"
+msgstr "Ihre Email-Adresse:"
+
+#: config/prefs.php.dist:5
+msgid "Your Information"
+msgstr "Ihre Angaben"
+
+#: templates/problem/problem.inc:11
+msgid "Your Name:"
+msgstr "Ihr Name:"
+
+#: lib/PrefsUI.php:146
+msgid "Your options have been updated."
+msgstr "Ihre Einstellungen wurden gespeichert."
+
+#: problem.php:67
+msgid "[Problem Report]"
+msgstr "[Problembericht]"
+
+#: lib/Horde.php:239
+#, php-format
+msgid "[line %s of %s]"
+msgstr "[Zeile %s von %s]"
+
+#: po/translation.php:504
+msgid "an error has occured:"
+msgstr "ein Fehler ist aufgetreten:"
+
+#: po/translation.php:226 po/translation.php:333 po/translation.php:403
+#: po/translation.php:534 po/translation.php:574
+msgid "done"
+msgstr "fertig"
+
+#: po/translation.php:335 po/translation.php:367 po/translation.php:405
+#: po/translation.php:536 po/translation.php:576
+msgid "failed"
+msgstr "fehlgeschlagen"
+
+#: menu.php:37 menu.php:39
+msgid "name"
+msgstr "Name"
+
+#: po/translation.php:142
+msgid "not found"
+msgstr "nicht gefunden"
+
+#: po/translation.php:513
+#, php-format
+msgid "the Horde PO file for the locale %s does not exist:"
+msgstr "Hordes PO-Datei für das Locale %s existiert nicht:"
+
+#: lib/MIME/Viewer/vcard.php:36
+msgid "vCard"
+msgstr "vCard"

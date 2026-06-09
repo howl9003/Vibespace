@@ -1,0 +1,145 @@
+#!/bin/sh
+#
+# TODO: pass the 'log' directory and then the logs all pull from there
+#
+
+SSD_BASE="/sbin/start-stop-daemon --start --quiet --background --exec "
+SSD_TARGET="/etc/init.d/Archspace -- "
+SSD_METHOD_RESTART="restart"
+SSD_METHOD_ZAP="zap"
+SSD_METHOD_START="start"
+
+AS_PID="/etc/archspace/archspace.pid"
+AS_START="/etc/init.d/Archspace start"
+AS_RESTART="/etc/init.d/Archspace restart"
+AS_ZAP="/etc/init.d/Archspace zap"
+AS_PORTAL="/etc/init.d/ArchspacePortal start"
+LOG_PATH="$1"
+AS_CORE="${LOG_PATH}core"
+MONITOR_LOG="${LOG_PATH}monitor.log"
+MONITOR_LOG_ARCHIVE="${LOG_PATH}crash_archive.tar"
+LAST_LOG="${LOG_PATH}lastcrash.log"
+ARCHSPACE_SYSTEM_LOG="${LOG_PATH}systemlog"
+APACHE_ACCESS_LOG="/var/log/apache/access_log"
+APACHE_ERROR_LOG="/var/log/apache/error_log"
+REPORT_CRASH="/usr/src/archspace/report_crash.php"
+# depreciated var
+LOG_START="`date` ::"
+
+log() {
+message=$1
+echo "`date` :: $message" >> $MONITOR_LOG
+}
+
+crashlog() {
+file=$1
+message=$2
+echo "`date` :: $message" >> $file
+}
+
+log "Archspace Monitor Startup"
+log "LOG_PATH=${LOG_PATH}"
+while [ 1 ]
+do
+	if [ -f ${AS_PID} ]
+	then
+		pid=`cat $AS_PID`
+		if [ -e /proc/$pid ]
+		then
+			echo
+			# do nothing
+		else
+			log "Crash detected! Attempting to restart archspace and creating crash log"
+			if [ -f "/usr/sbin/core" ]
+			then
+				mv /usr/sbin/core ${AS_CORE}
+			fi
+			if [ -f ${AS_CORE} ]
+			then
+				NEW_CORE="${AS_CORE}_`date +%m-%d-%H_%M_%S`"
+				mv ${AS_CORE} ${NEW_CORE}
+				log "${AS_CORE} moved to ${NEW_CORE}"
+			fi 
+			# Create the crashlog
+			TEMPPREFIX="${LOG_PATH}crashlog"
+			TEMPFILE="${TEMPPREFIX}-`date +%m-%d-%y_%H:%M:%S`"
+
+			N=10
+			# Create apache info
+			crashlog $TEMPFILE " "
+			crashlog $TEMPFILE "Dumping last ${N} lines of apache access log"
+			crashlog $TEMPFILE "********** START APACHE ACCESS LOG DUMP *********"
+			crashlog $TEMPFILE "`tail -n ${N} ${APACHE_ACCESS_LOG}`"
+			crashlog $TEMPFILE "********** END   APACHE ACCESS LOG DUMP *********"
+			
+			N=250			
+			# Create post info log
+			tail -n ${N} ${APACHE_ERROR_LOG} > temp.log
+			crashlog $TEMPFILE " "
+			crashlog $TEMPFILE "Getting post/ip info from last ${N} lines of apache error log"
+			crashlog $TEMPFILE "********** START APACHE ERROR LOG DUMP **********"
+			crashlog $TEMPFILE "`grep -i "make_connection_send" temp.log`"
+			crashlog $TEMPFILE "`grep -i "make_post_send" temp.log`"
+			crashlog $TEMPFILE "********** END   APACHE ERROR LOG DUMP **********"
+			rm temp.log			
+
+			N=5
+			# Create the archspace log info
+			crashlog $TEMPFILE " "
+			crashlog $TEMPFILE "Dumping last ${N} lines of archspace system log"
+			crashlog $TEMPFILE "********** START SYSTEM LOG DUMP *********"
+			crashlog $TEMPFILE "`tail -n ${N} ${ARCHSPACE_SYSTEM_LOG}`"
+			crashlog $TEMPFILE "********** END   SYSTEM LOG DUMP *********"
+			
+			if [ -f ${TEMPFILE} ]
+			then
+			log "Crash log ${TEMPFILE} created"
+			# Archive the logging file
+			log "Check ${MONITOR_LOG_ARCHIVE} for the actual crash log"
+
+			if [ -f ${MONITOR_LOG_ARCHIVE} ]
+			then
+				tar -uf ${MONITOR_LOG_ARCHIVE} ${TEMPFILE}
+				log "Updated ${MONITOR_LOG_ARCHIVE} with ${TEMPFILE}"
+			else
+				tar -cf ${MONITOR_LOG_ARCHIVE} ${TEMPFILE}
+				log "Created ${MONITOR_LOG_ARCHIVE} from ${MONITOR_LOG}"
+			fi
+			
+			# Create the lastcrash.log
+			if [ -f ${LAST_LOG} ]
+			then
+				log "Removing the old ${LAST_LOG}"
+				rm ${LAST_LOG}
+			fi
+
+			mv ${TEMPFILE} ${LAST_LOG}
+
+			if [ -f ${LAST_LOG} ]
+			then
+				log "${LAST_LOG} replaced with ${TEMPFILE}"
+			else
+				log "${LAST_LOG} could not be created"
+			fi
+			
+			else
+				log "Error: ${TEMPFILE} could not be created -- no crash log made"
+			fi
+
+			# Mail it to me!
+			php ${REPORT_CRASH}
+
+			# Actually restart AS and make sure portal is started
+			${AS_PORTAL}
+			${SSD_BASE}${SSD_TARGET}${SSD_METHOD_ZAP} # daemonized for monitor protection
+			cd ${LOG_PATH}			
+			${SSD_BASE}${SSD_TARGET}${SSD_METHOD_START} # instead of restart which kills the monitor
+			sleep 120 # hey, if the server crashes again -- it shouldn't be within 2 minutes =)
+		fi
+	fi
+# only update every 5 seconds
+sleep 5 
+done
+
+log "Archspace Monitor Shutdown"
+exit

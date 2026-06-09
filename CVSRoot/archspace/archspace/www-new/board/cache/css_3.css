@@ -1,0 +1,88 @@
+html { overflow-x: auto; }
+form { display: inline; }
+img { vertical-align: middle;border: 0px; }
+BODY { font-family: Verdana, Tahoma, Arial, sans-serif;font-size: 11px;margin: 0px 10px 0px 10px;color: white;background-color: black; }
+TABLE, TR, TD { font-family: Verdana, Tahoma, Arial, sans-serif;font-size: 11px;color: white; }
+a:link, a:visited, a:active { text-decoration: underline;color: #3366CC; }
+a:hover { text-decoration: underline;color: #0099CC; }
+fieldset.search { padding: 6px;line-height: 150%; }
+label { cursor: pointer; }
+img.attach { padding: 2px;border: 2px outset #EEF2F7; }
+.googleroot { padding: 6px;line-height: 130%; }
+.googlechild { padding: 6px;margin-left: 30px;line-height: 130%; }
+.googlebottom, .googlebottom a:link, .googlebottom a:visited, .googlebottom a:active { font-size: 11px;color: #3A4F6C; }
+.googlish, .googlish a:link, .googlish a:visited, .googlish a:active { font-size: 14px;font-weight: bold;color: #00D; }
+.googlepagelinks { font-size: 1.1em;letter-spacing: 1px; }
+.googlesmall, .googlesmall a:link, .googlesmall a:active, .googlesmall a:visited { font-size: 10px;color: #434951; }
+li.helprow { padding: 0px;margin: 0px 0px 10px 0px; }
+ul#help { padding: 0px 0px 0px 15px; }
+option.cat { font-weight: bold; }
+option.sub { font-weight: bold;color: #555; }
+.caldate { text-align: right;font-weight: bold;font-size: 11px;padding: 4px;margin: 0px;color: #777;background-color: black; }
+.warngood { color: green; }
+.warnbad { color: red; }
+#padandcenter { margin-left: auto;margin-right: auto;text-align: center;padding: 14px 0px 14px 0px; }
+#profilename { font-size: 28px;font-weight: bold; }
+#calendarname { font-size: 22px;font-weight: bold; }
+#photowrap { padding: 6px; }
+#phototitle { font-size: 24px;border-bottom: 1px solid black; }
+#photoimg { text-align: center;margin-top: 15px; }
+#ucpmenu { line-height: 150%;width: 22%;background-color: black;border: 1px solid #345487; }
+#ucpmenu p { padding: 2px 5px 6px 9px;margin: 0px; }
+#ucpcontent { line-height: 150%;width: auto;background-color: black;border: 1px solid #345487; }
+#ucpcontent p { padding: 10px;margin: 0px; }
+#ipsbanner { position: absolute;top: 1px;right: 5%; }
+#logostrip { padding: 0px;margin: 0px;background-color: black;border: 1px solid #345487;background-image: url(style_images/<#IMG_DIR#>/header_tile.gif)/*tile_back.gif)*/; }
+#submenu { font-size: 10px;margin: 3px 0px 3px 0px;font-weight: bold;color: #3A4F6C;background-color: black;border: 1px solid #BCD0ED; }
+#submenu a:link, #submenu  a:visited, #submenu a:active { font-weight: bold;font-size: 10px;text-decoration: none;color: #3A4F6C; }
+#userlinks { background-color: black;border: 1px solid #C2CFDF; }
+#navstrip { font-weight: bold;padding: 6px 0px 6px 0px; }
+.activeuserstrip { padding: 6px;background-color: black; }
+.pformstrip { font-weight: bold;padding: 7px;margin-top: 1px;color: #3A4F6C;background-color: black; }
+.pformleft { padding: 6px;margin-top: 1px;width: 25%;border-top: 1px solid #C2CFDF;border-right: 1px solid #C2CFDF;background-color: black; }
+.pformleftw { padding: 6px;margin-top: 1px;width: 40%;border-top: 1px solid #C2CFDF;border-right: 1px solid #C2CFDF;background-color: black; }
+.pformright { padding: 6px;margin-top: 1px;border-top: 1px solid #C2CFDF;background-color: black; }
+.post1 { background-color: black; }
+.post2 { background-color: black; }
+.postlinksbar { padding: 7px;margin-top: 1px;font-size: 10px;background-color: black;background-image: url(style_images/<#IMG_DIR#>/tile_sub.gif); }
+.row1 { background-color: black; }
+.row2 { background-color: black; }
+.row3 { background-color: black; }
+.row4 { background-color: black; }
+.darkrow1 { color: #4C77B6;background-color: black; }
+.darkrow2 { color: #3A4F6C;background-color: black; }
+.darkrow3 { color: #3A4F6C;background-color: black; }
+.hlight { background-color: black; }
+.dlight { background-color: black; }
+.titlemedium { font-weight: bold;padding: 7px;margin: 0px;color: #3A4F6C;background-image: url(style_images/<#IMG_DIR#>/tile_sub.gif); }
+.titlemedium  a:link, .titlemedium  a:visited, .titlemedium  a:active { text-decoration: underline;color: #3A4F6C; }
+.maintitle { vertical-align: middle;font-weight: bold;letter-spacing: 1px;padding: 8px 0px 8px 5px;color: #FFF;background-image: url(style_images/<#IMG_DIR#>/tile_back.gif); }
+.maintitle a:link, .maintitle  a:visited, .maintitle  a:active { text-decoration: none;color: #FFF; }
+.maintitle a:hover { text-decoration: underline; }
+.plainborder { background-color: black;border: 1px solid #345487; }
+.tableborder { border: 1px solid #345487; }
+.tablefill { padding: 6px;background-color: black;border: 1px solid #345487; }
+.tablepad { padding: 6px;background-color: black; }
+.tablebasic { width: 100%;padding: 0px 0px 0px 0px;margin: 0px;border: 0px; }
+.wrapmini { float: left;line-height: 1.5em;width: 25%; }
+.pagelinks { float: left;line-height: 1.2em;width: 35%; }
+.desc { font-size: 10px;color: #434951; }
+.edit { font-size: 9px; }
+.signature { font-size: 10px;line-height: 160%;color: #339; }
+.postdetails { font-size: 10px; }
+.postcolor { font-size: 12px;line-height: 160%; }
+.normalname { font-size: 12px;font-weight: bold;color: teal; }
+.normalname a:link, .normalname a:visited, .normalname a:active { font-size: 12px; }
+.unreg { font-size: 11px;font-weight: bold;color: #900; }
+.searchlite { font-weight: bold;color: #F00;background-color: #FF0; }
+#QUOTE { font-family: Verdana, Arial;font-size: 11px;padding-top: 2px;padding-right: 2px;padding-bottom: 2px;padding-left: 2px;color: #465584;background-color: black;border: 1px solid #BBB; }
+#CODE { font-family: Courier, Courier New, Verdana, Arial;font-size: 11px;padding-top: 2px;padding-right: 2px;padding-bottom: 2px;padding-left: 2px;color: #465584;background-color: black;border: 1px solid #BBB; }
+.copyright { font-family: Verdana, Tahoma, Arial, Sans-Serif;font-size: 9px;line-height: 12px; }
+.codebuttons { font-size: 10px;font-family: verdana, helvetica, sans-serif;vertical-align: middle; }
+.forminput, .textinput, .radiobutton, .checkbox { font-size: 11px;font-family: verdana, helvetica, sans-serif;vertical-align: middle; }
+.thin { padding: 6px 0px 6px 0px;line-height: 140%;margin: 2px 0px 2px 0px;border-top: 1px solid #FFF;border-bottom: 1px solid #FFF; }
+.purple { font-weight: bold;color: purple; }
+.red { font-weight: bold;color: red; }
+.green { font-weight: bold;color: green; }
+.blue { font-weight: bold;color: blue; }
+.orange { font-weight: bold;color: #F90; }
