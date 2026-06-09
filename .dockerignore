@@ -1,0 +1,30 @@
+# Keep the Docker build context small: the image only needs
+# archspace_source/archspace (the game) + archspace.tar.gz (web assets),
+# plus docker/ and web/. Exclude the large historical trees and junk.
+
+.git
+.gitignore
+
+# Large non-built reference trees (~15,800 files) — not part of the image
+archspace_source/CVSRoot
+archspace_source/Old Code
+archspace_source/Older archspace
+
+# Build artifacts (the image compiles fresh)
+**/*.o
+**/*.a
+**/*.so
+archspace_source/archspace/src/apps/archspace/archspace
+archspace_source/archspace/src/apps/archspace/viewsize
+docker/as-cgi/as-cgi
+
+# CVS metadata sprinkled through the source tree
+**/CVS
+
+# Editor/OS noise
+**/.#*
+**/*.swp
+**/.DS_Store
+
+# The plan file / local notes
+*.png
