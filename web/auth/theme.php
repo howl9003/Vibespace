@@ -46,12 +46,15 @@ function auth_page_start(string $title): void {
   /* The original .newInput uses an invalid "background:clean" (renders as a
      white box -> invisible white text). Force the intended look: white text on
      a transparent field with a white underline, on the dark #252525 box. */
-  .as-box .newInput{width:200px;max-width:100%;font-family:inherit;font-size:13px;
+  .as-box .newInput{width:254px;max-width:100%;font-family:inherit;font-size:13px;
                     background:transparent;color:#fff;outline:none;}
   .as-title{color:#fff;font-size:15px;font-weight:bold;letter-spacing:.04em;margin:0 0 10px;}
-  /* login + register on one line, then a small "forgot" link under them */
-  .as-btnrow{display:flex;gap:14px;align-items:center;justify-content:center;margin-top:14px;}
-  .as-btnrow a{line-height:0;}
+  /* login + register on one line (same width as the inputs, edges aligned),
+     then a small "forgot" link under them */
+  .as-btnrow{display:flex;align-items:center;justify-content:space-between;
+             width:254px;max-width:100%;margin-top:16px;}
+  .as-btnrow a{line-height:0;display:block;}
+  .as-btnrow img,.as-btnrow input{display:block;}
   .as-forgot-sm{margin-top:8px;text-align:center;}
   .as-forgot-sm a{color:#B5721E;text-decoration:none;font-size:12px;}
   .as-forgot-sm a:hover{text-decoration:underline;}
@@ -59,7 +62,7 @@ function auth_page_start(string $title): void {
                 padding:6px 10px;margin:0 0 10px;}
   .as-msg-ok{background:#0a2a14;border-left:3px solid #2e8b57;color:#9d9;
              padding:6px 10px;margin:0 0 10px;}
-  .as-btn{background:none;border:0;padding:0;cursor:pointer;margin-top:12px;}
+  .as-btn{background:none;border:0;padding:0;cursor:pointer;display:block;}
   .as-links{margin-top:14px;font-size:12px;line-height:1.9;}
   .as-links a{color:#a9a9a9;text-decoration:underline;}
   .as-links a:hover{color:#f0ffff;}

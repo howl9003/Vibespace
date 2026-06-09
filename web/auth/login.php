@@ -52,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Sign In');
-echo auth_title('Enter Archspace');
 echo auth_error($error);
 ?>
 <form method="post" action="/auth/login.php">
