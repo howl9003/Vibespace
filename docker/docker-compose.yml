@@ -1,0 +1,37 @@
+# Archspace — single-image deployment (MariaDB + game server + web tier).
+# Build context is the repo root so the Dockerfile can COPY archspace_source/.
+#
+#   docker compose -f docker/docker-compose.yml up --build
+#
+services:
+  archspace:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: archspace:latest
+    restart: unless-stopped
+    ports:
+      - "8080:80"          # web UI  ->  http://localhost:8080
+    environment:
+      TZ: UTC
+      DB_PASS: comconq1     # internal DB password (not publicly exposed)
+      # SMTP_HOST: smtp.example.com   # set to enable password-reset email;
+      # SMTP_PORT: 587                # unset -> reset links are logged instead
+      # SMTP_USER: ...
+      # SMTP_PASS: ...
+      # SMTP_FROM: archspace@example.com
+    volumes:
+      - db_data:/var/lib/mysql
+      - game_state:/var/archspace/data   # news, battles, messages, audit — persisted
+      - logs:/var/log/archspace
+    healthcheck:
+      test: ["CMD-SHELL", "ss -ltn | grep -q ':12350'"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  db_data:
+  game_state:
+  logs:
