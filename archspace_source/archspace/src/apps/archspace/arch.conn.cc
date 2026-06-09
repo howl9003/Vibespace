@@ -179,7 +179,11 @@ CArchspaceConnection::make_page()
 	}
 */
 
-    	char * PHPSessionID = mCookies.get_value("phpbb2mysql_sid");
+    	// Modern auth: resolve the session cookie set by the new email/password
+    	// auth service (web/auth) against our own `sessions` table, instead of the
+    	// legacy phpBB `asbb_sessions` lookup. The account id plays the former
+    	// portal-id role.
+    	char * PHPSessionID = mCookies.get_value("as_session");
 	if (!PHPSessionID)
 	{
 		portal_login_message_page(GETTEXT("First of all, you must log in."));
@@ -189,16 +193,15 @@ CArchspaceConnection::make_page()
 
  	CMySQL
 		*MySQL=NULL;
-    	while (!(MySQL = MYSQL_POOL->get_connection())) 
-         	;           
- 
+    	while (!(MySQL = MYSQL_POOL->get_connection()))
+         	;
+
  	CString
-		Query;	
-    	Query.clear();           
-	Query.format( "SELECT "
-			"session_user_id, "
-			"session_time "
-			"FROM asbb_sessions where session_id='%s' LIMIT 1", PHPSessionID);
+		Query;
+    	Query.clear();
+	Query.format( "SELECT account_id "
+			"FROM sessions WHERE id='%s' AND expires > UNIX_TIMESTAMP() LIMIT 1",
+			PHPSessionID );
 	MySQL->query( (char*)Query );
 	MySQL->use_result();
 	Query.clear();
@@ -207,7 +210,6 @@ CArchspaceConnection::make_page()
 	{
         	MYSQL_ROW aRow = MySQL->row();
         	char *aPortalID = aRow[0];
-        	char *aSessionTime = aRow[1];
 
         	if (!aPortalID || atoi(aPortalID) <= 0)
 	    	{
@@ -216,33 +218,7 @@ CArchspaceConnection::make_page()
 		   return true;
 	    	}
 	    	mPortalID = atoi(aPortalID);
-
-        	if (time(0) - atoi(aSessionTime) > 60)
-        	{
-           		MySQL->free_result();
-
-           		Query.format( "UPDATE asbb_sessions SET "
-			             "session_time = '%d' "
-			             "WHERE session_id='%s'", time(0), PHPSessionID);
-           		MySQL->query( (char*)Query );
-	       		MySQL->use_result();
-			if (MySQL->has_result())
-				MySQL->free_result();
-			Query.clear();
-
-           		Query.format( "UPDATE asbb_users SET "
-			             "user_session_time = '%d' "
-			             "WHERE user_id='%d'", time(0), mPortalID);
-           		MySQL->query( (char*)Query );
-	       		MySQL->use_result();
-			if (MySQL->has_result())
-				MySQL->free_result();
-	       		Query.clear();       
-        	}
-        	else
-        	{
-         		MySQL->free_result();    
-        	}
+        	MySQL->free_result();
 	}
 	else
 	{
