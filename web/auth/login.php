@@ -58,11 +58,11 @@ echo auth_error($error);
 <form method="post" action="/auth/login.php">
 <?= auth_input('Email', 'email', 'email', (string)($_POST['email'] ?? ''), 'email') ?>
 <?= auth_input('Password', 'password', 'password', '', 'current-password') ?>
-<?= auth_submit('bu_login.gif', 'login', 120, 16) ?>
+<div class="as-btnrow">
+  <input class="as-btn" type="image" src="/image/as_login/bu_login.gif" width="120" height="16" alt="login">
+  <a href="/auth/register.php"><img src="/image/as_login/bu_register.gif" width="120" height="16" border="0" alt="register"></a>
+</div>
 </form>
+<div class="as-forgot-sm"><a href="/auth/forgot.php">forgot your password?</a></div>
 <?php
-auth_page_end(
-    '<div class="as-forgot"><a href="/auth/forgot.php">Forgot your password?</a></div>'
-    . 'New player? <a href="/auth/register.php"><img src="/image/as_login/bu_register.gif"'
-    . ' width="120" height="16" border="0" alt="register" style="vertical-align:middle"></a>'
-);
+auth_page_end();

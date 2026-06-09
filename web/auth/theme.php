@@ -31,22 +31,30 @@ function auth_page_start(string $title): void {
 <link rel="stylesheet" href="/archspace.css">
 <link rel="stylesheet" href="/cssLib.css">
 <style>
-  /* Faithful to the original login: black space bg, Arial 13px grey. */
-  html,body{margin:0;background:#000 url(/image/as_login/back_top.gif) repeat-x top center;
-            font-family:"Arial","Helvetica",sans-serif;font-size:13px;color:#999;}
+  /* Plain black background (just the logo), bold serif to match the original
+     login/register button GIFs (Times New Roman Bold). */
+  html,body{margin:0;background:#000;
+            font-family:"Times New Roman","Liberation Serif",Georgia,serif;
+            font-size:14px;color:#bbb;}
   .as-auth-wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
                 padding:40px 12px;}
   .as-auth-col{width:486px;max-width:100%;text-align:center;}
   .as-hero{margin:0 auto 14px;max-width:100%;height:auto;border:0;display:block;}
   .as-box{display:inline-block;background:#252525;padding:16px 20px;text-align:left;
           min-width:240px;}
-  .as-box .lbl{color:#fff;display:block;margin:6px 0 2px;}
+  .as-box .lbl{color:#fff;font-weight:bold;display:block;margin:6px 0 2px;}
   /* The original .newInput uses an invalid "background:clean" (renders as a
      white box -> invisible white text). Force the intended look: white text on
      a transparent field with a white underline, on the dark #252525 box. */
   .as-box .newInput{width:200px;max-width:100%;font-family:inherit;font-size:13px;
                     background:transparent;color:#fff;outline:none;}
-  .as-title{color:#fff;font-size:14px;letter-spacing:.04em;margin:0 0 10px;}
+  .as-title{color:#fff;font-size:15px;font-weight:bold;letter-spacing:.04em;margin:0 0 10px;}
+  /* login + register on one line, then a small "forgot" link under them */
+  .as-btnrow{display:flex;gap:14px;align-items:center;justify-content:center;margin-top:14px;}
+  .as-btnrow a{line-height:0;}
+  .as-forgot-sm{margin-top:8px;text-align:center;}
+  .as-forgot-sm a{color:#B5721E;text-decoration:none;font-size:12px;}
+  .as-forgot-sm a:hover{text-decoration:underline;}
   .as-msg-error{background:#2a0a0a;border-left:3px solid #c0392b;color:#e88;
                 padding:6px 10px;margin:0 0 10px;}
   .as-msg-ok{background:#0a2a14;border-left:3px solid #2e8b57;color:#9d9;
