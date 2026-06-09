@@ -21,7 +21,12 @@ CPageCommon::get_conversion()
 	ITEM("ADLINE_BOTTOM", BottomBanner);
 
 	ITEM("CHAR_SET", GAME->get_charset());
-	ITEM("IMAGE_SERVER_URL", (char *)CGame::mImageServerURL);
+	// Guard against a NULL char* from an empty ImageServerURL (same-origin):
+	// the template substitution drops tokens whose value is NULL, leaving a
+	// literal "$IMAGE_SERVER_URL". A non-NULL "" makes "$IMAGE_SERVER_URL/image"
+	// resolve to "/image" (same origin).
+	char *ImageServerURL = (char *)CGame::mImageServerURL;
+	ITEM("IMAGE_SERVER_URL", ImageServerURL ? ImageServerURL : (char *)"");
 
 	return true;
 }

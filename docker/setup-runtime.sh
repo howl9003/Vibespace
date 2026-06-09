@@ -36,6 +36,12 @@ cp -f "$SRC"/src/script/* /etc/archspace/script/ 2>/dev/null || true
 echo "[setup] installing form + web content"
 cp -rf "$SRC/src/form" /usr/src/archspace/
 cp -rf "$SRC/src/web"  /usr/src/archspace/
+# Same-origin images: rewrite the template token "$IMAGE_SERVER_URL/image" to
+# "/image" in the *installed* page templates (the engine fills these at runtime),
+# so the original separate image-server prefix collapses to this origin. The
+# source tree is left untouched.
+grep -rlZ '\$IMAGE_SERVER_URL/image' /usr/src/archspace/web 2>/dev/null \
+    | xargs -0 -r sed -i 's#\$IMAGE_SERVER_URL/image#/image#g'
 
 echo "[setup] creating runtime data tree (from etc/initialize_game, non-interactive)"
 mkdir -p /var/archspace/data/admin /var/archspace/data/crontab \

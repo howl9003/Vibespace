@@ -150,27 +150,16 @@ CGame::initialize(CIniFile *aConfig)
 	
 	mTechRate = 1;
 
+	// Same-origin assets: an empty ImageServerURL is allowed and means images
+	// are served from this origin as /image/... (we collapsed the original
+	// separate image server). Default to empty rather than aborting.
 	TempString = mConfig->get_string("Game", "ImageServerURL", NULL);
-	if (TempString == NULL)
-	{
-		SLOG("ERROR : The image server is not specified!");
-		return false;
-	}
-	else
-	{
-		mImageServerURL = TempString;
-	}
+	mImageServerURL = (TempString == NULL) ? "" : TempString;
 
+	// The in-game forum link is inert in this build; an unset ForumServerURL
+	// is fine.
 	TempString = mConfig->get_string("Game", "ForumServerURL", NULL);
-	if (TempString == NULL)
-	{
-		SLOG("ERROR : The forum server is not specified!");
-		return false;
-	}
-	else
-	{
-		mForumServerURL = TempString;
-	}
+	mForumServerURL = (TempString == NULL) ? "" : TempString;
 
 	Temp = mConfig->get_integer("Game", "PeriodPlayerCouncilDonation", -1);
 	if (Temp >= -1) CAction::mPeriodPlayerCouncilDonation = Temp;
