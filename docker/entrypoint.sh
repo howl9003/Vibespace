@@ -47,15 +47,41 @@ mariadb -uroot -p"$DB_PASS" -e "SET GLOBAL sql_mode='NO_ENGINE_SUBSTITUTION';" 2
 log "installing runtime layout + game content"
 ARCHSPACE_SRC="$SRC" /usr/local/bin/setup-runtime.sh
 
-# --- 4. web tier (php-fpm + nginx), if present ------------------------------
-if [ -d /build/web ]; then
-    log "installing web tier"
-    mkdir -p /var/www/localhost/htdocs
-    cp -rf /build/web/* /var/www/localhost/htdocs/ 2>/dev/null || true
-    [ -f /etc/nginx/sites-available/archspace ] && ln -sfn /etc/nginx/sites-available/archspace /etc/nginx/sites-enabled/default
-    service php8.3-fpm start 2>/dev/null || (mkdir -p /run/php && php-fpm8.3 -D 2>/dev/null) || true
-    nginx 2>/dev/null || true
+# --- 4. web tier (assemble web root, php-fpm, fcgiwrap, nginx) --------------
+log "assembling web root"
+ARCHSPACE_TARBALL=/build/archspace.tar.gz AUTH_SRC=/build/web/auth \
+    /usr/local/bin/setup-web.sh || true
+
+# Enable our nginx site
+if [ -f /etc/nginx/sites-available/archspace ]; then
+    ln -sfn /etc/nginx/sites-available/archspace /etc/nginx/sites-enabled/default
 fi
+
+# php-fpm: pass DB_* env to workers (clear_env=no) and expose a stable socket.
+PHP_FPM_BIN="$(command -v php-fpm8.3 || command -v php-fpm || true)"
+PHP_POOL="$(ls /etc/php/*/fpm/pool.d/www.conf 2>/dev/null | head -1)"
+if [ -n "$PHP_POOL" ]; then
+    sed -i 's#^;\?listen = .*#listen = /run/php/php-fpm.sock#' "$PHP_POOL"
+    sed -i 's#^;\?clear_env = .*#clear_env = no#' "$PHP_POOL"
+    grep -q '^clear_env' "$PHP_POOL" || echo 'clear_env = no' >> "$PHP_POOL"
+fi
+mkdir -p /run/php
+export DB_HOST="${DB_HOST:-127.0.0.1}" DB_USER="${DB_USER:-root}" \
+       DB_PASS="${DB_PASS:-comconq1}" DB_NAME="${DB_NAME:-Archspace}" \
+       SMTP_HOST="${SMTP_HOST:-}" SMTP_PORT="${SMTP_PORT:-}" \
+       SMTP_USER="${SMTP_USER:-}" SMTP_PASS="${SMTP_PASS:-}" SMTP_FROM="${SMTP_FROM:-}"
+[ -n "$PHP_FPM_BIN" ] && { log "starting php-fpm"; "$PHP_FPM_BIN" -D 2>/dev/null || true; }
+
+# fcgiwrap: runs the as-cgi adapter for *.as requests
+if command -v fcgiwrap >/dev/null 2>&1 && [ -x /usr/local/bin/as-cgi ]; then
+    log "starting fcgiwrap (as-cgi adapter)"
+    rm -f /run/fcgiwrap.sock
+    fcgiwrap -s unix:/run/fcgiwrap.sock >/var/log/archspace/fcgiwrap.log 2>&1 &
+    sleep 1; chmod 666 /run/fcgiwrap.sock 2>/dev/null || true
+fi
+
+log "starting nginx"
+nginx 2>/dev/null || nginx -g 'daemon on;' 2>/dev/null || true
 
 # --- 5. game server ---------------------------------------------------------
 log "starting Archspace game server (listens on 12350, localhost)"

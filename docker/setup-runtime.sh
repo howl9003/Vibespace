@@ -19,6 +19,11 @@ mkdir -p /etc/archspace/script /usr/src/archspace /var/log/archspace \
 
 echo "[setup] installing config"
 cp -f "$SRC/etc/archspace.config" /etc/archspace/
+# Same-origin assets: drop the dead external image server so templates emit
+# /image/... (served locally by nginx from the unpacked www tier).
+sed -i 's#^ImageServerURL =.*#ImageServerURL =#' /etc/archspace/archspace.config
+# DB password from env (default comconq1 already in the file)
+[ -n "$DB_PASS" ] && sed -i "s/^Password = .*/Password = ${DB_PASS}/" /etc/archspace/archspace.config || true
 cp -f "$SRC/etc/banner"   /etc/archspace/banner   2>/dev/null || : > /etc/archspace/banner
 cp -f "$SRC/etc/ip_ban"   /etc/archspace/ip_ban   2>/dev/null || : > /etc/archspace/ip_ban
 [ -f /etc/archspace/admin_list ] || echo "admin@local" > /etc/archspace/admin_list
