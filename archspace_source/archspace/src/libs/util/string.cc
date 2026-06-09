@@ -615,7 +615,12 @@ CString::append(const char *aString, size_t aCount)
 
 CString::operator char*() const
 {
-	return get_data();
+	// Return "" rather than NULL for an empty string: this is the safe,
+	// std::string::c_str()-like behavior. It avoids printf("%s", NULL) ->
+	// "(null)" (e.g. same-origin image paths built as "%s/image/...", where
+	// mImageServerURL is empty) and prevents latent NULL derefs.
+	char *aData = get_data();
+	return aData ? aData : (char *)"";
 }
 
 const CString&
