@@ -66,18 +66,31 @@ if (navigator.appName.indexOf('Microsoft') == -1) {
       <TABLE WIDTH="600" BORDER="0" CELLSPACING="0" CELLPADDING="0">
         <TR CLASS="maintext"> 
 		<TD>
-		<APPLET CODE=Deployment.class ARCHIVE=deploy.jar WIDTH=630 HEIGHT=275>
+		<!-- Fleet deployment board: HTML5 replacement for Deployment.class / deploy.jar -->
+		<!-- Hidden div holds <param> tags emitted by the engine ($J_FLEET_INFO etc.). -->
+		<!-- as-deploy.js reads these at runtime to build the draggable canvas board.  -->
+		<div id="as-deploy-params" style="display:none">
 		$J_FLEET_INFO
 		$FLEET_INDEX_TO_ID
 		$J_FLEET_LIST
-		<PARAM NAME=TARGET VALUE="blockade_planet.as">
-		<PARAM NAME=TID VALUE="$TARGET_PLAYER_ID">
-		<PARAM NAME=IMAGEDIR VALUE="$IMAGEDIR/">
-		<CENTER>
-		Please get the latest Java plugin.<BR>
-		<A HREF="http://www.java.com/en/download/">You can find it here</A>
-		</CENTER>
-		</APPLET>
+		<param name="TARGET"  value="blockade_planet.as">
+		<param name="TID"     value="$TARGET_PLAYER_ID">
+		<param name="IMAGEDIR" value="$IMAGEDIR/">
+		</div>
+		<form id="as-deploy-form" method="post" action="blockade_planet.as">
+		  <!-- TID hidden field (target player id, required by the .as handler) -->
+		  <input type="hidden" name="TID" value="$TARGET_PLAYER_ID">
+		  <!-- Per-fleet X/Y hidden inputs are created and kept current by as-deploy.js -->
+		  <canvas id="as-deploy-board" width="630" height="275"
+		          style="display:block;background:#050510;cursor:crosshair;border:1px solid #223355;">
+		  </canvas>
+		  <div style="margin-top:6px;text-align:center;">
+		    <input type="submit" value="Deploy Fleets"
+		           style="background:#0d2244;color:#ccddff;border:1px solid #4477cc;
+		                  padding:4px 18px;cursor:pointer;font-size:13px;">
+		  </div>
+		</form>
+		<script src="/js/as-deploy.js"></script>
 
 		</TD>
         </TR>

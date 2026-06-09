@@ -52,16 +52,25 @@
       <P>&nbsp;</P>
     </TD>
   </TR>
-  <TR> 
-    <TD ALIGN="center"> 
-		<APPLET NAME=report CODE="Report.class" ARCHIVE="report.jar" WIDTH=550 HEIGHT=600>
-		<PARAM NAME=LOG_URL VALUE=$LOG_URL>
-		<PARAM NAME=PLAYER_ID VALUE=$PLAYER_ID>
-		<CENTER>
-		Please get the latest Java plugin.<BR>
-		<A HREF="http://www.java.com/en/download/">You can find it here</A>
-		</CENTER>
-		</APPLET>
+  <TR>
+    <TD ALIGN="center">
+      <!-- Battle replay: HTML5 replacement for Report.class / report.jar -->
+      <div style="width:550px;min-height:180px;margin:0 auto;
+                  background:#050510;border:1px solid #223355;
+                  color:#ccddff;font-family:sans-serif;padding:28px 24px;
+                  box-sizing:border-box;text-align:center;">
+        <div style="font-size:18px;font-weight:bold;color:#aabbdd;
+                    border-bottom:1px solid #223355;padding-bottom:10px;
+                    margin-bottom:16px;">
+          Battle Replay
+        </div>
+        <p style="color:#778899;font-size:13px;margin:0 0 12px;">
+          The animated battle replay is not available in this build.
+        </p>
+        <p style="color:#556677;font-size:12px;margin:0;">
+          Please see the battle report summary above for the outcome details.
+        </p>
+      </div>
     </TD>
   </TR>
   <TR> 
