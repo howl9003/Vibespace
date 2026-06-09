@@ -11,7 +11,7 @@ services:
     image: archspace:latest
     restart: unless-stopped
     ports:
-      - "8080:80"          # web UI  ->  http://localhost:8080
+      - "${WEB_PORT:-8080}:80"          # web UI; set WEB_PORT=80 for a bare http://host
     environment:
       TZ: UTC
       DB_PASS: comconq1     # internal DB password (not publicly exposed)

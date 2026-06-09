@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         g++ gcc make cmake pkg-config flex bison gettext \
         libpth-dev libmariadb-dev \
         mariadb-server mariadb-client \
-        nginx php-fpm php-mysqli php-cli fcgiwrap \
+        nginx php-fpm php-mysql php-cli fcgiwrap \
         ca-certificates tzdata procps iproute2 \
     && rm -rf /var/lib/apt/lists/* \
     # Compat: the engine includes <mysql.h>; MariaDB headers live in /usr/include/mariadb
