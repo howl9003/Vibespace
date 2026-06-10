@@ -44,13 +44,15 @@ fi
 mariadb -uroot -p"$DB_PASS" -e "SET GLOBAL sql_mode='NO_ENGINE_SUBSTITUTION';" 2>/dev/null || true
 
 # --- 3. runtime layout ------------------------------------------------------
+# Invoke via `sh` (not as an executable) so these still run when the scripts are
+# bind-mounted from a host checkout that didn't preserve the +x bit.
 log "installing runtime layout + game content"
-ARCHSPACE_SRC="$SRC" /usr/local/bin/setup-runtime.sh
+ARCHSPACE_SRC="$SRC" sh /usr/local/bin/setup-runtime.sh
 
 # --- 4. web tier (assemble web root, php-fpm, fcgiwrap, nginx) --------------
 log "assembling web root"
 ARCHSPACE_TARBALL=/build/archspace.tar.gz AUTH_SRC=/build/web/auth \
-    /usr/local/bin/setup-web.sh || true
+    sh /usr/local/bin/setup-web.sh || true
 
 # Enable our nginx site
 if [ -f /etc/nginx/sites-available/archspace ]; then
