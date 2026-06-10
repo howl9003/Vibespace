@@ -20,7 +20,7 @@ SSH in (`ssh -i your-key.pem ubuntu@<public-ip>`), then either:
 **a) git clone** (repo is private — use a GitHub Personal Access Token or deploy key):
 ```sh
 git clone https://<TOKEN>@github.com/howl9003/Vibespace.git archspace
-cd archspace && git checkout claude/festive-bohr-xk9fwc
+cd archspace && git checkout production   # the instance tracks the deploy branch
 ```
 
 **b) or copy from your machine:**
@@ -70,13 +70,25 @@ State persists in named volumes (`db_data`, `game_state`, `logs`). Back up
 ## 4b. Automatic updates (GitHub Actions → SSH)
 
 After the first manual bootstrap, you don't need to SSH in for updates. A
-workflow (`.github/workflows/deploy.yml`) runs on every push to the deployment
-branch (and on demand), SSHes into the instance, and runs
+workflow (`.github/workflows/deploy.yml`) runs on every push to the dedicated
+**`production`** branch (and on demand), SSHes into the instance, and runs
 `docker/deploy/deploy.sh` — which pulls the new code and rebuilds/restarts the
 stack (reusing the HTTP/HTTPS config the bootstrap saved in
 `docker/deploy/.deploy.env`). The image is built **on the instance**, same as
 the manual flow; the rebuild only blips the container at the swap, and the DB +
 game state in the named volumes survive.
+
+**Develop freely, ship deliberately.** Day-to-day commits land on a feature
+branch and do *not* deploy. You ship by advancing `production`:
+```sh
+# from your feature branch, when you're ready to release:
+git checkout production
+git merge --ff-only claude/festive-bohr-xk9fwc   # or your feature branch
+git push origin production                        # -> triggers the deploy
+```
+The instance tracks `production`, so the workflow deploys exactly what you
+pushed there. (Until the EC2 secrets below are set, the workflow runs but
+cleanly skips the deploy step.)
 
 **One-time setup** — add these repository secrets
 (*Settings → Secrets and variables → Actions*):
