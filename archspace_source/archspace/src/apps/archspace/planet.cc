@@ -953,13 +953,13 @@ CPlanet::compute_nogada_point()
 		NogadaPointPerMillien,
 		NogadaPoint;
 
-	// ³ë°¡´Ù Control Model¿¡ ÀÇÇÑ ³ë°¡´Ù Æ÷ÀÎÆ® °è»ê
+	// ï¿½ë°¡ï¿½ï¿½ Control Modelï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ë°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½
 	NogadaPointPerMillien = 5;
 
-	// »ý»êµÇ´Â Nogada Point °è»ê
+	// ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ Nogada Point ï¿½ï¿½ï¿½
 	NogadaPoint = (get_population() / 1000) * NogadaPointPerMillien;
 
-	// È¯°æ Control Model¿¡ ÀÇÇÑ ³ë°¡´Ù Æ÷ÀÎÆ® °è»ê
+	// È¯ï¿½ï¿½ Control Modelï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ë°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½
 	if (mControlModel.get_environment() <= -10)
 		NogadaPoint /= 10;
 	else if (mControlModel.get_environment() < -1)
@@ -2265,7 +2265,10 @@ CPlanet::news()
 
 	const char *News = mPlanetNewsCenter.generate();
 
-	if (!News) return NULL;
+	// Suppress empty reports: generate() returns "" (not NULL) on a no-change
+	// turn, so without checking for an empty string we'd emit a bare
+	// "<planet> Planet Report" header with no content every refresh.
+	if (!News || !*News) return NULL;
 
 	Buffer.clear();
 

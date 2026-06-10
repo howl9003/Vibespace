@@ -107,8 +107,6 @@ CPlanetNewsCenter::generate()
 		Buffer += "</CENTER>\n"
 				"</TD>\n"
 				"</TR>\n";
-
-		set_population(mPlanet->get_population());
 	}
 
 	int Current = mPlanet->mBuilding.get(BUILDING_FACTORY);
@@ -154,8 +152,6 @@ CPlanetNewsCenter::generate()
 		Buffer += "</CENTER>\n"
 				"</TD>\n"
 				"</TR>\n";
-
-		set_factory(Current);
 	}
 
 	Current = mPlanet->mBuilding.get(BUILDING_MILITARY_BASE);
@@ -201,8 +197,6 @@ CPlanetNewsCenter::generate()
 		Buffer += "</CENTER>\n"
 				"</TD>\n"
 				"</TR>\n";
-
-		set_military_base(Current);
 	}
 
 	Current = mPlanet->mBuilding.get(BUILDING_RESEARCH_LAB);
@@ -248,9 +242,28 @@ CPlanetNewsCenter::generate()
 		Buffer += "</CENTER>\n"
 				"</TD>\n"
 				"</TR>\n";
-
-		set_research_lab(Current);
 	}
 
 	return (char*)Buffer;
+}
+
+//---------------------------------------------------------------------------
+// mark_seen() — consume the planet's pending news.
+//
+// generate() is read-only so an auto-/push-refresh of the main page keeps
+// accumulating the population/building deltas across turns (instead of
+// resetting every turn and showing only the latest turn's activity). This is
+// the consume step: advance every baseline to the planet's current values.
+// Called when the player navigates away from the dashboard
+// (CPlayer::acknowledge_news). Mirrors CNewsCenter::mark_seen().
+//---------------------------------------------------------------------------
+void
+CPlanetNewsCenter::mark_seen()
+{
+	if (!mPlanet) return;
+
+	set_population(mPlanet->get_population());
+	set_factory(mPlanet->mBuilding.get(BUILDING_FACTORY));
+	set_military_base(mPlanet->mBuilding.get(BUILDING_MILITARY_BASE));
+	set_research_lab(mPlanet->mBuilding.get(BUILDING_RESEARCH_LAB));
 }

@@ -2751,6 +2751,20 @@ CPlayer::generate_news()
 }
 
 void
+CPlayer::acknowledge_news()
+{
+	// Empire-level news (turn summary, tech/planet/project/admiral, time-news).
+	mNewsCenter.mark_seen();
+
+	// Per-planet building/population news baselines.
+	for (int i = 0; i < mPlanetList.length(); i++)
+	{
+		CPlanet *Planet = (CPlanet *)mPlanetList.get(i);
+		if (Planet) Planet->acknowledge_news();
+	}
+}
+
+void
 CPlayer::update_admiral_pool()
 {
 
@@ -3233,13 +3247,13 @@ CPlayer::independence_declaration(char *aName, const char *aSlogan)
 
 	// added by thedaz for create council forum ->
 /*
-	player.cc -> council ÀÌ »ý±æ¶§ speaker °¡ ÀÖÀ½
+	player.cc -> council ï¿½ï¿½ ï¿½ï¿½ï¿½æ¶§ speaker ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	db: CouncilForum
 
-	catagories ¿¡ COUNCIL_ID ÀÔ·Âed
-	forums ¿¡ COUNCIL_ID ÀÔ·Âed
-	forum_mods ¿¡ speaker ÀÎ »ç¿ëÀÚ ³Ö±âed (user_id = mGameID)
-	users ¿¡ speaker ³Ö±âed
+	catagories ï¿½ï¿½ COUNCIL_ID ï¿½Ô·ï¿½ed
+	forums ï¿½ï¿½ COUNCIL_ID ï¿½Ô·ï¿½ed
+	forum_mods ï¿½ï¿½ speaker ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ed (user_id = mGameID)
+	users ï¿½ï¿½ speaker ï¿½Ö±ï¿½ed
 */
 /*	SLOG("THEDAZ: Create new council - independence declaration");
 

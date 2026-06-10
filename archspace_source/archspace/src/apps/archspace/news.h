@@ -317,9 +317,15 @@ class CPlanetNewsCenter
 
 		inline void set_planet(CPlanet *aPlanet);
 		const char *generate();
+		// Acknowledge the planet's building/population news: advance the
+		// baselines to the current values. generate() is read-only (so an
+		// auto-refresh accumulates the deltas across turns instead of
+		// resetting each turn); this is the consume step, called on
+		// navigate-away via CPlayer::acknowledge_news().
+		void mark_seen();
 
 	public:
-		inline bool empty();	
+		inline bool empty();
 		const char *get_query();
 
 	public:

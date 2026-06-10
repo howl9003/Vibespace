@@ -114,7 +114,7 @@ class CPlanet: public CStore
 		    GAS_CO2,
 		    GAS_O2, 
 		    GAS_N2, 
-		    GAS_CH4, // ¸ÞÅº 
+		    GAS_CH4, // ï¿½ï¿½Åº 
 		    GAS_H2O,
 		    GAS_MAX 
 		};
@@ -204,8 +204,8 @@ class CPlanet: public CStore
 
 		CCommandSet mAttribute;
 
-		int mPopulation;		// ´ÜÀ§ k
-		int mMaxPopulation;		// ´ÜÀ§ k
+		int mPopulation;		// ï¿½ï¿½ï¿½ï¿½ k
+		int mMaxPopulation;		// ï¿½ï¿½ï¿½ï¿½ k
 
 		CResource
 			mOldBuilding,
@@ -370,6 +370,10 @@ class CPlanet: public CStore
 		void update_turn();
 		const char* html_management_record();
 		const char* news();
+		// Consume this planet's pending building/population news (advance the
+		// news baselines). Called from CPlayer::acknowledge_news on
+		// navigate-away so the dashboard report accumulates across turns.
+		inline void acknowledge_news() { mPlanetNewsCenter.mark_seen(); }
 
 		const char *get_atmosphere_html();
 		const char *get_attribute_html();

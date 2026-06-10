@@ -681,11 +681,11 @@ class CPlayer: public CStore
 		const char *get_news_file_name();
 		void load_news();
 
-		// Consume pending turn-news (advance baselines + clear itemized lists).
-		// generate_news()/CNewsCenter::generate() is read-only so the auto-
-		// refreshing main page accumulates unseen news; this acknowledges it
-		// when the player navigates away from the main page.
-		inline void acknowledge_news() { mNewsCenter.mark_seen(); }
+		// Consume pending turn-news (advance baselines + clear itemized lists)
+		// for the empire AND every planet. generate_news() is read-only so the
+		// auto-refreshing main page accumulates unseen news across turns; this
+		// acknowledges it when the player navigates away from the main page.
+		void acknowledge_news();
 
 		// Count of pending real-time events (sieges/raids/etc.) in the news
 		// feed; part of the /archspace/events.as push fingerprint.
