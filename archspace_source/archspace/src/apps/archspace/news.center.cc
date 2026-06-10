@@ -194,6 +194,21 @@ CNewsCenter::get_current_time()
 void
 CNewsCenter::time_news(const char* aNewsString)
 {
+	// Ignore blank/whitespace-only news. Several callers (e.g. mission_handler,
+	// effect accumulation) hand us their buffer guarded only by a NULL check;
+	// since CString->char* now yields "" (not NULL) for an empty buffer, an
+	// idle turn would otherwise add an empty time-stamped row every turn.
+	if (aNewsString)
+	{
+		const char *p = aNewsString;
+		while (*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++;
+		if (!*p) return;
+	}
+	else
+	{
+		return;
+	}
+
 	mStoreFlag += STORE_TIME_NEWS;
 
 	const char *
