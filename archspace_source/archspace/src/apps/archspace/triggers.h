@@ -285,6 +285,29 @@ class CCronTabNewPlayer : public CCronTab
 		virtual void handler();
 };
 
+// Keep a band-locked population of bot (NPC) players topped up (see
+// trigger/crontab.bot.cc).
+class CCronTabBotPopulation : public CCronTab
+{
+	public :
+		virtual ~CCronTabBotPopulation() {};
+		virtual const char *name() { return "bot_population"; }
+		virtual int get_run_second() { return 300; }   // every 5 minutes
+	private :
+		virtual void handler();
+};
+
+// Drive each bot's defensive economy (expedition / train / build / defend).
+class CCronTabBotAI : public CCronTab
+{
+	public :
+		virtual ~CCronTabBotAI() {};
+		virtual const char *name() { return "bot_ai"; }
+		virtual int get_run_second() { return 60; }     // every minute
+	private :
+		virtual void handler();
+};
+
 class CTriggerRunCronTab: public CTrigger, public CList
 {
 	public:

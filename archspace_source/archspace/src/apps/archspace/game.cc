@@ -1606,6 +1606,178 @@ CGame::create_new_player(int aPortalID, const char *aName, int aRace)
 	return Player;
 }
 
+// Create a bot (NPC) player seeded into power band aBand (0..NUM_BOT_BANDS-1).
+// Builds on create_new_player() (home planet + 3 starting fleets), then adds
+// planets and raises full-strength fleets until get_power() reaches the band
+// floor -- auto-tuning to the band without hard-coding power-per-ship constants.
+// The band is encoded in the portal id (see player.h); bot identity is portal-id
+// based, so nothing extra is persisted.
+CPlayer *
+CGame::create_bot_player(int aBand)
+{
+	if (aBand < 0) aBand = 0;
+	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
+
+	// next free portal id within this band's reserved range
+	int RangeLo = BOT_PORTAL_BASE + aBand * BOT_BAND_STRIDE;
+	int RangeHi = RangeLo + BOT_BAND_STRIDE;
+	int MaxID = RangeLo;
+	for (int i=0 ; i<PLAYER_TABLE->length() ; i++)
+	{
+		CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
+		if (P == NULL) continue;
+		int PID = P->get_portal_id();
+		if (PID >= RangeLo && PID < RangeHi && PID > MaxID) MaxID = PID;
+	}
+	int PortalID = MaxID + 1;
+	if (PortalID >= RangeHi) return NULL;   // band space exhausted (1M slots)
+
+	CString Name;
+	Name.format("BOT(%d)", PortalID - BOT_PORTAL_BASE);
+
+	CPlayer *Player = create_new_player(PortalID, (char *)Name, number(10));
+	if (Player == NULL) return NULL;
+
+	CPlanetList    *PlanetList     = Player->get_planet_list();
+	CAdmiralList   *AdmiralList    = Player->get_admiral_list();
+	CAdmiralList   *AdmiralPool    = Player->get_admiral_pool();
+	CFleetList     *FleetList      = Player->get_fleet_list();
+	CShipDesignList *ShipDesignList = Player->get_ship_design_list();
+
+	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
+	int TargetPlanets = 4 + aBand * 4;
+	int PlanetGuard = 0;
+	while (PlanetList->length() < TargetPlanets && PlanetGuard++ < TargetPlanets * 4)
+	{
+		int ClusterID = Player->find_new_planet(true);
+		if (ClusterID == -1)
+		{
+			for (int i=0 ; i<UNIVERSE->length() ; i++)
+			{
+				CCluster *Cluster = (CCluster *)UNIVERSE->get(i);
+				if (Cluster->get_id() == EMPIRE_CLUSTER_ID) continue;
+				if (Cluster->get_player_count()*20 < Cluster->get_planet_count()) continue;
+				if (PlanetList->count_planet_from_cluster(Cluster->get_id()) > 20) continue;
+				ClusterID = Cluster->get_id();
+				break;
+			}
+		}
+		if (ClusterID == -1)
+		{
+			CCluster *Cluster = UNIVERSE->new_cluster();
+			ClusterID = Cluster->get_id();
+			CMagistrate *Magistrate = new CMagistrate();
+			EMPIRE->get_magistrate_list()->add_magistrate(Magistrate);
+			Magistrate->initialize(Cluster->get_id());
+		}
+
+		CCluster *Cluster = UNIVERSE->get_by_id(ClusterID);
+		if (Cluster == NULL) break;
+
+		CPlanet *Planet = new CPlanet();
+		Planet->initialize();
+		Planet->set_cluster(Cluster);
+		Planet->set_name(Cluster->get_new_planet_name());
+		Player->add_planet(Planet);
+		PLANET_TABLE->add_planet(Planet);
+		Planet->start_terraforming();
+		Player->new_planet_news(Planet);
+
+		Planet->type(QUERY_INSERT);
+		STORE_CENTER->store(*Planet);
+	}
+
+	// --- raise fleets until power reaches the MINIMUM (floor) of the band -----
+	// The bot is created at the low end of its band and the last fleet is sized
+	// (its capacity, not just its crew) so it lands just above the floor rather
+	// than deep inside the band. Sizing the *capacity* matters: the AI keeps
+	// fleets manned to max_ship, so a merely under-crewed fleet would be re-
+	// filled and overshoot -- a smaller-capacity fleet stays put near the floor.
+	// Always raise a small minimum so even band-0 bots are viable; commanders
+	// are created on demand if the pool runs dry. Bounded by a hard cap.
+	int Floor     = bot_band_floor(aBand);
+	int MinFleets  = 3 + aBand * 3;
+	int MaxFleets  = 500;                  // absolute safety cap
+	Player->refresh_power();
+	while (FleetList->length() < MaxFleets &&
+	       (FleetList->length() < MinFleets || Player->get_power() < Floor))
+	{
+		if (AdmiralPool->length() == 0)
+		{
+			CAdmiral *NewAdmiral = new CAdmiral(Player);
+			AdmiralPool->add_admiral(NewAdmiral);
+			NewAdmiral->type(QUERY_INSERT);
+			STORE_CENTER->store(*NewAdmiral);
+		}
+		CAdmiral *Admiral = (CAdmiral *)AdmiralPool->get(0);
+		CShipDesign *ShipDesign =
+			(CShipDesign *)ShipDesignList->get(ShipDesignList->length() - 1);
+		if (Admiral == NULL || ShipDesign == NULL) break;
+
+		int Before    = Player->get_power();
+		int Capacity  = Admiral->get_fleet_commanding();
+
+		CFleet *Fleet = new CFleet();
+		Fleet->set_id(FleetList->get_new_fleet_id());
+		Fleet->set_owner(Player->get_game_id());
+		Fleet->set_name((char *)format("BOT Fleet(%d)", Fleet->get_id()));
+		Fleet->set_admiral(Admiral->get_id());
+		Fleet->set_ship_class(ShipDesign);
+		Fleet->set_max_ship(Capacity);
+		Fleet->set_current_ship(Capacity);
+		Fleet->set_exp(25 + Player->get_control_model()->get_military()*3);
+		FleetList->add_fleet(Fleet);
+		Player->refresh_power();
+
+		// If this full fleet overshot the band floor, shrink its capacity so the
+		// bot settles right at the low end (skip band 0, whose floor is 0).
+		int After = Player->get_power();
+		if (Floor > 0 && Before < Floor && After > Floor && Capacity > 0)
+		{
+			int PerShip = (After - Before) / Capacity;        // ~power per ship
+			if (PerShip > 0)
+			{
+				int WantShips = (Floor - Before) / PerShip + 1;
+				if (WantShips < 1) WantShips = 1;
+				if (WantShips < Capacity)
+				{
+					Fleet->set_max_ship(WantShips);
+					Fleet->set_current_ship(WantShips);
+					Player->refresh_power();
+				}
+			}
+		}
+
+		Admiral->set_fleet_number(Fleet->get_id());
+		AdmiralPool->remove_without_free_admiral(Admiral->get_id());
+		AdmiralList->add_admiral(Admiral);
+
+		Fleet->type(QUERY_INSERT);
+		STORE_CENTER->store(*Fleet);
+		Admiral->type(QUERY_UPDATE);
+		STORE_CENTER->store(*Admiral);
+	}
+
+	// leave a few spare commanders in the pool for the AI to grow into
+	while (AdmiralPool->length() < 5)
+	{
+		CAdmiral *Admiral = new CAdmiral(Player);
+		AdmiralPool->add_admiral(Admiral);
+		Admiral->type(QUERY_INSERT);
+		STORE_CENTER->store(*Admiral);
+	}
+
+	Player->set_last_login(time(0));
+	Player->type(QUERY_UPDATE);
+	STORE_CENTER->store(*Player);
+
+	SLOG("SYSTEM : bot %s created (band %d, portal %d, power %d, planets %d, fleets %d)",
+			Player->get_nick(), aBand, PortalID, Player->get_power(),
+			PlanetList->length(), FleetList->length());
+
+	return Player;
+}
+
 CCouncil *
 CGame::create_new_council(CCluster *aCluster, char *aName )
 {

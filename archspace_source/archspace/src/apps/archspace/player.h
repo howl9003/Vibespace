@@ -26,6 +26,19 @@ class CRace;
 class CAdmission;
 class CRankTable;
 
+// --- Bot (NPC) players -------------------------------------------------------
+// Bots are ordinary CPlayer rows distinguished by a reserved high portal-id
+// band. Auth-issued portal ids equal accounts.id (a low auto-increment), so the
+// reserved band never collides. The bot's power band (0..NUM_BOT_BANDS-1) is
+// encoded in the portal id, so no extra DB column is needed:
+//     portal_id = BOT_PORTAL_BASE + band*BOT_BAND_STRIDE + sequence
+#define BOT_PORTAL_BASE   1000000000
+#define BOT_BAND_STRIDE   1000000
+#define NUM_BOT_BANDS     4
+// Power ceiling for a band; the floor is the previous band's ceiling (0 for 0).
+int bot_band_ceiling(int aBand);
+int bot_band_floor(int aBand);
+
 //------------------------------------------------------- CPlayer
 
 struct LostPlanet
@@ -320,6 +333,11 @@ class CPlayer: public CStore
 	public: // get
 		inline int get_portal_id() const;
 		inline int get_game_id() const;
+
+		// bot (NPC) identity, encoded in the portal id (see top of file)
+		bool is_bot() const { return mPortalID >= BOT_PORTAL_BASE; }
+		int bot_band() const
+			{ return is_bot() ? (mPortalID - BOT_PORTAL_BASE) / BOT_BAND_STRIDE : -1; }
 
 		inline const char* get_name() const;
 		const char *get_nick() const { return (char *)mNick; }

@@ -1,0 +1,53 @@
+name: Build check (no deploy)
+
+# Compile the engine image on the self-hosted EC2 runner WITHOUT touching the
+# running game. This is the safety gate for C++ engine changes (which the deploy
+# would otherwise build straight onto production): a green run here proves the
+# engine compiles on the real target before we flip `production`.
+#
+# Safety: the build runs in an isolated, detached git worktree at the pushed
+# commit and tags a throwaway image (archspace:buildcheck-<sha>) via a direct
+# `docker build` -- so it never disturbs the production checkout, never
+# overwrites the archspace:latest image the live container would restart from,
+# and never runs `compose up`. The throwaway image and worktree are removed at
+# the end.
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+concurrency:
+  group: build-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Compile engine image from the pushed commit (isolated)
+        run: |
+          set -e
+          cd "${EC2_REPO_DIR:-$HOME/archspace}"
+          git fetch --prune origin "${{ github.ref_name }}"
+
+          SHA="${{ github.sha }}"
+          TAG="archspace:buildcheck-${SHA}"
+          WORK="$(mktemp -d)"
+          cleanup() {
+            git worktree remove --force "$WORK" 2>/dev/null || true
+            rm -rf "$WORK" 2>/dev/null || true
+            $DOCKER image rm "$TAG" 2>/dev/null || true
+          }
+
+          DOCKER="docker"
+          if ! $DOCKER info >/dev/null 2>&1; then DOCKER="sudo docker"; fi
+
+          trap cleanup EXIT
+          git worktree add --detach "$WORK" "$SHA"
+
+          # Build context == repo root (matches compose `context: ..`); the
+          # Dockerfile compiles libs + the C++ game server and asserts the binary
+          # exists, so a compile/link failure fails this step.
+          echo "==> build-check: compiling $SHA as $TAG"
+          $DOCKER build -f "$WORK/docker/Dockerfile" -t "$TAG" "$WORK"
+          echo "==> build-check: OK (engine compiled cleanly)"

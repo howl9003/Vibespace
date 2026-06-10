@@ -74,8 +74,9 @@ class CGame
         bool database_table();
 
 	public:
-		CPlayer* create_new_player(int aPortalID, const char *aName, 
+		CPlayer* create_new_player(int aPortalID, const char *aName,
 													int aRace);
+		CPlayer* create_bot_player(int aBand);
 
 		CCouncil *create_new_council(CCluster *aCluster, char *aName = NULL);
 		bool create_new_action( CPlayer *Owner, int aAction, 

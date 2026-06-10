@@ -3037,6 +3037,26 @@ CPlayer::get_race_name2()
 	}
 }
 
+// Bot power bands (see player.h). Band b spans (floor(b), ceiling(b)].
+int
+bot_band_ceiling(int aBand)
+{
+	switch (aBand)
+	{
+		case 0: return 10000;
+		case 1: return 50000;
+		case 2: return 100000;
+		case 3: return 200000;
+		default: return 200000;
+	}
+}
+
+int
+bot_band_floor(int aBand)
+{
+	return aBand <= 0 ? 0 : bot_band_ceiling(aBand - 1);
+}
+
 bool
 CPlayer::refresh_power()
 {

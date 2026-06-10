@@ -472,7 +472,8 @@ CCFILES=\
 		trigger/crontab.empire.counterattack.cc \
 		trigger/crontab.event.cc \
 		trigger/crontab.council.cc \
-		trigger/crontab.commerce.cc
+		trigger/crontab.commerce.cc \
+		trigger/crontab.bot.cc
 
 #		page/domestic.cc page/select_mode.cc \
 #		page/select_mode2.cc page/whitebook.cc page/planet_manage.cc \
