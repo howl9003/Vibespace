@@ -480,9 +480,20 @@ static void cgi_error(const char *msg)
            "<title>*********ARCHSPACE************</title>\n"
            "<meta http-equiv=\"Content-Type\" content=\"text/html;"
            " charset=utf-8\">\n"
+           /* When a .as request errors inside the game frameset, this page
+              lands in the main frame and sits next to a now-stale/broken left
+              menu frame. Break out so the whole window shows one clean message.
+              location.replace avoids a history entry; once we are the top
+              document the guard is false, so there is no redirect loop. */
+           "<script type=\"text/javascript\">\n"
+           "if (window.top !== window.self) {"
+           " window.top.location.replace(window.self.location.href); }\n"
+           "</script>\n"
            "</head>\n"
-           "<body bgcolor=\"#000000\">\n"
-           "<p style=\"color:#999999;\">%s</p>\n"
+           "<body bgcolor=\"#000000\" style=\"margin:0;\">\n"
+           "<div style=\"max-width:620px;margin:16%% auto 0;padding:0 24px;"
+           "text-align:center;color:#999999;font-family:sans-serif;"
+           "font-size:15px;line-height:1.6;\">%s</div>\n"
            "</body>\n"
            "</html>\n", msg);
 }
