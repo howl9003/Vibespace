@@ -3467,6 +3467,11 @@ CPlayer::mission_handler()
 
 		CMission &Mission = Fleet->get_mission();
 
+		// QOL: when set, the fleet's mission_target carries a 0/1 auto-repeat
+		// flag for expeditions (the field is otherwise unused for them). If a
+		// completed expedition auto-relaunches below, we must skip end_mission().
+		bool Relaunched = false;
+
 		if (Mission.get_mission() == CMission::MISSION_PATROL)
 			Admiral->gain_exp(CMission::mAdmiralExpPatrol);
 
@@ -3504,11 +3509,13 @@ CPlayer::mission_handler()
 
 				new_planet_news(Planet);
 
-				Fleet->init_mission(CMission::MISSION_RETURNING_WITH_PLANET, 0);
+				// carry the auto-repeat flag through the return leg
+				Fleet->init_mission(CMission::MISSION_RETURNING_WITH_PLANET, Mission.get_target());
 			}
 			else
 			{
-				Fleet->init_mission(CMission::MISSION_EXPEDITION, 0);
+				// preserve the auto-repeat flag across silent retries
+				Fleet->init_mission(CMission::MISSION_EXPEDITION, Mission.get_target());
 			}
 		}
 
@@ -3602,6 +3609,15 @@ CPlayer::mission_handler()
 					Buf.format(GETTEXT("Your fleet %1$s has returned with a new planet."),
 								Fleet->get_name());
 					Buf += "<BR>\n";
+
+					// QOL auto-repeat: relaunch instead of going idle
+					if (Mission.get_target() != 0)
+					{
+						Fleet->init_mission(CMission::MISSION_EXPEDITION, Mission.get_target());
+						Relaunched = true;
+						Buf += GETTEXT("It has automatically set out on another expedition.");
+						Buf += "<BR>\n";
+					}
 				}
 				break;
 
@@ -3611,7 +3627,7 @@ CPlayer::mission_handler()
 				case CMission::MISSION_STATION_ON_PLANET:
 				break;
 			}
-			Fleet->end_mission();
+			if (!Relaunched) Fleet->end_mission();
 		}
 	}
 	return (char*)Buf;

@@ -648,6 +648,14 @@ CFleet::get_detailed_status_string()
 		Buf = get_status_string();
 	}
 
+	// QOL: flag expeditions running on auto-repeat (mission_target reused as flag)
+	if ((mMission.get_mission() == CMission::MISSION_EXPEDITION ||
+		 mMission.get_mission() == CMission::MISSION_RETURNING_WITH_PLANET) &&
+		mMission.get_target() != 0)
+	{
+		Buf += " (auto)";
+	}
+
 	return (char*)Buf;
 }
 

@@ -46,13 +46,24 @@ CPageExpeditionResult::handler(CPlayer *aPlayer)
 		}
 	}
 
-	Fleet->init_mission(CMission::MISSION_EXPEDITION, 0);
+	// QOL: opt-in auto-repeat. The checkbox rides on the (otherwise unused for
+	// expeditions) mission_target field: 1 = relaunch after each success, 0 = one-shot.
+	QUERY("AUTO_REPEAT", AutoStr);
+	int
+		Auto = as_atoi(AutoStr) ? 1 : 0;
+
+	Fleet->init_mission(CMission::MISSION_EXPEDITION, Auto);
 
 	Fleet->type(QUERY_UPDATE);
 	STORE_CENTER->store(*Fleet);
 
-	ITEM("RESULT_MESSAGE", GETTEXT("Your selected fleet has set out on a expedition"
-									" to the deep space.")); 
+	if (Auto)
+		ITEM("RESULT_MESSAGE", GETTEXT("Your selected fleet has set out on a expedition"
+										" to the deep space, and will automatically continue"
+										" expeditions after each successful return."));
+	else
+		ITEM("RESULT_MESSAGE", GETTEXT("Your selected fleet has set out on a expedition"
+										" to the deep space."));
 
 //	system_log( "end page handler %s", get_name() );
 
