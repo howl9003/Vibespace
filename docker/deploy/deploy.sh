@@ -23,11 +23,28 @@ fi
 BRANCH="${DEPLOY_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
 
 # --- sync the working tree to the remote branch ----------------------------
+OLD_REV="$(git rev-parse HEAD 2>/dev/null || echo '')"
 echo "==> deploy: syncing to origin/$BRANCH"
 git fetch --prune origin "$BRANCH"
 git checkout "$BRANCH"
 git reset --hard "origin/$BRANCH"
+NEW_REV="$(git rev-parse HEAD)"
 echo "    now at: $(git rev-parse --short HEAD) $(git log -1 --pretty=%s)"
+
+# --- decide: cheap restart vs full rebuild ---------------------------------
+# The compose file bind-mounts the web tier, page templates, nginx config and
+# setup scripts; the entrypoint re-assembles them on every start. So UI /
+# template / config changes apply with a plain `restart` (seconds). Only a
+# change to the compiled C++ engine, the CGI adapter, or the Dockerfile needs a
+# real image rebuild (minutes). FORCE_REBUILD=1 overrides to always rebuild.
+NEEDS_BUILD=0
+if [ "${FORCE_REBUILD:-0}" = "1" ] || [ -z "$OLD_REV" ]; then
+  # Explicit override, or first deploy on this checkout -> build to be safe.
+  NEEDS_BUILD=1
+elif [ "$OLD_REV" != "$NEW_REV" ] && git diff --name-only "$OLD_REV" "$NEW_REV" \
+       | grep -qE '^archspace_source/archspace/src/(libs|apps)/|^docker/as-cgi/|^docker/Dockerfile$'; then
+  NEEDS_BUILD=1
+fi
 
 # --- docker (fall back to sudo only if the daemon isn't reachable) ----------
 DOCKER="docker"
@@ -41,15 +58,23 @@ if [ -n "${DOMAIN:-}" ]; then
   PROFILE="--profile https"
 fi
 
-# --- rebuild + restart (brief blip only at the swap, not during build) -----
-echo "==> deploy: building + restarting${DOMAIN:+ (HTTPS for $DOMAIN)}"
-WEB_BIND="${WEB_BIND:-0.0.0.0}" WEB_PORT="${WEB_PORT:-8080}" \
-  DOMAIN="${DOMAIN:-}" TLS_EMAIL="${TLS_EMAIL:-}" \
-  $COMPOSE $PROFILE up --build -d
+env_prefix() {
+  WEB_BIND="${WEB_BIND:-0.0.0.0}" WEB_PORT="${WEB_PORT:-8080}" \
+    DOMAIN="${DOMAIN:-}" TLS_EMAIL="${TLS_EMAIL:-}" "$@"
+}
 
-# --- reclaim space from the previous image ---------------------------------
-echo "==> deploy: pruning dangling images"
-$DOCKER image prune -f >/dev/null 2>&1 || true
+if [ "$NEEDS_BUILD" = "1" ]; then
+  echo "==> deploy: engine/Dockerfile changed -> rebuilding image${DOMAIN:+ (HTTPS for $DOMAIN)}"
+  env_prefix $COMPOSE $PROFILE up --build -d
+  echo "==> deploy: pruning dangling images"
+  $DOCKER image prune -f >/dev/null 2>&1 || true
+else
+  echo "==> deploy: web/template/config only -> restart (no rebuild)"
+  # `up -d` applies any compose/volume changes; `restart` re-runs the entrypoint
+  # so setup-web.sh / setup-runtime.sh re-assemble from the updated sources.
+  env_prefix $COMPOSE $PROFILE up -d
+  $COMPOSE restart archspace
+fi
 
 echo "==> deploy: done"
 $COMPOSE ps

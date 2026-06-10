@@ -27,6 +27,20 @@ services:
       - db_data:/var/lib/mysql
       - game_state:/var/archspace/data   # news, battles, messages, audit — persisted
       - logs:/var/log/archspace
+      # Fast iteration: bind-mount the sources the entrypoint re-assembles on
+      # every start (web tier, page templates, nginx, setup scripts). A host
+      # `git pull` + `docker compose restart` then applies UI/template/config
+      # changes with NO image rebuild. Only C++ engine changes need --build.
+      # Read-only: setup-runtime.sh copies+transforms these into the runtime
+      # paths it reads, never writing back to the source.
+      - ../web:/build/web:ro
+      - ../docker/web-overrides:/build/docker/web-overrides:ro
+      - ../archspace_source/archspace/src/web:/build/archspace/src/web:ro
+      - ../archspace_source/archspace/src/form:/build/archspace/src/form:ro
+      - ../docker/setup-web.sh:/usr/local/bin/setup-web.sh:ro
+      - ../docker/setup-runtime.sh:/usr/local/bin/setup-runtime.sh:ro
+      - ../docker/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro
+      - ../docker/nginx.conf:/etc/nginx/sites-available/archspace:ro
     healthcheck:
       test: ["CMD-SHELL", "ss -ltn | grep -q ':12350'"]
       interval: 30s
