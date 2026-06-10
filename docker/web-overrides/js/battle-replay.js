@@ -27,7 +27,7 @@
 
   var logPath = mount.getAttribute('data-log') || '';
   var viewerId = mount.getAttribute('data-player') || '';
-  var imgBase = mount.getAttribute('data-img') || '';   // $IMAGE_SERVER_URL
+  var imgBase = mount.getAttribute('data-img') || '';   // optional $IMAGE_SERVER_URL
 
   // race id -> image-folder name (src/script/race.en Number()s; folders under
   // /image/as_game/race/<name>/small_symbol.gif)
@@ -37,7 +37,12 @@
   };
   function raceLogo(raceId) {
     var name = RACE_NAMES[raceId];
-    return name ? imgBase + '/image/as_game/race/' + name + '/small_symbol.gif' : null;
+    if (!name) return null;
+    // Production collapses image assets to this origin (/image/...), and the
+    // battle-report page doesn't define IMAGE_SERVER_URL, so data-img can arrive
+    // as the literal unsubstituted token — ignore that and fall back to /image.
+    var base = (imgBase && imgBase.indexOf('$') === -1) ? imgBase : '';
+    return base + '/image/as_game/race/' + name + '/small_symbol.gif';
   }
 
   // Map the engine's filesystem path to the web route nginx serves.
@@ -159,16 +164,14 @@
       }
     }
 
-    // assign sides, sort samples, compute bounds, tally per-side fleets/ships
+    // assign sides, sort samples, compute bounds (header tallies fleets/ships
+    // live per turn in buildHeader, so no static totals are stored here)
     var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9, any = false;
-    B.stats = { att: { fleets: 0, ships: 0 }, def: { fleets: 0, ships: 0 } };
     for (var k in B.fleets) {
       var fl3 = B.fleets[k];
       // attacker side vs everyone else (defender + allies render as defender)
       fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
       fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
-      B.stats[fl3.side].fleets += 1;
-      B.stats[fl3.side].ships += (fl3.samples[0] ? fl3.samples[0].ships : 0);
       for (var si = 0; si < fl3.samples.length; si++) {
         var s = fl3.samples[si]; any = true;
         if (s.x < minX) minX = s.x; if (s.x > maxX) maxX = s.x;
@@ -199,8 +202,10 @@
   }
 
   // ---- combatant header ---------------------------------------------------
-  // One side panel: race logo + "Name(serial)" + FLEETS / SHIPS counts.
-  function sidePanel(name, serial, raceId, stats, accent, align) {
+  // One side panel: race logo + "Name(serial)" + a FLEETS / SHIPS line whose
+  // numbers update per turn (returns the stats element so buildHeader can
+  // refresh it as fleets are disabled and ships are sunk).
+  function sidePanel(name, serial, raceId, accent, align) {
     var box = el('div', 'flex:1;min-width:0;display:flex;flex-direction:column;' +
       'gap:2px;text-align:' + align + ';');
     var titleRow = el('div', 'display:flex;align-items:center;gap:5px;' +
@@ -214,24 +219,45 @@
       'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + label + '</span>';
     titleRow.innerHTML = align === 'right' ? (nameSpan + logoImg) : (logoImg + nameSpan);
     box.appendChild(titleRow);
-    box.appendChild(el('div', 'font:11px serif;color:#9ab;',
-      '<span style="color:#667;">FLEETS</span> ' + stats.fleets +
-      ' &nbsp; <span style="color:#667;">SHIPS</span> ' + stats.ships));
+    var statsEl = el('div', 'font:11px serif;color:#9ab;');
+    box.appendChild(statsEl);
+    box._stats = statsEl;
     return box;
+  }
+  function fmtStats(fleets, ships) {
+    return '<span style="color:#667;">FLEETS</span> ' + fleets +
+           ' &nbsp; <span style="color:#667;">SHIPS</span> ' + ships;
   }
   function buildHeader(B) {
     var hdr = el('div', 'display:flex;align-items:flex-start;gap:8px;' +
       'background:#070713;border:1px solid #223355;border-bottom:none;' +
       'padding:6px 10px;box-sizing:border-box;');
-    hdr.appendChild(sidePanel(B.attackerName, B.attackerId, B.attackerRace,
-      B.stats.att, ATT, 'left'));
+    var att = sidePanel(B.attackerName, B.attackerId, B.attackerRace, ATT, 'left');
+    hdr.appendChild(att);
     hdr.appendChild(el('div',
       'flex:none;align-self:center;color:#cdd;font:bold 13px serif;' +
       'text-align:center;padding:0 6px;white-space:nowrap;',
       (B.field || 'Battle').replace(/</g, '&lt;')));
-    hdr.appendChild(sidePanel(B.defenderName, B.defenderId, B.defenderRace,
-      B.stats.def, DEF, 'right'));
-    return hdr;
+    var def = sidePanel(B.defenderName, B.defenderId, B.defenderRace, DEF, 'right');
+    hdr.appendChild(def);
+
+    // per-side fleet lists for live tallies (ships sunk / fleets destroyed)
+    var sides = { att: [], def: [] };
+    for (var k in B.fleets) sides[B.fleets[k].side].push(B.fleets[k]);
+    function tally(list, t) {
+      var fleets = 0, ships = 0;
+      for (var i = 0; i < list.length; i++) {
+        var st = stateAt(list[i], t);
+        if (st) { fleets++; ships += st.ships; }
+      }
+      return { fleets: fleets, ships: ships };
+    }
+    function update(t) {
+      var a = tally(sides.att, t), d = tally(sides.def, t);
+      att._stats.innerHTML = fmtStats(a.fleets, a.ships);
+      def._stats.innerHTML = fmtStats(d.fleets, d.ships);
+    }
+    return { el: hdr, update: update };
   }
 
   // ---- build UI + run -----------------------------------------------------
@@ -241,7 +267,8 @@
     mount.appendChild(wrap);
 
     // ---- combatant header: race logo, name(serial), fleets & ships per side --
-    wrap.appendChild(buildHeader(B));
+    var header = buildHeader(B);
+    wrap.appendChild(header.el);
 
     var canvas = el('canvas', 'display:block;width:100%;background:#04040c;border:1px solid #223355;');
     canvas.width = CW; canvas.height = CH;
@@ -331,7 +358,7 @@
       cur = Math.max(0, Math.min(B.endTurn, t));
       slider.value = cur;
       turnLbl.textContent = 'Turn ' + Math.round(cur) + ' / ' + B.endTurn;
-      render(cur); renderTicker(cur);
+      render(cur); renderTicker(cur); header.update(cur);
     }
     function tick(ts) {
       if (!playing) return;
