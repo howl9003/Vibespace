@@ -246,10 +246,14 @@ CArchspaceConnection::make_page()
 			const char *Base = strrchr(URI, '/');
 			Base = Base ? Base + 1 : URI;
 			// main.as / menu.as are the auto-refreshing shell (summary + left
-			// navbar); the death_* variants are terminal status screens. None
-			// of these count as "navigating away", so don't consume there.
+			// navbar); the death_* variants are terminal status screens; and
+			// events.as is the SSE push fingerprint, polled every couple of
+			// seconds. NONE of these count as "navigating away" -- in
+			// particular consuming on events.as would clear the news feed
+			// before the player ever sees it -- so don't acknowledge there.
 			if (strcmp(Base, "main.as")       != 0 &&
 			    strcmp(Base, "menu.as")       != 0 &&
+			    strcmp(Base, "events.as")     != 0 &&
 			    strcmp(Base, "death_main.as") != 0 &&
 			    strcmp(Base, "death_menu.as") != 0)
 				Player->acknowledge_news();

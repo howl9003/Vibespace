@@ -165,8 +165,12 @@ class CNewsCenter
 		const char *time_news();
 
 	public: // get
-		inline bool empty();	
+		inline bool empty();
 		const char *get_query();
+		// Number of pending real-time (time-stamped) events not yet
+		// acknowledged. Used by the /archspace/events.as fingerprint so the
+		// SSE bridge can tell when a new hostile action / event has landed.
+		inline int get_time_news_count() { return mTimeNews.length(); }
 
 	public: // set
 		// Acknowledge all pending turn-news: advance the baselines + clear the

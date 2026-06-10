@@ -268,6 +268,31 @@ class CPageMain: public CPageGame
 };
 
 /**
+ * CPageEvents — /archspace/events.as
+ *
+ * A tiny read-only JSON endpoint used by the real-time push (SSE) bridge. It
+ * returns a "fingerprint" of the calling player's notifiable state — current
+ * turn, unread diplomatic/council message counts, and pending real-time
+ * (time-stamped) events. The bridge polls this internally and, when the
+ * fingerprint advances, pushes an SSE event so the browser updates the news
+ * feed the instant something happens instead of waiting for a manual reload.
+ * It reads existing state only — it never changes game logic.
+ */
+class CPageEvents: public CPageGame
+{
+	public:
+		CPageEvents():CPageGame() {}
+		virtual ~CPageEvents() {}
+
+		virtual const char *get_name() { return "/archspace/events.as"; }
+		virtual bool handle(CConnection &aConnection);
+	protected:
+		// CPageGame requires this; events.as overrides handle() directly so
+		// the templated player/death/create flow is bypassed.
+		virtual bool handler(CPlayer *aPlayer) { return true; }
+};
+
+/**
 */
 class CPageHeadTitle: public CPageGame
 {

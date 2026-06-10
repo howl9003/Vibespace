@@ -175,6 +175,7 @@ CCFILES=\
 		page/death_main.cc \
 		page/menu.cc \
 		page/main.cc \
+		page/events.cc \
 		page/restart.cc \
 		page/quit.cc \
 		page/retire.cc \

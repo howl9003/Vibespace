@@ -44,6 +44,7 @@ CArchspacePageStation::registration()
 	// game
 	insert_sorted(new CPageMenu());
 	insert_sorted(new CPageMain());
+	insert_sorted(new CPageEvents());
 	insert_sorted(new CPageShowEvent());
 	insert_sorted(new CPageAnswerEvent());
 	insert_sorted(new CPagePreference());

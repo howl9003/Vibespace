@@ -687,6 +687,11 @@ class CPlayer: public CStore
 		// when the player navigates away from the main page.
 		inline void acknowledge_news() { mNewsCenter.mark_seen(); }
 
+		// Count of pending real-time events (sieges/raids/etc.) in the news
+		// feed; part of the /archspace/events.as push fingerprint.
+		inline int get_pending_time_news_count()
+				{ return mNewsCenter.get_time_news_count(); }
+
 		CPlayerRelation *get_relation(CPlayer *aPlayer);
 
 		const char* improve_relationship(

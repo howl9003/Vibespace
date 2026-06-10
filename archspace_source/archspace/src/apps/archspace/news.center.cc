@@ -246,8 +246,11 @@ CNewsCenter::time_news()
 		News += "</TR>\n";
 	}
 
-	mStoreFlag += STORE_TIME_NEWS;
-	mTimeNews.remove_all();
+	// NOTE: time-news (real-time events: sieges, blockades, raids, spy ops,
+	// arriving messages) is NOT consumed here anymore. Like the rest of the
+	// feed it now accumulates so an auto-/push-refresh of the main page can't
+	// drop an event the player hasn't acknowledged; mark_seen() clears it on
+	// navigate-away.
 
 	return (char*)News;
 }
@@ -422,6 +425,9 @@ CNewsCenter::mark_seen()
 
 	mStoreFlag += STORE_ADMIRAL;
 	mAdmiralNews.clear();
+
+	mStoreFlag += STORE_TIME_NEWS;
+	mTimeNews.remove_all();
 }
 
 void 

@@ -64,6 +64,14 @@ if [ -n "$PHP_POOL" ]; then
     sed -i 's#^;\?listen = .*#listen = /run/php/php-fpm.sock#' "$PHP_POOL"
     sed -i 's#^;\?clear_env = .*#clear_env = no#' "$PHP_POOL"
     grep -q '^clear_env' "$PHP_POOL" || echo 'clear_env = no' >> "$PHP_POOL"
+    # The SSE push bridge (events.php) holds one worker per connected player for
+    # up to ~55s, so give the pool plenty of headroom beyond the default 5.
+    PHP_FPM_MAX_CHILDREN="${PHP_FPM_MAX_CHILDREN:-50}"
+    sed -i "s#^;\?pm.max_children = .*#pm.max_children = ${PHP_FPM_MAX_CHILDREN}#" "$PHP_POOL"
+    sed -i 's#^;\?pm = .*#pm = dynamic#' "$PHP_POOL"
+    sed -i 's#^;\?pm.start_servers = .*#pm.start_servers = 8#' "$PHP_POOL"
+    sed -i 's#^;\?pm.min_spare_servers = .*#pm.min_spare_servers = 4#' "$PHP_POOL"
+    sed -i 's#^;\?pm.max_spare_servers = .*#pm.max_spare_servers = 16#' "$PHP_POOL"
 fi
 mkdir -p /run/php
 export DB_HOST="${DB_HOST:-127.0.0.1}" DB_USER="${DB_USER:-root}" \
