@@ -3,7 +3,8 @@
  * register.php — New account registration.
  *
  * GET  — Display the registration form.
- * POST — Validate input, create account, establish session, redirect to /archspace/index.html.
+ * POST — Validate input, create account, establish session, redirect to the
+ *        standalone create-character page (a new account has no character yet).
  *
  * Fields: email, password, password2 (confirmation).
  * Rules:
@@ -18,9 +19,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/lib.php';
 
-// If already logged in, go straight to the game.
-if (current_account() !== null) {
-    header('Location: /archspace/index.html', true, 303);
+// If already logged in, go to the game (or create-character if none yet).
+$acct = current_account();
+if ($acct !== null) {
+    header('Location: ' . game_entry_url((int)$acct['id']), true, 303);
     exit;
 }
 
@@ -72,7 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         create_session($newId);
 
-        header('Location: /archspace/index.html', true, 303);
+        // A fresh account has no character yet -> the standalone create page
+        // (not the shell, whose left frame would also render the create form).
+        header('Location: ' . game_entry_url($newId), true, 303);
         exit;
     }
 }
