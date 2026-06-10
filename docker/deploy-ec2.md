@@ -78,6 +78,19 @@ block in `docker/docker-compose.yml`:
       SMTP_FROM: noreply@yourdomain.com
 ```
 
+## Real-time notifications (push)
+
+Incoming diplomatic/council messages and hostile actions (siege, blockade,
+raid, privateer, spy) are pushed to the browser in real time over
+Server-Sent Events (`/auth/events.php`) — no extra port, it rides the same
+HTTP port as the rest of the site. The dashboard's news feed refreshes the
+instant an event lands. Each open stream holds one php-fpm worker for ~55s
+before the browser reconnects; the pool is sized for this
+(`PHP_FPM_MAX_CHILDREN`, default 50 — raise it via the `environment:` block
+for very large player counts). If you put a reverse proxy in front, make sure
+it doesn't buffer `text/event-stream` (nginx and Caddy both pass SSE through
+fine by default).
+
 ## Troubleshooting
 
 - **Build OOM / killed** on a tiny instance → use `t3.medium`, or confirm the
@@ -86,3 +99,7 @@ block in `docker/docker-compose.yml`:
   and `docker compose ps` shows the container healthy.
 - **502 on a page** → `docker compose logs` to see if php-fpm / the game came up;
   the game listens internally on 12350 (not exposed).
+- **Notifications don't pop in real time** → confirm `/auth/events.php` returns
+  an event stream (`curl -N http://<ip>:<port>/auth/events.php` with a logged-in
+  `as_session` cookie should hold open and emit `event: ready`); make sure any
+  front proxy isn't buffering SSE.
