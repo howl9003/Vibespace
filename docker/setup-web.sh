@@ -69,13 +69,13 @@ PHP
 cat > "$WWW/game_logout.phtml" <<'PHP'
 <?php header('Location: /auth/logout.php'); exit; ?>
 PHP
-# A friendly root: send unauthenticated visitors to login, logged-in players
-# straight into the de-framed game shell.
+# A friendly root: unauthenticated -> login; logged-in with a character -> the
+# de-framed game shell; logged-in without one -> the standalone create page.
 cat > "$WWW/index.php" <<'PHP'
 <?php
 require __DIR__ . '/auth/lib.php';
 $acct = function_exists('current_account') ? current_account() : null;
-header('Location: ' . ($acct ? '/archspace/index.html' : '/auth/login.php'));
+header('Location: ' . ($acct ? game_entry_url((int)$acct['id']) : '/auth/login.php'));
 exit;
 PHP
 

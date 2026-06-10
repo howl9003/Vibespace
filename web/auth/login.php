@@ -12,9 +12,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/lib.php';
 
-// Already logged in — skip to game.
-if (current_account() !== null) {
-    header('Location: /archspace/index.html', true, 303);
+// Already logged in — skip to game (or to create-character if none yet).
+$acct = current_account();
+if ($acct !== null) {
+    header('Location: ' . game_entry_url((int)$acct['id']), true, 303);
     exit;
 }
 
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($row !== null && auth_verify($password, $hashToCheck)) {
         $remember = !empty($_POST['remember']);
         create_session((int)$row['id'], $remember);
-        header('Location: /archspace/index.html', true, 303);
+        header('Location: ' . game_entry_url((int)$row['id']), true, 303);
         exit;
     }
 

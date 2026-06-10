@@ -185,6 +185,43 @@ function current_account(): ?array
 }
 
 // ---------------------------------------------------------------------------
+// Post-login routing
+// ---------------------------------------------------------------------------
+
+/**
+ * Has this account already created a game character?
+ *
+ * The game keys a player row by portal_id (== accounts.id) in the same
+ * database. A brand-new account has none yet.
+ */
+function account_has_character(int $accountId): bool
+{
+    $db   = db();
+    $stmt = $db->prepare('SELECT 1 FROM player WHERE portal_id = ? LIMIT 1');
+    $stmt->bind_param('i', $accountId);
+    $stmt->execute();
+    $exists = $stmt->get_result()->fetch_row() !== null;
+    $stmt->close();
+    return $exists;
+}
+
+/**
+ * Where to send a logged-in account next.
+ *
+ * With a character -> the de-framed game shell (left menu + content). Without
+ * one -> the standalone create-character page, NOT the shell: in the shell both
+ * frames render the create form (the left frame would show a squished
+ * duplicate), so a new player must see the create page full-width and on its
+ * own.
+ */
+function game_entry_url(int $accountId): string
+{
+    return account_has_character($accountId)
+        ? '/archspace/index.html'
+        : '/archspace/create.as';
+}
+
+// ---------------------------------------------------------------------------
 // Mail helper
 // ---------------------------------------------------------------------------
 
