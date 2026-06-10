@@ -7,8 +7,9 @@
 //   CCronTabBotPopulation  keeps a fixed, band-locked spread of bots alive.
 //                          Target is BotPerBand (default 25) in each of the
 //                          NUM_BOT_BANDS power bands -> 100 bots total. Spawns
-//                          at most BotSpawnBatch new bots per run so a cold
-//                          start fills in gracefully rather than in one spike.
+//                          at most BotSpawnBatch new bots per run (default 100,
+//                          i.e. fill the whole population in one run; lower it to
+//                          spread a cold start over several runs if desired).
 //
 //   CCronTabBotAI          drives each living bot. Below its band ceiling a bot
 //                          GROWS: idle fleets auto-expedition for planets,
@@ -43,7 +44,7 @@ CCronTabBotPopulation::handler()
 	SLOG("SYSTEM : bot population crontab start");
 
 	int PerBand    = bot_cfg("BotPerBand", 25);
-	int SpawnBatch = bot_cfg("BotSpawnBatch", 5);
+	int SpawnBatch = bot_cfg("BotSpawnBatch", 100);  // fill all 100 in one run
 
 	int Spawned = 0;
 	for (int band=0 ; band<NUM_BOT_BANDS && Spawned<SpawnBatch ; band++)
