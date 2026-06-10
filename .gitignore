@@ -23,3 +23,6 @@ archspace_source/archspace/src/apps/relay/Makefile
 
 # Persisted server-side deploy config (written by ec2-bootstrap.sh)
 docker/deploy/.deploy.env
+
+# Per-deploy marker (last successfully deployed commit), written on the host
+docker/deploy/.last_deployed

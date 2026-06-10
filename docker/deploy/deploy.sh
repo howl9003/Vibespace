@@ -22,14 +22,21 @@ fi
 
 BRANCH="${DEPLOY_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
 
+# What was actually deployed last time. We track this in a marker file rather
+# than reading git HEAD, because the Actions workflow does its own
+# `git reset --hard` BEFORE invoking this script -- so by now HEAD is already
+# the new commit and a HEAD-vs-HEAD comparison would never detect a change
+# (which silently turned every engine deploy into a no-rebuild restart).
+MARKER="$REPO_ROOT/docker/deploy/.last_deployed"
+OLD_REV="$(cat "$MARKER" 2>/dev/null || echo '')"
+
 # --- sync the working tree to the remote branch ----------------------------
-OLD_REV="$(git rev-parse HEAD 2>/dev/null || echo '')"
 echo "==> deploy: syncing to origin/$BRANCH"
 git fetch --prune origin "$BRANCH"
 git checkout "$BRANCH"
 git reset --hard "origin/$BRANCH"
 NEW_REV="$(git rev-parse HEAD)"
-echo "    now at: $(git rev-parse --short HEAD) $(git log -1 --pretty=%s)"
+echo "    last deployed: ${OLD_REV:-<none>}  ->  now: $(git rev-parse --short HEAD) $(git log -1 --pretty=%s)"
 
 # --- decide: cheap restart vs full rebuild ---------------------------------
 # The compose file bind-mounts the web tier, page templates, nginx config and
@@ -39,7 +46,7 @@ echo "    now at: $(git rev-parse --short HEAD) $(git log -1 --pretty=%s)"
 # real image rebuild (minutes). FORCE_REBUILD=1 overrides to always rebuild.
 NEEDS_BUILD=0
 if [ "${FORCE_REBUILD:-0}" = "1" ] || [ -z "$OLD_REV" ]; then
-  # Explicit override, or first deploy on this checkout -> build to be safe.
+  # Explicit override, or no record of a prior deploy -> build to be safe.
   NEEDS_BUILD=1
 elif [ "$OLD_REV" != "$NEW_REV" ] && git diff --name-only "$OLD_REV" "$NEW_REV" \
        | grep -qE '^archspace_source/archspace/src/(libs|apps)/|^docker/as-cgi/|^docker/Dockerfile$'; then
@@ -75,6 +82,9 @@ else
   env_prefix $COMPOSE $PROFILE up -d
   $COMPOSE restart archspace
 fi
+
+# Record what we just deployed so the next run can diff against it.
+echo "$NEW_REV" > "$MARKER"
 
 echo "==> deploy: done"
 $COMPOSE ps
