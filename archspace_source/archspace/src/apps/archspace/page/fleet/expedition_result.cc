@@ -57,13 +57,13 @@ CPageExpeditionResult::handler(CPlayer *aPlayer)
 	Fleet->type(QUERY_UPDATE);
 	STORE_CENTER->store(*Fleet);
 
-	if (Auto)
-		ITEM("RESULT_MESSAGE", GETTEXT("Your selected fleet has set out on a expedition"
-										" to the deep space, and will automatically continue"
-										" expeditions after each successful return."));
-	else
-		ITEM("RESULT_MESSAGE", GETTEXT("Your selected fleet has set out on a expedition"
-										" to the deep space."));
+	// single ITEM call (the macro is a brace block, so if/else around it breaks)
+	ITEM("RESULT_MESSAGE", Auto
+			? GETTEXT("Your selected fleet has set out on a expedition"
+						" to the deep space, and will automatically continue"
+						" expeditions after each successful return.")
+			: GETTEXT("Your selected fleet has set out on a expedition"
+						" to the deep space."));
 
 //	system_log( "end page handler %s", get_name() );
 
