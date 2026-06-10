@@ -48,6 +48,14 @@ grep -rlZ -iE 'charset=euc-kr|charset=iso-8859-1' "$WWW" 2>/dev/null \
 grep -rlZ 'cursor:hand' "$WWW" 2>/dev/null \
     | xargs -0 -r sed -i 's/cursor:hand/cursor:pointer/g'
 
+# 1d) UI font. The original www tier hard-codes Arial / Arial Narrow in
+#     archspace.css (linked as /archspace.css by every in-game page). Normalize
+#     the whole game UI to Times New Roman by rewriting those font-family values.
+if [ -f "$WWW/archspace.css" ]; then
+    echo "[web] setting UI font to Times New Roman"
+    sed -i -E 's/font-family:[^;]*Arial[^;]*/font-family: "Times New Roman", "Times", serif/g' "$WWW/archspace.css"
+fi
+
 # 2) Modern auth service at /auth/
 if [ -d "$AUTH_SRC" ]; then
     echo "[web] installing auth service at /auth/"
