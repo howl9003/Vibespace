@@ -3,6 +3,14 @@
 # DOMAIN (and optional TLS_EMAIL) come from the environment; Caddy provisions
 # and renews the certificate on its own, and redirects http -> https. It fronts
 # the archspace container (nginx on :80) over the internal compose network.
+#
+# Serves the apex (e.g. archspace.cc) and 301-redirects the www host to it, so
+# www.archspace.cc -> https://archspace.cc/... (apex is canonical). Both names
+# need an A record pointing at this host; Caddy gets a cert for each.
+
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}
 
 {$DOMAIN} {
 	# Real-time push: proxy the SSE endpoint with immediate flushing and no
