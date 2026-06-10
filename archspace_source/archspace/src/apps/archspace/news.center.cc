@@ -289,7 +289,11 @@ CNewsCenter::generate()
 	Buffer += "</TD>\n";
 	Buffer += "</TR>\n";
 
-	set_turn(mOwner->mTurn);
+	// NOTE: baselines are NOT advanced here (no set_turn/set_production/...).
+	// generate() is now read-only so the main page can be auto-refreshed
+	// without consuming unseen news: the displayed range keeps accumulating
+	// (e.g. "from turn 4") until the player navigates away, at which point
+	// mark_seen() advances the baselines + clears the itemized lists.
 
 	// production
 	if ((mOwner->mProduction - mProduction) != 0)
@@ -303,7 +307,6 @@ CNewsCenter::generate()
 		Buffer += "</CENTER>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-		set_production(mOwner->mProduction);
 	}
 
 	// research
@@ -318,7 +321,6 @@ CNewsCenter::generate()
 		Buffer += "</CENTER>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-		set_research(mOwner->mResearch);
 	}
 
 	int Population = mOwner->calc_population();
@@ -333,7 +335,6 @@ CNewsCenter::generate()
 		Buffer += "<BR>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-		set_population(Population);
 	}
 
 	// tech	
@@ -346,9 +347,6 @@ CNewsCenter::generate()
 		Buffer += "</CENTER>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-
-		mStoreFlag += STORE_TECH;
-		mKnownTechNews.clear();
 	}
 
 	// planet	
@@ -361,9 +359,6 @@ CNewsCenter::generate()
 		Buffer += "</CENTER>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-
-		mStoreFlag += STORE_PLANET;
-		mPlanetNews.clear();
 	}
 
 	// project
@@ -376,9 +371,6 @@ CNewsCenter::generate()
 		Buffer += "</CENTER>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-
-		mStoreFlag += STORE_PROJECT;
-		mPurchasedProjectNews.clear();
 	}
 
 	// admiral
@@ -391,14 +383,45 @@ CNewsCenter::generate()
 		Buffer += "</CENTER>\n";
 		Buffer += "</TD>\n";
 		Buffer += "</TR>\n";
-
-		mStoreFlag += STORE_ADMIRAL;
-		mAdmiralNews.clear();
 	}
 
 	Buffer += time_news();
 
 	return (char*)Buffer;
+}
+
+//---------------------------------------------------------------------------
+// mark_seen() — acknowledge all pending turn-news.
+//
+// generate() is now read-only: it renders the accumulated summary but does
+// NOT advance the baselines or clear the itemized lists, so the auto-
+// refreshing main page never drops news the player hasn't acted on. This is
+// the consume step, called when the player navigates away from the main page
+// (see CPlayer::acknowledge_news / CArchspaceConnection::page). It advances
+// every baseline to "now" and clears the four itemized news lists, exactly
+// as generate() used to do inline.
+//---------------------------------------------------------------------------
+void
+CNewsCenter::mark_seen()
+{
+	if (!mOwner) return;
+
+	set_turn(mOwner->mTurn);
+	set_production(mOwner->mProduction);
+	set_research(mOwner->mResearch);
+	set_population(mOwner->calc_population());
+
+	mStoreFlag += STORE_TECH;
+	mKnownTechNews.clear();
+
+	mStoreFlag += STORE_PLANET;
+	mPlanetNews.clear();
+
+	mStoreFlag += STORE_PROJECT;
+	mPurchasedProjectNews.clear();
+
+	mStoreFlag += STORE_ADMIRAL;
+	mAdmiralNews.clear();
 }
 
 void 

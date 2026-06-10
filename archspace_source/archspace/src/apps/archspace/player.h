@@ -681,6 +681,12 @@ class CPlayer: public CStore
 		const char *get_news_file_name();
 		void load_news();
 
+		// Consume pending turn-news (advance baselines + clear itemized lists).
+		// generate_news()/CNewsCenter::generate() is read-only so the auto-
+		// refreshing main page accumulates unseen news; this acknowledges it
+		// when the player navigates away from the main page.
+		inline void acknowledge_news() { mNewsCenter.mark_seen(); }
+
 		CPlayerRelation *get_relation(CPlayer *aPlayer);
 
 		const char* improve_relationship(

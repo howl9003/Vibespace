@@ -233,6 +233,29 @@ CArchspaceConnection::make_page()
 
     if(Player) mGameID = Player->get_game_id();
 
+	// Turn-news accumulation (Option A): the main page (main.as) is auto-
+	// refreshed and renders turn-news read-only, so unseen items keep
+	// accumulating across refreshes. We consume (acknowledge) that news only
+	// when the player navigates AWAY from the main page to any other content
+	// page -- at which point they've had the chance to read it.
+	if (Player)
+	{
+		const char *URI = get_uri();
+		if (URI && *URI)
+		{
+			const char *Base = strrchr(URI, '/');
+			Base = Base ? Base + 1 : URI;
+			// main.as / menu.as are the auto-refreshing shell (summary + left
+			// navbar); the death_* variants are terminal status screens. None
+			// of these count as "navigating away", so don't consume there.
+			if (strcmp(Base, "main.as")       != 0 &&
+			    strcmp(Base, "menu.as")       != 0 &&
+			    strcmp(Base, "death_main.as") != 0 &&
+			    strcmp(Base, "death_menu.as") != 0)
+				Player->acknowledge_news();
+		}
+	}
+
 	CString *
 		Page = mPageStation->get_page(*this);
 

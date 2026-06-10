@@ -169,6 +169,10 @@ class CNewsCenter
 		const char *get_query();
 
 	public: // set
+		// Acknowledge all pending turn-news: advance the baselines + clear the
+		// itemized news lists. Called on navigate-away so the main page
+		// accumulates unread news across auto-refreshes instead of consuming it.
+		void mark_seen();
 		inline void set_turn(int aTurn);
 		inline int get_turn() { return mTurn; }
 		inline void set_production(int aProduction);
