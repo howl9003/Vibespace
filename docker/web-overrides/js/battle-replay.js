@@ -27,6 +27,18 @@
 
   var logPath = mount.getAttribute('data-log') || '';
   var viewerId = mount.getAttribute('data-player') || '';
+  var imgBase = mount.getAttribute('data-img') || '';   // $IMAGE_SERVER_URL
+
+  // race id -> image-folder name (src/script/race.en Number()s; folders under
+  // /image/as_game/race/<name>/small_symbol.gif)
+  var RACE_NAMES = {
+    1: 'human', 2: 'targoid', 3: 'buckaneer', 4: 'tecanoid', 5: 'evintos',
+    6: 'agerus', 7: 'bosalian', 8: 'xeloss', 9: 'xerusian', 10: 'xesperados'
+  };
+  function raceLogo(raceId) {
+    var name = RACE_NAMES[raceId];
+    return name ? imgBase + '/image/as_game/race/' + name + '/small_symbol.gif' : null;
+  }
 
   // Map the engine's filesystem path to the web route nginx serves.
   var m = logPath.match(/\/battle\/(.+)$/);
@@ -71,6 +83,7 @@
   function parse(text) {
     var B = {
       field: '', attackerId: null, defenderId: null, endTurn: 0,
+      attackerName: '', defenderName: '', attackerRace: 0, defenderRace: 0,
       fleets: {},            // key "owner:id" -> fleet
       firesByTurn: {},       // turn -> [fire]
       eventsByTurn: {},      // turn -> [string]  (ticker)
@@ -84,8 +97,9 @@
       var line = lines[li]; if (!line) continue;
       var f = fields(line);
       switch (f[0]) {
-        case 'ATTACKER': B.attackerId = num(f[2]); break;
-        case 'DEFENDER': B.defenderId = num(f[2]); break;
+        // ATTACKER/name/id/race ; DEFENDER/name/id/race
+        case 'ATTACKER': B.attackerName = f[1] || ''; B.attackerId = num(f[2]); B.attackerRace = num(f[3]); break;
+        case 'DEFENDER': B.defenderName = f[1] || ''; B.defenderId = num(f[2]); B.defenderRace = num(f[3]); break;
         case 'FIELD':    B.field = f[1] || ''; break;
         case 'ENDTURN':  B.endTurn = Math.max(B.endTurn, num(f[1])); break;
         case 'FL': {
@@ -145,13 +159,16 @@
       }
     }
 
-    // assign sides, sort samples, compute bounds
+    // assign sides, sort samples, compute bounds, tally per-side fleets/ships
     var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9, any = false;
+    B.stats = { att: { fleets: 0, ships: 0 }, def: { fleets: 0, ships: 0 } };
     for (var k in B.fleets) {
       var fl3 = B.fleets[k];
       // attacker side vs everyone else (defender + allies render as defender)
       fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
       fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
+      B.stats[fl3.side].fleets += 1;
+      B.stats[fl3.side].ships += (fl3.samples[0] ? fl3.samples[0].ships : 0);
       for (var si = 0; si < fl3.samples.length; si++) {
         var s = fl3.samples[si]; any = true;
         if (s.x < minX) minX = s.x; if (s.x > maxX) maxX = s.x;
@@ -181,11 +198,50 @@
     return { x: last.x, y: last.y, dir: last.dir, ships: last.ships };
   }
 
+  // ---- combatant header ---------------------------------------------------
+  // One side panel: race logo + "Name(serial)" + FLEETS / SHIPS counts.
+  function sidePanel(name, serial, raceId, stats, accent, align) {
+    var box = el('div', 'flex:1;min-width:0;display:flex;flex-direction:column;' +
+      'gap:2px;text-align:' + align + ';');
+    var titleRow = el('div', 'display:flex;align-items:center;gap:5px;' +
+      'justify-content:' + (align === 'right' ? 'flex-end' : 'flex-start') + ';');
+    var logo = raceLogo(raceId);
+    var logoImg = logo ? '<img src="' + logo + '" alt="" ' +
+      'style="height:16px;vertical-align:middle;flex:none;">' : '';
+    var label = (name || 'Unknown').replace(/</g, '&lt;') +
+      (serial ? '(' + serial + ')' : '');
+    var nameSpan = '<span style="color:' + accent + ';font:bold 13px serif;' +
+      'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + label + '</span>';
+    titleRow.innerHTML = align === 'right' ? (nameSpan + logoImg) : (logoImg + nameSpan);
+    box.appendChild(titleRow);
+    box.appendChild(el('div', 'font:11px serif;color:#9ab;',
+      '<span style="color:#667;">FLEETS</span> ' + stats.fleets +
+      ' &nbsp; <span style="color:#667;">SHIPS</span> ' + stats.ships));
+    return box;
+  }
+  function buildHeader(B) {
+    var hdr = el('div', 'display:flex;align-items:flex-start;gap:8px;' +
+      'background:#070713;border:1px solid #223355;border-bottom:none;' +
+      'padding:6px 10px;box-sizing:border-box;');
+    hdr.appendChild(sidePanel(B.attackerName, B.attackerId, B.attackerRace,
+      B.stats.att, ATT, 'left'));
+    hdr.appendChild(el('div',
+      'flex:none;align-self:center;color:#cdd;font:bold 13px serif;' +
+      'text-align:center;padding:0 6px;white-space:nowrap;',
+      (B.field || 'Battle').replace(/</g, '&lt;')));
+    hdr.appendChild(sidePanel(B.defenderName, B.defenderId, B.defenderRace,
+      B.stats.def, DEF, 'right'));
+    return hdr;
+  }
+
   // ---- build UI + run -----------------------------------------------------
   function build(B) {
     mount.innerHTML = '';
     var wrap = el('div', 'width:' + CW + 'px;max-width:100%;margin:0 auto;text-align:left;');
     mount.appendChild(wrap);
+
+    // ---- combatant header: race logo, name(serial), fleets & ships per side --
+    wrap.appendChild(buildHeader(B));
 
     var canvas = el('canvas', 'display:block;width:100%;background:#04040c;border:1px solid #223355;');
     canvas.width = CW; canvas.height = CH;
