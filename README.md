@@ -208,7 +208,13 @@ original `root` / `comconq1` **inside the container network only** (not exposed)
 | `production` | **deploy branch** — pushing here triggers a deploy |
 | feature branches (e.g. `claude/*`) | active development; do **not** deploy |
 
-Ship by fast-forwarding `production` to your feature tip and pushing.
+Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
+
+> **Multiple contributors:** `main`/`production` can move because another
+> collaborator's agent deploys too. Always `git fetch` before pushing; if the
+> remote moved, **rebase your feature branch onto `origin/main`** and re-verify —
+> never force-push the shared branches or discard the other's commits. Agent
+> conventions live in **[`CLAUDE.md`](CLAUDE.md)** (auto-loaded by Claude Code).
 
 ### Push-to-deploy (self-hosted runner)
 
