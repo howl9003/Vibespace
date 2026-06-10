@@ -54,23 +54,12 @@
   </TR>
   <TR>
     <TD ALIGN="center">
-      <!-- Battle replay: HTML5 replacement for Report.class / report.jar -->
-      <div style="width:550px;min-height:180px;margin:0 auto;
-                  background:#050510;border:1px solid #223355;
-                  color:#ccddff;font-family:sans-serif;padding:28px 24px;
-                  box-sizing:border-box;text-align:center;">
-        <div style="font-size:18px;font-weight:bold;color:#aabbdd;
-                    border-bottom:1px solid #223355;padding-bottom:10px;
-                    margin-bottom:16px;">
-          Battle Replay
-        </div>
-        <p style="color:#778899;font-size:13px;margin:0 0 12px;">
-          The animated battle replay is not available in this build.
-        </p>
-        <p style="color:#556677;font-size:12px;margin:0;">
-          Please see the battle report summary above for the outcome details.
-        </p>
-      </div>
+      <!-- Battle replay: HTML5 replacement for Report.class / report.jar.
+           battle-replay.js fetches the engine's turn-by-turn log (served at
+           /battle_log/ from LOG_URL) and animates it on a canvas + ticker. -->
+      <div id="battle-replay" data-log="$LOG_URL" data-player="$PLAYER_ID"
+           style="width:550px;max-width:100%;min-height:180px;margin:0 auto;text-align:center;"></div>
+      <script src="/js/battle-replay.js"></script>
     </TD>
   </TR>
   <TR> 
