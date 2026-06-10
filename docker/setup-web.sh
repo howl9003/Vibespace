@@ -21,6 +21,19 @@ if [ -f "$TARBALL" ]; then
     find "$WWW" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1a2) Planet thumbnails. The engine emits /image/as_game/planets/<Type>_<Size>.gif
+#      on the domestic / planet-management pages, but the original www tier never
+#      shipped that directory -- the icons only exist under www-new. Overlay just
+#      that one asset dir so the planet icons resolve.
+SRC_TREE="${ARCHSPACE_SRC:-/build/archspace}"
+PLANETS="$SRC_TREE/www-new/image/as_game/planets"
+if [ -d "$PLANETS" ]; then
+    echo "[web] adding planet thumbnails (from www-new)"
+    mkdir -p "$WWW/image/as_game/planets"
+    cp -rf "$PLANETS"/. "$WWW/image/as_game/planets"/ 2>/dev/null || true
+    find "$WWW/image/as_game/planets" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+fi
+
 # 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
 #     with a CSS-grid + named-iframe shell; same look, modern + mobile).
 OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
