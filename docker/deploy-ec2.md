@@ -67,58 +67,48 @@ docker compose -f docker/docker-compose.yml down         # stop (keeps volumes)
 State persists in named volumes (`db_data`, `game_state`, `logs`). Back up
 **both** `db_data` and `game_state` (the latter holds news/battles/messages).
 
-## 4b. Automatic updates (GitHub Actions → SSH)
+## 4b. Automatic updates (GitHub Actions, self-hosted runner)
 
-After the first manual bootstrap, you don't need to SSH in for updates. A
-workflow (`.github/workflows/deploy.yml`) runs on every push to the dedicated
-**`production`** branch (and on demand), SSHes into the instance, and runs
-`docker/deploy/deploy.sh` — which pulls the new code and rebuilds/restarts the
-stack (reusing the HTTP/HTTPS config the bootstrap saved in
-`docker/deploy/.deploy.env`). The image is built **on the instance**, same as
-the manual flow; the rebuild only blips the container at the swap, and the DB +
-game state in the named volumes survive.
+After the first manual bootstrap you don't SSH in for updates. A workflow
+(`.github/workflows/deploy.yml`) runs on every push to the dedicated
+**`production`** branch (and on demand) on a **self-hosted runner installed on
+the instance**. The runner dials *out* to GitHub (long-poll), so there's **no
+inbound SSH, no open port 22, no SSH key/secret, and the public IP can change
+freely**. The job runs `docker/deploy/deploy.sh` locally, which pulls and then
+either **restarts** (web/UI/template/config change — seconds) or **rebuilds**
+(C++ engine / Dockerfile change — minutes), reusing the HTTP/HTTPS config saved
+in `docker/deploy/.deploy.env`. The DB + game state in the named volumes survive.
 
 **Develop freely, ship deliberately.** Day-to-day commits land on a feature
 branch and do *not* deploy. You ship by advancing `production`:
 ```sh
-# from your feature branch, when you're ready to release:
 git checkout production
 git merge --ff-only claude/festive-bohr-xk9fwc   # or your feature branch
 git push origin production                        # -> triggers the deploy
 ```
-The instance tracks `production`, so the workflow deploys exactly what you
-pushed there. (Until the EC2 secrets below are set, the workflow runs but
-cleanly skips the deploy step.)
 
-**One-time setup** — add these repository secrets
-(*Settings → Secrets and variables → Actions*):
+**One-time setup — install the runner on the instance:**
+1. Repo → **Settings → Actions → Runners → New self-hosted runner** → **Linux /
+   x64**. GitHub shows a `./config.sh ... --token <TOKEN>` command.
+2. On the instance, run the shown download + `./config.sh` commands (accept the
+   default labels; they include `self-hosted`).
+3. Install + start it as a service so it survives reboots:
+   ```sh
+   sudo ./svc.sh install
+   sudo ./svc.sh start
+   ```
+The runner user (`ubuntu`) already has what it needs: the read-only **GitHub
+deploy key** for `git fetch` of this private repo (set up at clone time) and
+**docker-group** membership (added by `ec2-bootstrap.sh`).
 
-| Secret | Value |
-|---|---|
-| `EC2_HOST` | instance public IP or DNS |
-| `EC2_USER` | SSH user (e.g. `ubuntu`) |
-| `EC2_SSH_KEY` | a **private** key whose public half is in the instance's `~/.ssh/authorized_keys` |
-| `EC2_PORT` *(optional)* | SSH port if not `22` |
-| `EC2_REPO_DIR` *(optional)* | repo path on the instance if not `~/archspace` |
+Notes:
+- The runner runs as a service; `deploy.sh` falls back to `sudo docker`
+  automatically if the docker group isn't active in its environment.
+- To change which branch auto-deploys, edit the `branches:` list in the workflow.
+- Set repo **variable** `EC2_REPO_DIR` only if the checkout isn't `~/archspace`.
 
-Tips:
-- Use a **dedicated deploy key pair** for Actions (don't reuse your personal
-  key): `ssh-keygen -t ed25519 -f deploy_key`, append `deploy_key.pub` to the
-  instance's `authorized_keys`, and paste `deploy_key` (the private file) into
-  `EC2_SSH_KEY`.
-- The instance also needs to authenticate its own `git fetch` of this **private
-  repo**. The simplest durable option is a read-only **GitHub deploy key** on
-  the instance (`ssh-keygen` there, add the public key under the repo's
-  *Settings → Deploy keys*, and set the remote to the SSH URL:
-  `git remote set-url origin git@github.com:howl9003/Vibespace.git`). A
-  fine-grained PAT in a git credential helper works too.
-- `ec2-bootstrap.sh` adds the login user to the `docker` group, so the deploy
-  runs Docker without sudo.
-- To change which branch auto-deploys, edit the `branches:` list in the
-  workflow.
-
-You can also trigger a deploy by hand from the **Actions** tab
-(*Run workflow*), or run `bash docker/deploy/deploy.sh` directly on the box.
+You can also trigger a deploy by hand from the **Actions** tab (*Run workflow*),
+or run `bash docker/deploy/deploy.sh` directly on the box.
 
 ## 5. HTTPS + a domain (integrated Caddy)
 

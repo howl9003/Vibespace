@@ -1,19 +1,18 @@
 name: Deploy to EC2
 
-# Auto-deploy on every push to the dedicated deployment branch (and on demand).
-# Develop on a feature branch; ship by fast-forwarding `production` to it and
-# pushing. The workflow SSHes into the EC2 instance and runs the in-repo deploy
-# script, which pulls + rebuilds/restarts the Docker stack on the box (no image
-# is built in CI — the instance builds it, matching the build-on-the-VPS model).
+# Auto-deploy on every push to the dedicated `production` branch (and on
+# demand). This runs on a SELF-HOSTED GitHub Actions runner installed on the
+# EC2 instance itself: the runner dials OUT to GitHub (long-poll), so there's
+# no inbound SSH, no open port 22, no SSH key/secret to manage, and the public
+# IP can change freely. The job runs the in-repo deploy script locally, which
+# pulls + (restart or rebuild) the Docker stack on the box.
 #
-# Required repository secrets (Settings -> Secrets and variables -> Actions):
-#   EC2_HOST      public IP or DNS of the instance
-#   EC2_USER      SSH user (e.g. "ubuntu")
-#   EC2_SSH_KEY   private key whose public half is in the instance's
-#                 ~/.ssh/authorized_keys
-# Optional:
-#   EC2_PORT      SSH port (default 22)
-#   EC2_REPO_DIR  path to the repo checkout on the instance (default ~/archspace)
+# One-time setup on the instance:
+#   repo Settings -> Actions -> Runners -> New self-hosted runner (Linux x64)
+#   run the shown ./config.sh ... on the instance, then install it as a service:
+#     sudo ./svc.sh install && sudo ./svc.sh start
+# The runner user (e.g. ubuntu) needs: the instance's git deploy key (already
+# set up for cloning) and docker-group membership (the bootstrap adds it).
 
 on:
   push:
@@ -27,33 +26,13 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    env:
-      # Surface the secret to step-level `if` (job `if` can't read secrets).
-      EC2_HOST: ${{ secrets.EC2_HOST }}
+    runs-on: self-hosted
     steps:
-      - name: Skip if EC2 isn't configured yet
-        if: ${{ env.EC2_HOST == '' }}
+      - name: Pull latest + deploy
         run: |
-          echo "::notice::EC2_HOST secret not set — skipping deploy. Add the"
-          echo "::notice::EC2_HOST/EC2_USER/EC2_SSH_KEY secrets to enable it."
-
-      - name: Deploy over SSH
-        if: ${{ env.EC2_HOST != '' }}
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.EC2_PORT || 22 }}
-          script_stop: true
-          command_timeout: "20m"
-          script: |
-            set -e
-            cd "${EC2_REPO_DIR:-$HOME/archspace}"
-            # Fetch + reset first so we run the *latest* deploy.sh, then let it
-            # do the full pull/rebuild for the pushed branch.
-            git fetch --prune origin "${{ github.ref_name }}"
-            git checkout "${{ github.ref_name }}"
-            git reset --hard "origin/${{ github.ref_name }}"
-            bash docker/deploy/deploy.sh
+          set -e
+          cd "${EC2_REPO_DIR:-$HOME/archspace}"
+          git fetch --prune origin "${{ github.ref_name }}"
+          git checkout "${{ github.ref_name }}"
+          git reset --hard "origin/${{ github.ref_name }}"
+          bash docker/deploy/deploy.sh
