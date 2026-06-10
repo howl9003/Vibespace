@@ -1076,7 +1076,27 @@ CAdminTool::accuse_message(CDiplomaticMessage *aMessage)
 		Command;
 	Command.format("echo \"%s\" | /usr/sbin/sendmail -bs", (char *)Mail);
 
-	//system((char *)Command);
+	//system((char *)Command);   // outbound email not configured in this deployment
+
+	// GM-visible channel: append the accused message to a log a GM can review
+	// (mDataFileDirectory/log_accuse, on the persistent volume).
+	{
+		FILE *AccuseFile;
+		CString AccuseFileName;
+		AccuseFileName.format("%s/log_accuse", (char *)mDataFileDirectory);
+		AccuseFile = fopen((char *)AccuseFileName, "a");
+		if (AccuseFile != NULL)
+		{
+			time_t Time = time(0);
+			char *TimeString = (char *)asctime(localtime(&Time));
+			*(TimeString + strlen(TimeString) - 1) = '\0';
+			int SenderID   = aMessage->get_sender()   ? aMessage->get_sender()->get_game_id()   : -1;
+			int ReceiverID = aMessage->get_receiver() ? aMessage->get_receiver()->get_game_id() : -1;
+			fprintf(AccuseFile, "%s :: ACCUSE diplomatic sender:%d receiver:%d :: %s\n",
+					TimeString, SenderID, ReceiverID, (char *)aMessage->get_content());
+			fclose(AccuseFile);
+		}
+	}
 
 	return true;
 }
@@ -1144,7 +1164,26 @@ CAdminTool::accuse_message(CCouncilMessage *aMessage)
 		Command;
 	Command.format("echo \"%s\" | /usr/sbin/sendmail -bs", (char *)Mail);
 
-	//system((char *)Command);
+	//system((char *)Command);   // outbound email not configured in this deployment
+
+	// GM-visible channel: append the accused council message to the GM log.
+	{
+		FILE *AccuseFile;
+		CString AccuseFileName;
+		AccuseFileName.format("%s/log_accuse", (char *)mDataFileDirectory);
+		AccuseFile = fopen((char *)AccuseFileName, "a");
+		if (AccuseFile != NULL)
+		{
+			time_t Time = time(0);
+			char *TimeString = (char *)asctime(localtime(&Time));
+			*(TimeString + strlen(TimeString) - 1) = '\0';
+			int SenderID   = aMessage->get_sender()   ? aMessage->get_sender()->get_id()   : -1;
+			int ReceiverID = aMessage->get_receiver() ? aMessage->get_receiver()->get_id() : -1;
+			fprintf(AccuseFile, "%s :: ACCUSE council sender:%d receiver:%d :: %s\n",
+					TimeString, SenderID, ReceiverID, (char *)aMessage->get_content());
+			fclose(AccuseFile);
+		}
+	}
 
 	return true;
 }
