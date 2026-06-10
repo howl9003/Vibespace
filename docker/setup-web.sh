@@ -50,12 +50,17 @@ PHP
 cat > "$WWW/register.php" <<'PHP'
 <?php header('Location: /auth/register.php'); exit; ?>
 PHP
-# A friendly root: send unauthenticated visitors to login, else into the game frame.
+# The tarball ships the legacy 2004 portal frameset as the root index.html
+# (frames up.html / left.html / main.php — a frontend we've dropped, whose
+# frames now 404). Remove it so nginx serves our index.php redirect at "/".
+rm -f "$WWW/index.html" "$WWW/index.htm"
+# A friendly root: send unauthenticated visitors to login, logged-in players
+# straight into the de-framed game shell.
 cat > "$WWW/index.php" <<'PHP'
 <?php
 require __DIR__ . '/auth/lib.php';
 $acct = function_exists('current_account') ? current_account() : null;
-header('Location: ' . ($acct ? '/main.php' : '/auth/login.php'));
+header('Location: ' . ($acct ? '/archspace/index.html' : '/auth/login.php'));
 exit;
 PHP
 
