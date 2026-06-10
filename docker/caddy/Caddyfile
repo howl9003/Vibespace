@@ -1,0 +1,22 @@
+# Caddy reverse proxy for Archspace — automatic HTTPS (Let's Encrypt/ZeroSSL).
+#
+# DOMAIN (and optional TLS_EMAIL) come from the environment; Caddy provisions
+# and renews the certificate on its own, and redirects http -> https. It fronts
+# the archspace container (nginx on :80) over the internal compose network.
+
+{$DOMAIN} {
+	# Real-time push: proxy the SSE endpoint with immediate flushing and no
+	# compression, so events reach the browser the instant they're emitted.
+	@sse path /auth/events.php
+	handle @sse {
+		reverse_proxy archspace:80 {
+			flush_interval -1
+		}
+	}
+
+	# Everything else: normal proxy with compression.
+	handle {
+		encode gzip zstd
+		reverse_proxy archspace:80
+	}
+}

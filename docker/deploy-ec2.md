@@ -11,7 +11,7 @@ C++ engine).
 | **AMI** | Ubuntu Server 24.04 LTS (x86_64) |
 | **Type** | `t3.medium` (4 GB) for a smooth build. `t3.small` (2 GB) works — the bootstrap adds 2 GB swap so the compile won't OOM. |
 | **Storage** | 20 GB gp3 |
-| **Security group (inbound)** | SSH `22` from *your IP*; TCP `8080` (or `80`) from `0.0.0.0/0` for the game. Add `443` if you set up HTTPS. |
+| **Security group (inbound)** | SSH `22` from *your IP*. Plain HTTP: TCP `8080` (or `80`) from `0.0.0.0/0`. HTTPS: `80` **and** `443` from `0.0.0.0/0` (Caddy needs `80` for the ACME challenge + redirect). |
 
 ## 2. Get the code onto the instance
 
@@ -31,15 +31,29 @@ rsync -az --exclude .git ./ ubuntu@<public-ip>:~/archspace/
 
 ## 3. Build + run (one command)
 
+**Plain HTTP** (quickest, good for a first smoke test):
 ```sh
 cd ~/archspace
 sudo WEB_PORT=8080 bash docker/deploy/ec2-bootstrap.sh
 ```
-This installs Docker, adds swap if needed, then `docker compose up --build -d`.
-Use `WEB_PORT=80` to serve on the bare URL (`http://<public-ip>/`).
+Use `WEB_PORT=80` to serve on the bare URL (`http://<public-ip>/`). When it
+finishes it prints the URL — open **`http://<public-ip>:8080/`**.
 
-When it finishes it prints the URL. Open **`http://<public-ip>:8080/`** and you
-should get the login page → register → create a character → play.
+**HTTPS with a domain** (recommended for real testing): point a DNS A record at
+the instance's public IP first, then:
+```sh
+cd ~/archspace
+sudo DOMAIN=play.example.com TLS_EMAIL=you@example.com \
+     bash docker/deploy/ec2-bootstrap.sh
+```
+This brings up Caddy on `80`/`443` in front of the app (which stays internal on
+`127.0.0.1:8080`), provisions a Let's Encrypt certificate automatically, and
+redirects HTTP→HTTPS. Open **`https://play.example.com/`** (the first request
+may take a few seconds while the cert is issued). Make sure inbound **80 and
+443** are open in the Security Group.
+
+Either way you should get the login page → register → create a character → play,
+with real-time notifications pushing into the dashboard news feed.
 
 ## 4. Operate
 
@@ -53,17 +67,22 @@ docker compose -f docker/docker-compose.yml down         # stop (keeps volumes)
 State persists in named volumes (`db_data`, `game_state`, `logs`). Back up
 **both** `db_data` and `game_state` (the latter holds news/battles/messages).
 
-## 5. Optional: HTTPS + a domain
+## 5. HTTPS + a domain (integrated Caddy)
 
-Point a domain at the instance and run Caddy in front for automatic TLS:
+HTTPS is built into the compose stack via the `https` profile (see step 3) — no
+separate `docker run` needed. The `caddy` service terminates TLS on `80`/`443`,
+auto-renews the certificate, and reverse-proxies to the app over the internal
+network (the SSE push endpoint is proxied unbuffered so notifications still
+arrive in real time).
+
+To start/stop it manually (outside the bootstrap):
 ```sh
-# example: map 80/443 -> the game on 8080
-sudo docker run -d --name caddy --network host \
-  -v caddy_data:/data caddy:2 \
-  caddy reverse-proxy --from yourdomain.com --to localhost:8080
+DOMAIN=play.example.com TLS_EMAIL=you@example.com \
+  docker compose -f docker/docker-compose.yml --profile https up --build -d
 ```
-Open `443` (and `80` for the ACME challenge) in the security group. Then the
-game is at `https://yourdomain.com/`.
+Certs persist in the `caddy_data` volume. If issuance fails, check
+`docker compose logs caddy` — the usual causes are DNS not yet pointing at the
+instance or port `80` blocked in the Security Group.
 
 ## Email (password reset)
 

@@ -73,11 +73,14 @@ function generate_token(): string
 
 /**
  * Set the as_session cookie with secure attributes.
- * Secure flag is added only when the current request came over HTTPS.
+ * Secure flag is added only when the current request came over HTTPS —
+ * directly, or via a TLS-terminating proxy (Caddy sets X-Forwarded-Proto).
  */
 function set_session_cookie(string $value, int $expires): void
 {
-    $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+          || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+    $secure = $https;
 
     setcookie(AS_SESSION_COOKIE, $value, [
         'expires'  => $expires,

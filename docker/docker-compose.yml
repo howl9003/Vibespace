@@ -11,7 +11,10 @@ services:
     image: archspace:latest
     restart: unless-stopped
     ports:
-      - "${WEB_PORT:-8080}:80"          # web UI; set WEB_PORT=80 for a bare http://host
+      # web UI. Plain HTTP: set WEB_PORT=80 for a bare http://host. Behind the
+      # https profile, bind to localhost (WEB_BIND=127.0.0.1) so only Caddy
+      # (over the internal network) and the host reach it.
+      - "${WEB_BIND:-0.0.0.0}:${WEB_PORT:-8080}:80"
     environment:
       TZ: UTC
       DB_PASS: comconq1     # internal DB password (not publicly exposed)
@@ -31,7 +34,35 @@ services:
       retries: 5
       start_period: 40s
 
+  # Optional HTTPS front door (automatic Let's Encrypt TLS via Caddy).
+  # Enable with the "https" profile and a DOMAIN that resolves to this host:
+  #   DOMAIN=play.example.com docker compose --profile https up --build -d
+  # Open inbound 80 + 443 in the security group; keep 8080 internal
+  # (WEB_BIND=127.0.0.1). Caddy reaches the app as "archspace" on the network.
+  caddy:
+    image: caddy:2
+    profiles: ["https"]
+    restart: unless-stopped
+    depends_on:
+      - archspace
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"            # HTTP/3
+    # NOTE: DOMAIN must be set when using --profile https (the bootstrap does
+    # this). A default-empty avoids breaking plain `docker compose up`, since
+    # compose interpolates variables for the whole file regardless of profile.
+    environment:
+      DOMAIN: ${DOMAIN:-}
+      TLS_EMAIL: ${TLS_EMAIL:-}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
 volumes:
   db_data:
   game_state:
   logs:
+  caddy_data:
+  caddy_config:
