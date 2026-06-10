@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Constant-time-ish check: always call auth_verify to avoid timing oracle.
     $hashToCheck = $row['password_hash'] ?? '$argon2id$v=19$m=65536,t=4,p=1$x$x';
     if ($row !== null && auth_verify($password, $hashToCheck)) {
-        create_session((int)$row['id']);
+        $remember = !empty($_POST['remember']);
+        create_session((int)$row['id'], $remember);
         header('Location: /archspace/index.html', true, 303);
         exit;
     }
@@ -57,6 +58,7 @@ echo auth_error($error);
 <form method="post" action="/auth/login.php">
 <?= auth_input('Email', 'email', 'email', (string)($_POST['email'] ?? ''), 'email') ?>
 <?= auth_input('Password', 'password', 'password', '', 'current-password') ?>
+<label class="as-remember"><input type="checkbox" name="remember" value="1"> Remember me</label>
 <div class="as-btnrow">
   <input class="as-btn" type="image" src="/image/as_login/bu_login.gif" width="120" height="16" alt="login">
   <a href="/auth/register.php"><img src="/image/as_login/bu_register.gif" width="120" height="16" border="0" alt="register"></a>

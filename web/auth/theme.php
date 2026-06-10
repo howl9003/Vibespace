@@ -49,6 +49,8 @@ function auth_page_start(string $title): void {
   .as-box .newInput{width:254px;max-width:100%;font-family:inherit;font-size:13px;
                     background:transparent;color:#fff;outline:none;}
   .as-title{color:#fff;font-size:15px;font-weight:bold;letter-spacing:.04em;margin:0 0 10px;}
+  .as-remember{display:block;margin:10px 0 0;color:#bbb;font-size:12px;cursor:pointer;}
+  .as-remember input{vertical-align:middle;margin-right:5px;}
   /* login + register on one line (same width as the inputs, edges aligned),
      then a small "forgot" link under them */
   .as-btnrow{display:flex;align-items:center;justify-content:space-between;

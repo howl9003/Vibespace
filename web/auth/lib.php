@@ -27,8 +27,9 @@ require_once __DIR__ . '/db.php';
 /** Name of the session cookie. */
 const AS_SESSION_COOKIE = 'as_session';
 
-/** Session lifetime in seconds (7 days). */
+/** Session lifetime in seconds (7 days default; 30 days with "remember me"). */
 const AS_SESSION_TTL = 7 * 24 * 3600;
+const AS_SESSION_TTL_REMEMBER = 30 * 24 * 3600;
 
 // ---------------------------------------------------------------------------
 // Password helpers
@@ -97,11 +98,11 @@ function set_session_cookie(string $value, int $expires): void
  * @param  int $accountId  The accounts.id value.
  * @return string          The 64-char session token.
  */
-function create_session(int $accountId): string
+function create_session(int $accountId, bool $remember = false): string
 {
     $token     = generate_token();
     $now       = time();
-    $expires   = $now + AS_SESSION_TTL;
+    $expires   = $now + ($remember ? AS_SESSION_TTL_REMEMBER : AS_SESSION_TTL);
 
     $db   = db();
     $stmt = $db->prepare(
@@ -111,7 +112,10 @@ function create_session(int $accountId): string
     $stmt->execute();
     $stmt->close();
 
-    set_session_cookie($token, $expires);
+    // "Remember me" => a persistent cookie (survives browser close); otherwise a
+    // session cookie (expires=0) that the browser drops on close. The server-side
+    // session row still has a real expiry either way.
+    set_session_cookie($token, $remember ? $expires : 0);
 
     return $token;
 }
