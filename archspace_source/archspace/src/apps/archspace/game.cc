@@ -1606,12 +1606,83 @@ CGame::create_new_player(int aPortalID, const char *aName, int aRace)
 	return Player;
 }
 
+// Build a ship design from the best components the bot's tech has unlocked
+// (mirrors page/fleet/ship_design_register.cc, picking get_best_component() per
+// category). aShipSize is the hull (1..10). Returns the registered design, or
+// NULL if a core slot can't be filled. Stored on the player's design list.
+static CShipDesign *
+make_best_bot_design(CPlayer *aPlayer, int aShipSize)
+{
+	if (aShipSize < 1) aShipSize = 1;
+	if (aShipSize > 10) aShipSize = 10;
+
+	CShipSize *Body = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + aShipSize);
+	if (Body == NULL) return NULL;
+
+	CComponentList *CompList = aPlayer->get_component_list();
+	CComponent *Computer = CompList->get_best_component(CComponent::CC_COMPUTER);
+	CComponent *Engine   = CompList->get_best_component(CComponent::CC_ENGINE);
+	CComponent *Shield   = CompList->get_best_component(CComponent::CC_SHIELD);
+	CComponent *Armor    = CompList->get_best_component(CComponent::CC_ARMOR);
+	CComponent *Weapon   = CompList->get_best_component(CComponent::CC_WEAPON);
+	if (!Computer || !Engine || !Shield || !Armor || !Weapon) return NULL;
+
+	CShipDesignList *DesignList = aPlayer->get_ship_design_list();
+	CShipDesign *Design = new CShipDesign;
+	Design->set_name((char *)format("BOT Class %d", aShipSize));
+	Design->set_design_id(DesignList->max_design_id() + 1);
+	Design->set_owner(aPlayer->get_game_id());
+	Design->set_body(4000 + aShipSize);
+	Design->set_build_cost(Body->get_cost());
+	Design->set_build_time((int)time((time_t *)0));
+	Design->set_computer(Computer->get_id());
+	Design->set_engine(Engine->get_id());
+	Design->set_shield(Shield->get_id());
+	Design->set_armor(Armor->get_id());
+
+	// fill every weapon slot the hull has with the best weapon (count = how many
+	// fit per slot); leave the rest empty.
+	int WeaponSpace = ((CWeapon *)Weapon)->get_space();
+	if (WeaponSpace < 1) WeaponSpace = 1;
+	for (int i=0 ; i<WEAPON_MAX_NUMBER ; i++)
+	{
+		if (i < Body->get_weapon() && Body->get_slot() >= WeaponSpace)
+		{
+			Design->set_weapon(i, Weapon->get_id());
+			Design->set_weapon_number(i, Body->get_slot() / WeaponSpace);
+		}
+		else
+		{
+			Design->set_weapon(i, 0);
+			Design->set_weapon_number(i, 0);
+		}
+	}
+
+	// one best device (slot 0) if the hull has a device slot and it fits this
+	// size; devices must be distinct, so we don't repeat it across slots.
+	CComponent *Device = CompList->get_best_component(CComponent::CC_DEVICE);
+	for (int i=0 ; i<DEVICE_MAX_NUMBER ; i++)
+	{
+		if (i == 0 && i < Body->get_device() && Device != NULL &&
+			((CDevice *)Device)->get_min_class() <= aShipSize &&
+			((CDevice *)Device)->get_max_class() >= aShipSize)
+			Design->set_device(i, Device->get_id());
+		else
+			Design->set_device(i, 0);
+	}
+
+	DesignList->add_ship_design(Design);
+	Design->type(QUERY_INSERT);
+	*STORE_CENTER << *Design;
+	return Design;
+}
+
 // Create a bot (NPC) player seeded into power band aBand (0..NUM_BOT_BANDS-1).
-// Builds on create_new_player() (home planet + 3 starting fleets), then adds
-// planets and raises full-strength fleets until get_power() reaches the band
-// floor -- auto-tuning to the band without hard-coding power-per-ship constants.
-// The band is encoded in the portal id (see player.h); bot identity is portal-id
-// based, so nothing extra is persisted.
+// Builds on create_new_player(): grants band-scaled tech (level 3/5/7/9, which
+// also unlocks components), designs a best-components ship, adds planets, then
+// raises fleets flying that design until get_power() reaches the band floor --
+// auto-tuning to the band without hard-coding power-per-ship constants. The band
+// is encoded in the portal id (see player.h); nothing extra is persisted.
 CPlayer *
 CGame::create_bot_player(int aBand)
 {
@@ -1643,6 +1714,30 @@ CGame::create_bot_player(int aBand)
 	CAdmiralList   *AdmiralPool    = Player->get_admiral_pool();
 	CFleetList     *FleetList      = Player->get_fleet_list();
 	CShipDesignList *ShipDesignList = Player->get_ship_design_list();
+
+	// --- tech: grant every tech up to the band's level (3/5/7/9) -------------
+	// Discovering in ascending level order satisfies prerequisites and unlocks
+	// the matching ship components (discover_tech adds them to the component
+	// list), so the best-components design below reflects the band's tech.
+	int TechLevel = 3 + aBand * 2;             // band 0..3 -> level 3/5/7/9
+	for (int L=1 ; L<=TechLevel ; L++)
+	{
+		for (int i=0 ; i<TECH_TABLE->length() ; i++)
+		{
+			CTech *Tech = (CTech *)TECH_TABLE->get(i);
+			if (Tech == NULL) continue;
+			if (Tech->get_level() == L) Player->discover_tech(Tech->get_id());
+		}
+	}
+
+	// --- best-components ship design, hull scaled with band (clamped to what
+	//     matter-energy tech allows: count/2 + 2, same gate as the design page).
+	int MatterMax = Player->count_tech_by_category(CTech::TYPE_MATTER_ENERGY) / 2 + 2;
+	int ShipSize  = 3 + aBand * 2;             // band 0..3 -> hull 3/5/7/9
+	if (ShipSize > MatterMax) ShipSize = MatterMax;
+	if (ShipSize > 10) ShipSize = 10;
+	if (ShipSize < 1)  ShipSize = 1;
+	CShipDesign *BotDesign = make_best_bot_design(Player, ShipSize);
 
 	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
 	int TargetPlanets = 4 + aBand * 4;
@@ -1710,8 +1805,11 @@ CGame::create_bot_player(int aBand)
 			STORE_CENTER->store(*NewAdmiral);
 		}
 		CAdmiral *Admiral = (CAdmiral *)AdmiralPool->get(0);
-		CShipDesign *ShipDesign =
-			(CShipDesign *)ShipDesignList->get(ShipDesignList->length() - 1);
+		// fly the best-components design; fall back to the latest stock design
+		// if the best-design build failed for any reason.
+		CShipDesign *ShipDesign = BotDesign
+			? BotDesign
+			: (CShipDesign *)ShipDesignList->get(ShipDesignList->length() - 1);
 		if (Admiral == NULL || ShipDesign == NULL) break;
 
 		int Before    = Player->get_power();
