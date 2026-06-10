@@ -51,9 +51,24 @@ cat > "$WWW/register.php" <<'PHP'
 <?php header('Location: /auth/register.php'); exit; ?>
 PHP
 # The tarball ships the legacy 2004 portal frameset as the root index.html
-# (frames up.html / left.html / main.php — a frontend we've dropped, whose
-# frames now 404). Remove it so nginx serves our index.php redirect at "/".
-rm -f "$WWW/index.html" "$WWW/index.htm"
+# (frames up.html / left.html / main.php — a frontend we've dropped). Remove it
+# so nginx serves our index.php redirect at "/", and drop the two frame docs it
+# pulled in (only meaningful inside that frameset; they reference $ad_line and
+# portal-era images).
+rm -f "$WWW/index.html" "$WWW/index.htm" "$WWW/up.html" "$WWW/left.html"
+
+# Neutralize the remaining portal-dependent entry points so a direct hit can't
+# throw a PHP fatal (they require the unshipped IPBSDK / the dropped portal
+# socket). main.php -> the proper landing; the legacy logouts -> modern logout.
+cat > "$WWW/main.php" <<'PHP'
+<?php header('Location: /'); exit; ?>
+PHP
+cat > "$WWW/logout.phtml" <<'PHP'
+<?php header('Location: /auth/logout.php'); exit; ?>
+PHP
+cat > "$WWW/game_logout.phtml" <<'PHP'
+<?php header('Location: /auth/logout.php'); exit; ?>
+PHP
 # A friendly root: send unauthenticated visitors to login, logged-in players
 # straight into the de-framed game shell.
 cat > "$WWW/index.php" <<'PHP'
