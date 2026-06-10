@@ -20,3 +20,6 @@ archspace_source/archspace/src/apps/relay/Makefile
 # gettext compiled catalogs
 *.mo
 *.gmo
+
+# Persisted server-side deploy config (written by ec2-bootstrap.sh)
+docker/deploy/.deploy.env

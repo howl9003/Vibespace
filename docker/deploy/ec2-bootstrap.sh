@@ -43,6 +43,12 @@ fi
 docker --version
 docker compose version
 
+# Let the login user (and thus the Actions SSH deploy) run docker without sudo.
+DEPLOY_USER="${SUDO_USER:-$(id -un)}"
+if [ -n "$DEPLOY_USER" ] && [ "$DEPLOY_USER" != "root" ]; then
+  usermod -aG docker "$DEPLOY_USER" 2>/dev/null || true
+fi
+
 # --- 2. Swap (the C++ compile is RAM-hungry; help small instances) ---------
 MEM_KB=$(awk '/MemTotal/{print $2}' /proc/meminfo)
 if [ "$MEM_KB" -lt 3500000 ] && [ ! -f /swapfile ]; then
@@ -52,7 +58,24 @@ if [ "$MEM_KB" -lt 3500000 ] && [ ! -f /swapfile ]; then
   grep -q '/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
 fi
 
-# --- 3. Build + run --------------------------------------------------------
+# --- 3. Persist deploy config so future updates (deploy.sh / Actions) reuse it
+DEPLOY_BRANCH="${DEPLOY_BRANCH:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo main)}"
+ENV_FILE="$REPO_ROOT/docker/deploy/.deploy.env"
+{
+  echo "# Written by ec2-bootstrap.sh — consumed by docker/deploy/deploy.sh"
+  echo "DEPLOY_BRANCH=$DEPLOY_BRANCH"
+  echo "WEB_PORT=$WEB_PORT"
+  if [ -n "$DOMAIN" ]; then
+    echo "DOMAIN=$DOMAIN"
+    echo "TLS_EMAIL=$TLS_EMAIL"
+    echo "WEB_BIND=127.0.0.1"
+  else
+    echo "WEB_BIND=0.0.0.0"
+  fi
+} > "$ENV_FILE"
+echo "==> wrote deploy config -> $ENV_FILE"
+
+# --- 4. Build + run --------------------------------------------------------
 echo "==> building + starting the stack (first build compiles the engine, ~2-5 min)"
 if [ -n "$DOMAIN" ]; then
   # HTTPS: Caddy fronts the app on 80/443; keep the app's own port on localhost.
