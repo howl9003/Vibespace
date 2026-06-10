@@ -48,13 +48,21 @@ grep -rlZ -iE 'charset=euc-kr|charset=iso-8859-1' "$WWW" 2>/dev/null \
 grep -rlZ 'cursor:hand' "$WWW" 2>/dev/null \
     | xargs -0 -r sed -i 's/cursor:hand/cursor:pointer/g'
 
-# 1d) UI font. The original www tier hard-codes Arial / Arial Narrow in
-#     archspace.css (linked as /archspace.css by every in-game page). Normalize
-#     the whole game UI to Times New Roman by rewriting those font-family values.
-if [ -f "$WWW/archspace.css" ]; then
-    echo "[web] setting UI font to Times New Roman"
-    sed -i -E 's/font-family:[^;]*Arial[^;]*/font-family: "Times New Roman", "Times", serif/g' "$WWW/archspace.css"
-fi
+# 1d) UI font -> Times New Roman across the whole assembled web root.
+#     archspace.css (linked by every in-game page) drives most of the UI, but
+#     the original templates also hard-code <font face="Arial,..."> and inline
+#     font-family styles, so normalize those too. Each rule is bounded by its
+#     value delimiter (; } or the closing quote) so a match can't run past the
+#     value, and the replacement contains no "Arial" -> re-runs are no-ops.
+echo "[web] setting UI font to Times New Roman"
+# CSS files: font-family values (delimited by ; or })
+grep -rlZ -i --include='*.css' arial "$WWW" 2>/dev/null \
+    | xargs -0 -r sed -i -E 's/font-family:[^;}]*Arial[^;}]*/font-family: "Times New Roman", "Times", serif/gI'
+# HTML/PHP templates: <font face="...Arial..."> and inline style font-family
+grep -rlZ -i --include='*.html' --include='*.htm' --include='*.phtml' --include='*.php' arial "$WWW" 2>/dev/null \
+    | xargs -0 -r sed -i -E \
+        -e 's/(face=")[^"]*Arial[^"]*(")/\1Times New Roman, Times, serif\2/gI' \
+        -e 's/font-family:[^;"}]*Arial[^;"}]*/font-family:Times New Roman, Times, serif/gI'
 
 # 2) Modern auth service at /auth/
 if [ -d "$AUTH_SRC" ]; then
