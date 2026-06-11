@@ -162,27 +162,16 @@ CPageFormNewFleetResult::handler(CPlayer *aPlayer)
 		CAdmiral *
 			Admiral = (CAdmiral *)Pool->get(AdmiralIndex);
 
-		int
-			FleetID = as_atoi(FleetIDString);
-
-		if (FleetID <= 0)
-		{
-			Message.format("Invalid fleet ID selected for admiral %1$s.<BR>",
-					Admiral->get_name());
-			continue;
-		}
-
+		// Ignore the submitted FLEET_ID; always assign the next available fleet
+		// number from the live fleet list. Each fleet created below is added to
+		// the list before the next iteration, so successive calls return the
+		// next free id, skipping any existing fleets (e.g. 1, then 3 if 2 exists).
 		CFleetList *
 			FleetList = aPlayer->get_fleet_list();
+		int
+			FleetID = FleetList->get_new_fleet_id();
 		CFleet *
-			Fleet = (CFleet *)FleetList->get_by_id(FleetID);
-
-		if (Fleet)
-		{
-			Message.format("Fleet ID selected for admiral %1$d already exists.<BR>",
-								Admiral->get_id());
-			continue;
-		}
+			Fleet = NULL;
 
 		CString
 			FleetName;
