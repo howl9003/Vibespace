@@ -115,8 +115,8 @@ CPageSiegePlanetResult::handler(CPlayer *aPlayer)
 		else if((CGame::get_game_time() - Relation->get_time()) < 600)
 						{
 							ITEM("ERROR_MESSAGE",
-												(char *)format(GETTEXT("You have not been at war with the player %1$s long enough to attack. Please wait another %d seconds"),
-							TargetPlayer->get_nick(), (Relation->get_time() + 600) - CGame::get_game_time() ));
+												(char *)format(GETTEXT("You have not been at war with the player %1$s long enough to attack. Please wait another %2$d seconds"),
+							TargetPlayer->get_nick(), (int)((Relation->get_time() + 600) - CGame::get_game_time()) ));
 			return output("war/war_error.html");
 			}
 	}
@@ -144,8 +144,8 @@ CPageSiegePlanetResult::handler(CPlayer *aPlayer)
 			if((CGame::get_game_time() - Relation->get_time()) < 600)
 			{
 				ITEM("ERROR_MESSAGE",
-									(char *)format(GETTEXT("You have not been at war with the player %1$s long enough to attack. Please wait another %d seconds"),
-				TargetPlayer->get_nick(), (Relation->get_time() + 600) - CGame::get_game_time() ));
+									(char *)format(GETTEXT("You have not been at war with the player %1$s long enough to attack. Please wait another %2$d seconds"),
+				TargetPlayer->get_nick(), (int)((Relation->get_time() + 600) - CGame::get_game_time()) ));
 				return output("war/war_error.html");
 			}
 		}
@@ -154,8 +154,8 @@ CPageSiegePlanetResult::handler(CPlayer *aPlayer)
 			if((CGame::get_game_time() - Relation->get_time()) < 600)
 			{
 				ITEM("ERROR_MESSAGE",
-									(char *)format(GETTEXT("You have not been at war with the player %1$s long enough to attack. Please wait another %d seconds"),
-				TargetPlayer->get_nick(), (Relation->get_time() + 600) - CGame::get_game_time() ));
+									(char *)format(GETTEXT("You have not been at war with the player %1$s long enough to attack. Please wait another %2$d seconds"),
+				TargetPlayer->get_nick(), (int)((Relation->get_time() + 600) - CGame::get_game_time()) ));
 				return output("war/war_error.html");
 			}
 		}
