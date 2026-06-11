@@ -16,26 +16,15 @@ CPageSiegePlanetPlanet::handler(CPlayer *aPlayer)
 
 		return output("war/war_error.html");
 	}
-	CPreference *aPreference = aPlayer->get_preference();
 	static CString
 		DeployInfo;
 	DeployInfo.clear();
 
-	int	TargetPlayerID;
-	if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-	{   
-		QUERY("TID", TIDString);
-		CHECK(TIDString == NULL,
-		GETTEXT("You didn't enter a target player's ID."));
-		TargetPlayerID = as_atoi(TIDString);
-	}
-	else
-	{
-		QUERY("TARGET_PLAYER_ID", TargetPlayerIDString);
-		CHECK(TargetPlayerIDString == NULL,
-		GETTEXT("You didn't enter a target player's ID."));
-		TargetPlayerID = as_atoi(TargetPlayerIDString);
-	}
+	// HTML5 deploy board (as-deploy.js) posts the target player as TID.
+	QUERY("TID", TIDString);
+	CHECK(TIDString == NULL,
+			GETTEXT("You didn't enter a target player's ID."));
+	int	TargetPlayerID = as_atoi(TIDString);
 
 	CPlayer *
 		TargetPlayer = PLAYER_TABLE->get_by_game_id(TargetPlayerID);
@@ -128,18 +117,10 @@ CPageSiegePlanetPlanet::handler(CPlayer *aPlayer)
 	CFleetList
 		SortieFleetList;
 
-	int	CapitalID;
-	if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-    {   
-        QUERY("capFleet_ID", CapitalIDString)
-        CapitalID = as_atoi(CapitalIDString);        
-    }
-	else
-	{
-        QUERY("capFleet_id", CapitalIDString)
-        CapitalID = as_atoi(CapitalIDString);        
-    }
-    
+	QUERY("capFleet_ID", CapitalIDString)
+	int	CapitalID = as_atoi(CapitalIDString);
+
+
 	CFleetList *
 		FleetList = aPlayer->get_fleet_list();
 	CFleet *
@@ -187,11 +168,7 @@ CPageSiegePlanetPlanet::handler(CPlayer *aPlayer)
 	{
 		char Query[100];
 
-		if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-		    sprintf(Query, "Fleet%d_ID", i);
-		else
-            sprintf(Query, "fleet%d_id", i);      
-
+		sprintf(Query, "Fleet%d_ID", i);
 
 		QUERY(Query, FleetIDString);
 
@@ -226,20 +203,10 @@ CPageSiegePlanetPlanet::handler(CPlayer *aPlayer)
 			LocationY;
 
 
-		if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-		{
-		  QUERY((char *)format("Fleet%d_X", i), LocationXString)
-		  QUERY((char *)format("Fleet%d_Y", i), LocationYString)
-		  LocationY = as_atoi(LocationYString);
-		  LocationX = as_atoi(LocationXString);
-		}
-        else
-        { 
-          QUERY((char *)format("fleet%d_X", i), LocationXString)
-          QUERY((char *)format("fleet%d_Y", i), LocationYString) 
-		  LocationY = as_atoi(LocationYString);
-		  LocationX = as_atoi(LocationXString);
-        }
+		QUERY((char *)format("Fleet%d_X", i), LocationXString)
+		QUERY((char *)format("Fleet%d_Y", i), LocationYString)
+		LocationY = as_atoi(LocationYString);
+		LocationX = as_atoi(LocationXString);
 		if (LocationX < 9 || LocationX > 609 ||
 				LocationY < 226 || LocationY > 426) continue;
 
