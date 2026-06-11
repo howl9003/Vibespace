@@ -46,6 +46,17 @@ if [ -d "$ENCYC" ]; then
     find "$WWW/image/as_login/encyclopedia" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1a4) Fleet marker icons. The HTML5 battle-deployment board (as-deploy.js) draws
+#      the original ship markers (ship_set.gif / ship_cap.gif from
+#      /image/as_game/fleet/). Overlay that dir from www-new so they resolve.
+FLEETIMG="$SRC_TREE/www-new/image/as_game/fleet"
+if [ -d "$FLEETIMG" ]; then
+    echo "[web] adding fleet marker icons (from www-new)"
+    mkdir -p "$WWW/image/as_game/fleet"
+    cp -rf "$FLEETIMG"/. "$WWW/image/as_game/fleet"/ 2>/dev/null || true
+    find "$WWW/image/as_game/fleet" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+fi
+
 # 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
 #     with a CSS-grid + named-iframe shell; same look, modern + mobile).
 OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
