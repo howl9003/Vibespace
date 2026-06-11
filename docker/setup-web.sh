@@ -30,7 +30,11 @@ PLANETS="$SRC_TREE/www-new/image/as_game/planets"
 if [ -d "$PLANETS" ]; then
     echo "[web] adding planet thumbnails (from www-new)"
     mkdir -p "$WWW/image/as_game/planets"
-    cp -rf "$PLANETS"/. "$WWW/image/as_game/planets"/ 2>/dev/null || true
+    # No-clobber: never overwrite a good tarball image with a www-new one (see
+    # the encyclopedia note below). The tarball ships no planet thumbnails, so
+    # www-new fills them regardless. NOTE: the www-new planet GIFs are currently
+    # byte-corrupted with no good source -- tracked for reconstruction.
+    cp -rn "$PLANETS"/. "$WWW/image/as_game/planets"/ 2>/dev/null || true
     find "$WWW/image/as_game/planets" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
@@ -60,12 +64,13 @@ fi
 
 # 1a4) Fleet marker icons. The HTML5 battle-deployment board (as-deploy.js) draws
 #      the original ship markers (ship_set.gif / ship_cap.gif from
-#      /image/as_game/fleet/). Overlay that dir from www-new so they resolve.
+#      /image/as_game/fleet/). No-clobber overlay (tarball wins) -- the tarball
+#      ships good versions; www-new only fills any gaps.
 FLEETIMG="$SRC_TREE/www-new/image/as_game/fleet"
 if [ -d "$FLEETIMG" ]; then
-    echo "[web] adding fleet marker icons (from www-new)"
+    echo "[web] filling fleet marker icon gaps from www-new (no-clobber; tarball wins)"
     mkdir -p "$WWW/image/as_game/fleet"
-    cp -rf "$FLEETIMG"/. "$WWW/image/as_game/fleet"/ 2>/dev/null || true
+    cp -rn "$FLEETIMG"/. "$WWW/image/as_game/fleet"/ 2>/dev/null || true
     find "$WWW/image/as_game/fleet" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 

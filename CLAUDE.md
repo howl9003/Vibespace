@@ -55,6 +55,32 @@ agent deploys too. So:
   local `docker compose -f docker/docker-compose.yml up --build`.
 - **Web/JS:** `node --check` any changed JS override; eyeball the template.
 
+## Web assets & image routing (read before touching `/image/...`)
+The web root is assembled at boot by `docker/setup-web.sh`, in this order:
+1. **The original `www` tarball** (`archspace.tar.gz`) is the **canonical, complete,
+   known-good** asset tier — unpacked first. It already contains almost every
+   `/image/...` the game and encyclopedia reference.
+2. **`www-new/`** is a **supplemental** tree, overlaid *only to fill genuine gaps*
+   the tarball lacks (e.g. planet thumbnails). It is overlaid with **`cp -n`
+   (no-clobber)** so it can **never overwrite a good tarball image**.
+
+**Why no-clobber matters (a real incident):** `www-new/image/**` had 900+
+byte-corrupted GIFs (a Windows/CVS import mangled the binaries). The overlay used
+to `cp -f` them *over* the good tarball images, so the encyclopedia, deploy-board
+ship icons, etc. rendered broken. They were repaired from the tarball and the
+overlay switched to `cp -n`. **Rules:**
+- The **tarball wins**; `www-new` only fills gaps. Don't change the overlays back
+  to `cp -f`.
+- A broken in-game image is almost always a *missing/corrupt asset in the web
+  root*, **not** an engine bug. The image-server prefix is blanked at boot, so
+  paths are same-origin `/image/...`; a broken image is a 404 or a corrupt file,
+  not a bad URL.
+- `.gitattributes` marks `*.gif/*.png/...` as `binary` so checkouts can't
+  re-corrupt them. **Keep it.** When adding image assets, verify they decode
+  (`file x.gif` / open them) before committing.
+- Still-corrupt with no good source (tracked for reconstruction): the
+  `image/as_game/planets/` thumbnails and 3 `encyclopedia/special_ops/*` icons.
+
 ## Gotchas
 - `CString → char*` now returns `""` (not `NULL`) for empty strings. Old
   `if (x != NULL)` checks can emit empty UI elements; guard at the source with

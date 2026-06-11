@@ -1,0 +1,26 @@
+# Force binary handling for asset/binary file types so NO checkout, merge, or
+# platform (esp. Windows) ever applies line-ending / text normalization to them.
+#
+# History: the www-new image tree was once committed through a tool that treated
+# these GIFs as text and mangled the bytes (908 of them failed to decode). They
+# were repaired from the original `archspace.tar.gz` www tier; these rules keep
+# it from happening again.
+*.gif   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ico   binary
+*.bmp   binary
+*.gz    binary
+*.tgz   binary
+*.zip   binary
+*.jar   binary
+*.class binary
+*.swf   binary
+*.ttf   binary
+*.woff  binary
+*.woff2 binary
+*.eot   binary
+*.mp3   binary
+*.wav   binary
+*.ogg   binary
