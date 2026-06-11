@@ -133,5 +133,27 @@ if (navigator.appName.indexOf('Microsoft') == -1) {
 
 <P>&nbsp;</P>
 
+<SCRIPT TYPE="text/javascript">
+// Changing the first commander row's Ship Class copies it to every other row's
+// Ship Class select. The pooled-admirals table (as-sortable) can reorder its
+// rows, so "first row" is resolved live as the top <tbody> row at change time.
+(function () {
+  function isShipClass(el) {
+    return el && el.tagName === 'SELECT' && /^SHIP_DESIGN[0-9]+$/.test(el.name || '');
+  }
+  document.addEventListener('change', function (e) {
+    var sel = e.target;
+    if (!isShipClass(sel)) return;
+    var tbody = sel.parentNode;
+    while (tbody && tbody.tagName !== 'TBODY') tbody = tbody.parentNode;
+    if (!tbody || !tbody.rows.length || !tbody.rows[0].contains(sel)) return;  // only the first row drives
+    var selects = tbody.getElementsByTagName('select');
+    for (var i = 0; i < selects.length; i++) {
+      if (isShipClass(selects[i]) && selects[i] !== sel) selects[i].value = sel.value;
+    }
+  });
+})();
+</SCRIPT>
+
 </BODY>
 </html>
