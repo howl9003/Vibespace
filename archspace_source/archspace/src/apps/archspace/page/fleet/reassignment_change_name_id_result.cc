@@ -115,6 +115,46 @@ CPageReassignmentChangeNameIDResult::handler(CPlayer *aPlayer)
 
 		Fleet->type(QUERY_INSERT);
 		STORE_CENTER->store(*Fleet);
+
+		// Repoint the player's defence plans at the renumbered fleet so it isn't
+		// silently dropped from them. A deployment row is keyed by
+		// (owner, plan_id, fleet_id) and its UPDATE query has no WHERE clause, so
+		// re-key it the same way as the fleet itself: delete the old row and insert
+		// a fresh one under the new id (preserving its command/coordinates). Also
+		// repoint any plan whose capital fleet was this one (that UPDATE is safe --
+		// it is keyed by owner+id). A fleet can appear in several plans, so scan all.
+		CDefensePlanList *
+			PlanList = aPlayer->get_defense_plan_list();
+		for (int p=0 ; p<PlanList->length() ; p++)
+		{
+			CDefensePlan *
+				Plan = (CDefensePlan *)PlanList->get(p);
+			if (Plan == NULL) continue;
+
+			CDefenseFleetList *
+				DFList = Plan->get_fleet_list();
+			CDefenseFleet *
+				DF = DFList->get_by_id(OldID);
+			if (DF)
+			{
+				DF->type(QUERY_DELETE);
+				STORE_CENTER->store(*DF);
+
+				DFList->remove_without_free_defense_fleet(OldID);
+				DF->set_fleet_id(NewID);
+				DFList->add_defense_fleet(DF);
+
+				DF->type(QUERY_INSERT);
+				STORE_CENTER->store(*DF);
+			}
+
+			if (Plan->get_capital() == OldID)
+			{
+				Plan->set_capital(NewID);
+				Plan->type(QUERY_UPDATE);
+				STORE_CENTER->store(*Plan);
+			}
+		}
 	}
 	else
 	{
