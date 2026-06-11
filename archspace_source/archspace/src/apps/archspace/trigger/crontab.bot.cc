@@ -20,16 +20,16 @@
 //                          bot takes losses), then keeps them manned -- so a bot
 //                          always has its full reserve defending. It is spawned
 //                          at its band FLOOR and is meant to STAY in band, so it
-//                          does not chase the ceiling: it only auto-expeditions for
-//                          planets when it has fallen BELOW its floor, and recalls
-//                          those expeditions once back at/above it. As a hard cap,
-//                          any bot found above its band CEILING is shrunk back under
-//                          it (trimming the biggest fleets' crews). It also always
-//                          PRIORITISES its strongest commanders on defence: stronger
-//                          commanders from the bench are swapped onto the weakest
-//                          defenders (without resizing the fleet -- that inflated
-//                          power past the band) and the displaced commanders return
-//                          to the pool to be retrained.
+//                          does not chase the ceiling with planets: it only auto-
+//                          expeditions when it has fallen BELOW its floor, and
+//                          recalls those expeditions once back at/above it. It also
+//                          always PRIORITISES its strongest commanders on defence:
+//                          stronger commanders from the bench are swapped onto the
+//                          weakest defenders and those fleets grow to the new
+//                          commander's capacity -- but only while still under the
+//                          band CEILING, after which fleet size is frozen, so
+//                          promotion fills out the band without overshooting it.
+//                          Displaced commanders return to the pool to be retrained.
 //                          It also keeps a generic DEFENCE PLAN in sync with its
 //                          defenders (every fleet on the FORMATION command) so a
 //                          sieged/blockaded bot fights by plan -- except ENSIGN
@@ -311,11 +311,11 @@ bot_train_pool(CPlayer *aPlayer, int aLevelCap, int aMaxStart)
 
 // ---------------------------------------------------------------------------
 // Always put the bot's strongest available commanders on its defenders. A
-// higher-level commander fights better (skills/efficiency), so each pass swaps
-// the WEAKEST defender's commander for the STRONGEST commander waiting on the
-// bench (the pool). It does NOT resize the fleet -- growing fleets to a maxed
-// commander's 45-ship capacity was pushing bots past their band ceiling; the
-// fleet keeps its size and only shrinks if the new commander can't command it.
+// higher-level commander fights better and commands more ships, so each pass
+// swaps the WEAKEST defender's commander for the STRONGEST commander on the bench
+// (the pool) and grows the fleet to that commander's capacity -- BUT only while
+// the bot is still under its band ceiling. Once the band is full the fleet size
+// is frozen, so promotion can fill out the band without pushing the bot past it.
 // The displaced commander returns to the pool, where the training program levels it
 // back up -- so over time every defender ends up under a maxed commander and the
 // bench feeds a steady supply of graduates. "Defenders" are the idle, in-system
@@ -326,7 +326,7 @@ bot_train_pool(CPlayer *aPlayer, int aLevelCap, int aMaxStart)
 // stable; bounded per run. Returns the number of swaps made.
 // ---------------------------------------------------------------------------
 static int
-bot_promote_defenders(CPlayer *aPlayer, int aMaxSwaps)
+bot_promote_defenders(CPlayer *aPlayer, int aMaxSwaps, int aCeiling)
 {
 	CFleetList   *FleetList   = aPlayer->get_fleet_list();
 	CAdmiralList *AdmiralList = aPlayer->get_admiral_list();
@@ -375,14 +375,21 @@ bot_promote_defenders(CPlayer *aPlayer, int aMaxSwaps)
 		Best->set_fleet_number(WeakFleet->get_id());
 
 		WeakFleet->set_admiral(Best->get_id());
-		// Do NOT grow the fleet to the new commander's capacity -- that was inflating
-		// bots past their band ceiling. Keep the fleet's size (a stronger commander
-		// still fights better via skills/efficiency); only shrink it if the new
-		// commander cannot command the current crew.
-		if (WeakFleet->get_max_ship() > Best->get_fleet_commanding())
+		// Grow the fleet to the new commander's full capacity ONLY while the bot is
+		// still under its band ceiling: this lets defenders fill out the band, but
+		// once the band is full the fleet size is frozen so the bot doesn't climb
+		// past its ceiling. At/above the ceiling, keep the current size (shrink only
+		// if the new commander can't command the existing crew).
+		int Cap = Best->get_fleet_commanding();
+		if (aPlayer->get_power() < aCeiling)
 		{
-			WeakFleet->set_max_ship(Best->get_fleet_commanding());
-			WeakFleet->set_current_ship(Best->get_fleet_commanding());
+			WeakFleet->set_max_ship(Cap);
+			WeakFleet->set_current_ship(Cap);
+		}
+		else if (WeakFleet->get_max_ship() > Cap)
+		{
+			WeakFleet->set_max_ship(Cap);
+			WeakFleet->set_current_ship(Cap);
 		}
 
 		WeakFleet->type(QUERY_UPDATE);
@@ -391,6 +398,9 @@ bot_promote_defenders(CPlayer *aPlayer, int aMaxSwaps)
 		STORE_CENTER->store(*Best);
 		WeakCommander->type(QUERY_UPDATE);
 		STORE_CENTER->store(*WeakCommander);
+
+		// Reflect the resize so the next swap's ceiling check sees current power.
+		aPlayer->refresh_power();
 
 		Swaps++;
 	}
@@ -651,44 +661,12 @@ bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap
 	}
 
 	// (P) Prioritise the strongest commanders on defence: swap higher-level
-	// commanders from the bench onto the weakest held-back defenders (no resize --
-	// see bot_promote_defenders). Displaced commanders return to the pool to be
-	// trained back up. Runs even when throttled -- defence quality is always wanted.
-	if (bot_promote_defenders(aPlayer, aPromotePerRun))
+	// commanders from the bench onto the weakest held-back defenders, growing those
+	// fleets to the new commander's capacity but only while still under the band
+	// ceiling (bot_promote_defenders freezes size once the band is full). Displaced
+	// commanders return to the pool to be retrained.
+	if (bot_promote_defenders(aPlayer, aPromotePerRun, Ceiling))
 		aPlayer->refresh_power();
-
-	// (T) Hard cap on the band ceiling. Promotions/re-crewing/past expeditions can
-	// still leave a bot above its ceiling (and existing bots are already over), so
-	// shrink it back: a bot's fleet ships are synthesized, so trimming the biggest
-	// fleets' crews lowers power with no other side effect. Cut the largest fleet
-	// ~25% per pass until power is back under the ceiling (bounded by a guard).
-	// Planets can't be un-claimed, so a bot whose planets alone top the ceiling
-	// settles just above it -- still bounded, not runaway.
-	{
-		aPlayer->refresh_power();   // re-man above changed crews without refreshing
-		int Guard = 0;
-		while (aPlayer->get_power() > Ceiling && Guard++ < 400)
-		{
-			CFleet *Big = NULL;
-			for (int i=0 ; i<FleetList->length() ; i++)
-			{
-				CFleet *Fleet = (CFleet *)FleetList->get(i);
-				if (Fleet == NULL) continue;
-				if (Fleet->get_current_ship() <= 1) continue;
-				if (Big == NULL || Fleet->get_current_ship() > Big->get_current_ship())
-					Big = Fleet;
-			}
-			if (Big == NULL) break;   // nothing left to trim (planet-dominated)
-
-			int NewSize = Big->get_current_ship() - (Big->get_current_ship() / 4 + 1);
-			if (NewSize < 1) NewSize = 1;
-			Big->set_current_ship(NewSize);
-			if (Big->get_max_ship() > NewSize) Big->set_max_ship(NewSize);
-			Big->type(QUERY_UPDATE);
-			STORE_CENTER->store(*Big);
-			aPlayer->refresh_power();
-		}
-	}
 
 	// (3) Train the commander pool toward the level cap. Runs even when throttled:
 	// it develops commanders rather than chasing power, and is self-limiting (a
