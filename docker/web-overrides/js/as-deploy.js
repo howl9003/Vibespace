@@ -181,7 +181,9 @@
     canvas.addEventListener('touchend', up);
 
     /* 7. Submit: the full POST contract (capital = battle-fleet 1; rest from 2),
-       positions mapped into the battle coordinate space (X 9..609, Y 226..426). */
+       positions mapped into the battle coordinate space (X 9..609, Y 226..426).
+       Every fleet defaults to the FORMATION stance. */
+    var ORDER = 'FORMATION';
     form.addEventListener('submit', function () {
       function ex(cx) { return Math.round(9 + (cx / BOARD_W) * 600); }
       function ey(cy) { return Math.round(226 + (cy / BOARD_H) * 200); }
@@ -190,12 +192,12 @@
       fleets.forEach(function (f) {
         if (f.isCap) {
           ensureHidden(form, 'capFleet_ID', String(f.id));
-          ensureHidden(form, 'capFleet_O', 'NORMAL');
+          ensureHidden(form, 'capFleet_O', ORDER);
         } else {
           ensureHidden(form, 'Fleet' + n + '_ID', String(f.id));
           ensureHidden(form, 'Fleet' + n + '_X', String(ex(f.x)));
           ensureHidden(form, 'Fleet' + n + '_Y', String(ey(f.y)));
-          ensureHidden(form, 'fleet' + n + '_O', 'NORMAL');
+          ensureHidden(form, 'fleet' + n + '_O', ORDER);
           n++;
         }
       });
