@@ -53,6 +53,7 @@
   var ATT = '#ff8844', ATT_DIM = '#7a3a1c';   // attacker (orange)
   var DEF = '#55bbff', DEF_DIM = '#1c4a6e';   // defender (cyan)
   var CW = 544, CH = 320;                       // canvas size
+  var ROUT = 10, PANIC = 12;                    // CBattleFleet status enum (battle.h): morale-break states
 
   function el(tag, css, html) {
     var e = document.createElement(tag);
@@ -114,7 +115,7 @@
           B.fleets[owner + ':' + id] = {
             owner: owner, id: id, nick: f[3] || ('Fleet ' + id),
             admiral: f[4] || '', side: null /* set after attacker/def known */,
-            samples: [{ turn: 0, x: num(f[8]), y: num(f[9]), dir: num(f[10]), ships: num(f[7]) }],
+            samples: [{ turn: 0, x: num(f[8]), y: num(f[9]), dir: num(f[10]), ships: num(f[7]), cmd: num(f[11]) }],
             disabledTurn: null
           };
           break;
@@ -122,7 +123,7 @@
         case 'M': {
           // M/turn/owner/id/x/y/dir/cmd/substatus/ships
           var t = num(f[1]), fl = fleet(num(f[2]), num(f[3]));
-          if (fl) fl.samples.push({ turn: t, x: num(f[4]), y: num(f[5]), dir: num(f[6]), ships: num(f[9]) });
+          if (fl) fl.samples.push({ turn: t, x: num(f[4]), y: num(f[5]), dir: num(f[6]), ships: num(f[9]), cmd: num(f[7]) });
           B.endTurn = Math.max(B.endTurn, t);
           break;
         }
@@ -191,16 +192,16 @@
     if (fl.disabledTurn != null && t >= fl.disabledTurn) return null;
     var s = fl.samples, n = s.length;
     if (!n) return null;
-    if (t <= s[0].turn) return { x: s[0].x, y: s[0].y, dir: s[0].dir, ships: s[0].ships };
+    if (t <= s[0].turn) return { x: s[0].x, y: s[0].y, dir: s[0].dir, ships: s[0].ships, cmd: s[0].cmd };
     for (var i = 0; i < n - 1; i++) {
       if (t >= s[i].turn && t <= s[i + 1].turn) {
         var a = s[i], b = s[i + 1], span = (b.turn - a.turn) || 1, f = (t - a.turn) / span;
         return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f,
-                 dir: a.dir, ships: a.ships };
+                 dir: a.dir, ships: a.ships, cmd: a.cmd };
       }
     }
     var last = s[n - 1];
-    return { x: last.x, y: last.y, dir: last.dir, ships: last.ships };
+    return { x: last.x, y: last.y, dir: last.dir, ships: last.ships, cmd: last.cmd };
   }
 
   // ---- combatant header ---------------------------------------------------
@@ -306,14 +307,26 @@
       var x = tx(st.x), y = ty(st.y);
       var r = Math.max(4, Math.min(16, 3 + Math.sqrt(st.ships || 1) * 1.6));
       var col = fl.side === 'att' ? ATT : DEF;
+      // rout/panic: flicker the marker and tint it (panic red, rout amber)
+      var panicky = (st.cmd === ROUT || st.cmd === PANIC);
+      var alpha = 1, tag = '';
+      if (panicky) {
+        alpha = 0.3 + 0.7 * Math.abs(Math.sin(Date.now() / 120));
+        col = (st.cmd === PANIC) ? '#ff5577' : '#ffbb33';
+        tag = (st.cmd === PANIC) ? ' ⚠ PANIC' : ' ⚠ ROUT';
+      }
       var rad = (st.dir || 0) * Math.PI / 180;
-      ctx.save(); ctx.translate(x, y); ctx.rotate(rad);
+      ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(rad);
       ctx.fillStyle = col; ctx.beginPath();
       ctx.moveTo(r, 0); ctx.lineTo(-r * 0.7, r * 0.7); ctx.lineTo(-r * 0.7, -r * 0.7);
       ctx.closePath(); ctx.fill();
       ctx.restore();
-      ctx.fillStyle = '#7d8aa0'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(fl.nick + ' (' + st.ships + ')', x, y - r - 3);
+      ctx.save();
+      ctx.globalAlpha = panicky ? alpha : 1;
+      ctx.fillStyle = panicky ? col : '#7d8aa0';
+      ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(fl.nick + ' (' + st.ships + ')' + tag, x, y - r - 3);
+      ctx.restore();
     }
 
     function render(t) {
@@ -356,11 +369,29 @@
     }
 
     var cur = 0, playing = false, raf = null, acc = 0, last = 0;
+    // is any visible fleet in a rout/panic state at turn t? (drives the flicker)
+    function anyAbnormal(t) {
+      for (var i = 0; i < fleetList.length; i++) {
+        var st = stateAt(fleetList[i], t);
+        if (st && (st.cmd === ROUT || st.cmd === PANIC)) return true;
+      }
+      return false;
+    }
+    // standalone repaint loop so rout/panic markers keep flickering while paused
+    var flickerReq = null;
+    function flicker() {
+      flickerReq = null;
+      if (playing) return;                 // playback's own tick repaints during play
+      render(cur);
+      if (anyAbnormal(cur)) flickerReq = requestAnimationFrame(flicker);
+    }
+    function ensureFlicker() { if (!flickerReq && !playing && anyAbnormal(cur)) flickerReq = requestAnimationFrame(flicker); }
     function setTurn(t) {
       cur = Math.max(0, Math.min(B.endTurn, t));
       slider.value = cur;
       turnLbl.textContent = 'Turn ' + Math.round(cur) + ' / ' + B.endTurn;
       render(cur); renderTicker(cur); header.update(cur);
+      ensureFlicker();
     }
     function tick(ts) {
       if (!playing) return;
@@ -368,11 +399,12 @@
       var dt = (ts - last) / 1000; last = ts;
       acc += dt * num(speedSel.value) * 12; // ~12 turns/sec at 1x
       if (acc >= 1) { setTurn(cur + Math.floor(acc)); acc -= Math.floor(acc); }
+      else render(cur);                      // repaint between advances so rout/panic still flickers
       if (cur >= B.endTurn) { stop(); return; }
       raf = requestAnimationFrame(tick);
     }
     function play() { if (playing) return; if (cur >= B.endTurn) setTurn(0); playing = true; last = 0; acc = 0; playBtn.innerHTML = '❚❚ Pause'; raf = requestAnimationFrame(tick); }
-    function stop() { playing = false; if (raf) cancelAnimationFrame(raf); playBtn.innerHTML = '▶ Play'; }
+    function stop() { playing = false; if (raf) cancelAnimationFrame(raf); playBtn.innerHTML = '▶ Play'; ensureFlicker(); }
     playBtn.onclick = function () { playing ? stop() : play(); };
     slider.oninput = function () { stop(); setTurn(num(slider.value)); };
 
