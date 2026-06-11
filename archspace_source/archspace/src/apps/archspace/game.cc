@@ -1703,10 +1703,21 @@ CGame::create_bot_player(int aBand)
 	int PortalID = MaxID + 1;
 	if (PortalID >= RangeHi) return NULL;   // band space exhausted (1M slots)
 
-	CString Name;
-	Name.format("BOT(%d)", PortalID - BOT_PORTAL_BASE);
+	// Bot name: a rank prefix scaled to the band + a commander-style name drawn
+	// from the bot's race. The rank pool widens with the band -- band 0 only
+	// Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank
+	// (Ensign..Admiral). Built into a local buffer (capped to player.name's 30
+	// chars) BEFORE create_new_player, which reuses the name generator's static
+	// buffer when it makes the bot's admirals.
+	static const char *RankNames[] = { "Ensign", "Captain", "Commodore", "Admiral" };
+	int Race = number(10);                       // 1..10 (valid race id)
+	int Rank = number(aBand + 1) - 1;            // 0..aBand
+	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(Race);
+	if (!Commander || !*Commander) Commander = "Bot";
+	char Name[31];
+	snprintf(Name, sizeof(Name), "%s %s", RankNames[Rank], Commander);
 
-	CPlayer *Player = create_new_player(PortalID, (char *)Name, number(10));
+	CPlayer *Player = create_new_player(PortalID, Name, Race);
 	if (Player == NULL) return NULL;
 
 	CPlanetList    *PlanetList     = Player->get_planet_list();
