@@ -1,6 +1,7 @@
 #include <libintl.h>
 #include "../../pages.h"
 #include "../../game.h"
+#include "../../archspace.h"	// STORE_CENTER (CArchspace) for the refill/maximize cases
 
 #define REASSIGNMENT_COMMANDER_CHANGE	1
 #define REASSIGNMENT_SHIP_REASSIGNMENT	2

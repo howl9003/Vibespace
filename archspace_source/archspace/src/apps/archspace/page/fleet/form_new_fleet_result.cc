@@ -220,8 +220,6 @@ CPageFormNewFleetResult::handler(CPlayer *aPlayer)
 
 		if (ShipNumber <= 0)
 		{
-			Message.format("You entered an invalid number of ships for fleet %1$d.<BR>",
-											FleetID);
 			continue;
 		}
 

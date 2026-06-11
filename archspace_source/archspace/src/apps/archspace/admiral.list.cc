@@ -245,108 +245,148 @@ CAdmiralList::fleet_commander_list_javascript(CPlayer *aPlayer)
 	Info.clear();
 
 	CPreference *aPreference =
-		parent->get_preference();
+		aPlayer->get_preference();
 
 	if (!length())
 	{
-		Info += "/***** NO POOLED ADMIRALS *****/";
+		Info = GETTEXT("You don't have any admirals.");
 		return (char *)Info;
 	}
 
-	Info += "function pooledAdmiralSwapAndSort(column)\n{\n";
-	Info += "\tvar Action = \n\t{\n\t\tNONE : -1,\n\t\tASCENDING : 0,\n\t\tDESCENDING : 1\n\t}\n";
-	Info += "\tswitch (PooledAdmiralTable.getSortingOrder(column))\n\t{\n";
-	Info += "\t\tcase Action.NONE:\n\t\tPooledAdmiralTable.addPriorityRank(column, Action.ASCENDING);\n\t\tif (PooledAdmiralTable.getPriorityRank(column) > 4) PooledAdmiralTable.setColumnData(column, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-11.gif\\\"></TH>\");\n\t\telse PooledAdmiralTable.setColumnData(column, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(PooledAdmiralTable.getPriorityRank(column)) + 1) + \".gif\\\"></TH>\");\t\tbreak;\n";
-	Info += "\t\tcase Action.ASCENDING:\n\t\tPooledAdmiralTable.setSortingOrder(column, Action.DESCENDING);\n\t\tif (PooledAdmiralTable.getPriorityRank(column) > 4) PooledAdmiralTable.setColumnData(column, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-12.gif\\\"></TH>\");\n\t\telse PooledAdmiralTable.setColumnData(column, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(PooledAdmiralTable.getPriorityRank(column)) + 6) + \".gif\\\"></TH>\");\t\tbreak;\n";
-	Info += "\t\tcase Action.DESCENDING:\n\t\tPooledAdmiralTable.removePriorityRank(column);\n\t\tPooledAdmiralTable.setColumnData(column, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"</TH>\");\n";
-	Info += "\t\tfor (var col = 0; col < PooledAdmiralTable.getTotalColumns(); col++)\n\t\t{\n\t\t\tif (PooledAdmiralTable.getSortingOrder(col) == Action.ASCENDING)\n\t\t\t{\n\t\t\t\tif (PooledAdmiralTable.getPriorityRank(col) > 4) PooledAdmiralTable.setColumnData(col, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-11.gif\\\"></TH>\");\n\t\t\t\telse PooledAdmiralTable.setColumnData(col, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(PooledAdmiralTable.getPriorityRank(col)) + 1) + \".gif\\\"></TH>\");\n\t\t\t}\n";
-	Info += "\t\t\telse if (PooledAdmiralTable.getSortingOrder(col) == Action.DESCENDING)\n\t\t\t{\n\t\t\t\tif (PooledAdmiralTable.getPriorityRank(col) > 4) PooledAdmiralTable.setColumnData(col, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-11.gif\\\"></TH>\");\n\t\t\t\telse PooledAdmiralTable.setColumnData(col, ColumnData.HEADER_HTML, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, PooledAdmiralTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(PooledAdmiralTable.getPriorityRank(col)) + 1) + \".gif\\\"></TH>\");\n\t\t\t}\n\t\t}\n\t\tbreak;\n";
-	Info += "\t}\n";
-	Info += "\tPooledAdmiralTable.sort();\n";
-	Info += "\tdocument.getElementById(\"PooledAdmirals\").innerHTML = PooledAdmiralTable.getTableHTML();\n";
-	Info += "}\n\n";
-	Info += "PooledAdmiralTable = new Table();\n";
-	Info += "PooledAdmiralTable.setTableAttributes(\"WIDTH=\\\"550\\\" BORDER=\\\"1\\\" CELLSPACING=\\\"0\\\" CELLPADDING=\\\"0\\\" BORDERCOLOR=\\\"#2A2A2A\\\"\");\n";
-	Info += "PooledAdmiralTable.setHeaderRowAttributes(\"STYLE=\\\"vertical-align: bottom;\\\" BGCOLOR=\\\"#171717\\\"\");\n";
-	Info += "PooledAdmiralTable.setSortDelimiter(\"#SORT#\");\n";
-	Info += "PooledAdmiralTable.addColumn(0,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"45\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:pooledAdmiralSwapAndSort(0)\\\">ID</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"45\\\" ALIGN=\\\"CENTER\\\">\", \"</TD>\");\n";
-	Info += "PooledAdmiralTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"134\\\"><INPUT TYPE=\\\"checkbox\\\" onClick=\\\"javascript:allCheck();\\\"/></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"134\\\" ALIGN=\\\"CENTER\\\"><INPUT TYPE=\\\"checkbox\\\" onClick=\\\"javascript:shipSel();\\\" NAME=\\\"ADMIRAL\", \"\\\"></TD>\");\n";
-	Info += "PooledAdmiralTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"118\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:pooledAdmiralSwapAndSort(2)\\\">Name</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"118\\\" ALIGN=\\\"CENTER\\\"><A HREF=\\\"/archspace/fleet/fleet_commander_information.as?ADMIRAL_ID=\", \"</A></TD>\");\n";
+	int
+		BaseFleetID = aPlayer->get_fleet_list()->get_new_fleet_id();
 
-	int columns = 3;
+	CDock *
+		ShipPool = aPlayer->get_dock();
 
-#define COMMANDER_STAT_TITLE(enum, title, type, width) \
+	Info = "<TABLE CLASS=\"as-sortable\" WIDTH=\"550\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"0\" BORDERCOLOR=\"#2A2A2A\">\n";
+	Info += "<THEAD>\n";
+	Info += "<TR BGCOLOR=\"#171717\">\n";
+
+	Info += "<TH CLASS=\"tabletxt\" WIDTH=\"45\"><FONT COLOR=\"666666\">";
+	Info += GETTEXT("ID");
+	Info += "</FONT></TH>\n";
+
+	Info += "<TH WIDTH=\"118\" CLASS=\"tabletxt\"><FONT COLOR=\"666666\">";
+	Info += GETTEXT("Name");
+	Info += "</FONT></TH>\n";
+
+#define COMMANDER_STAT_TITLE(enum, title, width) \
 	if (aPreference->hasCommanderStat(CPreference::enum))\
 	{\
-		Info.format("PooledAdmiralTable.addColumn(%d,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"%d\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:pooledAdmiralSwapAndSort(%d)\\\">%s</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"%d\\\" ALIGN=\\\"CENTER\\\">\", \"</TD>\");\n",\
-				type, width, columns, title, width);\
-		columns++;\
+		Info.format("<TH WIDTH=\"%d\" CLASS=\"tabletxt\"><FONT COLOR=\"666666\">%s</FONT></TH>\n", width, title);\
 	}
 
-	COMMANDER_STAT_TITLE(LEVEL, "Level", 0, 51);
-	COMMANDER_STAT_TITLE(EXP, "Exp", 0, 44);
-	COMMANDER_STAT_TITLE(FLEET_COMMANDING, "Fleet<BR>Commanding", 0, 102);
-	COMMANDER_STAT_TITLE(EFFICIENCY, "Efficiency", 0, 42);
-	COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 0, 44);
-	COMMANDER_STAT_TITLE(BLOCKADE, "Blockade", 0, 40);
-	COMMANDER_STAT_TITLE(RAID, "Raid", 0, 40);
-	COMMANDER_STAT_TITLE(PRIVATEER, "Privateer", 0, 40);
-	COMMANDER_STAT_TITLE(SIEGE_REPELLING, "Siege<BR>Repelling", 0, 44);
-	COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "Break<BR>Blockade", 0, 44);
-	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 0, 44);
-	COMMANDER_STAT_TITLE(MANEUVER, "Maneuver", 0, 40);
-	COMMANDER_STAT_TITLE(DETECTION, "Detection", 0, 40);
-	COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 0, 44);
-	COMMANDER_STAT_TITLE(ARMADA_CLASS, "Armada<BR>Class", 1, 44);
-	COMMANDER_STAT_TITLE(ABILITY, "Ability", 1, 44);
+	COMMANDER_STAT_TITLE(LEVEL, "Level", 51);
+	COMMANDER_STAT_TITLE(EXP, "Exp", 44);
+	COMMANDER_STAT_TITLE(FLEET_COMMANDING, "Fleet<BR>Commanding", 102);
+	COMMANDER_STAT_TITLE(EFFICIENCY, "Efficiency", 42);
+	COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
+	COMMANDER_STAT_TITLE(BLOCKADE, "Blockade", 40);
+	COMMANDER_STAT_TITLE(RAID, "Raid", 40);
+	COMMANDER_STAT_TITLE(PRIVATEER, "Privateer", 40);
+	COMMANDER_STAT_TITLE(SIEGE_REPELLING, "Siege<BR>Repelling", 44);
+	COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "Break<BR>Blockade", 44);
+	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);
+	COMMANDER_STAT_TITLE(MANEUVER, "Maneuver", 40);
+	COMMANDER_STAT_TITLE(DETECTION, "Detection", 40);
+	COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
+	COMMANDER_STAT_TITLE(ARMADA_CLASS, "Armada<BR>Class", 44);
+	COMMANDER_STAT_TITLE(ABILITY, "Ability", 44);
+
 #undef COMMANDER_STAT_TITLE
 
-	Info += "PooledAdmiralTable.addRows(\"|\", new Array(";
+	Info += "<TH CLASS=\"tabletxt nosort\" WIDTH=\"99\"><FONT COLOR=\"666666\">";
+	Info += GETTEXT("Ship Class");
+	Info += "</FONT></TH>\n";
 
-	for (int i = 0 ; i < length() ; i++)
+	Info += "<TH CLASS=\"tabletxt nosort\" WIDTH=\"44\"><FONT COLOR=\"666666\">";
+	Info += GETTEXT("# of Ship(s)");
+	Info += "</FONT></TH>\n";
+
+	Info += "<TH CLASS=\"tabletxt nosort\" WIDTH=\"118\"><FONT COLOR=\"666666\">";
+	Info += GETTEXT("Fleet Name");
+	Info += "</FONT></TH>\n";
+
+	Info += "</TR>\n";
+	Info += "</THEAD>\n";
+	Info += "<TBODY>\n";
+
+	for (int i=0 ; i<length() ; i++)
 	{
 		CAdmiral *
-		Admiral = (CAdmiral *)get(i);
-		Info.format("\"%d|%d|%d\\\">#SORT#%s#SORT#",
-		Admiral->get_id(), i, Admiral->get_id(), Admiral->get_name());
+			Admiral = (CAdmiral *)get(i);
 
-#define COMMANDER_STAT(enum, function) \
-		if (aPreference->hasCommanderStat(CPreference::enum))\
-		{\
-			Info.format("|%d",\
-					Admiral->function());\
-		}
+		Info += "<TR>\n";
+		Info.format("<TD CLASS=\"tabletxt\" WIDTH=\"45\" ALIGN=\"CENTER\">%d</TD>\n",
+					Admiral->get_id());
 
-		COMMANDER_STAT(LEVEL, get_level);
-		COMMANDER_STAT(EXP, get_exp);
-		COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding);
-		COMMANDER_STAT(EFFICIENCY, get_real_efficiency);
-		COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level);
-		COMMANDER_STAT(BLOCKADE, get_blockade_level);
-		COMMANDER_STAT(RAID, get_raid_level);
-		COMMANDER_STAT(PRIVATEER, get_privateer_level);
-		COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level);
-		COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level);
-		COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level);
-		COMMANDER_STAT(MANEUVER, get_maneuver_level);
-		COMMANDER_STAT(DETECTION, get_detection_level);
-		COMMANDER_STAT(INTERPRETATION, get_interpretation_level);
-#undef COMMANDER_STAT
-#define COMMANDER_STAT(enum, function) \
-		if (aPreference->hasCommanderStat(CPreference::enum))\
-		{\
-			Info.format("|%s",\
-					Admiral->function());\
-		}
-		COMMANDER_STAT(ARMADA_CLASS, get_armada_commanding_name);
-		COMMANDER_STAT(ABILITY, get_ability_name);
-#undef COMMANDER_STAT
+		Info += "<TD CLASS=\"tabletxt\" ALIGN=\"LEFT\" WIDTH=\"118\">";
+		Info.format("<A HREF=\"/archspace/fleet/fleet_commander_information.as?ADMIRAL_ID=%d\">%s</A>",
+					Admiral->get_id(), Admiral->get_name());
+		Info += "</TD>\n";
 
-		Info.format("|%d\"", i);
-		if (i + 1 >= length()) Info += ")";
-		else Info += ",\n\t";
+#define COMMANDER_STAT(enum, function, width) \
+	if (aPreference->hasCommanderStat(CPreference::enum))\
+	{\
+		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"%d\">%d</TD>\n",\
+				width, Admiral->function());\
 	}
-	Info += ");\n";
+
+	COMMANDER_STAT(LEVEL, get_level, 51);
+	COMMANDER_STAT(EXP, get_exp, 44);
+	COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding, 102);
+	COMMANDER_STAT(EFFICIENCY, get_real_efficiency, 42);
+	COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
+	COMMANDER_STAT(BLOCKADE, get_blockade_level, 40);
+	COMMANDER_STAT(RAID, get_raid_level, 40);
+	COMMANDER_STAT(PRIVATEER, get_privateer_level, 40);
+	COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level, 44);
+	COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level, 44);
+	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);
+	COMMANDER_STAT(MANEUVER, get_maneuver_level, 40);
+	COMMANDER_STAT(DETECTION, get_detection_level, 40);
+	COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
+#undef COMMANDER_STAT
+#define COMMANDER_STAT(enum, function, width) \
+	if (aPreference->hasCommanderStat(CPreference::enum))\
+	{\
+		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"%d\">%s</TD>\n",\
+				width, Admiral->function());\
+	}
+	COMMANDER_STAT(ARMADA_CLASS, get_armada_commanding_name, 44);
+	COMMANDER_STAT(ABILITY, get_ability_name, 44);
+#undef COMMANDER_STAT
+
+		// Ship-class select. CDock::print_html_select() hardcodes
+		// NAME="SHIP_CLASS_ID", so we emit a per-row SHIP_DESIGN{i}
+		// select ourselves by iterating the docked ships.
+		Info += "<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"99\">";
+		Info.format("<SELECT NAME=SHIP_DESIGN%d>\n", i);
+		if (ShipPool)
+		{
+			for (int s=0 ; s<ShipPool->length() ; s++)
+			{
+				CDockedShip *
+					DockedShip = (CDockedShip *)ShipPool->get(s);
+				CShipDesign *
+					Class = (CShipDesign *)DockedShip;
+				Info.format("<OPTION VALUE=%d>%s</OPTION>\n",
+							Class->CShipDesign::get_design_id(), Class->get_name());
+			}
+		}
+		Info += "</SELECT></TD>\n";
+
+		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"44\"><INPUT NAME=SHIP_NUMBER%d VALUE=0 SIZE=4></TD>\n", i);
+
+		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"118\"><INPUT NAME=FLEET_NAME%d SIZE=12>", i);
+		Info.format("<INPUT TYPE=hidden NAME=FLEET_ID%d VALUE=%d></TD>\n", i, BaseFleetID + i);
+
+		Info += "</TR>\n";
+	}
+
+	Info += "</TBODY>\n";
+	Info += "</TABLE>\n";
 
 	return (char *)Info;
 }
