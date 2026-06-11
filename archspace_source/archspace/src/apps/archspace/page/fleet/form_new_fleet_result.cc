@@ -186,7 +186,7 @@ CPageFormNewFleetResult::handler(CPlayer *aPlayer)
 			continue;
 		}
 
-		if(!is_valid_name((char *)FleetName))
+		if(!is_valid_name((char *)FleetName, 30))
 		{
 			Message.format("You didn't enter a valid fleet name for fleet %1$d.<BR>",
 					FleetID);

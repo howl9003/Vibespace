@@ -129,7 +129,7 @@ CPageFormNewFleetConfirm::handler(CPlayer *aPlayer)
 			return output("fleet/form_new_fleet_error.html");
 		}
 
-		if(!is_valid_name((char *)FleetName))
+		if(!is_valid_name((char *)FleetName, 30))
 		{
 			ITEM("ERROR_MESSAGE", GETTEXT("You did not enter a valid fleet name."));
 			return output("fleet/form_new_fleet_error.html");

@@ -15,7 +15,7 @@ CPageDefensePlanSpecialNewResult::handler(CPlayer *aPlayer)
 		ITEM("ERROR_MESSAGE", GETTEXT("You didn't select a name of plan."));
 		return output("war/defense_plan_special_error.html");
 	}
-	if (!is_valid_name((char *)PlanNameString))
+	if (!is_valid_name((char *)PlanNameString, 30))
 	{
 		ITEM("ERROR_MESSAGE", GETTEXT("That name is invalid."));
 		return output("war/defense_plan_special_error.html");

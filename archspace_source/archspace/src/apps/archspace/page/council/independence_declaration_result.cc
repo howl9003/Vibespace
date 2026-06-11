@@ -100,7 +100,7 @@ CPageIndependenceDeclarationResult::handler(CPlayer *aPlayer)
 				GETTEXT("Enter the council slogan."))
 		return output("council/independence_declaration_error.html");
 	}
-    else if (!is_valid_name((char *)Slogan))
+    else if (!is_valid_name((char *)Slogan, 80))
 	{
 		ITEM("ERROR_MESSAGE",
 				GETTEXT("The slogan is invalid. Please enter a proper slogan."));

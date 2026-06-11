@@ -379,7 +379,7 @@ CAdmiralList::fleet_commander_list_javascript(CPlayer *aPlayer)
 
 		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"44\"><INPUT NAME=SHIP_NUMBER%d VALUE=0 SIZE=4></TD>\n", i);
 
-		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"118\"><INPUT NAME=FLEET_NAME%d SIZE=12>", i);
+		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"118\"><INPUT NAME=FLEET_NAME%d SIZE=12 MAXLENGTH=30>", i);
 		Info.format("<INPUT TYPE=hidden NAME=FLEET_ID%d VALUE=%d></TD>\n", i, BaseFleetID + i);
 
 		Info += "</TR>\n";

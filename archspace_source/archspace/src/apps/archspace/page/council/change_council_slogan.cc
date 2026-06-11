@@ -22,7 +22,7 @@ CPageChangeCouncilSlogan::handler(CPlayer *aPlayer)
 	CouncilSlogan.htmlspecialchars();
 	CouncilSlogan.nl2br();
 
-	if (!is_valid_name((char *)CouncilSlogan))
+	if (!is_valid_name((char *)CouncilSlogan, 80))
 	{
 		ITEM("RESULT_MESSAGE", GETTEXT("Enter the council slogan."));
 	}
