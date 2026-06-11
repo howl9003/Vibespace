@@ -77,6 +77,9 @@ class CGame
 		CPlayer* create_new_player(int aPortalID, const char *aName,
 													int aRace);
 		CPlayer* create_bot_player(int aBand);
+		// Build a bot display name: band-scaled rank prefix (Ensign..Admiral) +
+		// a commander-style name for aRace. Written into aOut (<= aOutSize-1).
+		void make_bot_name(int aRace, int aBand, char *aOut, int aOutSize);
 
 		CCouncil *create_new_council(CCluster *aCluster, char *aName = NULL);
 		bool create_new_action( CPlayer *Owner, int aAction, 

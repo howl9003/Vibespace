@@ -1678,6 +1678,31 @@ make_best_bot_design(CPlayer *aPlayer, int aShipSize)
 	return Design;
 }
 
+// Build a bot display name into aOut: a rank prefix scaled to the band (band 0
+// only Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank up to
+// Admiral) + a commander-style name for aRace. If the full first+last name is
+// over 30 chars, only the last name is kept; the commander name gets its own 30
+// chars on top of the rank (max "Commodore " + 30 = 40, fits player.name).
+void
+CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
+{
+	static const char *RankNames[] = { "Ensign", "Captain", "Commodore", "Admiral" };
+	if (aBand < 0) aBand = 0;
+	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
+	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
+	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
+
+	int Rank = number(aBand + 1) - 1;            // 0..aBand
+	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(aRace);
+	if (!Commander || !*Commander) Commander = "Bot";
+	if ((int)strlen(Commander) > 30)
+	{
+		const char *Space = strrchr(Commander, ' ');
+		if (Space && *(Space + 1)) Commander = Space + 1;
+	}
+	snprintf(aOut, aOutSize, "%s %.30s", RankNames[Rank], Commander);
+}
+
 // Create a bot (NPC) player seeded into power band aBand (0..NUM_BOT_BANDS-1).
 // Builds on create_new_player(): grants band-scaled tech (level 3/5/7/9, which
 // also unlocks components), designs a best-components ship, adds planets, then
@@ -1704,29 +1729,12 @@ CGame::create_bot_player(int aBand)
 	int PortalID = MaxID + 1;
 	if (PortalID >= RangeHi) return NULL;   // band space exhausted (1M slots)
 
-	// Bot name: a rank prefix scaled to the band + a commander-style name drawn
-	// from the bot's race. The rank pool widens with the band -- band 0 only
-	// Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank
-	// (Ensign..Admiral). Built into a local buffer BEFORE create_new_player,
-	// which reuses the name generator's static buffer when it makes the bot's
-	// admirals.
-	static const char *RankNames[] = { "Ensign", "Captain", "Commodore", "Admiral" };
+	// Bot name: a band-scaled rank prefix + a commander-style name for a random
+	// race (see make_bot_name). Built BEFORE create_new_player, which reuses the
+	// name generator's static buffer when it makes the bot's admirals.
 	int Race = number(10);                       // 1..10 (valid race id)
-	int Rank = number(aBand + 1) - 1;            // 0..aBand
-	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(Race);
-	if (!Commander || !*Commander) Commander = "Bot";
-	// If the full first+last name already exceeds 30 chars, drop the first name
-	// and use only the last name (the part after the final space).
-	if ((int)strlen(Commander) > 30)
-	{
-		const char *Space = strrchr(Commander, ' ');
-		if (Space && *(Space + 1)) Commander = Space + 1;
-	}
-	// The commander name gets its own 30 chars; the rank prefix is extra (longest
-	// "Commodore " (10) + 30 = 40, which fits player.name char(40)). A last name
-	// still over 30 is truncated by the %.30s as a final safety.
 	char Name[41];
-	snprintf(Name, sizeof(Name), "%s %.30s", RankNames[Rank], Commander);
+	make_bot_name(Race, aBand, Name, sizeof(Name));
 
 	CPlayer *Player = create_new_player(PortalID, Name, Race);
 	if (Player == NULL) return NULL;

@@ -28,6 +28,7 @@
 // bot_band(), bot_band_ceiling()); nothing extra is persisted.
 
 #include <libintl.h>
+#include <cstring>
 #include "../triggers.h"
 #include "../archspace.h"
 
@@ -48,6 +49,28 @@ CCronTabBotPopulation::handler()
 
 	int PerBand    = bot_cfg("BotPerBand", 25);
 	int SpawnBatch = bot_cfg("BotSpawnBatch", 100);  // fill all 100 in one run
+
+	// One-time on deploy: convert legacy "BOT(n)" bots to the rank+commander
+	// name scheme, using each bot's own race and band. The new name never starts
+	// with "BOT(", so this is idempotent and a cheap no-op once all are renamed.
+	// player.name isn't part of the player UPDATE set, so persist it directly.
+	int Renamed = 0;
+	for (int i=0 ; i<PLAYER_TABLE->length() ; i++)
+	{
+		CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
+		if (P == NULL || !P->is_bot() || P->is_dead()) continue;
+		const char *Nm = P->get_name();
+		if (!Nm || strncmp(Nm, "BOT(", 4) != 0) continue;
+
+		char NewName[41];
+		GAME->make_bot_name(P->get_race(), P->bot_band(), NewName, sizeof(NewName));
+		P->set_name(NewName);
+		STORE_CENTER->query("player",
+				(char *)format("UPDATE player SET name = '%s' WHERE game_id = %d",
+						(char *)add_slashes(NewName), P->get_game_id()));
+		Renamed++;
+	}
+	if (Renamed) SLOG("SYSTEM : bot population crontab renamed %d legacy bot(s)", Renamed);
 
 	int Spawned = 0;
 	for (int band=0 ; band<NUM_BOT_BANDS && Spawned<SpawnBatch ; band++)
