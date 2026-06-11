@@ -13,8 +13,11 @@
 //
 //   CCronTabBotAI          drives each living bot. It ALWAYS keeps a band-sized
 //                          defense reserve (5/10/15/20 fleets by band) on stand-
-//                          by and fully manned, so a bot that has fleets always
-//                          has fleets defending. Below its band ceiling a bot
+//                          by and fully manned: it first REBUILDS any fleets lost
+//                          since spawn back up to that reserve (the per-band
+//                          minimum is otherwise only set at spawn and decays as a
+//                          bot takes losses), then keeps them manned -- so a bot
+//                          always has its full reserve defending. Below its band ceiling a bot
 //                          GROWS with the SURPLUS beyond that reserve: surplus
 //                          fleets auto-expedition for planets or train their
 //                          commanders. At/above the ceiling it
@@ -108,18 +111,92 @@ bot_defense_reserve(int aBand)
 }
 
 // ---------------------------------------------------------------------------
+// Rebuild lost fleets back up to the band's defense reserve. The per-band
+// minimum is only ever established at spawn (CGame::create_bot_player); combat
+// losses then erode it permanently, because the rest of the AI only re-crews and
+// missions *existing* fleets -- nothing builds replacements. Topping the fleet
+// list back up here maintains the floor for the life of the bot, and retrofits
+// bots that were spawned before the reserve sizing existed. Mirrors the spawn
+// loop (commander on demand, latest design, manned to commander capacity), but
+// bounded per call so a cold retrofit of a large population spreads over several
+// runs instead of bursting a few thousand inserts in one go. Returns the count
+// of fleets built.
+// ---------------------------------------------------------------------------
+static int
+bot_rebuild_reserve(CPlayer *aPlayer, int aReserve, int aMaxBuild)
+{
+	CFleetList      *FleetList      = aPlayer->get_fleet_list();
+	CAdmiralList    *AdmiralList    = aPlayer->get_admiral_list();
+	CAdmiralList    *AdmiralPool    = aPlayer->get_admiral_pool();
+	CShipDesignList *ShipDesignList = aPlayer->get_ship_design_list();
+
+	int Built = 0;
+	while (FleetList->length() < aReserve && Built < aMaxBuild)
+	{
+		if (AdmiralPool->length() == 0)
+		{
+			CAdmiral *NewAdmiral = new CAdmiral(aPlayer);
+			AdmiralPool->add_admiral(NewAdmiral);
+			NewAdmiral->type(QUERY_INSERT);
+			STORE_CENTER->store(*NewAdmiral);
+		}
+		CAdmiral *Admiral = (CAdmiral *)AdmiralPool->get(0);
+		// fly the bot's latest design (the best-components design built at spawn
+		// is the newest entry); bail if it somehow has no design at all.
+		CShipDesign *ShipDesign = ShipDesignList->length()
+			? (CShipDesign *)ShipDesignList->get(ShipDesignList->length() - 1)
+			: NULL;
+		if (Admiral == NULL || ShipDesign == NULL) break;
+
+		int Capacity = Admiral->get_fleet_commanding();
+
+		CFleet *Fleet = new CFleet();
+		Fleet->set_id(FleetList->get_new_fleet_id());
+		Fleet->set_owner(aPlayer->get_game_id());
+		Fleet->set_name((char *)format("BOT Fleet(%d)", Fleet->get_id()));
+		Fleet->set_admiral(Admiral->get_id());
+		Fleet->set_ship_class(ShipDesign);
+		Fleet->set_max_ship(Capacity);
+		Fleet->set_current_ship(Capacity);
+		Fleet->set_exp(25 + aPlayer->get_control_model()->get_military()*3);
+		FleetList->add_fleet(Fleet);
+
+		Admiral->set_fleet_number(Fleet->get_id());
+		AdmiralPool->remove_without_free_admiral(Admiral->get_id());
+		AdmiralList->add_admiral(Admiral);
+
+		Fleet->type(QUERY_INSERT);
+		STORE_CENTER->store(*Fleet);
+		Admiral->type(QUERY_UPDATE);
+		STORE_CENTER->store(*Admiral);
+
+		Built++;
+	}
+	return Built;
+}
+
+// ---------------------------------------------------------------------------
 // Per-bot AI step.
 // ---------------------------------------------------------------------------
 static void
-bot_ai_act(CPlayer *aPlayer, int aTrainExpTarget)
+bot_ai_act(CPlayer *aPlayer, int aTrainExpTarget, int aRebuildPerRun)
 {
 	aPlayer->refresh_power();
 
 	int Ceiling      = bot_band_ceiling(aPlayer->bot_band());
-	bool BelowCeiling = aPlayer->get_power() < Ceiling;
 	int  Reserve      = bot_defense_reserve(aPlayer->bot_band());
 
 	CFleetList *FleetList = aPlayer->get_fleet_list();
+
+	// (0) Maintain the band minimum: rebuild fleets lost since spawn back up to
+	// the defense reserve. Without this the floor is only ever set at spawn and
+	// decays as the bot takes losses. Done first so the new fleets are counted by
+	// the defense/growth steps below (they start fully manned, on stand-by).
+	if (bot_rebuild_reserve(aPlayer, Reserve, aRebuildPerRun))
+		aPlayer->refresh_power();
+
+	bool BelowCeiling = aPlayer->get_power() < Ceiling;
+
 	int N = FleetList->length();
 
 	// (1) Defense -- ALWAYS, even when throttled: keep idle, in-system fleets
@@ -214,6 +291,7 @@ CCronTabBotAI::handler()
 
 	int PerRun        = bot_cfg("BotAIPerRun", 25);
 	int TrainExpTarget = bot_cfg("BotTrainExpTarget", 300);
+	int RebuildPerRun  = bot_cfg("BotRebuildPerRun", 5);  // fleets rebuilt per bot per run
 
 	int Len = PLAYER_TABLE->length();
 	if (Len <= 0) { SLOG("SYSTEM : bot AI crontab end (no players)"); return; }
@@ -233,7 +311,7 @@ CCronTabBotAI::handler()
 		if (Player == NULL) continue;
 		if (!Player->is_bot() || Player->is_dead()) continue;
 
-		bot_ai_act(Player, TrainExpTarget);
+		bot_ai_act(Player, TrainExpTarget, RebuildPerRun);
 		Processed++;
 	}
 
