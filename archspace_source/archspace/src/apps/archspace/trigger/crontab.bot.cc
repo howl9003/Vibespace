@@ -22,8 +22,13 @@
 //                          reserve: surplus fleets auto-expedition for planets.
 //                          At/above the ceiling it THROTTLES: it only defends,
 //                          which holds it inside its band so the 25/25/25/25
-//                          spread stays stable. SEPARATELY (and regardless of the
-//                          ceiling) it runs a COMMANDER-TRAINING program: every
+//                          spread stays stable. It also always PRIORITISES its
+//                          strongest commanders on defence: stronger commanders
+//                          from the bench are swapped onto the weakest defenders
+//                          (resizing those fleets to the new capacity) and the
+//                          displaced commanders return to the pool to be retrained.
+//                          SEPARATELY (and regardless of the ceiling) it runs a
+//                          COMMANDER-TRAINING program: every
 //                          below-cap commander in the pool is put into its own
 //                          auto-repeat training fleet and trained up; on reaching
 //                          the level cap (BotTrainLevelCap, default 20 = MAX_LEVEL)
@@ -289,10 +294,92 @@ bot_train_pool(CPlayer *aPlayer, int aLevelCap, int aMaxStart)
 }
 
 // ---------------------------------------------------------------------------
+// Always put the bot's strongest available commanders on its defenders. A
+// higher-level commander commands more ships and fights better, so each pass
+// swaps the WEAKEST defender's commander for the STRONGEST commander waiting on
+// the bench (the pool), and resizes the fleet to the new commander's capacity
+// (a defender's ships are synthesized for free, like the rebuild path). The
+// displaced commander returns to the pool, where the training program levels it
+// back up -- so over time every defender ends up under a maxed commander and the
+// bench feeds a steady supply of graduates. "Defenders" are the idle, in-system
+// stand-by fleets left after growth has sent the expedition surplus out (the
+// held-back reserve). Bench commanders that are already mid-training sit in
+// trainee fleets, not the pool, so they are never yanked off training here.
+// Only strict improvements are made (bench level > defender level), so this is
+// stable; bounded per run. Returns the number of swaps made.
+// ---------------------------------------------------------------------------
+static int
+bot_promote_defenders(CPlayer *aPlayer, int aMaxSwaps)
+{
+	CFleetList   *FleetList   = aPlayer->get_fleet_list();
+	CAdmiralList *AdmiralList = aPlayer->get_admiral_list();
+	CAdmiralList *AdmiralPool = aPlayer->get_admiral_pool();
+
+	int Swaps = 0;
+	while (Swaps < aMaxSwaps)
+	{
+		// weakest in-system defender and its commander
+		CFleet   *WeakFleet     = NULL;
+		CAdmiral *WeakCommander = NULL;
+		for (int i=0 ; i<FleetList->length() ; i++)
+		{
+			CFleet *F = (CFleet *)FleetList->get(i);
+			if (F == NULL) continue;
+			if (F->get_status() != CFleet::FLEET_STAND_BY) continue;
+			if (F->under_mission()) continue;
+			if (F->get_mission().get_mission() != CMission::MISSION_NONE) continue;
+			CAdmiral *C = AdmiralList->get_by_id(F->get_admiral_id());
+			if (C == NULL) continue;
+			if (WeakCommander == NULL || C->get_level() < WeakCommander->get_level())
+			{
+				WeakFleet     = F;
+				WeakCommander = C;
+			}
+		}
+		if (WeakFleet == NULL) break;
+
+		// strongest commander on the bench
+		CAdmiral *Best = NULL;
+		for (int i=0 ; i<AdmiralPool->length() ; i++)
+		{
+			CAdmiral *P = (CAdmiral *)AdmiralPool->get(i);
+			if (P == NULL) continue;
+			if (Best == NULL || P->get_level() > Best->get_level()) Best = P;
+		}
+		if (Best == NULL || Best->get_level() <= WeakCommander->get_level()) break;
+
+		// bench the weak commander, promote the strong one onto the defender, and
+		// resize the fleet to the new commander's capacity (synthesized for free).
+		WeakCommander->set_fleet_number(0);
+		AdmiralList->remove_without_free_admiral(WeakCommander->get_id());
+		AdmiralPool->add_admiral(WeakCommander);
+
+		AdmiralPool->remove_without_free_admiral(Best->get_id());
+		AdmiralList->add_admiral(Best);
+		Best->set_fleet_number(WeakFleet->get_id());
+
+		WeakFleet->set_admiral(Best->get_id());
+		WeakFleet->set_max_ship(Best->get_fleet_commanding());
+		WeakFleet->set_current_ship(Best->get_fleet_commanding());
+
+		WeakFleet->type(QUERY_UPDATE);
+		STORE_CENTER->store(*WeakFleet);
+		Best->type(QUERY_UPDATE);
+		STORE_CENTER->store(*Best);
+		WeakCommander->type(QUERY_UPDATE);
+		STORE_CENTER->store(*WeakCommander);
+
+		Swaps++;
+	}
+	return Swaps;
+}
+
+// ---------------------------------------------------------------------------
 // Per-bot AI step.
 // ---------------------------------------------------------------------------
 static void
-bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap)
+bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap,
+		int aPromotePerRun)
 {
 	aPlayer->refresh_power();
 
@@ -385,6 +472,14 @@ bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap
 		}
 	}
 
+	// (P) Prioritise the strongest commanders on defence: swap maxed/higher-level
+	// commanders from the bench onto the weakest held-back defenders and resize
+	// those fleets to the new capacity (step (1) above already re-manned, and the
+	// swap sets the fleet full). Displaced commanders return to the pool to be
+	// trained back up. Runs even when throttled -- defence quality is always wanted.
+	if (bot_promote_defenders(aPlayer, aPromotePerRun))
+		aPlayer->refresh_power();
+
 	// (3) Train the commander pool toward the level cap. Runs even when throttled:
 	// it develops commanders rather than chasing power, and is self-limiting (a
 	// trainee leaves the pool while training and returns maxed in step (A)).
@@ -405,6 +500,7 @@ CCronTabBotAI::handler()
 	int RebuildPerRun  = bot_cfg("BotRebuildPerRun", 5);  // defenders rebuilt per bot per run
 	int TrainPerRun    = bot_cfg("BotTrainPerRun", 5);    // trainees started per bot per run
 	int LevelCap       = bot_cfg("BotTrainLevelCap", 20); // graduate a commander at this level
+	int PromotePerRun  = bot_cfg("BotPromotePerRun", 5);  // defender commander swaps per bot per run
 
 	int Len = PLAYER_TABLE->length();
 	if (Len <= 0) { SLOG("SYSTEM : bot AI crontab end (no players)"); return; }
@@ -424,7 +520,7 @@ CCronTabBotAI::handler()
 		if (Player == NULL) continue;
 		if (!Player->is_bot() || Player->is_dead()) continue;
 
-		bot_ai_act(Player, RebuildPerRun, TrainPerRun, LevelCap);
+		bot_ai_act(Player, RebuildPerRun, TrainPerRun, LevelCap, PromotePerRun);
 		Processed++;
 	}
 
