@@ -850,19 +850,21 @@ CShipDesign::class_info_for_building_html(CPlayer *aPlayer)
 
 	CArmor *
 		Armor = (CArmor *)COMPONENT_TABLE->get_by_id(get_armor());
+	// Build cost = hull cost, with the Bio-armor + Great Spawning Pool 20%
+	// discount applied (mirrors the real consumption in CPlayer::build_ship()).
+	// Used for BOTH the PP column and the turns column below so they stay in
+	// sync -- previously only the PP column was discounted, so a Bio doomstar
+	// showed the same build time as a non-Bio one despite actually building
+	// faster.
+	int
+		BuildCost = Body->get_cost();
 	if (Armor->get_armor_type() == AT_BIO &&
 		aPlayer->has_ability(ABILITY_GREAT_SPAWNING_POOL))
-	{
-		ClassInfo += "<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"105\">";
-		ClassInfo.format("%s PP", dec2unit(Body->get_cost() * 80 / 100));
-		ClassInfo += "</TD>\n";
-	}
-	else
-	{
-		ClassInfo += "<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"105\">";
-		ClassInfo.format("%s PP", dec2unit(Body->get_cost()));
-		ClassInfo += "</TD>\n";
-	}
+		BuildCost = BuildCost * 80 / 100;
+
+	ClassInfo += "<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"105\">";
+	ClassInfo.format("%s PP", dec2unit(BuildCost));
+	ClassInfo += "</TD>\n";
 
 	int
 		RealShipProduction = aPlayer->calc_real_ship_production(); 
@@ -880,10 +882,10 @@ CShipDesign::class_info_for_building_html(CPlayer *aPlayer)
 		int
 			TimeCost;
 
-		if (Body->get_cost() % RealShipProduction)
+		if (BuildCost % RealShipProduction)
 		{
-			TimeCost = Body->get_cost() / RealShipProduction + 1;
-		} else TimeCost = Body->get_cost() / RealShipProduction;
+			TimeCost = BuildCost / RealShipProduction + 1;
+		} else TimeCost = BuildCost / RealShipProduction;
 
 		CString
 			TurnString;
