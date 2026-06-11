@@ -2328,6 +2328,20 @@ class CPageReassignmentRemoveAddShipResult: public CPageFleetLink
 		virtual bool handler(CPlayer *aPlayer);
 };
 
+/**
+*/
+class CPageReassignmentChangeNameIDResult: public CPageFleetLink
+{
+	public:
+		CPageReassignmentChangeNameIDResult():CPageFleetLink() {}
+		virtual ~CPageReassignmentChangeNameIDResult() {}
+		virtual const char *get_name()
+			{ return "/archspace/fleet/reassignment_change_name_id_result.as"; }
+		virtual const char *allow_method() { return "POST"; }
+	protected:
+		virtual bool handler(CPlayer *aPlayer);
+};
+
 //---------------------------------------------------------------- WAR
 /**
 */

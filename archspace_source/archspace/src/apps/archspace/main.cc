@@ -207,6 +207,7 @@ CArchspacePageStation::registration()
 	insert_sorted(new CPageReassignmentCommanderChangeResult());
 	insert_sorted(new CPageReassignmentRemoveAddShipConfirm());
 	insert_sorted(new CPageReassignmentRemoveAddShipResult());
+	insert_sorted(new CPageReassignmentChangeNameIDResult());
 	insert_sorted(new CPageReassignmentShipReassignmentConfirm());
 	insert_sorted(new CPageReassignmentShipReassignmentResult());
 

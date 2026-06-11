@@ -8,6 +8,7 @@
 #define REASSIGNMENT_REMOVE_ADD_SHIPS	3
 #define REASSIGNMENT_REFILL_FLEET		4
 #define REASSIGNMENT_MAXIMIZE_FLEET		5
+#define REASSIGNMENT_CHANGE_NAME_ID		6
 
 bool
 CPageReassignment2::handler(CPlayer *aPlayer)
@@ -419,6 +420,30 @@ CPageReassignment2::handler(CPlayer *aPlayer)
 			return output("fleet/reassignment_removeadd_ship.html");
 		}
 
+		case REASSIGNMENT_CHANGE_NAME_ID :
+		{
+			ITEM("STRING_CHANGE_NAME_ID", GETTEXT("Change Name/ID"));
+
+			ITEM("STRING_FLEET", GETTEXT("Fleet"));
+			ITEM("STRING_CLASS", GETTEXT("Class"));
+			ITEM("STRING_CURRENT_FLEET_ID", GETTEXT("Current Fleet ID"));
+			ITEM("STRING_NEW_FLEET_NAME", GETTEXT("New Fleet Name"));
+			ITEM("STRING_NEW_FLEET_ID", GETTEXT("New Fleet ID"));
+
+			ITEM("FLEET", Fleet->get_name());
+			ITEM("CLASS", Fleet->CShipDesign::get_name());
+			ITEM("CURRENT_FLEET_ID", Fleet->get_id());
+
+			ITEM("NEW_FLEET_NAME",
+					(char *)format("<INPUT TYPE=text NAME=NEW_NAME SIZE=30 MAXLENGTH=30 VALUE=\"%s\">",
+									Fleet->get_name()));
+			ITEM("NEW_FLEET_ID",
+					(char *)format("<INPUT TYPE=text NAME=NEW_ID SIZE=10 VALUE=\"%d\">",
+									Fleet->get_id()));
+
+			return output("fleet/reassignment_change_name_id.html");
+		}
+
 		default :
 		{
 			ITEM("ERROR_MESSAGE",
@@ -433,4 +458,5 @@ CPageReassignment2::handler(CPlayer *aPlayer)
 #undef REASSIGNMENT_REMOVE_ADD_SHIPS
 #undef REASSIGNMENT_REFILL_FLEET
 #undef REASSIGNMENT_MAXIMIZE_FLEET
+#undef REASSIGNMENT_CHANGE_NAME_ID
 

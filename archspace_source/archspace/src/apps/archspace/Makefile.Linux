@@ -319,6 +319,7 @@ CCFILES=\
 		page/fleet/reassignment_commander_change_result.cc \
 		page/fleet/reassignment_removeadd_ship_confirm.cc \
 		page/fleet/reassignment_removeadd_ship_result.cc \
+		page/fleet/reassignment_change_name_id_result.cc \
 		page/fleet/reassignment_ship_reassignment_confirm.cc \
 		page/fleet/reassignment_ship_reassignment_result.cc \
 		page/fleet/class_specification.cc \

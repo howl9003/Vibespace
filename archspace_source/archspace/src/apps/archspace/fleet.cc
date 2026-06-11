@@ -716,6 +716,10 @@ CFleet::select_reassignment_html()
 	Reassignment += GETTEXT("Maximize Fleet(s)");
 	Reassignment += "<BR>\n";
 
+	Reassignment += "<INPUT TYPE=radio NAME=\"REASSIGNMENT\" VALUE=\"6\">";
+	Reassignment += GETTEXT("Change Name/ID");
+	Reassignment += "<BR>\n";
+
 	Reassignment += "</TD>\n";
 
 	return (char *)Reassignment;
