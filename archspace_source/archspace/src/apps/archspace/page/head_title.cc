@@ -38,8 +38,8 @@ CPageHeadTitle::refresh_population_item()
 	assert(Player);
 
 	ITEM("POPULATION", 
-			(char *)format(GETTEXT("Pop. : %1$s"),
-							Player->calc_population_with_unit()));
+			(char *)format(GETTEXT("Power : %1$s"),
+							dec2unit(Player->get_power())));
 }
 
 bool
@@ -128,8 +128,8 @@ CPageHeadTitle::get_conversion()
 					dec2unit(NumberOfPlanet)));
 
 	ITEM("POPULATION",
-			(char *)format(GETTEXT("Pop. : %1$s"),
-							Player->calc_population_with_unit()));
+			(char *)format(GETTEXT("Power : %1$s"),
+							dec2unit(Player->get_power())));
 
 	return true;
 }
