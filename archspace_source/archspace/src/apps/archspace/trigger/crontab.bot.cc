@@ -131,19 +131,23 @@ bot_defense_reserve(int aBand)
 	return Reserve;
 }
 
-// Fleets that count toward the defensive floor: everything except the temporary
-// training fleets (those are a commander-development "factory", not defenders --
-// see bot_train_pool). Without this, trainees would masquerade as reserve fleets
-// and the rebuild below would leave the bot short of real defenders.
+// Fleets actually standing by to defend RIGHT NOW: idle, in-system, on no
+// mission. This deliberately excludes fleets that are away -- on expedition
+// (claiming planets) or training -- because those don't defend the home system
+// and will not be present in a battle. The rebuild below tops this count back up
+// to the reserve; counting away fleets here was the bug that let a bot with a
+// few auto-repeating expeditions sit at 1-2 real defenders while "looking" full.
 static int
-bot_defense_fleet_count(CFleetList *aList)
+bot_standby_defender_count(CFleetList *aList)
 {
 	int Count = 0;
 	for (int i=0 ; i<aList->length() ; i++)
 	{
 		CFleet *F = (CFleet *)aList->get(i);
 		if (F == NULL) continue;
-		if (F->get_mission().get_mission() == CMission::MISSION_TRAIN) continue;
+		if (F->get_status() != CFleet::FLEET_STAND_BY) continue;
+		if (F->under_mission()) continue;
+		if (F->get_mission().get_mission() != CMission::MISSION_NONE) continue;
 		Count++;
 	}
 	return Count;
@@ -170,7 +174,7 @@ bot_rebuild_reserve(CPlayer *aPlayer, int aReserve, int aMaxBuild)
 	CShipDesignList *ShipDesignList = aPlayer->get_ship_design_list();
 
 	int Built = 0;
-	while (bot_defense_fleet_count(FleetList) < aReserve && Built < aMaxBuild)
+	while (bot_standby_defender_count(FleetList) < aReserve && Built < aMaxBuild)
 	{
 		if (AdmiralPool->length() == 0)
 		{
@@ -551,8 +555,9 @@ bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap
 		bot_disband_training_fleet(aPlayer, Fleet, Admiral);
 	}
 
-	// (0) Maintain the band minimum: rebuild lost defenders back up to the reserve
-	// (training fleets don't count -- see bot_defense_fleet_count). Done before the
+	// (0) Maintain the band minimum: rebuild lost defenders back up to the reserve.
+	// Counts only fleets actually standing by (bot_standby_defender_count) -- fleets
+	// away on expedition/training don't defend the home system. Done before the
 	// defense/growth steps so the new fleets are counted there (manned, stand-by).
 	if (bot_rebuild_reserve(aPlayer, Reserve, aRebuildPerRun))
 		aPlayer->refresh_power();
