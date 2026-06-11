@@ -90,7 +90,17 @@ CPageReassignmentChangeNameIDResult::handler(CPlayer *aPlayer)
 		Fleet->type(QUERY_DELETE);
 		STORE_CENTER->store(*Fleet);
 
+		// The fleet list is sorted by each fleet's key (owner+id); set_id() rebuilds
+		// the key in place but does NOT re-sort the list, so the fleet would keep its
+		// old slot (still showing as e.g. #2). Pull it out under the old id, renumber,
+		// then re-insert so it sorts into its new position.
+		CFleetList *
+			FleetList = aPlayer->get_fleet_list();
+		FleetList->remove_without_free_fleet(OldID);
+
 		Fleet->set_id(NewID);
+
+		FleetList->add_fleet(Fleet);
 
 		// Keep the commanding admiral's fleet-number reference in sync.
 		CAdmiral *
