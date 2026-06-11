@@ -4,6 +4,7 @@
 #include "archspace.h"
 #include <cstdlib>
 #include <cstdio>
+#include <cstring>
 #include "script.h"
 #include "ending.h"
 #include "battle.h"
@@ -1714,8 +1715,16 @@ CGame::create_bot_player(int aBand)
 	int Rank = number(aBand + 1) - 1;            // 0..aBand
 	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(Race);
 	if (!Commander || !*Commander) Commander = "Bot";
-	// Give the commander name its own 30 chars; the rank prefix is extra. Longest
-	// rank "Commodore " (10) + 30 = 40, which fits player.name char(40).
+	// If the full first+last name already exceeds 30 chars, drop the first name
+	// and use only the last name (the part after the final space).
+	if ((int)strlen(Commander) > 30)
+	{
+		const char *Space = strrchr(Commander, ' ');
+		if (Space && *(Space + 1)) Commander = Space + 1;
+	}
+	// The commander name gets its own 30 chars; the rank prefix is extra (longest
+	// "Commodore " (10) + 30 = 40, which fits player.name char(40)). A last name
+	// still over 30 is truncated by the %.30s as a final safety.
 	char Name[41];
 	snprintf(Name, sizeof(Name), "%s %.30s", RankNames[Rank], Commander);
 
