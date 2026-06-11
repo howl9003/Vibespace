@@ -102,6 +102,29 @@
       idx++;
     }
 
+    /* ── 3b. Default formation: capital fleet centred, the rest in a tidy
+       5-column × 4-row grid around it. Overrides the engine's raw default
+       coordinates (which stack/scatter) so the board opens neatly arranged;
+       the player can still drag any fleet from there. */
+    (function defaultGrid() {
+      var COLS = 5, ROWS = 4;
+      var mX = 80, mY = 45;                          // edge margin (box ≈ 80×36)
+      var stepX = (BOARD_W - 2 * mX) / (COLS - 1);   // 5 columns across
+      var stepY = (BOARD_H - 2 * mY) / (ROWS - 1);   // 4 rows down
+      var slot = 0;
+      fleets.forEach(function (f) {
+        if (f.isCap) {
+          f.x = Math.round(BOARD_W / 2);
+          f.y = Math.round(BOARD_H / 2);
+        } else {
+          var col = slot % COLS, row = Math.floor(slot / COLS);
+          f.x = Math.round(mX + col * stepX);
+          f.y = Math.round(mY + row * stepY);
+          slot++;
+        }
+      });
+    })();
+
     // Clamp all initial positions inside the board
     fleets.forEach(function (f) {
       f.x = clamp(f.x, 0, BOARD_W - 1);
