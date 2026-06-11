@@ -3047,7 +3047,9 @@ bot_band_ceiling(int aBand)
 		case 1: return 50000;
 		case 2: return 100000;
 		case 3: return 200000;
-		default: return 200000;
+		case 4: return 500000;     // Grand Admiral band:  200k - 500k
+		case 5: return 1000000;    // Supreme Admiral band: 500k - 1M
+		default: return 1000000;
 	}
 }
 

@@ -6,13 +6,14 @@
 //
 //   CCronTabBotPopulation  keeps a fixed, band-locked spread of bots alive.
 //                          Target is BotPerBand (default 25) in each of the
-//                          NUM_BOT_BANDS power bands -> 100 bots total. Spawns
-//                          at most BotSpawnBatch new bots per run (default 100,
-//                          i.e. fill the whole population in one run; lower it to
-//                          spread a cold start over several runs if desired).
+//                          NUM_BOT_BANDS (6) power bands -> 150 bots total. Spawns
+//                          at most BotSpawnBatch new bots per run (default 100, so
+//                          a cold start fills over a couple of runs; lower it to
+//                          spread a cold start over more runs if desired).
 //
 //   CCronTabBotAI          drives each living bot. It ALWAYS keeps a band-sized
-//                          defense reserve (5/10/15/20 fleets by band) on stand-
+//                          defense reserve (5/10/15/20 fleets by band, capped at
+//                          20 so bands 3-5 all hold 20) on stand-
 //                          by and fully manned: it first REBUILDS any defenders
 //                          lost since spawn back up to that reserve (the per-band
 //                          minimum is otherwise only set at spawn and decays as a
@@ -113,17 +114,21 @@ CCronTabBotPopulation::handler()
 
 // ---------------------------------------------------------------------------
 // Minimum fleets a bot always keeps on stand-by to defend, by power band:
-//   band 0 (0-10k)    -> 5     band 2 (50-100k)  -> 15
-//   band 1 (10-50k)   -> 10    band 3 (100-200k) -> 20
-// (band+1)*5. These are never sent on a mission, so a bot that has fleets always
-// has fleets standing by to defend.
+//   band 0 (0-10k)    -> 5     band 3 (100-200k)        -> 20
+//   band 1 (10-50k)   -> 10    band 4 (200-500k, Grand) -> 20
+//   band 2 (50-100k)  -> 15    band 5 (500k-1M, Supreme)-> 20
+// (band+1)*5, capped at 20 (which is also the defence-plan fleet limit). These
+// are never sent on a mission, so a bot that has fleets always has fleets
+// standing by to defend.
 // ---------------------------------------------------------------------------
 static int
 bot_defense_reserve(int aBand)
 {
 	if (aBand < 0) aBand = 0;
 	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
-	return (aBand + 1) * 5;
+	int Reserve = (aBand + 1) * 5;
+	if (Reserve > 20) Reserve = 20;
+	return Reserve;
 }
 
 // Fleets that count toward the defensive floor: everything except the temporary

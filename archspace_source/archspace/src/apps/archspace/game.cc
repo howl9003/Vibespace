@@ -1680,19 +1680,23 @@ make_best_bot_design(CPlayer *aPlayer, int aShipSize)
 
 // Build a bot display name into aOut: a rank prefix scaled to the band (band 0
 // only Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank up to
-// Admiral) + a commander-style name for aRace. If the full first+last name is
-// over 30 chars, only the last name is kept; the commander name gets its own 30
-// chars on top of the rank (max "Commodore " + 30 = 40, fits player.name).
+// Admiral; band 4 always Grand Admiral; band 5 always Supreme Admiral) + a
+// commander-style name for aRace. If the full first+last name is over 30 chars,
+// only the last name is kept; the commander name gets its own 30 chars on top of
+// the rank (snprintf bounds the whole thing to player.name's width).
 void
 CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 {
-	static const char *RankNames[] = { "Ensign", "Captain", "Commodore", "Admiral" };
+	static const char *RankNames[] =
+		{ "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
 	if (aBand < 0) aBand = 0;
 	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
 	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
 	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
 
-	int Rank = number(aBand + 1) - 1;            // 0..aBand
+	// bands 0-3: a random rank scaled to the band; bands 4-5: a fixed signature
+	// rank shared by every bot in the band.
+	int Rank = (aBand >= 4) ? aBand : number(aBand + 1) - 1;
 	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(aRace);
 	if (!Commander || !*Commander) Commander = "Bot";
 	if ((int)strlen(Commander) > 30)
@@ -1745,11 +1749,16 @@ CGame::create_bot_player(int aBand)
 	CFleetList     *FleetList      = Player->get_fleet_list();
 	CShipDesignList *ShipDesignList = Player->get_ship_design_list();
 
-	// --- tech: grant every tech up to the band's level (3/5/7/9) -------------
+	// --- tech: grant every tech up to the band's level -----------------------
 	// Discovering in ascending level order satisfies prerequisites and unlocks
 	// the matching ship components (discover_tech adds them to the component
 	// list), so the best-components design below reflects the band's tech.
-	int TechLevel = 3 + aBand * 2;             // band 0..3 -> level 3/5/7/9
+	//   bands 0-3 -> level 3/5/7/9; band 4 (Grand Admiral) -> all level-9 techs;
+	//   band 5 (Supreme Admiral) -> every tech (the tree tops out at level 12).
+	int TechLevel;
+	if (aBand <= 3)      TechLevel = 3 + aBand * 2;
+	else if (aBand == 4) TechLevel = 9;
+	else                 TechLevel = 99;
 	for (int L=1 ; L<=TechLevel ; L++)
 	{
 		for (int i=0 ; i<TECH_TABLE->length() ; i++)
@@ -1760,13 +1769,24 @@ CGame::create_bot_player(int aBand)
 		}
 	}
 
-	// --- best-components ship design, hull scaled with band (clamped to what
-	//     matter-energy tech allows: count/2 + 2, same gate as the design page).
-	int MatterMax = Player->count_tech_by_category(CTech::TYPE_MATTER_ENERGY) / 2 + 2;
-	int ShipSize  = 3 + aBand * 2;             // band 0..3 -> hull 3/5/7/9
-	if (ShipSize > MatterMax) ShipSize = MatterMax;
-	if (ShipSize > 10) ShipSize = 10;
-	if (ShipSize < 1)  ShipSize = 1;
+	// --- best-components ship design, hull scaled with band -------------------
+	// bands 0-3: hull 3/5/7/9, clamped to what matter-energy tech allows
+	// (count/2 + 2, the same gate as the design page). Bands 4-5 (Grand/Supreme
+	// Admiral) fly doomstars (class 10): bots design directly, so we set the hull
+	// to 10 and skip the matter-energy gate rather than depend on tech count.
+	int ShipSize;
+	if (aBand >= 4)
+	{
+		ShipSize = 10;
+	}
+	else
+	{
+		int MatterMax = Player->count_tech_by_category(CTech::TYPE_MATTER_ENERGY) / 2 + 2;
+		ShipSize = 3 + aBand * 2;
+		if (ShipSize > MatterMax) ShipSize = MatterMax;
+		if (ShipSize > 10) ShipSize = 10;
+		if (ShipSize < 1)  ShipSize = 1;
+	}
 	CShipDesign *BotDesign = make_best_bot_design(Player, ShipSize);
 
 	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
@@ -1818,13 +1838,15 @@ CGame::create_bot_player(int aBand)
 	// than deep inside the band. Sizing the *capacity* matters: the AI keeps
 	// fleets manned to max_ship, so a merely under-crewed fleet would be re-
 	// filled and overshoot -- a smaller-capacity fleet stays put near the floor.
-	// Always raise at least the band's defense reserve (5/10/15/20 by band, see
-	// bot_defense_reserve() in crontab.bot.cc) plus a small growth buffer, so the
-	// bot starts with enough fleets to keep its full reserve standing by to defend
-	// and still have a surplus to expedition. Commanders are created on demand if
-	// the pool runs dry. Bounded by a hard cap.
+	// Always raise at least the band's defense reserve (5/10/15/20/20/20 by band,
+	// capped at 20; see bot_defense_reserve() in crontab.bot.cc) plus a small
+	// growth buffer, so the bot starts with enough fleets to keep its full reserve
+	// standing by to defend and still have a surplus to expedition. Commanders are
+	// created on demand if the pool runs dry. Bounded by a hard cap.
 	int Floor     = bot_band_floor(aBand);
-	int MinFleets  = (aBand + 1) * 5 + 2;
+	int Reserve   = (aBand + 1) * 5;
+	if (Reserve > 20) Reserve = 20;        // bands 3-5 all hold 20 (also the plan limit)
+	int MinFleets  = Reserve + 2;
 	int MaxFleets  = 500;                  // absolute safety cap
 	Player->refresh_power();
 	while (FleetList->length() < MaxFleets &&
