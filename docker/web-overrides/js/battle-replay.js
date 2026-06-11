@@ -53,7 +53,16 @@
   var ATT = '#ff8844', ATT_DIM = '#7a3a1c';   // attacker (orange)
   var DEF = '#55bbff', DEF_DIM = '#1c4a6e';   // defender (cyan)
   var CW = 544, CH = 320;                       // canvas size
-  var ROUT = 10, PANIC = 12;                    // CBattleFleet status enum (battle.h): morale-break states
+  // CBattleFleet morale-break statuses (battle.h enum): each flickers + tints the
+  // icon and stamps a letter on it (R=Rout, T=reTreat to avoid the R clash; the
+  // full name is shown in the label).
+  var STATUS_FX = {
+    8:  { ch: 'B', name: 'BERSERK',  color: '#ff8a00' },
+    9:  { ch: 'D', name: 'DISORDER', color: '#b066ff' },
+    10: { ch: 'R', name: 'ROUT',     color: '#ffd633' },
+    11: { ch: 'T', name: 'RETREAT',  color: '#5bc0ff' },
+    12: { ch: 'P', name: 'PANIC',    color: '#ff5577' }
+  };
 
   function el(tag, css, html) {
     var e = document.createElement(tag);
@@ -307,13 +316,14 @@
       var x = tx(st.x), y = ty(st.y);
       var r = Math.max(4, Math.min(16, 3 + Math.sqrt(st.ships || 1) * 1.6));
       var col = fl.side === 'att' ? ATT : DEF;
-      // rout/panic: flicker the marker and tint it (panic red, rout amber)
-      var panicky = (st.cmd === ROUT || st.cmd === PANIC);
+      // morale-break status: flicker + tint the marker, stamp its letter on the
+      // icon, and show the full name in the label.
+      var fx = STATUS_FX[st.cmd];
       var alpha = 1, tag = '';
-      if (panicky) {
+      if (fx) {
         alpha = 0.3 + 0.7 * Math.abs(Math.sin(Date.now() / 120));
-        col = (st.cmd === PANIC) ? '#ff5577' : '#ffbb33';
-        tag = (st.cmd === PANIC) ? ' ⚠ PANIC' : ' ⚠ ROUT';
+        col = fx.color;
+        tag = ' ⚠ ' + fx.name;
       }
       var rad = (st.dir || 0) * Math.PI / 180;
       ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(rad);
@@ -321,9 +331,19 @@
       ctx.moveTo(r, 0); ctx.lineTo(-r * 0.7, r * 0.7); ctx.lineTo(-r * 0.7, -r * 0.7);
       ctx.closePath(); ctx.fill();
       ctx.restore();
+      if (fx) {   // status letter, upright and centered on the icon
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+        ctx.strokeText(fx.ch, x, y);
+        ctx.fillStyle = '#fff'; ctx.fillText(fx.ch, x, y);
+        ctx.restore();
+      }
       ctx.save();
-      ctx.globalAlpha = panicky ? alpha : 1;
-      ctx.fillStyle = panicky ? col : '#7d8aa0';
+      ctx.globalAlpha = fx ? alpha : 1;
+      ctx.fillStyle = fx ? col : '#7d8aa0';
       ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
       ctx.fillText(fl.nick + ' (' + st.ships + ')' + tag, x, y - r - 3);
       ctx.restore();
@@ -373,7 +393,7 @@
     function anyAbnormal(t) {
       for (var i = 0; i < fleetList.length; i++) {
         var st = stateAt(fleetList[i], t);
-        if (st && (st.cmd === ROUT || st.cmd === PANIC)) return true;
+        if (st && STATUS_FX[st.cmd]) return true;
       }
       return false;
     }
