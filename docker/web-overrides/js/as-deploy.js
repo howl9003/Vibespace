@@ -21,12 +21,8 @@
   'use strict';
 
   var BOARD_W = 630, BOARD_H = 275;
-  var COLS = 5, ROWS = 4;                  // default-formation columns/rows
-  var MARGIN_X = 70, MARGIN_Y = 40;
-  var STEP_X = (BOARD_W - 2 * MARGIN_X) / (COLS - 1);
-  var STEP_Y = (BOARD_H - 2 * MARGIN_Y) / (ROWS - 1);
-  var CAP_SLOT = (ROWS - 1) * COLS + Math.floor(COLS / 2); // bottom row, centre
-  var R = 10;                              // marker radius
+  var R = 12;                              // hit-test radius (icons are small)
+  var ICON_H = 22;                         // drawn marker height in px
 
   // Snap grid = the original applet's 20-unit battle squares. The battle area
   // is 600×200 (X 9..609, Y 226..426); map a unit to canvas px.
@@ -35,8 +31,8 @@
 
   var COLOR_BG   = '#050510';
   var COLOR_GRID = '#191936';
-  var BLUE = '#2f6fd0', BLUE_HI = '#5b9bff';
-  var RED  = '#cc3a34', RED_HI  = '#ff6a60';
+  var BLUE = '#2f6fd0';   // fallback marker fill if a ship gif fails to load
+  var RED  = '#cc3a34';
 
   document.addEventListener('DOMContentLoaded', function () {
     var paramsDiv = document.getElementById('as-deploy-params');
@@ -67,21 +63,45 @@
       idx++;
     }
 
-    /* 3. Default 5×4 formation, each fleet snapped to the battle grid. */
-    function slotXY(slot) {
-      var c = slot % COLS, r = Math.floor(slot / COLS);
-      return { x: MARGIN_X + c * STEP_X, y: MARGIN_Y + r * STEP_Y };
-    }
+    /* 3. Default formation: a compact 5-wide block of adjacent grid squares
+       hugging the capital (capital fixed at the block's bottom-centre), with
+       the squares closest to the capital filled first. A full 20-fleet set
+       lands as the 5×4 block FFFFF / FFFFF / FFFFF / FFCFF. */
+    var GCOLS = Math.max(1, Math.round(BOARD_W / GX));
+    var GROWS = Math.max(1, Math.round(BOARD_H / GY));
     function snap(cx, cy) {
-      var col = clamp(Math.round(cx / GX), 0, Math.round(BOARD_W / GX));
-      var row = clamp(Math.round(cy / GY), 0, Math.round(BOARD_H / GY));
+      var col = clamp(Math.round(cx / GX), 0, GCOLS);
+      var row = clamp(Math.round(cy / GY), 0, GROWS);
       return { x: Math.round(col * GX), y: Math.round(row * GY) };
     }
-    var nextSlot = 0;
+    function cellXY(col, row) { return { x: Math.round(col * GX), y: Math.round(row * GY) }; }
+
+    var capCol = Math.round(GCOLS / 2);    // bottom-centre of the board
+    var capRow = GROWS - 1;
+    var capPx  = cellXY(capCol, capRow);
+    var nNonCap = fleets.reduce(function (n, f) { return n + (f.isCap ? 0 : 1); }, 0);
+
+    // Candidate squares: 5 columns centred on the capital, rows stacked upward,
+    // enough to hold every fleet; ordered by pixel distance to the capital so
+    // the nearest squares are always used first.
+    var BLOCK_W = 5, half = (BLOCK_W - 1) / 2;
+    var needRows = Math.max(1, Math.ceil(nNonCap / BLOCK_W) + 1);
+    var cands = [];
+    for (var rr = capRow; rr > capRow - needRows && rr >= 0; rr--) {
+      for (var dc = -half; dc <= half; dc++) {
+        var cc = clamp(capCol + dc, 0, GCOLS);
+        if (cc === capCol && rr === capRow) continue;   // the capital's own square
+        var p = cellXY(cc, rr);
+        cands.push({ x: p.x, y: p.y,
+          d: (p.x - capPx.x) * (p.x - capPx.x) + (p.y - capPx.y) * (p.y - capPx.y) });
+      }
+    }
+    cands.sort(function (a, b) { return a.d - b.d; });
+
+    var ci = 0;
     fleets.forEach(function (f) {
-      if (f.isCap) f.slot = CAP_SLOT;
-      else { if (nextSlot === CAP_SLOT) nextSlot++; f.slot = nextSlot++; }
-      var p = slotXY(f.slot), s = snap(p.x, p.y); f.x = s.x; f.y = s.y;
+      if (f.isCap) { f.x = capPx.x; f.y = capPx.y; }
+      else { var c = cands[ci++] || capPx; f.x = c.x; f.y = c.y; }
     });
 
     /* 4. Ship images (original Java assets). */
@@ -102,17 +122,21 @@
       ctx.fillText('Drag fleets to a grid square, then Deploy. (Capital is fixed.)', BOARD_W - 6, BOARD_H - 4);
     }
     function drawFleet(f, sel) {
-      var base = f.isCap ? RED : BLUE, hi = f.isCap ? RED_HI : BLUE_HI;
-      ctx.beginPath(); ctx.arc(f.x, f.y, R, 0, Math.PI * 2);
-      ctx.fillStyle = sel ? hi : base; ctx.fill();
-      ctx.lineWidth = f.isCap ? 2 : 1; ctx.strokeStyle = f.isCap ? '#ffd0c0' : '#bcd4ff'; ctx.stroke();
       var img = f.isCap ? imgCap : imgFleet;
-      if (img.complete && img.naturalWidth) {
-        var w = img.naturalWidth * 0.8, h = img.naturalHeight * 0.8;   // ~50% of prior size
-        ctx.drawImage(img, Math.round(f.x - w / 2), Math.round(f.y - h / 2), w, h);
+      if (sel) {                                    // drag highlight: a soft cell halo
+        ctx.fillStyle = f.isCap ? 'rgba(255,120,90,.35)' : 'rgba(120,170,255,.35)';
+        ctx.fillRect(Math.round(f.x - GX / 2), Math.round(f.y - GY / 2), Math.round(GX), Math.round(GY));
+      }
+      if (img.complete && img.naturalWidth) {       // the original Java ship icons
+        var scale = ICON_H / img.naturalHeight;
+        var w = img.naturalWidth * scale;
+        ctx.drawImage(img, Math.round(f.x - w / 2), Math.round(f.y - ICON_H / 2), Math.round(w), ICON_H);
+      } else {                                       // fallback if the gif failed to load
+        ctx.fillStyle = f.isCap ? RED : BLUE;
+        ctx.fillRect(Math.round(f.x - 6), Math.round(f.y - 7), 12, 14);
       }
       ctx.fillStyle = '#cdd9f2'; ctx.font = '8px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText((f.isCap ? '★' : '') + f.id, f.x, f.y + R + 8);
+      ctx.fillText((f.isCap ? '★' : '') + f.id, f.x, f.y + ICON_H / 2 + 7);
     }
 
     /* 6. Drag + snap-to-grid (capital excluded). */
