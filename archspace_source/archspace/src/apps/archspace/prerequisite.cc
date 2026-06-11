@@ -779,7 +779,7 @@ CPrerequisiteList::tech_description()
 			comma = true;
 		}
 	}
-	if (!PrerequisiteName) return "NONE";
+	if (!PrerequisiteName.length()) return "NONE";
 	return (char*)PrerequisiteName;
 }
 
@@ -842,7 +842,7 @@ CPrerequisiteList::tech_description(CPlayer *aPlayer)
 			comma = true;
 		}
 	}
-	if (!PrerequisiteName) PrerequisiteName = "NONE";
+	if (!PrerequisiteName.length()) PrerequisiteName = "NONE";
 	return (char*)PrerequisiteName;
 }
 
@@ -891,7 +891,7 @@ CPrerequisiteList::race_description()
 			comma = true;
 		}
 	}
-	if (!PrerequisiteName) PrerequisiteName = "ALL RACES";
+	if (!PrerequisiteName.length()) PrerequisiteName = "ALL RACES";
 	return (char*)PrerequisiteName;
 }
 
@@ -939,7 +939,7 @@ CPrerequisiteList::project_description()
 			comma = true;
 		}
 	}
-	if (!PrerequisiteName) PrerequisiteName = "NONE";
+	if (!PrerequisiteName.length()) PrerequisiteName = "NONE";
 	return (char*)PrerequisiteName;
 }
 
