@@ -34,6 +34,18 @@ if [ -d "$PLANETS" ]; then
     find "$WWW/image/as_game/planets" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1a3) Encyclopedia icons. The engine generates /encyclopedia/*.html at boot with
+#      image paths /image/as_login/encyclopedia/... (nav buttons, race icons, and
+#      per-tech tech/<id>.gif), but like the planet thumbnails those only ship under
+#      www-new. Overlay that one dir so the encyclopedia images resolve.
+ENCYC="$SRC_TREE/www-new/image/as_login/encyclopedia"
+if [ -d "$ENCYC" ]; then
+    echo "[web] adding encyclopedia icons (from www-new)"
+    mkdir -p "$WWW/image/as_login/encyclopedia"
+    cp -rf "$ENCYC"/. "$WWW/image/as_login/encyclopedia"/ 2>/dev/null || true
+    find "$WWW/image/as_login/encyclopedia" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+fi
+
 # 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
 #     with a CSS-grid + named-iframe shell; same look, modern + mobile).
 OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
