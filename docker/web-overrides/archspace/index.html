@@ -19,11 +19,14 @@
   .as-shell iframe { border: 0; width: 100%; height: 100%; display: block; background: #000; }
   .as-toggle { display: none; }
 
-  /* Mobile: collapse the left menu to a slide-in drawer with a toggle. */
+  /* Mobile: collapse the left menu to a slide-in drawer with a toggle.
+     The drawer is narrower than the 170px desktop rail -- the menu header
+     image (menu_main.gif) is only 141px wide and menu.html scales it to the
+     drawer, so 132px fits the content without eating the small screen. */
   @media (max-width: 760px) {
     .as-shell { grid-template-columns: 1fr; }
     .as-menu {
-      position: fixed; top: 0; left: 0; bottom: 0; width: 170px; z-index: 30;
+      position: fixed; top: 0; left: 0; bottom: 0; width: 132px; z-index: 30;
       transform: translateX(-100%); transition: transform .2s ease;
       box-shadow: 2px 0 8px rgba(0,0,0,.6);
     }
