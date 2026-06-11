@@ -148,11 +148,22 @@ CPageReassignment2::handler(CPlayer *aPlayer)
 		}
 	}
 
-	QUERY("FLEET", FleetIDString);
-	int
-		FleetID = as_atoi(FleetIDString);
-	CFleet *
-		Fleet = aPlayer->get_fleet_list()->get_by_id(FleetID);
+	// The fleet list renders checkboxes (NAME=FLEET<i>, i = the fleet's index in
+	// the player's fleet list) -- the same contract the bulk path above reads.
+	// A single-fleet reassignment uses the first checked one.
+	CFleet *Fleet = NULL;
+	{
+		CFleetList *FleetList = aPlayer->get_fleet_list();
+		for (int i=0 ; i<FleetList->length() ; i++)
+		{
+			CFleet *F = (CFleet *)FleetList->get(i);
+			if (F->get_status() != CFleet::FLEET_STAND_BY) continue;
+			CString QueryVar;
+			QueryVar.format("FLEET%d", i);
+			QUERY(QueryVar, FleetCheckString);
+			if (FleetCheckString && !strcasecmp(FleetCheckString, "ON")) { Fleet = F; break; }
+		}
+	}
 
 	if(!Fleet)
 	{
