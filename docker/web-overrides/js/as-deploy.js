@@ -64,9 +64,10 @@
     }
 
     /* 3. Default formation: a compact 5-wide block of adjacent grid squares
-       hugging the capital (capital fixed at the block's bottom-centre), with
-       the squares closest to the capital filled first. A full 20-fleet set
-       lands as the 5×4 block FFFFF / FFFFF / FFFFF / FFCFF. */
+       hugging the capital. The capital sits at the vertical middle of the grid
+       (centre column) and the other fleets stack upward in front of it, with
+       the squares closest to the capital filled first -- leaving the rows
+       behind the capital free for the player to drag fleets into if they want. */
     var GCOLS = Math.max(1, Math.round(BOARD_W / GX));
     var GROWS = Math.max(1, Math.round(BOARD_H / GY));
     function snap(cx, cy) {
@@ -76,8 +77,8 @@
     }
     function cellXY(col, row) { return { x: Math.round(col * GX), y: Math.round(row * GY) }; }
 
-    var capCol = Math.round(GCOLS / 2);    // bottom-centre of the board
-    var capRow = GROWS - 1;
+    var capCol = Math.round(GCOLS / 2);    // centre column, vertical middle
+    var capRow = Math.round(GROWS / 2);
     var capPx  = cellXY(capCol, capRow);
     var nNonCap = fleets.reduce(function (n, f) { return n + (f.isCap ? 0 : 1); }, 0);
 
