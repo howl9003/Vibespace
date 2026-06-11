@@ -13,19 +13,25 @@
 //
 //   CCronTabBotAI          drives each living bot. It ALWAYS keeps a band-sized
 //                          defense reserve (5/10/15/20 fleets by band) on stand-
-//                          by and fully manned: it first REBUILDS any fleets lost
-//                          since spawn back up to that reserve (the per-band
+//                          by and fully manned: it first REBUILDS any defenders
+//                          lost since spawn back up to that reserve (the per-band
 //                          minimum is otherwise only set at spawn and decays as a
 //                          bot takes losses), then keeps them manned -- so a bot
-//                          always has its full reserve defending. Below its band ceiling a bot
-//                          GROWS with the SURPLUS beyond that reserve: surplus
-//                          fleets auto-expedition for planets or train their
-//                          commanders. At/above the ceiling it
-//                          THROTTLES: it only defends (keeps fleets manned),
+//                          always has its full reserve defending. Below its band
+//                          ceiling a bot GROWS with the SURPLUS beyond that
+//                          reserve: surplus fleets auto-expedition for planets.
+//                          At/above the ceiling it THROTTLES: it only defends,
 //                          which holds it inside its band so the 25/25/25/25
-//                          spread stays stable. Bounded to BotAIPerRun bots per
-//                          run (round-robin across the player table) so a full
-//                          population can't stall the engine loop.
+//                          spread stays stable. SEPARATELY (and regardless of the
+//                          ceiling) it runs a COMMANDER-TRAINING program: every
+//                          below-cap commander in the pool is put into its own
+//                          auto-repeat training fleet and trained up; on reaching
+//                          the level cap (BotTrainLevelCap, default 20 = MAX_LEVEL)
+//                          the fleet is disbanded and the maxed commander returns
+//                          to the pool as a ready bench the rebuild step can draft.
+//                          Bounded to BotAIPerRun bots per run (round-robin across
+//                          the player table) so a full population can't stall the
+//                          engine loop.
 //
 // Bot identity and band are encoded in the portal id (see player.h: is_bot(),
 // bot_band(), bot_band_ceiling()); nothing extra is persisted.
@@ -110,6 +116,24 @@ bot_defense_reserve(int aBand)
 	return (aBand + 1) * 5;
 }
 
+// Fleets that count toward the defensive floor: everything except the temporary
+// training fleets (those are a commander-development "factory", not defenders --
+// see bot_train_pool). Without this, trainees would masquerade as reserve fleets
+// and the rebuild below would leave the bot short of real defenders.
+static int
+bot_defense_fleet_count(CFleetList *aList)
+{
+	int Count = 0;
+	for (int i=0 ; i<aList->length() ; i++)
+	{
+		CFleet *F = (CFleet *)aList->get(i);
+		if (F == NULL) continue;
+		if (F->get_mission().get_mission() == CMission::MISSION_TRAIN) continue;
+		Count++;
+	}
+	return Count;
+}
+
 // ---------------------------------------------------------------------------
 // Rebuild lost fleets back up to the band's defense reserve. The per-band
 // minimum is only ever established at spawn (CGame::create_bot_player); combat
@@ -131,7 +155,7 @@ bot_rebuild_reserve(CPlayer *aPlayer, int aReserve, int aMaxBuild)
 	CShipDesignList *ShipDesignList = aPlayer->get_ship_design_list();
 
 	int Built = 0;
-	while (FleetList->length() < aReserve && Built < aMaxBuild)
+	while (bot_defense_fleet_count(FleetList) < aReserve && Built < aMaxBuild)
 	{
 		if (AdmiralPool->length() == 0)
 		{
@@ -176,22 +200,126 @@ bot_rebuild_reserve(CPlayer *aPlayer, int aReserve, int aMaxBuild)
 }
 
 // ---------------------------------------------------------------------------
+// Disband a finished training fleet: the commander has hit the level cap, so the
+// fleet stops training, is deleted, and the (now fully trained) commander goes
+// back to the pool. Mirrors the player disband path (page/fleet/disband_result),
+// minus the dock return -- a bot's trainee ships are synthesized for free at
+// creation, so they simply vanish on disband rather than piling up in the dock.
+// NOTE: frees the fleet object via remove_fleet(), so aFleet must not be used
+// after this returns.
+// ---------------------------------------------------------------------------
+static void
+bot_disband_training_fleet(CPlayer *aPlayer, CFleet *aFleet, CAdmiral *aAdmiral)
+{
+	int FleetID = aFleet->get_id();
+
+	aFleet->type(QUERY_DELETE);
+	STORE_CENTER->store(*aFleet);                 // built from owner+id now
+	aPlayer->get_fleet_list()->remove_fleet(FleetID);   // frees aFleet
+
+	aAdmiral->set_fleet_number(0);
+	aPlayer->get_admiral_list()->remove_without_free_admiral(aAdmiral->get_id());
+	aPlayer->get_admiral_pool()->add_admiral(aAdmiral);
+	aAdmiral->type(QUERY_UPDATE);
+	STORE_CENTER->store(*aAdmiral);
+}
+
+// ---------------------------------------------------------------------------
+// Train the commander pool: pull every below-cap pool commander into its own
+// training fleet (auto-repeat MISSION_TRAIN) so it gains exp turn over turn. A
+// trainee leaves the pool while training and returns at the cap via
+// bot_disband_training_fleet, so this is self-limiting -- once every pool
+// commander is maxed there is nothing left to start. Already-maxed pool
+// commanders are left in the pool (a ready bench of strong commanders that the
+// rebuild step can draft into real fleets). Bounded per run so a deep pool
+// spreads over several ticks. Trainee ships are synthesized like the rebuild
+// path (manned to capacity, no dock draw). Returns the count started.
+// ---------------------------------------------------------------------------
+static int
+bot_train_pool(CPlayer *aPlayer, int aLevelCap, int aMaxStart)
+{
+	CFleetList      *FleetList      = aPlayer->get_fleet_list();
+	CAdmiralList    *AdmiralList    = aPlayer->get_admiral_list();
+	CAdmiralList    *AdmiralPool    = aPlayer->get_admiral_pool();
+	CShipDesignList *ShipDesignList = aPlayer->get_ship_design_list();
+
+	int Started = 0;
+	// Walk the pool with a cursor; assigning a commander removes it from the pool
+	// (the tail shifts down), so only advance the cursor when we leave one in place.
+	for (int i=0 ; i<AdmiralPool->length() && Started<aMaxStart ; )
+	{
+		CAdmiral *Admiral = (CAdmiral *)AdmiralPool->get(i);
+		if (Admiral == NULL) { i++; continue; }
+		if (Admiral->get_level() >= aLevelCap) { i++; continue; }  // maxed: keep on the bench
+
+		CShipDesign *ShipDesign = ShipDesignList->length()
+			? (CShipDesign *)ShipDesignList->get(ShipDesignList->length() - 1)
+			: NULL;
+		if (ShipDesign == NULL) break;
+
+		int Capacity = Admiral->get_fleet_commanding();
+
+		CFleet *Fleet = new CFleet();
+		Fleet->set_id(FleetList->get_new_fleet_id());
+		Fleet->set_owner(aPlayer->get_game_id());
+		Fleet->set_name((char *)format("BOT Trainee(%d)", Fleet->get_id()));
+		Fleet->set_admiral(Admiral->get_id());
+		Fleet->set_ship_class(ShipDesign);
+		Fleet->set_max_ship(Capacity);
+		Fleet->set_current_ship(Capacity);
+		Fleet->set_exp(25 + aPlayer->get_control_model()->get_military()*3);
+		FleetList->add_fleet(Fleet);
+
+		Admiral->set_fleet_number(Fleet->get_id());
+		AdmiralPool->remove_without_free_admiral(Admiral->get_id());
+		AdmiralList->add_admiral(Admiral);
+
+		// target=1 -> auto-repeat: keeps re-entering training every cycle (no per-
+		// cycle news for bots) until the commander maxes and graduates.
+		Fleet->init_mission(CMission::MISSION_TRAIN, 1);
+		Fleet->type(QUERY_INSERT);
+		STORE_CENTER->store(*Fleet);
+		Admiral->type(QUERY_UPDATE);
+		STORE_CENTER->store(*Admiral);
+
+		Started++;
+		// Admiral removed from the pool -> the front shifted; re-read index i.
+	}
+	return Started;
+}
+
+// ---------------------------------------------------------------------------
 // Per-bot AI step.
 // ---------------------------------------------------------------------------
 static void
-bot_ai_act(CPlayer *aPlayer, int aTrainExpTarget, int aRebuildPerRun)
+bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap)
 {
 	aPlayer->refresh_power();
 
-	int Ceiling      = bot_band_ceiling(aPlayer->bot_band());
-	int  Reserve      = bot_defense_reserve(aPlayer->bot_band());
+	int Ceiling   = bot_band_ceiling(aPlayer->bot_band());
+	int Reserve   = bot_defense_reserve(aPlayer->bot_band());
 
-	CFleetList *FleetList = aPlayer->get_fleet_list();
+	CFleetList   *FleetList   = aPlayer->get_fleet_list();
+	CAdmiralList *AdmiralList = aPlayer->get_admiral_list();
 
-	// (0) Maintain the band minimum: rebuild fleets lost since spawn back up to
-	// the defense reserve. Without this the floor is only ever set at spawn and
-	// decays as the bot takes losses. Done first so the new fleets are counted by
-	// the defense/growth steps below (they start fully manned, on stand-by).
+	// (A) Graduate: any training fleet whose commander has reached the level cap
+	// stops training -- disband the fleet and return the now fully-trained
+	// commander to the pool. Backward scan: disbanding removes the fleet from the
+	// list. Runs even when throttled so commanders always cycle out at the cap.
+	for (int i=FleetList->length()-1 ; i>=0 ; i--)
+	{
+		CFleet *Fleet = (CFleet *)FleetList->get(i);
+		if (Fleet == NULL) continue;
+		if (Fleet->get_mission().get_mission() != CMission::MISSION_TRAIN) continue;
+		CAdmiral *Admiral = AdmiralList->get_by_id(Fleet->get_admiral_id());
+		if (Admiral == NULL) continue;
+		if (Admiral->get_level() < aLevelCap) continue;
+		bot_disband_training_fleet(aPlayer, Fleet, Admiral);
+	}
+
+	// (0) Maintain the band minimum: rebuild lost defenders back up to the reserve
+	// (training fleets don't count -- see bot_defense_fleet_count). Done before the
+	// defense/growth steps so the new fleets are counted there (manned, stand-by).
 	if (bot_rebuild_reserve(aPlayer, Reserve, aRebuildPerRun))
 		aPlayer->refresh_power();
 
@@ -215,68 +343,52 @@ bot_ai_act(CPlayer *aPlayer, int aTrainExpTarget, int aRebuildPerRun)
 		}
 	}
 
-	if (!BelowCeiling)
+	// (2) Growth -- only below the band ceiling. Hold back the band's defense
+	// reserve of idle stand-by fleets (step (1) keeps them manned) and send the
+	// surplus on auto-repeat expeditions to claim planets. Commander training is
+	// handled separately by the pool program below, so surplus fleets here go
+	// straight to expeditions. (At/above the ceiling the bot throttles: it skips
+	// this growth and only defends + trains.)
+	if (BelowCeiling)
 	{
-		// throttled: hold the band, defend only.
-		aPlayer->refresh_power();
-		return;
-	}
-
-	// (2) Growth -- below the band ceiling. Count idle stand-by fleets and ALWAYS
-	// hold back the band's defense reserve (5/10/15/20 by band): those are left
-	// on stand-by (step (1) keeps them manned) so they auto-deploy to defend.
-	// Only the *surplus* beyond that reserve is put to work -- under-experienced
-	// surplus fleets train their commanders, the rest auto-repeat expeditions to
-	// claim planets. The reserve is never missioned, so a bot that has fleets
-	// always has fleets standing by to defend.
-	//
-	// (The reserve used to be the slice that got trained, which flipped it to
-	// FLEET_UNDER_MISSION and left the bot with no defenders -- fixed here by
-	// missioning only the surplus.)
-	int IdleCount = 0;
-	for (int i=0 ; i<N ; i++)
-	{
-		CFleet *Fleet = (CFleet *)FleetList->get(i);
-		if (Fleet == NULL) continue;
-		if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
-		if (Fleet->under_mission()) continue;
-		if (Fleet->get_mission().get_mission() != CMission::MISSION_NONE) continue;
-		IdleCount++;
-	}
-
-	int Surplus = IdleCount - Reserve;
-	if (Surplus < 0) Surplus = 0;
-
-	int Seen = 0, Sent = 0, Trained = 0;
-	for (int i=0 ; i<N ; i++)
-	{
-		CFleet *Fleet = (CFleet *)FleetList->get(i);
-		if (Fleet == NULL) continue;
-		if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
-		if (Fleet->under_mission()) continue;
-		if (Fleet->get_mission().get_mission() != CMission::MISSION_NONE) continue;
-
-		// The last Reserve idle fleets fall outside the surplus window and stay
-		// on stand-by -- this is the home defense reserve, left untouched.
-		if (Seen++ >= Surplus) continue;
-
-		if (Fleet->get_exp() < aTrainExpTarget)
+		int IdleCount = 0;
+		for (int i=0 ; i<N ; i++)
 		{
-			// surplus fleet, under-trained -> train its commander.
-			Fleet->init_mission(CMission::MISSION_TRAIN, 0);
-			Fleet->type(QUERY_UPDATE);
-			STORE_CENTER->store(*Fleet);
-			Trained++;
+			CFleet *Fleet = (CFleet *)FleetList->get(i);
+			if (Fleet == NULL) continue;
+			if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
+			if (Fleet->under_mission()) continue;
+			if (Fleet->get_mission().get_mission() != CMission::MISSION_NONE) continue;
+			IdleCount++;
 		}
-		else
+
+		int Surplus = IdleCount - Reserve;
+		if (Surplus < 0) Surplus = 0;
+
+		int Seen = 0;
+		for (int i=0 ; i<N ; i++)
 		{
+			CFleet *Fleet = (CFleet *)FleetList->get(i);
+			if (Fleet == NULL) continue;
+			if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
+			if (Fleet->under_mission()) continue;
+			if (Fleet->get_mission().get_mission() != CMission::MISSION_NONE) continue;
+
+			// The last Reserve idle fleets fall outside the surplus window and stay
+			// on stand-by -- this is the home defense reserve, left untouched.
+			if (Seen++ >= Surplus) continue;
+
 			// surplus fleet -> claim planets; target=1 -> auto-repeat on return.
 			Fleet->init_mission(CMission::MISSION_EXPEDITION, 1);
 			Fleet->type(QUERY_UPDATE);
 			STORE_CENTER->store(*Fleet);
-			Sent++;
 		}
 	}
+
+	// (3) Train the commander pool toward the level cap. Runs even when throttled:
+	// it develops commanders rather than chasing power, and is self-limiting (a
+	// trainee leaves the pool while training and returns maxed in step (A)).
+	bot_train_pool(aPlayer, aLevelCap, aTrainPerRun);
 
 	aPlayer->refresh_power();
 	aPlayer->type(QUERY_UPDATE);
@@ -290,8 +402,9 @@ CCronTabBotAI::handler()
 	SLOG("SYSTEM : bot AI crontab start");
 
 	int PerRun        = bot_cfg("BotAIPerRun", 25);
-	int TrainExpTarget = bot_cfg("BotTrainExpTarget", 300);
-	int RebuildPerRun  = bot_cfg("BotRebuildPerRun", 5);  // fleets rebuilt per bot per run
+	int RebuildPerRun  = bot_cfg("BotRebuildPerRun", 5);  // defenders rebuilt per bot per run
+	int TrainPerRun    = bot_cfg("BotTrainPerRun", 5);    // trainees started per bot per run
+	int LevelCap       = bot_cfg("BotTrainLevelCap", 20); // graduate a commander at this level
 
 	int Len = PLAYER_TABLE->length();
 	if (Len <= 0) { SLOG("SYSTEM : bot AI crontab end (no players)"); return; }
@@ -311,7 +424,7 @@ CCronTabBotAI::handler()
 		if (Player == NULL) continue;
 		if (!Player->is_bot() || Player->is_dead()) continue;
 
-		bot_ai_act(Player, TrainExpTarget, RebuildPerRun);
+		bot_ai_act(Player, RebuildPerRun, TrainPerRun, LevelCap);
 		Processed++;
 	}
 
