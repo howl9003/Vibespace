@@ -156,6 +156,83 @@ if (navigator.appName.indexOf('Microsoft') == -1) {
 </SCRIPT>
 
 <SCRIPT TYPE="text/javascript">
+// Add an "all rows" checkbox to the "# of Ship(s)" and "Fleet Name" column
+// headers. When a column's box is checked, the top row's value is copied into
+// every row below and kept in sync as you edit the top row; uncheck to edit
+// rows independently. The headers are injected here because the table is built
+// server-side. Registered before the availability script below so propagated
+// quantities are in place when it recomputes the per-class counts.
+(function () {
+  function colOf(el) {
+    if (!el || el.tagName !== 'INPUT') return null;
+    if (/^SHIP_NUMBER[0-9]+$/.test(el.name || '')) return 'num';
+    if (/^FLEET_NAME[0-9]+$/.test(el.name || '')) return 'name';
+    return null;
+  }
+  function tbodyOf(el) { var t = el.parentNode; while (t && t.tagName !== 'TBODY') t = t.parentNode; return t; }
+  function colInputInRow(row, col) {
+    var ins = row.getElementsByTagName('input');
+    for (var i = 0; i < ins.length; i++) if (colOf(ins[i]) === col) return ins[i];
+    return null;
+  }
+
+  // locate the pooled-admirals table via its first "# of ships" input
+  var probe = null, allIn = document.getElementsByTagName('input');
+  for (var p = 0; p < allIn.length; p++) if (colOf(allIn[p]) === 'num') { probe = allIn[p]; break; }
+  if (!probe) return;
+  var tbody = tbodyOf(probe); if (!tbody || !tbody.rows.length) return;
+  var table = tbody.parentNode; while (table && table.tagName !== 'TABLE') table = table.parentNode;
+  var thead = table ? table.tHead : null;
+  if (!thead || !thead.rows.length) return;
+  var headRow = thead.rows[0], firstRow = tbody.rows[0];
+
+  function propagate(col) {
+    var src = colInputInRow(tbody.rows[0], col); if (!src) return;
+    for (var i = 1; i < tbody.rows.length; i++) {
+      var inp = colInputInRow(tbody.rows[i], col);
+      if (inp) inp.value = src.value;
+    }
+  }
+  function refreshCounts() {  // nudge the availability script to recompute
+    var s = colInputInRow(tbody.rows[0], 'num');
+    if (s) s.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  var boxes = {};
+  function addBox(col, label) {
+    var inp = colInputInRow(firstRow, col); if (!inp) return;
+    var td = inp; while (td && td.tagName !== 'TD') td = td.parentNode;
+    if (!td) return;
+    var th = headRow.cells[td.cellIndex]; if (!th) return;
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'font:9px sans-serif;color:#888;margin-top:2px;white-space:nowrap;';
+    var cb = document.createElement('input'); cb.type = 'checkbox';
+    cb.title = "Apply the first row's " + label + ' to all rows';
+    cb.style.cssText = 'vertical-align:middle;margin:0 2px 0 0;';
+    cb.onclick = function (ev) { ev.stopPropagation(); };   // don't trigger header sort
+    cb.addEventListener('change', function () {
+      if (!cb.checked) return;
+      propagate(col);
+      if (col === 'num') refreshCounts();
+    });
+    wrap.appendChild(cb); wrap.appendChild(document.createTextNode('all rows'));
+    th.appendChild(wrap);
+    boxes[col] = cb;
+  }
+  addBox('num', '# of ships');
+  addBox('name', 'fleet name');
+
+  // while a column's box is checked, keep the rows in sync with the top row
+  document.addEventListener('input', function (e) {
+    var col = colOf(e.target); if (!col) return;
+    if (!boxes[col] || !boxes[col].checked) return;
+    if (!tbody.rows[0].contains(e.target)) return;   // only the top row drives
+    propagate(col);
+  });
+})();
+</SCRIPT>
+
+<SCRIPT TYPE="text/javascript">
 // Under each "# of Ship(s)" box, show how many ships of the row's selected Ship
 // Class are still available: the pool total for that class minus what every row
 // has allocated to it. Updates live as classes and quantities change.
