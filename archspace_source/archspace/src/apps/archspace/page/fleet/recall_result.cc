@@ -45,10 +45,11 @@ CPageRecallResult::handler(CPlayer *aPlayer)
 		CMission &Mission = Fleet->get_mission();
 		if (Mission.get_mission() != CMission::MISSION_STATION_ON_PLANET &&
 			Mission.get_mission() != CMission::MISSION_DISPATCH_TO_ALLY &&
+			Mission.get_mission() != CMission::MISSION_TRAIN &&
 			Mission.get_mission() != CMission::MISSION_EXPEDITION)
 		{
 			ITEM("ERROR_MESSAGE",
-					GETTEXT("You can recall only fleets stationed on planets or dispatched to allies."));
+					GETTEXT("You can recall only fleets that are stationed on planets, dispatched to allies, on expedition, or training."));
 			return output("fleet/recall_error.html");
 		}
 

@@ -83,8 +83,11 @@
         <TR VALIGN="bottom">
           <TD>
 		    <FORM name=form1 method=post action=/archspace/fleet/mission_train_result.as>
-		      <IMG SRC="$IMAGE_SERVER_URL/image/as_game/bu_done1.gif"> 
+		      <IMG SRC="$IMAGE_SERVER_URL/image/as_game/bu_done1.gif">
 			  $FLEET_SET
+			  <DIV ALIGN="center" CLASS="maintext" STYLE="margin:6px 0;">
+			    <LABEL><INPUT TYPE="checkbox" NAME="AUTO_REPEAT" VALUE="1"> Keep training until the fleet is recalled</LABEL>
+			  </DIV>
 			  <INPUT TYPE=image SRC="$IMAGE_SERVER_URL/image/as_game/bu_ok1.gif" WIDTH="49" HEIGHT="44" BORDER="0">
   			  <A HREF="mission.as">
 		        <IMG SRC="$IMAGE_SERVER_URL/image/as_game/bu_cancel.gif" WIDTH="61" HEIGHT="44" BORDER="0">

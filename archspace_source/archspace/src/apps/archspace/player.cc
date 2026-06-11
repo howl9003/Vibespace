@@ -3549,9 +3549,6 @@ CPlayer::mission_handler()
 						NewExp = 10 + mControlModel.get_military()*5;
 					if (NewExp < CMission::mFleetExpMinTrain) NewExp = CMission::mFleetExpMinTrain;
 					Fleet->change_exp(NewExp);
-					Buf.format(GETTEXT("Your fleet %1$s has gained %2$s points of exp."),
-								Fleet->get_name(),
-								dec2unit(NewExp));
 					int
 						AdmiralExp = Fleet->get_current_ship() *
 										(Fleet->get_body()-4000) *
@@ -3559,10 +3556,26 @@ CPlayer::mission_handler()
 
 					if (AdmiralExp < CMission::mAdmiralExpMinTrain + 500* Admiral->get_level()) AdmiralExp = CMission::mAdmiralExpMinTrain + 500* Admiral->get_level();
 					Admiral->gain_exp(AdmiralExp);
-					Buf.format(GETTEXT("and %1$s has gained %2$s points of exp. from the training."),
-						Admiral->get_name(),
-						dec2unit(AdmiralExp));
-					Buf += "<BR>\n";
+
+					// QOL auto-repeat: if flagged, silently re-enter training --
+					// the fleet keeps gaining exp with NO per-cycle news until the
+					// player recalls it. News is only emitted on a normal (non-
+					// repeating) return below.
+					if (Mission.get_target() != 0)
+					{
+						Fleet->init_mission(CMission::MISSION_TRAIN, Mission.get_target());
+						Relaunched = true;
+					}
+					else
+					{
+						Buf.format(GETTEXT("Your fleet %1$s has gained %2$s points of exp."),
+									Fleet->get_name(),
+									dec2unit(NewExp));
+						Buf.format(GETTEXT("and %1$s has gained %2$s points of exp. from the training."),
+							Admiral->get_name(),
+							dec2unit(AdmiralExp));
+						Buf += "<BR>\n";
+					}
 				}
 				break;
 

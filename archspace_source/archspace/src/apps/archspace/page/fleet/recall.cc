@@ -39,6 +39,7 @@ CPageRecall::handler(CPlayer *aPlayer)
 			Mission = Fleet->get_mission();
 		if (Mission.get_mission() != CMission::MISSION_STATION_ON_PLANET &&
 			Mission.get_mission() != CMission::MISSION_DISPATCH_TO_ALLY &&
+			Mission.get_mission() != CMission::MISSION_TRAIN &&
 			Mission.get_mission() != CMission::MISSION_EXPEDITION) continue;
 
 		AnyRecallFleet = true;

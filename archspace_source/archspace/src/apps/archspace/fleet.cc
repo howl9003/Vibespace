@@ -648,9 +648,10 @@ CFleet::get_detailed_status_string()
 		Buf = get_status_string();
 	}
 
-	// QOL: flag expeditions running on auto-repeat (mission_target reused as flag)
+	// QOL: flag expeditions/training running on auto-repeat (mission_target reused as flag)
 	if ((mMission.get_mission() == CMission::MISSION_EXPEDITION ||
-		 mMission.get_mission() == CMission::MISSION_RETURNING_WITH_PLANET) &&
+		 mMission.get_mission() == CMission::MISSION_RETURNING_WITH_PLANET ||
+		 mMission.get_mission() == CMission::MISSION_TRAIN) &&
 		mMission.get_target() != 0)
 	{
 		Buf += " (auto)";
@@ -1641,6 +1642,7 @@ CFleetList::recall_fleet_list_html(CPlayer *aPlayer)
 			Mission = Fleet->get_mission();
 		if (Mission.get_mission() != CMission::MISSION_STATION_ON_PLANET &&
 			Mission.get_mission() != CMission::MISSION_DISPATCH_TO_ALLY &&
+			Mission.get_mission() != CMission::MISSION_TRAIN &&
 			Mission.get_mission() != CMission::MISSION_EXPEDITION) continue;
 
 		CAdmiral *

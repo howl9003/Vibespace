@@ -35,6 +35,13 @@ CPageMissionTrainResult::handler(CPlayer *aPlayer)
 		return output("fleet/mission_error.html");
 	}
 
+	// QOL auto-repeat: when checked, the fleet keeps re-entering training each
+	// cycle (mission_target carries the 0/1 flag, like expeditions) until the
+	// player recalls it. Mirrors expedition_result.cc.
+	QUERY("AUTO_REPEAT", AutoStr);
+	int
+		Auto = (AutoStr && as_atoi(AutoStr)) ? 1 : 0;
+
 	CFleetList *
 		FleetList = aPlayer->get_fleet_list();
 	int
@@ -104,7 +111,7 @@ CPageMissionTrainResult::handler(CPlayer *aPlayer)
 		if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
 		if (FleetSet.has(i))
 		{
-			Fleet->init_mission(CMission::MISSION_TRAIN, 0);
+			Fleet->init_mission(CMission::MISSION_TRAIN, Auto);
 		}
 	}
 
@@ -112,6 +119,12 @@ CPageMissionTrainResult::handler(CPlayer *aPlayer)
 	aPlayer->change_reserved_production(-UpkeepPP);
 
 	Message.format(GETTEXT("You have lost %1$d MP and %2$d PP."), UpkeepMP, UpkeepPP );
+
+	if (Auto)
+	{
+		Message += "<BR><BR>\n";
+		Message += GETTEXT("The fleet(s) will keep training automatically until you recall them.");
+	}
 
 	ITEM("RESULT_MESSAGE", (char *)Message);
 
