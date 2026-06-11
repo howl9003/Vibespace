@@ -13,8 +13,7 @@ CPageDefensePlanGenericResult::handler(CPlayer *aPlayer)
 		GenericDefensePlan = DefensePlanList->get_generic_plan();
 	CFleetList *
 		FleetList = aPlayer->get_fleet_list();
-	CPreference *aPreference = aPlayer->get_preference();
-	
+
 	QUERY("FLEET_NUMBER", FleetNumberString)
 	int
 		FleetNumber = as_atoi(FleetNumberString);
@@ -35,17 +34,9 @@ CPageDefensePlanGenericResult::handler(CPlayer *aPlayer)
 		PlanID = GenericDefensePlan->get_id();
 	}
 
-	int	CapitalID;
-	if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-    {   
-        QUERY("capFleet_ID", CapitalIDString)
-        CapitalID = as_atoi(CapitalIDString);        
-    }
-	else
-	{
-        QUERY("capFleet_id", CapitalIDString)
-        CapitalID = as_atoi(CapitalIDString);        
-    }
+	// HTML5 deploy board (as-deploy.js) posts the capital as capFleet_ID.
+	QUERY("capFleet_ID", CapitalIDString)
+	int	CapitalID = as_atoi(CapitalIDString);
 
 	CFleet *
 		Fleet = (CFleet *)FleetList->get_by_id(CapitalID);
@@ -86,10 +77,7 @@ CPageDefensePlanGenericResult::handler(CPlayer *aPlayer)
 			QueryVar;
 		QueryVar.clear();
 
-		if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-		    QueryVar.format("Fleet%d_ID", i);
-		else
-            QueryVar.format("fleet%d_id", i);      
+		QueryVar.format("Fleet%d_ID", i);
 
 		QUERY((char *)QueryVar, FleetIDString);
 
@@ -111,34 +99,13 @@ CPageDefensePlanGenericResult::handler(CPlayer *aPlayer)
 		int
 			LocationY;
 
-		if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-		{
-		  QUERY((char *)format("Fleet%d_X", i), LocationXString)
-		  QUERY((char *)format("Fleet%d_Y", i), LocationYString)
-		  LocationY = as_atoi(LocationYString);
-		  LocationX = as_atoi(LocationXString);
-		}
-        else
-        { 
-          QUERY((char *)format("fleet%d_X", i), LocationXString)
-          QUERY((char *)format("fleet%d_Y", i), LocationYString) 
-		  LocationY = as_atoi(LocationYString);
-		  LocationX = as_atoi(LocationXString);
-        }
-        
-        int Command = -1;
-		if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
-		{
-		  QUERY((char *)format("Fleet%d_O", i), CommandString)
-		  Command = CDefenseFleet::get_fleet_command_from_string((char *)CommandString);
-//		SLOG("FLEET ID: %d SET ORDER %d COMMAND STRING %s", FleetID, Command, (char *)CommandString);
-  		}
-        else
-        {
-          QUERY((char *)format("fleet%d_O", i), CommandString)
-          Command = CDefenseFleet::get_fleet_command_from_string((char *)CommandString);
-//		SLOG("FLEET ID: %d SET ORDER %d COMMAND STRING %s", FleetID, Command, (char *)CommandString);          
-        }  
+		QUERY((char *)format("Fleet%d_X", i), LocationXString)
+		QUERY((char *)format("Fleet%d_Y", i), LocationYString)
+		LocationY = as_atoi(LocationYString);
+		LocationX = as_atoi(LocationXString);
+
+		QUERY((char *)format("fleet%d_O", i), CommandString)
+		int Command = CDefenseFleet::get_fleet_command_from_string((char *)CommandString);
 			
 		if (Command == -1)
 		{
