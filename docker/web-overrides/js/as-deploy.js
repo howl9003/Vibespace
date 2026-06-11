@@ -86,8 +86,10 @@
       });
     }
 
-    // Numbered fleets: Fleet0_*, Fleet1_*, …
-    var idx = 0;
+    // Numbered fleets. The engine emits the capital as capFleet_* (index 0) and
+    // the rest as Fleet1_*, Fleet2_*, … (1-indexed) — there is no Fleet0_*, so
+    // start scanning at 1 or no numbered fleets are ever found.
+    var idx = 1;
     while (true) {
       var prefix = 'Fleet' + idx;
       if (params[prefix + '_ID'] === undefined) break;
