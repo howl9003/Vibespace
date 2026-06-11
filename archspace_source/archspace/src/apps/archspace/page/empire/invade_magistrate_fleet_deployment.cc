@@ -188,8 +188,7 @@ CPageEmpireInvadeMagistrateFleetDeployment::handler(CPlayer *aPlayer)
   CString FleetIndexToID;
    FleetIndexToID.clear();
 
-   // Java specific defense plan code
-    if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
+    if (true) // HTML5 deploy board (as-deploy.js) for everyone; Java applets are dead (was: PR_JAVA)
     {
     	// Create Java Applet Image URL Var for 'IMAGEDIR'
     	CString FleetImageURL;
@@ -358,8 +357,8 @@ CPageEmpireInvadeMagistrateFleetDeployment::handler(CPlayer *aPlayer)
 	ITEM("FLEET_NUMBER", FleetIDList.length());
 
 //	system_log( "end page handler %s", get_name() );
-    if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
+    if (true) // HTML5 deploy board for everyone (was: PR_JAVA)
     	return output("empire/invade_magistrate_fleet_deployment.html");
-	return output("empire/invade_magistrate_fleet_deployment_js.html");    	
+	return output("empire/invade_magistrate_fleet_deployment_js.html");
 }
 

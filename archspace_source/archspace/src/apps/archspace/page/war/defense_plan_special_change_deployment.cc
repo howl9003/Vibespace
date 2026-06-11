@@ -137,18 +137,24 @@ CPageDefensePlanSpecialChangeDeployment::handler(CPlayer *aPlayer)
 
 	ITEM("FLEET_NUMBER", FleetIDList.length());
 
+	// HTML5 deploy board (as-deploy.js): emit the fleet ids as <PARAM> data the
+	// board reads (capFleet_ID + Fleet{i}_ID, 1-indexed), and the image dir.
+	CString FleetImageURL;
+	FleetImageURL.format("%s/image/as_game/fleet", (char *)CGame::mImageServerURL);
+	ITEM("IMAGEDIR", (char *)FleetImageURL);
+
 	CString FleetIndexToID;
 
 	FleetIndexToID.clear();
 
-	FleetIndexToID.format("<INPUT TYPE=hidden NAME=capFleet_id VALUE=%d>",
+	FleetIndexToID.format("<PARAM NAME=capFleet_ID VALUE=%d>",
 							FleetIDList.get(0));
 	FleetIndexToID += "\n";
 
 	for (int i=1 ; i<FleetIDList.length() ; i++)
 	{
-		FleetIndexToID.format("<INPUT TYPE=hidden NAME=fleet%d_id VALUE=%d>",
-								i+1, FleetIDList.get(i));
+		FleetIndexToID.format("<PARAM NAME=Fleet%d_ID VALUE=%d>",
+								i, FleetIDList.get(i));
 		FleetIndexToID += "\n";
 	}
 

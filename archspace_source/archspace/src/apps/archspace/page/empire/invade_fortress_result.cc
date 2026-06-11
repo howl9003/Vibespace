@@ -173,7 +173,7 @@ CPageEmpireInvadeFortressResult::handler(CPlayer *aPlayer)
     }
 	else
 	{
-        QUERY("capFleet_id", CapitalIDString)
+        QUERY("capFleet_ID", CapitalIDString)
         CapitalFleetID = as_atoi(CapitalIDString);        
     }
     
@@ -248,8 +248,8 @@ CPageEmpireInvadeFortressResult::handler(CPlayer *aPlayer)
 		}
         else
         { 
-          QUERY((char *)format("fleet%d_X", i), LocationXString)
-          QUERY((char *)format("fleet%d_Y", i), LocationYString) 
+          QUERY((char *)format("Fleet%d_X", i), LocationXString)
+          QUERY((char *)format("Fleet%d_Y", i), LocationYString) 
 		  LocationY = as_atoi(LocationYString);
 		  LocationX = as_atoi(LocationXString);
 		  CHECK(!LocationXString ||	!LocationYString, GETTEXT("Missing Fleet Location Data"));
@@ -258,7 +258,7 @@ CPageEmpireInvadeFortressResult::handler(CPlayer *aPlayer)
 		if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
 		    sprintf(Query, "Fleet%d_ID", i);
 		else
-            sprintf(Query, "fleet%d_id", i);      
+            sprintf(Query, "Fleet%d_ID", i);      
 		QUERY(Query, FleetIDString);
 
 
@@ -450,7 +450,7 @@ CPageEmpireInvadeFortressResult::handler(CPlayer *aPlayer)
 		{
 			char Query[100];
 
-			sprintf(Query, "fleet%d_id", i);
+			sprintf(Query, "Fleet%d_ID", i);
 			QUERY(Query, FleetIDString);
 
 			FleetID = as_atoi(FleetIDString);

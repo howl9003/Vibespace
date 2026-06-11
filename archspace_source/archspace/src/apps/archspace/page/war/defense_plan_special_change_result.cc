@@ -43,7 +43,7 @@ CPageDefensePlanSpecialChangeResult::handler(CPlayer *aPlayer)
 	CDefensePlan
 		TempDefensePlan;
 
-	QUERY("capFleet_id", CapitalIDString)
+	QUERY("capFleet_ID", CapitalIDString)
 	int
 		CapitalID = as_atoi(CapitalIDString);
 	if (!CapitalID)
@@ -80,7 +80,7 @@ CPageDefensePlanSpecialChangeResult::handler(CPlayer *aPlayer)
 			QueryVar;
 		QueryVar.clear();
 
-		QueryVar.format("fleet%d_id", i);
+		QueryVar.format("Fleet%d_ID", i);
 
 		QUERY((char *)QueryVar, FleetIDString);
 
@@ -97,8 +97,8 @@ CPageDefensePlanSpecialChangeResult::handler(CPlayer *aPlayer)
 			return output("war/defense_plan_special_error.html");
 		}
 
-		QUERY((char *)format("fleet%d_X", i), LocationXString);
-		QUERY((char *)format("fleet%d_Y", i), LocationYString);
+		QUERY((char *)format("Fleet%d_X", i), LocationXString);
+		QUERY((char *)format("Fleet%d_Y", i), LocationYString);
 
 		int
 			LocationX = as_atoi(LocationXString);
