@@ -1706,16 +1706,18 @@ CGame::create_bot_player(int aBand)
 	// Bot name: a rank prefix scaled to the band + a commander-style name drawn
 	// from the bot's race. The rank pool widens with the band -- band 0 only
 	// Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank
-	// (Ensign..Admiral). Built into a local buffer (capped to player.name's 30
-	// chars) BEFORE create_new_player, which reuses the name generator's static
-	// buffer when it makes the bot's admirals.
+	// (Ensign..Admiral). Built into a local buffer BEFORE create_new_player,
+	// which reuses the name generator's static buffer when it makes the bot's
+	// admirals.
 	static const char *RankNames[] = { "Ensign", "Captain", "Commodore", "Admiral" };
 	int Race = number(10);                       // 1..10 (valid race id)
 	int Rank = number(aBand + 1) - 1;            // 0..aBand
 	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(Race);
 	if (!Commander || !*Commander) Commander = "Bot";
-	char Name[31];
-	snprintf(Name, sizeof(Name), "%s %s", RankNames[Rank], Commander);
+	// Give the commander name its own 30 chars; the rank prefix is extra. Longest
+	// rank "Commodore " (10) + 30 = 40, which fits player.name char(40).
+	char Name[41];
+	snprintf(Name, sizeof(Name), "%s %.30s", RankNames[Rank], Commander);
 
 	CPlayer *Player = create_new_player(PortalID, Name, Race);
 	if (Player == NULL) return NULL;

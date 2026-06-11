@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS player;
 CREATE TABLE player (
 	game_id int(10) NOT NULL,
 	portal_id int(10) NOT NULL,
-	name char(30) NOT NULL,
+	name char(40) NOT NULL,
 	home_cluster_id int(10) DEFAULT '0' NOT NULL,
 	last_login int(10) DEFAULT '0' NOT NULL,
 	last_login_ip varchar(15) DEFAULT '000.000.000.000' NOT NULL,

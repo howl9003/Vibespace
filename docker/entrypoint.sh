@@ -43,6 +43,16 @@ fi
 # ensure non-strict mode for the live connection too
 mariadb -uroot -p"$DB_PASS" -e "SET GLOBAL sql_mode='NO_ENGINE_SUBSTITUTION';" 2>/dev/null || true
 
+# --- 2b. lightweight schema migrations (idempotent, every boot) ------------
+# Existing DBs don't re-run all.sql, so widen columns here. Guarded by the
+# current type so we don't rebuild the table on every restart. Fresh DBs are
+# already created at the new width and skip the ALTER.
+PLAYER_NAME_TYPE=$($M -N -B "$DB_NAME" -e "SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DB_NAME' AND TABLE_NAME='player' AND COLUMN_NAME='name';" 2>/dev/null)
+if [ -n "$PLAYER_NAME_TYPE" ] && [ "$PLAYER_NAME_TYPE" != "char(40)" ]; then
+    log "migrating: player.name $PLAYER_NAME_TYPE -> char(40)"
+    $M "$DB_NAME" -e "ALTER TABLE player MODIFY name char(40) NOT NULL;" || true
+fi
+
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.
