@@ -27,6 +27,11 @@
 //                          from the bench are swapped onto the weakest defenders
 //                          (resizing those fleets to the new capacity) and the
 //                          displaced commanders return to the pool to be retrained.
+//                          It also keeps a generic DEFENCE PLAN in sync with its
+//                          defenders (every fleet on the FORMATION command) so a
+//                          sieged/blockaded bot fights by plan -- except ENSIGN
+//                          (lowest-rank) bots, which keep no plan and fall back to
+//                          the engine's auto-deployment.
 //                          SEPARATELY (and regardless of the ceiling) it runs a
 //                          COMMANDER-TRAINING program: every
 //                          below-cap commander in the pool is put into its own
@@ -374,6 +379,143 @@ bot_promote_defenders(CPlayer *aPlayer, int aMaxSwaps)
 	return Swaps;
 }
 
+// Ensign bots (the lowest rank) carry no defence plan. The rank lives only in the
+// player name (make_bot_name: "<Rank> <Commander>"), so detect it by prefix.
+static bool
+bot_is_ensign(CPlayer *aPlayer)
+{
+	const char *Name = aPlayer->get_name();
+	return Name && strncmp(Name, "Ensign", 6) == 0;
+}
+
+// Delete a bot's generic defence plan and its deployment rows (DB + memory).
+// Query strings are built from the live owner/id before each object is freed.
+static void
+bot_delete_defense_plan(CPlayer *aPlayer, CDefensePlan *aPlan)
+{
+	CDefenseFleetList *DFList = aPlan->get_fleet_list();
+	for (int i=DFList->length()-1 ; i>=0 ; i--)
+	{
+		CDefenseFleet *DF = (CDefenseFleet *)DFList->get(i);
+		DF->type(QUERY_DELETE);
+		STORE_CENTER->store(*DF);
+		DFList->remove_defense_fleet(DF->get_fleet_id());
+	}
+	int PlanID = aPlan->get_id();
+	aPlan->type(QUERY_DELETE);
+	STORE_CENTER->store(*aPlan);
+	aPlayer->get_defense_plan_list()->remove_defense_plan(PlanID);   // frees aPlan
+}
+
+// ---------------------------------------------------------------------------
+// Keep a bot's generic defence plan in sync with its current defenders, every
+// fleet set to the FORMATION command. The generic plan is what get_optimal_plan()
+// falls back to when the bot is sieged/blockaded (siege_planet_result.cc etc.),
+// so it is what actually drives the defenders' battle behaviour; without a plan
+// the engine uses auto_deployment instead. ENSIGN bots are exempt -- they keep no
+// plan and fall back to auto_deployment, per the rule that the lowest-rank bots
+// don't run a defence plan.
+//
+// Defenders = idle, in-system, stand-by fleets (the held-back reserve, after the
+// expedition surplus has gone out); trainees/expeditions are UNDER_MISSION and so
+// excluded. Capped at the plan's 20-fleet limit. The plan is rebuilt only when the
+// defender SET changes -- commander promotions keep the same fleet ids, so a
+// steady-state bot does an in-memory check here and writes nothing. Mirrors the
+// player path in page/war/defense_plan_generic_result.cc.
+// ---------------------------------------------------------------------------
+static void
+bot_sync_defense_plan(CPlayer *aPlayer)
+{
+	if (bot_is_ensign(aPlayer))
+	{
+		// Ensign bots run no plan. Drop a stale one a pre-rename "BOT(n)" bot may
+		// have acquired before it was renamed into the Ensign rank.
+		CDefensePlan *Stale = aPlayer->get_defense_plan_list()->get_generic_plan();
+		if (Stale != NULL) bot_delete_defense_plan(aPlayer, Stale);
+		return;
+	}
+
+	CFleetList *FleetList = aPlayer->get_fleet_list();
+
+	int DefenderID[20];
+	int DefenderCount = 0;
+	for (int i=0 ; i<FleetList->length() && DefenderCount<20 ; i++)
+	{
+		CFleet *F = (CFleet *)FleetList->get(i);
+		if (F == NULL) continue;
+		if (F->get_status() != CFleet::FLEET_STAND_BY) continue;
+		if (F->under_mission()) continue;
+		if (F->get_mission().get_mission() != CMission::MISSION_NONE) continue;
+		DefenderID[DefenderCount++] = F->get_id();
+	}
+
+	if (DefenderCount == 0) return;   // no defenders to plan around this tick
+
+	CDefensePlanList *PlanList = aPlayer->get_defense_plan_list();
+	CDefensePlan     *Plan     = PlanList->get_generic_plan();
+
+	// Already covers exactly this defender set (same capital, same ids)? Promotions
+	// only swap commanders, not fleet ids, so a settled bot returns here untouched.
+	if (Plan != NULL && Plan->get_capital() == DefenderID[0])
+	{
+		CDefenseFleetList *DFList = Plan->get_fleet_list();
+		if (DFList->length() == DefenderCount)
+		{
+			bool Same = true;
+			for (int i=0 ; i<DefenderCount ; i++)
+				if (DFList->get_by_id(DefenderID[i]) == NULL) { Same = false; break; }
+			if (Same) return;
+		}
+	}
+
+	// Rebuild: drop any existing deployment rows, then (create or update the plan
+	// and) lay the defenders out in a non-overlapping grid, all on FORMATION.
+	if (Plan != NULL)
+	{
+		CDefenseFleetList *DFList = Plan->get_fleet_list();
+		for (int i=DFList->length()-1 ; i>=0 ; i--)
+		{
+			CDefenseFleet *DF = (CDefenseFleet *)DFList->get(i);
+			DF->type(QUERY_DELETE);
+			STORE_CENTER->store(*DF);
+			DFList->remove_defense_fleet(DF->get_fleet_id());
+		}
+	}
+
+	if (Plan == NULL)
+	{
+		Plan = new CDefensePlan();
+		Plan->set_owner(aPlayer->get_game_id());
+		Plan->set_id(PlanList->get_new_id());
+		Plan->set_type(CDefensePlan::GENERIC_PLAN);
+		Plan->set_capital(DefenderID[0]);
+		PlanList->add_defense_plan(Plan);
+		Plan->type(QUERY_INSERT);
+		STORE_CENTER->store(*Plan);
+	}
+	else
+	{
+		Plan->set_capital(DefenderID[0]);
+		Plan->type(QUERY_UPDATE);
+		STORE_CENTER->store(*Plan);
+	}
+
+	int PlanID = Plan->get_id();
+	for (int i=0 ; i<DefenderCount ; i++)
+	{
+		CDefenseFleet *DF = new CDefenseFleet();
+		DF->set_owner(aPlayer->get_game_id());
+		DF->set_plan_id(PlanID);
+		DF->set_fleet_id(DefenderID[i]);
+		DF->set_command(CDefenseFleet::COMMAND_FORMATION);
+		DF->set_x(7000 + (i % 5) * 500);   // distinct cells -> no stacked fleets
+		DF->set_y(3000 + (i / 5) * 500);
+		Plan->add_defense_fleet(DF);
+		DF->type(QUERY_INSERT);
+		STORE_CENTER->store(*DF);
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Per-bot AI step.
 // ---------------------------------------------------------------------------
@@ -484,6 +626,11 @@ bot_ai_act(CPlayer *aPlayer, int aRebuildPerRun, int aTrainPerRun, int aLevelCap
 	// it develops commanders rather than chasing power, and is self-limiting (a
 	// trainee leaves the pool while training and returns maxed in step (A)).
 	bot_train_pool(aPlayer, aLevelCap, aTrainPerRun);
+
+	// (4) Keep the defence plan (every defender on FORMATION) in sync with the
+	// current defenders so a sieged/blockaded bot fights by plan. Ensign bots are
+	// exempt and fall back to the engine's auto-deployment.
+	bot_sync_defense_plan(aPlayer);
 
 	aPlayer->refresh_power();
 	aPlayer->type(QUERY_UPDATE);
