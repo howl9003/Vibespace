@@ -83,6 +83,7 @@
     return out;
   }
   function num(x) { var n = parseInt(x, 10); return isNaN(n) ? 0 : n; }
+  function comma(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
   // ---- parse --------------------------------------------------------------
   function parse(text) {
@@ -130,7 +131,7 @@
           var fire = {
             id: num(f[1]), turn: num(f[2]),
             from: num(f[3]) + ':' + num(f[4]), to: num(f[5]) + ':' + num(f[6]),
-            weapon: f[7] || 'weapon', num: num(f[9]), hits: 0, sunk: 0, dealt: false
+            weapon: f[7] || 'weapon', num: num(f[9]), hits: 0, damage: 0, sunk: 0, dealt: false
           };
           (B.firesByTurn[fire.turn] = B.firesByTurn[fire.turn] || []).push(fire);
           B.pendingFire[fire.id] = fire;
@@ -141,11 +142,12 @@
           // H/fireid/turn/hits/misses/damage/sunk
           var fire2 = B.pendingFire[num(f[1])];
           if (fire2) {
-            fire2.hits = num(f[3]); fire2.sunk = num(f[6]); fire2.dealt = true;
+            fire2.hits = num(f[3]); fire2.damage = num(f[5]); fire2.sunk = num(f[6]); fire2.dealt = true;
             var a = B.fleets[fire2.from], d = B.fleets[fire2.to];
             ev(fire2.turn, (a ? a.nick : '?') + ' → ' + (d ? d.nick : '?') +
                ': ' + fire2.weapon + ' ×' + fire2.num + ' — ' +
                fire2.hits + ' hit' + (fire2.hits === 1 ? '' : 's') +
+               (fire2.damage ? ', ' + comma(fire2.damage) + ' dmg' : '') +
                (fire2.sunk ? ', ' + fire2.sunk + ' sunk' : ''));
             delete B.pendingFire[num(f[1])];
           }
