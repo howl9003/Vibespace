@@ -232,6 +232,7 @@ class CFleetList: public CSortedList
 		char *possessed_fleet_info_html();
 		char *recall_fleet_list_html(CPlayer *aPlayer);
 		char *reassignment_fleet_list_html(CPlayer *aPlayer);
+		char *reassignment_fleet_list_javascript(CPlayer *aPlayer);
 		char *expedition_fleet_list_html(CPlayer *aPlayer);
 		char *mission_fleet_list_html(CPlayer *aPlayer);
 		char *disband_fleet_list_html(CPlayer *aPlayer);

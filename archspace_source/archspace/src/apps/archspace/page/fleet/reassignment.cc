@@ -56,6 +56,8 @@ CPageReassignment::handler(CPlayer *aPlayer)
 
 	ITEM("FLEETS", FleetList->reassignment_fleet_list_html(aPlayer));
 
+	ITEM("REASSIGNMENT_JAVASCRIPT", FleetList->reassignment_fleet_list_javascript(aPlayer));
+
 	ITEM("SELECT_REASSIGNMENT", CFleet::select_reassignment_html());
 
 //	system_log("end page handler %s", get_name());

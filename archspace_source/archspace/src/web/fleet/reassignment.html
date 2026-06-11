@@ -10,6 +10,39 @@
     <meta http-equiv="Pragma" content="no-cache"/>
 <SCRIPT TYPE="text/javascript" LANGUAGE=javascript SRC=/jsLib.js></SCRIPT>
 <LINK REL="stylesheet" HREF="/archspace.css">
+<SCRIPT TYPE="text/javascript" LANGUAGE="javascript" SRC="/ptblsort.js"></SCRIPT>
+<script type="text/javascript" src="/yahoo.js" ></script>
+<script type="text/javascript" src="/event.js" ></script>
+<script type="text/javascript" src="/dom.js" ></script>
+<SCRIPT LANGUAGE=javascript>
+var checkflag = false;
+
+function allCheck()
+{
+	var boxes = document.getElementsByTagName("input");
+	for (var i = 0; i < boxes.length; i++)
+	{
+		if (boxes[i].type == "checkbox" && boxes[i].name.indexOf("FLEET") == 0)
+		{
+			boxes[i].checked = (checkflag == false);
+		}
+	}
+	if (checkflag == false) checkflag = true;
+	else checkflag = false;
+}
+
+function display_table()
+{
+	if (document.getElementById("ReassignmentFleetList") != null)
+	{
+		document.getElementById("ReassignmentFleetList").innerHTML = ReassignmentFleetTable.getTableHTML();
+	}
+}
+
+$REASSIGNMENT_JAVASCRIPT
+
+YAHOO.util.Event.addListener(window, "load", display_table);
+</SCRIPT>
 </HEAD>
 <!--~========================= END DOCUMENT HEADER =========================~-->
 
@@ -65,7 +98,7 @@
   </TR>
   <TR>
     <TD align=center CLASS="maintext">
-      $FLEETS
+      <div id="ReassignmentFleetList">$FLEETS</div>
     </TD>
   </TR>
   <TR> 

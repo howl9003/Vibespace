@@ -707,6 +707,14 @@ CFleet::select_reassignment_html()
 	Reassignment += GETTEXT("Remove/Add Ships");
 	Reassignment += "<BR>\n";
 
+	Reassignment += "<INPUT TYPE=radio NAME=\"REASSIGNMENT\" VALUE=\"4\">";
+	Reassignment += GETTEXT("Refill Fleet(s)");
+	Reassignment += "<BR>\n";
+
+	Reassignment += "<INPUT TYPE=radio NAME=\"REASSIGNMENT\" VALUE=\"5\">";
+	Reassignment += GETTEXT("Maximize Fleet(s)");
+	Reassignment += "<BR>\n";
+
 	Reassignment += "</TD>\n";
 
 	return (char *)Reassignment;
@@ -1771,6 +1779,80 @@ CFleetList::reassignment_fleet_list_html(CPlayer *aPlayer)
 	List += "</TABLE>\n";
 
 	return (char *)List;
+}
+
+char *
+	CFleetList::reassignment_fleet_list_javascript(CPlayer *aPlayer)
+{
+	static CString
+		Info;
+	Info.clear();
+
+	if (!length())
+	{
+		Info += "/***** NO POOLED ADMIRALS *****/";
+		return (char *)Info;
+	}
+
+	Info += "function reassignmentFleetSwapAndSort(column)\n{\n";
+	Info += "\tvar Action = \n\t{\n\t\tNONE : -1,\n\t\tASCENDING : 0,\n\t\tDESCENDING : 1\n\t}\n";
+	Info += "\tswitch (ReassignmentFleetTable.getSortingOrder(column))\n\t{\n";
+	Info += "\t\tcase Action.NONE:\n\t\tReassignmentFleetTable.addPriorityRank(column, Action.ASCENDING);\n\t\tif (ReassignmentFleetTable.getPriorityRank(column) > 4) ReassignmentFleetTable.setColumnData(column, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-11.gif\\\"></TH>\");\n\t\telse ReassignmentFleetTable.setColumnData(column, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(ReassignmentFleetTable.getPriorityRank(column)) + 1) + \".gif\\\"></TH>\");\t\tbreak;\n";
+	Info += "\t\tcase Action.ASCENDING:\n\t\tReassignmentFleetTable.setSortingOrder(column, Action.DESCENDING);\n\t\tif (ReassignmentFleetTable.getPriorityRank(column) > 4) ReassignmentFleetTable.setColumnData(column, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-12.gif\\\"></TH>\");\n\t\telse ReassignmentFleetTable.setColumnData(column, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(ReassignmentFleetTable.getPriorityRank(column)) + 6) + \".gif\\\"></TH>\");\t\tbreak;\n";
+	Info += "\t\tcase Action.DESCENDING:\n\t\tReassignmentFleetTable.removePriorityRank(column);\n\t\tReassignmentFleetTable.setColumnData(column, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(column, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"</TH>\");\n";
+	Info += "\t\tfor (var col = 0; col < ReassignmentFleetTable.getTotalColumns(); col++)\n\t\t{\n\t\t\tif (ReassignmentFleetTable.getSortingOrder(col) == Action.ASCENDING)\n\t\t\t{\n\t\t\t\tif (ReassignmentFleetTable.getPriorityRank(col) > 4) ReassignmentFleetTable.setColumnData(col, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-11.gif\\\"></TH>\");\n\t\t\t\telse ReassignmentFleetTable.setColumnData(col, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(ReassignmentFleetTable.getPriorityRank(col)) + 1) + \".gif\\\"></TH>\");\n\t\t\t}\n";
+	Info += "\t\t\telse if (ReassignmentFleetTable.getSortingOrder(col) == Action.DESCENDING)\n\t\t\t{\n\t\t\t\tif (ReassignmentFleetTable.getPriorityRank(col) > 4) ReassignmentFleetTable.setColumnData(col, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-11.gif\\\"></TH>\");\n\t\t\t\telse ReassignmentFleetTable.setColumnData(col, ColumnData.HEADER_HTML, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).substring(0, ReassignmentFleetTable.getColumnData(col, ColumnData.HEADER_HTML).indexOf(\"</A>\") + 4) + \"<BR><IMG src=\\\"http://archspace.org/image/as_game/admrlArrow-\" + (parseInt(ReassignmentFleetTable.getPriorityRank(col)) + 1) + \".gif\\\"></TH>\");\n\t\t\t}\n\t\t}\n\t\tbreak;\n";
+	Info += "\t}\n";
+	Info += "\tReassignmentFleetTable.sort();\n";
+	Info += "\tdocument.getElementById(\"ReassignmentFleetList\").innerHTML = ReassignmentFleetTable.getTableHTML();\n";
+	Info += "}\n\n";
+	Info += "ReassignmentFleetTable = new Table();\n";
+	Info += "ReassignmentFleetTable.setTableAttributes(\"WIDTH=\\\"550\\\" BORDER=\\\"1\\\" CELLSPACING=\\\"0\\\" CELLPADDING=\\\"0\\\" BORDERCOLOR=\\\"#2A2A2A\\\"\");\n";
+	Info += "ReassignmentFleetTable.setHeaderRowAttributes(\"STYLE=\\\"vertical-align: bottom;\\\" BGCOLOR=\\\"#171717\\\"\");\n";
+	Info += "ReassignmentFleetTable.setSortDelimiter(\"#SORT#\");\n";
+	Info += "ReassignmentFleetTable.addColumn(0,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"45\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(0)\\\">ID</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"45\\\" ALIGN=\\\"CENTER\\\">\", \"</TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"45\\\"><INPUT TYPE=\\\"checkbox\\\" onClick=\\\"javascript:allCheck();\\\"/></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"45\\\" ALIGN=\\\"CENTER\\\"><INPUT TYPE=\\\"checkbox\\\" NAME=\\\"FLEET\", \"\\\"></TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"144\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(2)\\\">Name</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"144\\\" ALIGN=\\\"LEFT\\\">\", \"</TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"122\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(3)\\\">Commander</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"122\\\" ALIGN=\\\"LEFT\\\"><A HREF=\\\"/archspace/fleet/fleet_commander_information.as?ADMIRAL_ID=\", \"</A></TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(0,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"36\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(4)\\\">Exp.</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"36\\\" ALIGN=\\\"CENTER\\\">\", \"</TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"99\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(5)\\\">Design</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"99\\\" ALIGN=\\\"LEFT\\\"><A HREF=\\\"/archspace/fleet/class_specification.as?DESIGN_ID=\", \"</A></TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(0,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"49\\\">Ships</TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"49\\\" ALIGN=\\\"CENTER\\\">\", \"</TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"122\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(7)\\\">Common<BR>Ability</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"122\\\" ALIGN=\\\"LEFT\\\">\", \"</TD>\");\n";
+	Info += "ReassignmentFleetTable.addColumn(1,true, \"<TH CLASS=\\\"tabletxt\\\" WIDTH=\\\"122\\\"><A STYLE=\\\"color:#666666\\\" HREF=\\\"javascript:reassignmentFleetSwapAndSort(8)\\\">Racial<BR>Ability</A></TH>\", \"<TD CLASS=\\\"tabletxt\\\" WIDTH=\\\"122\\\" ALIGN=\\\"LEFT\\\">\", \"</TD>\");\n";
+
+	Info += "ReassignmentFleetTable.addRows(\"|\", new Array(";
+
+	CAdmiralList *
+	AdmiralList = aPlayer->get_admiral_list();
+
+	int sillycounter = 0;
+
+	for (int i = 0 ; i < length() ; i++)
+	{
+		CFleet *
+		Fleet = (CFleet *)get(i);
+		if (Fleet->get_status() == CFleet::FLEET_STAND_BY)
+		{
+			sillycounter++;
+			CAdmiral *
+			Admiral = AdmiralList->get_by_id(Fleet->get_admiral_id());
+			if (sillycounter > 1) Info += ",\n\t";
+			Info.format("\"%d|%d|%s|%d\\\">#SORT#%s#SORT#|%d|%d\\\">#SORT#%s#SORT#|%d/%d/%d|%s|%s|%d\"",
+			Fleet->get_id(), i, Fleet->get_name(), Admiral->get_id(), Admiral->get_name(), Fleet->get_exp(),
+			Fleet->get_design_id(), Fleet->CShipDesign::get_name(),
+			Fleet->get_current_ship(), Fleet->get_max_ship(), Admiral->get_fleet_commanding(),
+			Admiral->get_special_ability_name(), Admiral->get_racial_ability_name(), i);
+			if (i + 1 >= length()) Info += ")";
+		}
+		else
+		{
+			if (i + 1 >= length()) Info += ")";
+			continue;
+		}
+	}
+	Info += ");\n";
+
+	return (char *)Info;
 }
 
 char *

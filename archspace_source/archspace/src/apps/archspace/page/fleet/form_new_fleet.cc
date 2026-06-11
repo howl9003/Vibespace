@@ -5,6 +5,9 @@ bool
 CPageFormNewFleet::handler(CPlayer *aPlayer)
 {
 //	system_log( "start page handler %s", get_name() );
+	// if player doesn't have a preference object yet, make it
+	if (aPlayer->get_preference() == NULL)
+		aPlayer->set_preference(new CPreference(aPlayer->get_game_id()));
 
 	static CString
 		Message1,
@@ -30,6 +33,8 @@ CPageFormNewFleet::handler(CPlayer *aPlayer)
 				GETTEXT("You don't have any admirals."));
 		return output("fleet/form_new_fleet_error.html");
 	}
+
+	ITEM("FLEET_COMMANDER_JAVASCRIPT", AdmiralPool->fleet_commander_list_javascript(aPlayer));
 
 	CDock *
 		ShipPool = aPlayer->get_dock();

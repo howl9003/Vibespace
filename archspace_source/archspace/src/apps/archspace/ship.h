@@ -360,6 +360,7 @@ class CDock: public CSortedList
 		char *dock_info_html();
 		char *radio_ship_reassignment_html(int designID);
 		char *print_html_select();
+		char *print_javascript_select();
 	protected:
 		virtual bool free_item( TSomething aItem );
 		virtual int compare( TSomething aItem1, TSomething aItem2 ) const;

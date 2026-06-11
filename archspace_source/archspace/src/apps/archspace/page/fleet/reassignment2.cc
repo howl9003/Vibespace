@@ -5,6 +5,8 @@
 #define REASSIGNMENT_COMMANDER_CHANGE	1
 #define REASSIGNMENT_SHIP_REASSIGNMENT	2
 #define REASSIGNMENT_REMOVE_ADD_SHIPS	3
+#define REASSIGNMENT_REFILL_FLEET		4
+#define REASSIGNMENT_MAXIMIZE_FLEET		5
 
 bool
 CPageReassignment2::handler(CPlayer *aPlayer)
@@ -14,6 +16,136 @@ CPageReassignment2::handler(CPlayer *aPlayer)
 	static CString
 		Message;
 	Message.clear();
+
+	// Bulk Refill / Maximize operate over checked FLEET<i> stand-by fleets and
+	// do not post a single FLEET id, so handle them before the single-fleet lookup.
+	{
+		QUERY("REASSIGNMENT", BulkReassignmentIDString);
+		int BulkReassignmentID =
+			BulkReassignmentIDString ? as_atoi(BulkReassignmentIDString) : 0;
+
+		if (BulkReassignmentID == REASSIGNMENT_REFILL_FLEET ||
+			BulkReassignmentID == REASSIGNMENT_MAXIMIZE_FLEET)
+		{
+			CCommandSet FleetSet;
+			FleetSet.clear();
+
+			CFleetList *FleetList = aPlayer->get_fleet_list();
+			for (int i=0 ; i<FleetList->length() ; i++)
+			{
+				CFleet *Fleet = (CFleet *)FleetList->get(i);
+				if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
+
+				CString QueryVar;
+				QueryVar.clear();
+				QueryVar.format("FLEET%d", i);
+
+				QUERY(QueryVar, FleetIDString);
+
+				if (FleetIDString)
+				{
+					if (!strcasecmp(FleetIDString, "ON"))
+					{
+						FleetSet += i;
+					}
+				}
+			}
+
+			if (FleetSet.is_empty())
+			{
+				ITEM("ERROR_MESSAGE", GETTEXT("You didn't select any fleets."));
+				return output("fleet/reassignment_error.html");
+			}
+
+			CDock *Pool = aPlayer->get_dock();
+
+			CString Result;
+			Result.clear();
+			CString ClassInfoURL;
+
+			bool changedFleet = false;
+
+			for (int i=0 ; i<FleetList->length() ; i++)
+			{
+				CFleet *Fleet = (CFleet *)FleetList->get(i);
+
+				if (Fleet->get_status() != CFleet::FLEET_STAND_BY) continue;
+				if (FleetSet.has(i) == false) continue;
+
+				int ShipNeed;
+				if (BulkReassignmentID == REASSIGNMENT_MAXIMIZE_FLEET)
+				{
+					CAdmiral *Admiral =
+						aPlayer->get_admiral_list()->get_by_id(Fleet->get_admiral_id());
+					if (!Admiral) continue;
+					ShipNeed = Admiral->get_fleet_commanding() - Fleet->get_current_ship();
+				}
+				else
+				{
+					ShipNeed = Fleet->get_max_ship() - Fleet->get_current_ship();
+				}
+				if (ShipNeed <= 0) continue;
+
+				int current_ship = Fleet->get_current_ship();
+				int available_ship = Pool->count_ship(Fleet->get_design_id());
+
+				if (available_ship == 0) continue;
+
+				if (ShipNeed > available_ship)
+				{
+					ShipNeed = available_ship;
+				}
+
+				changedFleet = true;
+
+				if (BulkReassignmentID == REASSIGNMENT_MAXIMIZE_FLEET)
+				{
+					Fleet->set_max_ship(current_ship + ShipNeed);
+				}
+				Fleet->set_current_ship(current_ship + ShipNeed);
+				aPlayer->get_dock()->change_ship((CShipDesign *)Fleet, -ShipNeed);
+
+				ClassInfoURL.clear();
+				ClassInfoURL.format("<A HREF=\"/archspace/fleet/class_specification.as?DESIGN_ID=%d\">%s</A>",
+						Fleet->get_design_id(),
+						Fleet->CShipDesign::get_name());
+
+				aPlayer->get_fleet_list()->refresh_power();
+				aPlayer->refresh_power();
+
+				Message.clear();
+				Message.format(GETTEXT("You have successfully changed %1$s as a fleet of %2$s %3$s.<BR>"),
+						Fleet->get_name(),
+						dec2unit(current_ship + ShipNeed),
+						(char *)ClassInfoURL);
+
+				Result += Message;
+
+				Fleet->type(QUERY_UPDATE);
+				STORE_CENTER->store(*Fleet);
+			}
+
+			if (changedFleet)
+			{
+				ITEM("RESULT_MESSAGE", (char *)Result);
+			}
+			else
+			{
+				ITEM("RESULT_MESSAGE", GETTEXT("No fleets were modified by this process."));
+			}
+
+			if (BulkReassignmentID == REASSIGNMENT_MAXIMIZE_FLEET)
+			{
+				ITEM("STRING_MAXIMIZE_FLEET", GETTEXT("Maximize Fleet(s)"));
+				return output("fleet/reassignment_maximize_fleet_result.html");
+			}
+			else
+			{
+				ITEM("STRING_REFILL_FLEET", GETTEXT("Refill Fleet(s)"));
+				return output("fleet/reassignment_refill_fleet_result.html");
+			}
+		}
+	}
 
 	QUERY("FLEET", FleetIDString);
 	int
@@ -287,4 +419,6 @@ CPageReassignment2::handler(CPlayer *aPlayer)
 #undef REASSIGNMENT_COMMANDER_CHANGE
 #undef REASSIGNMENT_SHIP_REASSIGNMENT
 #undef REASSIGNMENT_REMOVE_ADD_SHIPS
+#undef REASSIGNMENT_REFILL_FLEET
+#undef REASSIGNMENT_MAXIMIZE_FLEET
 

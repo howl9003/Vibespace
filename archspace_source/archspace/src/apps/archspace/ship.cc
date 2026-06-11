@@ -2058,6 +2058,27 @@ CDock::print_html_select()
 	return (char *)Buf;
 }
 
+char*
+CDock::print_javascript_select()
+{
+	static CString
+		Buf;
+	Buf.clear();
+
+	for(int i=0 ; i<length(); i++)
+	{
+		CDockedShip *
+			DockedShip = (CDockedShip *)get(i);
+		CShipDesign *
+			Class = (CShipDesign *)DockedShip;
+
+		Buf.format("<OPTION VALUE=\\\"%d\\\">%s</OPTION>",
+					Class->CShipDesign::get_design_id(), Class->get_name());
+	}
+	Buf += "</SELECT>";
+	return (char *)Buf;
+}
+
 CDamagedShip::CDamagedShip(CShipDesign *aClass, int aHP, int aID)
 {
 	*(CShipDesign*)this = *aClass;

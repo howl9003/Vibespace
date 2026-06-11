@@ -329,6 +329,7 @@ class CAdmiralList: public CSortedList
 		char *attached_fleet_commander_info_html(CPlayer *aPlayer);
 		char *pool_fleet_commander_info_html();
 		char *fleet_commander_list_html();
+		char *fleet_commander_list_javascript(CPlayer *aPlayer);
 
 	protected:
 		virtual bool free_item(TSomething aItem);
