@@ -195,7 +195,7 @@ CPageSiegePlanetFleetDeployment::handler(CPlayer *aPlayer)
    CString FleetIndexToID;
    FleetIndexToID.clear();
    // Java specific defense plan code
-    if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
+    if (true) // HTML5 deploy board (as-deploy.js) for everyone; Java applets are dead (was: PR_JAVA)
     {
     	// Create Java Applet Image URL Var for 'IMAGEDIR'
     	CString FleetImageURL;
@@ -370,7 +370,7 @@ CPageSiegePlanetFleetDeployment::handler(CPlayer *aPlayer)
 
 	
 	ITEM("FLEET_NUMBER", FleetIDList.length());
-    if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
+    if (true) // HTML5 deploy board (as-deploy.js) for everyone; Java applets are dead (was: PR_JAVA)
     	return output("war/siege_planet_fleet_deployment.html");
 	return output("war/siege_planet_fleet_deployment_js.html");
 

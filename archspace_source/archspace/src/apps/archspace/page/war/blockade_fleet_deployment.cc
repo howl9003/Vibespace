@@ -144,7 +144,7 @@ CPageBlockadeFleetDeployment::handler(CPlayer *aPlayer)
    FleetIndexToID.clear();
 
    // Java specific defense plan code
-    if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
+    if (true) // HTML5 deploy board (as-deploy.js) for everyone; Java applets are dead (was: PR_JAVA)
     {
     	// Create Java Applet Image URL Var for 'IMAGEDIR'
     	CString FleetImageURL;
@@ -310,7 +310,7 @@ CPageBlockadeFleetDeployment::handler(CPlayer *aPlayer)
 
 //	system_log( "end page handler %s", get_name() );
 
-    if (aPreference != NULL && aPreference->has(CPreference::PR_JAVA))
+    if (true) // HTML5 deploy board (as-deploy.js) for everyone; Java applets are dead (was: PR_JAVA)
     	return output("war/blockade_fleet_deployment.html");
 	return output("war/blockade_fleet_deployment_js.html");
 
