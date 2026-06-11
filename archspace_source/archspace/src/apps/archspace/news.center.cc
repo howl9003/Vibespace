@@ -288,7 +288,21 @@ CNewsCenter::generate()
 
 	// turn
 	int Turn = mOwner->mTurn - mTurn;
-	if (!Turn) return NULL;
+	if (!Turn)
+	{
+		// No new turn has ticked, but real-time events (council war
+		// declarations, sieges, raids, arriving messages) are time-stamped and
+		// must still surface -- otherwise they'd be swallowed until a turn
+		// change, and possibly cleared by mark_seen() before the player sees
+		// them. Render just the time-news in that case.
+		const char *T = time_news();
+		if (T && *T && strcmp(T, " ") != 0)
+		{
+			Buffer = T;
+			return (char *)Buffer;
+		}
+		return NULL;
+	}
 	Buffer = "<TR>\n";
 	Buffer += "<TD CLASS=\"speakernews\" COLSPAN=2>\n";
 	Buffer += "<CENTER>\n";
