@@ -3952,26 +3952,32 @@ CPlayer::add_diplomatic_message(CDiplomaticMessage* aMessage)
 
 	bool SendReply = false;
 
-	if (mPreference)
+	// Bots have no preference object but still auto-reply (pacts) below.
+	if (mPreference || is_bot())
 	{
       switch ((int)aMessage->get_type())
 	  {
        case (int)CDiplomaticMessage::TYPE_SUGGEST_PACT:
-                                             if (mPreference->has(CPreference::PR_ACCEPT_PACT))
+                                             // Bots always auto-accept a pact (humans need PR_ACCEPT_PACT),
+                                             // unless this player is at war with the sender.
+                                             if ((is_bot() || (mPreference && mPreference->has(CPreference::PR_ACCEPT_PACT)))
+                                                 && !(get_relation(aMessage->get_sender())
+                                                      && (get_relation(aMessage->get_sender())->get_relation() == CRelation::RELATION_WAR
+                                                       || get_relation(aMessage->get_sender())->get_relation() == CRelation::RELATION_TOTAL_WAR)))
                                              {
                                                MessageType = CDiplomaticMessage::TYPE_REPLY_SUGGEST_PACT;
                                                SendReply = true;
                                              }
                                              break;
        case (int)CDiplomaticMessage::TYPE_SUGGEST_ALLY:
-                                             if (mPreference->has(CPreference::PR_ACCEPT_ALLY))
+                                             if (mPreference && mPreference->has(CPreference::PR_ACCEPT_ALLY))
                                              {
                                                MessageType = CDiplomaticMessage::TYPE_REPLY_SUGGEST_ALLY;
                                                SendReply = true;
                                              }
                                              break;
        case (int)CDiplomaticMessage::TYPE_SUGGEST_TRUCE:
-                                             if (mPreference->has(CPreference::PR_ACCEPT_TRUCE))
+                                             if (mPreference && mPreference->has(CPreference::PR_ACCEPT_TRUCE))
                                              {
                                                MessageType = CDiplomaticMessage::TYPE_REPLY_SUGGEST_TRUCE;
                                                SendReply = true;
