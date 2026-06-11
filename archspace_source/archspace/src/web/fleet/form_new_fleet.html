@@ -155,5 +155,52 @@ if (navigator.appName.indexOf('Microsoft') == -1) {
 })();
 </SCRIPT>
 
+<SCRIPT TYPE="text/javascript">
+// Under each "# of Ship(s)" box, show how many ships of the row's selected Ship
+// Class are still available: the pool total for that class minus what every row
+// has allocated to it. Updates live as classes and quantities change.
+(function () {
+  function isClassSel(el) { return el && el.tagName === 'SELECT' && /^SHIP_DESIGN[0-9]+$/.test(el.name || ''); }
+  function isQtyInput(el) { return el && el.tagName === 'INPUT' && /^SHIP_NUMBER[0-9]+$/.test(el.name || ''); }
+
+  var classSels = [], all = document.getElementsByTagName('select');
+  for (var i = 0; i < all.length; i++) if (isClassSel(all[i])) classSels.push(all[i]);
+  if (!classSels.length) return;
+
+  // Pool total per design id. JS_SHIP_NUMBER_LIST is "(n0, n1, ..., 0)" in the
+  // same order as each select's <option>s, so option[k] <-> counts[k].
+  var counts = "$JS_SHIP_NUMBER_LIST".replace(/[()\s]/g, '').split(',');
+  var poolTotal = {}, opts = classSels[0].options;
+  for (var k = 0; k < opts.length; k++) poolTotal[opts[k].value] = parseInt(counts[k], 10) || 0;
+
+  var qty = [], note = [];
+  for (var r = 0; r < classSels.length; r++) {
+    var tr = classSels[r]; while (tr && tr.tagName !== 'TR') tr = tr.parentNode;
+    var q = null, ins = tr ? tr.getElementsByTagName('input') : [];
+    for (var j = 0; j < ins.length; j++) if (isQtyInput(ins[j])) { q = ins[j]; break; }
+    qty.push(q);
+    var n = document.createElement('div');
+    n.style.cssText = 'font:9px sans-serif;color:#888;margin-top:2px;white-space:nowrap;';
+    if (q && q.parentNode) q.parentNode.appendChild(n);
+    note.push(n);
+  }
+
+  function val(inp) { var v = inp ? parseInt(inp.value, 10) : 0; return isNaN(v) ? 0 : v; }
+  function refresh() {
+    var alloc = {};
+    for (var a = 0; a < classSels.length; a++) { var c = classSels[a].value; alloc[c] = (alloc[c] || 0) + val(qty[a]); }
+    for (var b = 0; b < classSels.length; b++) {
+      if (!note[b]) continue;
+      var cc = classSels[b].value, rem = (poolTotal[cc] || 0) - (alloc[cc] || 0);
+      note[b].innerHTML = rem + ' available';
+      note[b].style.color = rem < 0 ? '#d44' : '#888';
+    }
+  }
+  document.addEventListener('change', function (e) { if (isClassSel(e.target) || isQtyInput(e.target)) refresh(); });
+  document.addEventListener('input', function (e) { if (isQtyInput(e.target)) refresh(); });
+  refresh();
+})();
+</SCRIPT>
+
 </BODY>
 </html>
