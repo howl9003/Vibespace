@@ -151,7 +151,7 @@ unescape(char *aString)
 	aString[i] = 0;
 }
 
-// 1 - i »çÀÌ ·£´ý ³Ñ¹ö
+// 1 - i ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½
 int number( int i )
 {
   static int initialized;
@@ -377,10 +377,10 @@ as_calc_date_index( time_t t, int aNumber )
 }
 
 bool
-is_valid_name(const char *aString)
+is_valid_name(const char *aString, int aMaxLen)
 {
 	if (!aString || strlen(aString) == 0) return false;
-    if (strlen(aString) > 20) return false;
+    if ((int)strlen(aString) > aMaxLen) return false;
 	int
 		NumberOfSpace = 0;
 	for (int i=0 ; i<(int)strlen(aString) ; i++)

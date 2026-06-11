@@ -82,7 +82,7 @@ CPageIndependenceDeclarationResult::handler(CPlayer *aPlayer)
     Slogan.htmlspecialchars();
     Slogan.nl2br();
     
-	if (!is_valid_name((char *)Name))
+	if (!is_valid_name((char *)Name, 30))
 	{
 		ITEM("ERROR_MESSAGE",
 				GETTEXT("This name is invalid. Please enter a proper name."));

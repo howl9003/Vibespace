@@ -22,7 +22,7 @@ CPageChangeCouncilName::handler(CPlayer *aPlayer)
 	CouncilName.htmlspecialchars();
 	CouncilName.nl2br();
 
-	if (!is_valid_name((char *)CouncilName))
+	if (!is_valid_name((char *)CouncilName, 30))
 	{
 		ITEM("RESULT_MESSAGE", GETTEXT("Enter the council name."));
 	} else if (!strcmp(Council->get_name(), (char *)CouncilName))

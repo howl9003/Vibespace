@@ -15,7 +15,7 @@ CPageShipDesign2::handler( CPlayer *aPlayer)
 	ITEM("STRING_SHIELD",GETTEXT("Shield"));
 
 	QUERY("CLASS_NAME", ClassName);
-	if (is_valid_name((const char *)ClassName) == false)
+	if (is_valid_name((const char *)ClassName, 30) == false)
 	{
 		ITEM("ERROR_MESSAGE", GETTEXT("You didn't enter a valid name for class."));
 		return output("fleet/ship_design_error.html");

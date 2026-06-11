@@ -148,7 +148,7 @@ char *integer_with_sign(int aNumber);					// Added by YOSHIKI(2001/01/17)
 bool as_isspace(int aChar);								// Added by YOSHIKI(2001/02/02)
 int as_calc_date_index( int aNumber );		// by Nara 2001-2-4
 int as_calc_date_index( time_t t, int aNumber );		// by Nara 2001-2-4
-bool is_valid_name(const char *aString);
+bool is_valid_name(const char *aString, int aMaxLen = 20);
 char *unsigned_int_to_char(unsigned int aNumber);
 void add_dot_for_sendmail(char *aString, CString *aResultString);
 pth_time_t get_pth_nap_time(int aNapTime);

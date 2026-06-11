@@ -29,7 +29,7 @@ CPageCreate2::handle(CConnection &aConnection)
 	Name.htmlspecialchars();
 	Name.nl2br();
 
-	if (!is_valid_name((char *)Name))
+	if (!is_valid_name((char *)Name, 30))
 	{
 		ITEM("ERROR_MESSAGE",
 				GETTEXT("Cannot create a character."

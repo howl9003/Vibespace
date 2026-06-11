@@ -26,7 +26,7 @@ CPageShipDesignConfirm::handler( CPlayer *aPlayer)
 	ClassName.strip_all_slashes();
 
 	
-	if (!is_valid_name((char *)ClassName))
+	if (!is_valid_name((char *)ClassName, 30))
 	{
 		ITEM("ERROR_MESSAGE", GETTEXT("You didn't enter a valid name for class."));
 		return output("fleet/ship_design_error.html");
