@@ -54,14 +54,14 @@
   var DEF = '#55bbff', DEF_DIM = '#1c4a6e';   // defender (cyan)
   var CW = 544, CH = 320;                       // canvas size
   // CBattleFleet morale-break statuses (battle.h enum): each flickers + tints the
-  // icon and stamps a letter on it (R=Rout, T=reTreat to avoid the R clash; the
-  // full name is shown in the label).
+  // icon and stamps a label on it (Ro=Rout, Rt=Retreat to keep them distinct; the
+  // full name is also shown in the text label).
   var STATUS_FX = {
-    8:  { ch: 'B', name: 'BERSERK',  color: '#ff8a00' },
-    9:  { ch: 'D', name: 'DISORDER', color: '#b066ff' },
-    10: { ch: 'R', name: 'ROUT',     color: '#ffd633' },
-    11: { ch: 'T', name: 'RETREAT',  color: '#5bc0ff' },
-    12: { ch: 'P', name: 'PANIC',    color: '#ff5577' }
+    8:  { ch: 'B',  name: 'BERSERK',  color: '#ff8a00' },
+    9:  { ch: 'D',  name: 'DISORDER', color: '#b066ff' },
+    10: { ch: 'Ro', name: 'ROUT',     color: '#ffd633' },
+    11: { ch: 'Rt', name: 'RETREAT',  color: '#5bc0ff' },
+    12: { ch: 'P',  name: 'PANIC',    color: '#ff5577' }
   };
 
   function el(tag, css, html) {
@@ -331,14 +331,14 @@
       ctx.moveTo(r, 0); ctx.lineTo(-r * 0.7, r * 0.7); ctx.lineTo(-r * 0.7, -r * 0.7);
       ctx.closePath(); ctx.fill();
       ctx.restore();
-      if (fx) {   // status letter, upright and centered on the icon
+      if (fx) {   // status label, black, upright and centered on the icon
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.font = 'bold 10px sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+        ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(255,255,255,0.85)';  // light halo for legibility
         ctx.strokeText(fx.ch, x, y);
-        ctx.fillStyle = '#fff'; ctx.fillText(fx.ch, x, y);
+        ctx.fillStyle = '#000'; ctx.fillText(fx.ch, x, y);
         ctx.restore();
       }
       ctx.save();
