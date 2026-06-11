@@ -40,14 +40,7 @@ cp -rf "$SRC/src/web"  /usr/src/archspace/
 # "/image" in the *installed* page templates (the engine fills these at runtime),
 # so the original separate image-server prefix collapses to this origin. The
 # source tree is left untouched.
-#
-# This must cover BOTH template trees the engine fills: web/ (the .as game
-# pages) and form/ (the boot-generated encyclopedia pages, EncyclopediaFormPath
-# = /usr/src/archspace/form/encyclopedia). The encyclopedia form templates
-# reference $IMAGE_SERVER_URL/image/as_login/encyclopedia/... for nav buttons
-# and per-race/per-tech icons; without this strip those collapse to the
-# original dead image-server prefix and every encyclopedia image 404s.
-grep -rlZ '\$IMAGE_SERVER_URL/image' /usr/src/archspace/web /usr/src/archspace/form 2>/dev/null \
+grep -rlZ '\$IMAGE_SERVER_URL/image' /usr/src/archspace/web 2>/dev/null \
     | xargs -0 -r sed -i 's#\$IMAGE_SERVER_URL/image#/image#g'
 # Modern-browser compat in the page templates (look unchanged):
 #  - UTF-8 instead of euc-kr/iso-8859-1

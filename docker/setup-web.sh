@@ -37,13 +37,34 @@ fi
 # 1a3) Encyclopedia icons. The engine generates /encyclopedia/*.html at boot with
 #      image paths /image/as_login/encyclopedia/... (nav buttons, race icons, and
 #      per-tech tech/<id>.gif), but like the planet thumbnails those only ship under
-#      www-new. Overlay that one dir so the encyclopedia images resolve.
+#      www-new. Overlay that whole dir (incl. race/ tech/ project/ ... subdirs) so
+#      the encyclopedia images resolve.
+#
+#      This overlay used to fail SILENTLY (cp ... 2>/dev/null || true): if it
+#      didn't land, the encyclopedia came up with same-origin 404s and nothing
+#      logged it. Now any failure (missing source, copy error, or a sentinel
+#      image absent afterwards) is logged loudly to stderr -- without aborting
+#      the web assembly (set -e), so the rest of the site still comes up.
 ENCYC="$SRC_TREE/www-new/image/as_login/encyclopedia"
+ENCYC_DEST="$WWW/image/as_login/encyclopedia"
 if [ -d "$ENCYC" ]; then
     echo "[web] adding encyclopedia icons (from www-new)"
-    mkdir -p "$WWW/image/as_login/encyclopedia"
-    cp -rf "$ENCYC"/. "$WWW/image/as_login/encyclopedia"/ 2>/dev/null || true
-    find "$WWW/image/as_login/encyclopedia" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+    mkdir -p "$ENCYC_DEST"
+    if cp -rf "$ENCYC"/. "$ENCYC_DEST"/; then
+        find "$ENCYC_DEST" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+    else
+        echo "[web] ERROR: encyclopedia icon overlay copy failed (src=$ENCYC)" >&2
+    fi
+    # Sentinel: a subdir image that only ships under www-new. If it's absent the
+    # overlay didn't fully land -- surface it instead of a silent 404.
+    if [ -f "$ENCYC_DEST/race/race_img.gif" ]; then
+        echo "[web] encyclopedia icons OK ($(find "$ENCYC_DEST" -type f | wc -l) files)"
+    else
+        echo "[web] ERROR: encyclopedia images missing after overlay; src listing:" >&2
+        ls -la "$ENCYC/race" >&2 2>/dev/null || echo "[web]   (source subdir $ENCYC/race not present!)" >&2
+    fi
+else
+    echo "[web] ERROR: encyclopedia source dir not found: $ENCYC" >&2
 fi
 
 # 1a4) Fleet marker icons. The HTML5 battle-deployment board (as-deploy.js) draws
