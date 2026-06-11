@@ -90,12 +90,7 @@
       var p = slotXY(f.slot); f.x = p.x; f.y = p.y;
     });
 
-    /* 4. Hidden X/Y inputs (kept current on submit). */
-    var hidden = {};
-    fleets.forEach(function (f) {
-      hidden[f.key] = { x: ensureHidden(form, f.key + '_X', String(f.x)),
-                        y: ensureHidden(form, f.key + '_Y', String(f.y)) };
-    });
+    /* 4. (All hidden form fields are written on submit — see step 8.) */
 
     /* 5. Ship images (original Java assets), tinted by drawing under them. */
     var imgFleet = new Image(), imgCap = new Image(), loaded = 0;
@@ -190,10 +185,27 @@
     canvas.addEventListener('touchmove', move, { passive: false });
     canvas.addEventListener('touchend', up);
 
-    /* 8. Submit: write each fleet's final slot coordinates. */
+    /* 8. Submit: write the full POST contract the .as handler expects. It reads
+       FLEET_NUMBER (total fleets), capFleet_ID + capFleet_O for the capital, and
+       Fleet{n}_ID / Fleet{n}_X / Fleet{n}_Y / fleet{n}_O for the rest with n
+       starting at 2 (the capital is battle-fleet 1, fixed). Positions go in the
+       battle coordinate space (X 9..609, Y 226..426), so map canvas pixels. */
     form.addEventListener('submit', function () {
+      function ex(cx) { return Math.round(9 + (cx / BOARD_W) * 600); }
+      function ey(cy) { return Math.round(226 + (cy / BOARD_H) * 200); }
+      ensureHidden(form, 'FLEET_NUMBER', String(fleets.length));
+      var n = 2;
       fleets.forEach(function (f) {
-        var h = hidden[f.key]; if (h) { h.x.value = String(f.x); h.y.value = String(f.y); }
+        if (f.isCap) {
+          ensureHidden(form, 'capFleet_ID', String(f.id));
+          ensureHidden(form, 'capFleet_O', 'NORMAL');
+        } else {
+          ensureHidden(form, 'Fleet' + n + '_ID', String(f.id));
+          ensureHidden(form, 'Fleet' + n + '_X', String(ex(f.x)));
+          ensureHidden(form, 'Fleet' + n + '_Y', String(ey(f.y)));
+          ensureHidden(form, 'fleet' + n + '_O', 'NORMAL');
+          n++;
+        }
       });
     });
 
