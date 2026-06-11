@@ -1788,10 +1788,13 @@ CGame::create_bot_player(int aBand)
 	// than deep inside the band. Sizing the *capacity* matters: the AI keeps
 	// fleets manned to max_ship, so a merely under-crewed fleet would be re-
 	// filled and overshoot -- a smaller-capacity fleet stays put near the floor.
-	// Always raise a small minimum so even band-0 bots are viable; commanders
-	// are created on demand if the pool runs dry. Bounded by a hard cap.
+	// Always raise at least the band's defense reserve (5/10/15/20 by band, see
+	// bot_defense_reserve() in crontab.bot.cc) plus a small growth buffer, so the
+	// bot starts with enough fleets to keep its full reserve standing by to defend
+	// and still have a surplus to expedition. Commanders are created on demand if
+	// the pool runs dry. Bounded by a hard cap.
 	int Floor     = bot_band_floor(aBand);
-	int MinFleets  = 3 + aBand * 3;
+	int MinFleets  = (aBand + 1) * 5 + 2;
 	int MaxFleets  = 500;                  // absolute safety cap
 	Player->refresh_power();
 	while (FleetList->length() < MaxFleets &&

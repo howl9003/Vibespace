@@ -11,10 +11,13 @@
 //                          i.e. fill the whole population in one run; lower it to
 //                          spread a cold start over several runs if desired).
 //
-//   CCronTabBotAI          drives each living bot. Below its band ceiling a bot
-//                          GROWS: idle fleets auto-expedition for planets,
-//                          reserve fleets train their commanders, and existing
-//                          fleets are kept manned. At/above the ceiling it
+//   CCronTabBotAI          drives each living bot. It ALWAYS keeps a band-sized
+//                          defense reserve (5/10/15/20 fleets by band) on stand-
+//                          by and fully manned, so a bot that has fleets always
+//                          has fleets defending. Below its band ceiling a bot
+//                          GROWS with the SURPLUS beyond that reserve: surplus
+//                          fleets auto-expedition for planets or train their
+//                          commanders. At/above the ceiling it
 //                          THROTTLES: it only defends (keeps fleets manned),
 //                          which holds it inside its band so the 25/25/25/25
 //                          spread stays stable. Bounded to BotAIPerRun bots per
@@ -67,15 +70,31 @@ CCronTabBotPopulation::handler()
 }
 
 // ---------------------------------------------------------------------------
+// Minimum fleets a bot always keeps on stand-by to defend, by power band:
+//   band 0 (0-10k)    -> 5     band 2 (50-100k)  -> 15
+//   band 1 (10-50k)   -> 10    band 3 (100-200k) -> 20
+// (band+1)*5. These are never sent on a mission, so a bot that has fleets always
+// has fleets standing by to defend.
+// ---------------------------------------------------------------------------
+static int
+bot_defense_reserve(int aBand)
+{
+	if (aBand < 0) aBand = 0;
+	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
+	return (aBand + 1) * 5;
+}
+
+// ---------------------------------------------------------------------------
 // Per-bot AI step.
 // ---------------------------------------------------------------------------
 static void
-bot_ai_act(CPlayer *aPlayer, int aReserveFleets, int aTrainExpTarget)
+bot_ai_act(CPlayer *aPlayer, int aTrainExpTarget)
 {
 	aPlayer->refresh_power();
 
 	int Ceiling      = bot_band_ceiling(aPlayer->bot_band());
 	bool BelowCeiling = aPlayer->get_power() < Ceiling;
+	int  Reserve      = bot_defense_reserve(aPlayer->bot_band());
 
 	CFleetList *FleetList = aPlayer->get_fleet_list();
 	int N = FleetList->length();
@@ -103,9 +122,17 @@ bot_ai_act(CPlayer *aPlayer, int aReserveFleets, int aTrainExpTarget)
 		return;
 	}
 
-	// (2) Growth -- below the band ceiling. Count idle stand-by fleets, keep a
-	// home reserve, send the rest on auto-repeat expeditions to claim planets,
-	// and train under-experienced reserve fleets' commanders.
+	// (2) Growth -- below the band ceiling. Count idle stand-by fleets and ALWAYS
+	// hold back the band's defense reserve (5/10/15/20 by band): those are left
+	// on stand-by (step (1) keeps them manned) so they auto-deploy to defend.
+	// Only the *surplus* beyond that reserve is put to work -- under-experienced
+	// surplus fleets train their commanders, the rest auto-repeat expeditions to
+	// claim planets. The reserve is never missioned, so a bot that has fleets
+	// always has fleets standing by to defend.
+	//
+	// (The reserve used to be the slice that got trained, which flipped it to
+	// FLEET_UNDER_MISSION and left the bot with no defenders -- fixed here by
+	// missioning only the surplus.)
 	int IdleCount = 0;
 	for (int i=0 ; i<N ; i++)
 	{
@@ -117,8 +144,8 @@ bot_ai_act(CPlayer *aPlayer, int aReserveFleets, int aTrainExpTarget)
 		IdleCount++;
 	}
 
-	int ToExpedition = IdleCount - aReserveFleets;
-	if (ToExpedition < 0) ToExpedition = 0;
+	int Surplus = IdleCount - Reserve;
+	if (Surplus < 0) Surplus = 0;
 
 	int Seen = 0, Sent = 0, Trained = 0;
 	for (int i=0 ; i<N ; i++)
@@ -129,23 +156,26 @@ bot_ai_act(CPlayer *aPlayer, int aReserveFleets, int aTrainExpTarget)
 		if (Fleet->under_mission()) continue;
 		if (Fleet->get_mission().get_mission() != CMission::MISSION_NONE) continue;
 
-		if (Seen < ToExpedition)
+		// The last Reserve idle fleets fall outside the surplus window and stay
+		// on stand-by -- this is the home defense reserve, left untouched.
+		if (Seen++ >= Surplus) continue;
+
+		if (Fleet->get_exp() < aTrainExpTarget)
 		{
-			// claim planets; target=1 -> auto-repeat after each return.
-			Fleet->init_mission(CMission::MISSION_EXPEDITION, 1);
-			Fleet->type(QUERY_UPDATE);
-			STORE_CENTER->store(*Fleet);
-			Sent++;
-		}
-		else if (Fleet->get_exp() < aTrainExpTarget)
-		{
-			// reserve fleet, under-trained -> train its commander.
+			// surplus fleet, under-trained -> train its commander.
 			Fleet->init_mission(CMission::MISSION_TRAIN, 0);
 			Fleet->type(QUERY_UPDATE);
 			STORE_CENTER->store(*Fleet);
 			Trained++;
 		}
-		Seen++;
+		else
+		{
+			// surplus fleet -> claim planets; target=1 -> auto-repeat on return.
+			Fleet->init_mission(CMission::MISSION_EXPEDITION, 1);
+			Fleet->type(QUERY_UPDATE);
+			STORE_CENTER->store(*Fleet);
+			Sent++;
+		}
 	}
 
 	aPlayer->refresh_power();
@@ -160,7 +190,6 @@ CCronTabBotAI::handler()
 	SLOG("SYSTEM : bot AI crontab start");
 
 	int PerRun        = bot_cfg("BotAIPerRun", 25);
-	int ReserveFleets = bot_cfg("BotDefenseReserveFleets", 2);
 	int TrainExpTarget = bot_cfg("BotTrainExpTarget", 300);
 
 	int Len = PLAYER_TABLE->length();
@@ -181,7 +210,7 @@ CCronTabBotAI::handler()
 		if (Player == NULL) continue;
 		if (!Player->is_bot() || Player->is_dead()) continue;
 
-		bot_ai_act(Player, ReserveFleets, TrainExpTarget);
+		bot_ai_act(Player, TrainExpTarget);
 		Processed++;
 	}
 
