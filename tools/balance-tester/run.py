@@ -45,8 +45,15 @@ def _verdict(value: float, kind: str) -> str:
     return f"Under optimized play the meta-game is **{kind}**; {who}."
 
 
+_START = None
+
+
 def _write_state(outdir, state):
     os.makedirs(outdir, exist_ok=True)
+    state = dict(state)
+    state["ts"] = time.time()
+    if _START is not None:
+        state["elapsed"] = round(time.time() - _START, 1)
     with open(os.path.join(outdir, "run_state.json"), "w") as f:
         json.dump(state, f, indent=2)
 
@@ -95,10 +102,15 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
                               "log": msg, "history": history_acc})
 
+    def on_progress(history, lib_size):
+        _write_state(outdir, {"phase": "search", "mode": "stackelberg",
+                              "scenario": sc.name, "history": list(history),
+                              "library_size": lib_size})
+
     out = S.stackelberg(sim, pool, atk, dfn, fixed_def,
                         rounds=sc.rounds, epsilon=sc.epsilon, mu=sc.mu, lam=sc.lam,
                         gens=sc.generations, replicates=sc.replicates,
-                        base_seed=sc.base_seed, rng=rng, log=log)
+                        base_seed=sc.base_seed, rng=rng, log=log, on_progress=on_progress)
     history_acc[:] = out["history"]
 
     # Final meta-game: attacker library vs {fixed, robust} defenders.
@@ -137,7 +149,8 @@ def main():
     mode = args.mode or sc.mode
     rng = random.Random(sc.base_seed)
 
-    t0 = time.time()
+    global _START
+    _START = t0 = time.time()
     with BattleSim() as sim:
         pool = Pool(sim)
         if mode == "assess":

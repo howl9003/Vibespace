@@ -114,7 +114,8 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
                 fixed_defender: G.Loadout, rounds: int = 4, epsilon: float = 0.05,
                 mu: int = 8, lam: int = 16, gens: int = 10, replicates: int = 20,
                 base_seed: int = 12345, rng: Optional[random.Random] = None,
-                log: Callable = print) -> dict:
+                log: Callable = print,
+                on_progress: Optional[Callable] = None) -> dict:
     rng = rng or random.Random(1)
 
     # Stage 1: attacker best-response vs the fixed human-set defender -> seed library.
@@ -146,6 +147,8 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
                         "library_size": len(attacker_lib)})
         log(f"Round {rnd}: robust defender worst-case def-win={robust_worstcase_defwin:.3f}; "
             f"best new attacker exploit win={best_exploit_atkwin:.3f}")
+        if on_progress:
+            on_progress(history, len(attacker_lib))
 
         # Converged if the best new attacker barely beats the robust defender, or the
         # exploit stopped improving round-over-round.
