@@ -293,25 +293,144 @@
     /* 7. Submit: the full POST contract (capital = battle-fleet 1; rest from 2),
        positions mapped into the battle coordinate space (X 9..609, Y 226..426),
        each fleet's chosen stance in capFleet_O / fleet{n}_O. */
-    form.addEventListener('submit', function () {
-      hideMenu();
-      function ex(cx) { return Math.round(9 + (cx / BOARD_W) * 600); }
-      function ey(cy) { return Math.round(226 + (cy / BOARD_H) * 200); }
-      ensureHidden(form, 'FLEET_NUMBER', String(fleets.length));
+    // Canvas px <-> engine board coords (X 9..609, Y 226..426).
+    function ex(cx) { return Math.round(9 + (cx / BOARD_W) * 600); }
+    function ey(cy) { return Math.round(226 + (cy / BOARD_H) * 200); }
+    function bx(x)  { return (x - 9) / 600 * BOARD_W; }
+    function by(y)  { return (y - 226) / 200 * BOARD_H; }
+    // Write the full POST contract into targetForm (used by the attack submit and
+    // by the "save template" post, which share the same field shape).
+    function writeDeployment(targetForm) {
+      ensureHidden(targetForm, 'FLEET_NUMBER', String(fleets.length));
       var n = 2;
       fleets.forEach(function (f) {
         if (f.isCap) {
-          ensureHidden(form, 'capFleet_ID', String(f.id));
-          ensureHidden(form, 'capFleet_O', f.order);
+          ensureHidden(targetForm, 'capFleet_ID', String(f.id));
+          ensureHidden(targetForm, 'capFleet_O', f.order);
         } else {
-          ensureHidden(form, 'Fleet' + n + '_ID', String(f.id));
-          ensureHidden(form, 'Fleet' + n + '_X', String(ex(f.x)));
-          ensureHidden(form, 'Fleet' + n + '_Y', String(ey(f.y)));
-          ensureHidden(form, 'fleet' + n + '_O', f.order);
+          ensureHidden(targetForm, 'Fleet' + n + '_ID', String(f.id));
+          ensureHidden(targetForm, 'Fleet' + n + '_X', String(ex(f.x)));
+          ensureHidden(targetForm, 'Fleet' + n + '_Y', String(ey(f.y)));
+          ensureHidden(targetForm, 'fleet' + n + '_O', f.order);
           n++;
         }
       });
-    });
+    }
+    form.addEventListener('submit', function () { hideMenu(); writeDeployment(form); });
+
+    /* 8. Attack-template picker (offence boards only). Reads the blob the engine
+       emitted in #as-attack-templates, applies a saved layout (matched by fleet
+       id; capital by role), and saves/overwrites/deletes named templates. Defence
+       boards don't emit the blob, so the whole feature is simply absent there. */
+    (function attackTemplates() {
+      var blobEl = document.getElementById('as-attack-templates');
+      if (!blobEl) return;
+
+      function stanceKeyFromIndex(i) {
+        return (i >= 0 && i < STANCES.length) ? STANCES[i].key : DEFAULT_ORDER;
+      }
+
+      // Parse "T<id>|<name>" headers and "F<fleetid>|<cmd>|<x>|<y>" fleet rows.
+      var templates = [], cur = null;
+      var lines = (blobEl.textContent || '').split('\n');
+      for (var li = 0; li < lines.length; li++) {
+        var ln = lines[li]; if (!ln) continue;
+        if (ln.charAt(0) === 'T') {
+          var rest = ln.substring(1), barAt = rest.indexOf('|');
+          cur = { id: rest.substring(0, barAt), name: rest.substring(barAt + 1), fleets: [] };
+          templates.push(cur);
+        } else if (ln.charAt(0) === 'F' && cur) {
+          var p = ln.substring(1).split('|');
+          cur.fleets.push({ id: p[0], cmd: parseInt(p[1], 10), x: parseInt(p[2], 10), y: parseInt(p[3], 10) });
+        }
+      }
+
+      // Apply a template: matched non-capital fleets jump to the saved board cell
+      // and stance; the capital row (stored at 0,0) sets only the current capital's
+      // stance; fleets not in the template (or template rows for fleets not brought)
+      // are left untouched.
+      function applyTemplate(tpl) {
+        if (!tpl) return;
+        for (var r = 0; r < tpl.fleets.length; r++) {
+          var row = tpl.fleets[r];
+          if (row.x === 0 && row.y === 0) {
+            for (var c = 0; c < fleets.length; c++)
+              if (fleets[c].isCap) fleets[c].order = stanceKeyFromIndex(row.cmd);
+            continue;
+          }
+          var fi = -1;
+          for (var k = 0; k < fleets.length; k++)
+            if (!fleets[k].isCap && String(fleets[k].id) === String(row.id)) { fi = k; break; }
+          if (fi === -1) continue;
+          fleets[fi].order = stanceKeyFromIndex(row.cmd);
+          var s = snapFree(fi, bx(row.x), by(row.y));
+          fleets[fi].x = s.x; fleets[fi].y = s.y;
+        }
+        draw();
+      }
+
+      function submitForm(action, fields, withDeployment) {
+        var f = document.createElement('form');
+        f.method = 'post'; f.action = action; f.style.display = 'none';
+        if (withDeployment) writeDeployment(f);
+        for (var key in fields) if (fields.hasOwnProperty(key)) {
+          var inp = document.createElement('input');
+          inp.type = 'hidden'; inp.name = key; inp.value = fields[key];
+          f.appendChild(inp);
+        }
+        document.body.appendChild(f); f.submit();
+      }
+
+      function nameOf(id) {
+        for (var t = 0; t < templates.length; t++) if (templates[t].id === id) return templates[t].name;
+        return '';
+      }
+
+      var bar = document.createElement('div');
+      bar.style.cssText = 'margin:0 0 6px;text-align:center;font:12px sans-serif;color:#cdd9f2;';
+
+      var sel = document.createElement('select');
+      sel.style.cssText = 'background:#0d1a30;color:#cdd9f2;border:1px solid #2f4a78;border-radius:4px;padding:2px;margin-right:4px;';
+      var opt0 = document.createElement('option');
+      opt0.value = '';
+      opt0.textContent = templates.length ? '— load template —' : '— no saved templates —';
+      sel.appendChild(opt0);
+      for (var t = 0; t < templates.length; t++) {
+        var o = document.createElement('option');
+        o.value = templates[t].id; o.textContent = templates[t].name;
+        sel.appendChild(o);
+      }
+      sel.onchange = function () {
+        for (var t2 = 0; t2 < templates.length; t2++)
+          if (templates[t2].id === sel.value) { applyTemplate(templates[t2]); break; }
+      };
+      bar.appendChild(sel);
+
+      function mkBtn(label) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = label;
+        b.style.cssText = 'background:#16243a;color:#cde;border:1px solid #2a4a6a;border-radius:4px;padding:2px 8px;margin:0 2px;cursor:pointer;';
+        bar.appendChild(b); return b;
+      }
+
+      mkBtn('Save as new…').onclick = function () {
+        var name = window.prompt('Name this attack template:', '');
+        if (!name) return;
+        submitForm('attack_template_save_result.as', { PLAN_NAME: name }, true);
+      };
+      mkBtn('Overwrite selected').onclick = function () {
+        if (!sel.value) { window.alert('Select a template to overwrite.'); return; }
+        if (!window.confirm('Overwrite template "' + nameOf(sel.value) + '" with the current layout?')) return;
+        submitForm('attack_template_save_result.as', { PLAN_NAME: nameOf(sel.value), PLAN_ID: sel.value }, true);
+      };
+      mkBtn('Delete selected').onclick = function () {
+        if (!sel.value) { window.alert('Select a template to delete.'); return; }
+        if (!window.confirm('Delete the selected attack template?')) return;
+        submitForm('attack_template_delete_result.as', { PLAN_ID: sel.value }, false);
+      };
+
+      canvas.parentNode.insertBefore(bar, canvas);
+    }());
 
     draw();
   });

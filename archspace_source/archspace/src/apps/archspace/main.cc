@@ -242,6 +242,9 @@ CArchspacePageStation::registration()
 	insert_sorted(new CPageDefensePlanSpecialChangeResult());
 	insert_sorted(new CPageDefensePlanSpecialDeleteResult());
 
+	insert_sorted(new CPageAttackTemplateSaveResult());
+	insert_sorted(new CPageAttackTemplateDeleteResult());
+
 	insert_sorted(new CPageBattleReport());
 	insert_sorted(new CPageBattleReport2());
 	insert_sorted(new CPageBattleReportDetail());	//telecard 2001/01/17

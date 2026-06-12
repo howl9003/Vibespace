@@ -10,6 +10,7 @@
 #include "action.h"
 #include "relation.h"
 #include "defense.plan.h"
+#include "attack.plan.h"
 #include "message.h"
 #include "empire.h"
 #include "event.h"
@@ -286,6 +287,7 @@ class CPlayer: public CStore
 		CPlayerRelationList mRelationList;
 
 		CDefensePlanList mDefensePlanList;
+		CAttackPlanList mAttackPlanList;
 
 		CDiplomaticMessageBox mMessageBox;
 
@@ -458,6 +460,7 @@ class CPlayer: public CStore
 		CAdmiralList *get_admiral_list() { return &mAdmiralList; }
 		CAdmiralList *get_admiral_pool() { return &mAdmiralPool; }
 		CDefensePlanList *get_defense_plan_list() { return &mDefensePlanList; }
+		CAttackPlanList *get_attack_plan_list() { return &mAttackPlanList; }
 
 		CProjectList *get_project_list() { set_project_list(); return &mProjectList; }
 		CPurchasedProjectList *get_purchased_project_list()

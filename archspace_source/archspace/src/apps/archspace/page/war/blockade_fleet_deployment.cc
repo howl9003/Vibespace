@@ -308,6 +308,9 @@ CPageBlockadeFleetDeployment::handler(CPlayer *aPlayer)
 
 	ITEM("FLEET_NUMBER", FleetIDList.length());
 
+	// Saved attack templates for this player -> the deploy board's picker.
+	ITEM("ATTACK_TEMPLATES", aPlayer->get_attack_plan_list()->deploy_board_blob());
+
 //	system_log( "end page handler %s", get_name() );
 
     if (true) // HTML5 deploy board (as-deploy.js) for everyone; Java applets are dead (was: PR_JAVA)

@@ -312,6 +312,7 @@ CPlayer::CPlayer(int aGameID)
 	(void)mActionList;
 	(void)mRelationList;
 	(void)mDefensePlanList;
+	(void)mAttackPlanList;
 	(void)mMessageBox;
 	mCouncilID = 0;
 	mHomeClusterID = 0;
@@ -4241,6 +4242,8 @@ CPlayer::remove_from_memory()
 	mFleetList.remove_all();
 
 	mDefensePlanList.remove_all();
+
+	mAttackPlanList.remove_all();
 
 	mRelationList.remove_all();
 

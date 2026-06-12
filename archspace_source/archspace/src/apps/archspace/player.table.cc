@@ -1134,6 +1134,70 @@ CPlayerTable::load_plan(CMySQL &aMySQL)
 
 	//aMySQL.query( "UNLOCK TABLES" );
 
+	// Attack templates (saved offence deployments). Loaded into a separate
+	// per-player list so they never leak into the defence-plan scans above.
+	for( int i = 0; i < MaxID+1000; i += 1000 ){
+		CString
+			Query;
+		Query.format( "SELECT owner, id, name, capital FROM attack_plan WHERE owner > %d AND owner <= %d", i, i+1000 );
+		aMySQL.query( (char*)Query );
+		aMySQL.use_result();
+		while( aMySQL.fetch_row() ) {
+			CPlayer
+				*player = get_by_game_id( atoi(aMySQL.row(0)) );
+			if( player == NULL ){
+				system_log( "player %s not exist for attack_plan %s(%s)", aMySQL.row(0), aMySQL.row(2), aMySQL.row(1) );
+				CString
+					Query;
+				Query.format( "DELETE FROM attack_plan WHERE owner = %s AND id = %s", aMySQL.row(0), aMySQL.row(1) );
+				STORE_CENTER->query("attack_plan", (char*)Query);
+				continue;
+			}
+			CAttackPlan *
+				plan = new CAttackPlan(aMySQL.row());
+			player->get_attack_plan_list()->add_attack_plan(plan);
+		}
+		aMySQL.free_result();
+	}
+
+	for( int i = 0; i < MaxID+100; i += 100 ){
+		CString
+			Query;
+		Query.format( "SELECT owner, plan_id, fleet_id, command, x, y FROM attack_fleet WHERE owner > %d AND owner <= %d", i, i+100 );
+		aMySQL.query( (char*)Query );
+		aMySQL.use_result();
+		while( aMySQL.fetch_row() ) {
+			CPlayer
+				*player = get_by_game_id( atoi(aMySQL.row(0)) );
+			if( player == NULL ){
+				system_log( "player %s not exist for attack_fleet %s", aMySQL.row(0), aMySQL.row(2) );
+				CString
+					Query;
+				Query.format( "DELETE FROM attack_fleet WHERE owner = %s", aMySQL.row(0) );
+				STORE_CENTER->query("attack_fleet", (char*)Query);
+				continue;
+			}
+
+			CAttackPlan
+				*plan = player->get_attack_plan_list()->get_by_id( atoi(aMySQL.row(1)) );
+			if( plan == NULL) {
+				system_log( "attack_plan %s of player %s for fleet %s not exists",
+					aMySQL.row(1), aMySQL.row(0), aMySQL.row(2) );
+				CString
+					Query;
+				Query.format( "DELETE FROM attack_fleet WHERE owner = %s AND plan_id = %s", aMySQL.row(0), aMySQL.row(1) );
+				STORE_CENTER->query("attack_fleet", (char*)Query);
+
+				continue;
+			}
+
+			CAttackFleet *
+				AttackFleet = new CAttackFleet(aMySQL.row());
+			plan->add_attack_fleet(AttackFleet);
+		}
+		aMySQL.free_result();
+	}
+
 	return true;
 }
 /* end telecard 2000/10/25 */

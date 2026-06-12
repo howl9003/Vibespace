@@ -372,6 +372,9 @@ CPageEmpireInvadeEmpirePlanetFleetDeployment::handler(CPlayer *aPlayer)
 
 	ITEM("FLEET_NUMBER", FleetIDList.length());
 
+	// Saved attack templates for this player -> the deploy board's picker.
+	ITEM("ATTACK_TEMPLATES", aPlayer->get_attack_plan_list()->deploy_board_blob());
+
 //	system_log( "end page handler %s", get_name() );
     if (true) // HTML5 deploy board for everyone (was: PR_JAVA)
     	return output("empire/invade_empire_planet_fleet_deployment.html");

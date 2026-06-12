@@ -2681,6 +2681,34 @@ class CPageDefensePlanSpecialNewResult: public CPageWarLink
 
 /**
 */
+class CPageAttackTemplateSaveResult: public CPageWarLink
+{
+	public:
+		CPageAttackTemplateSaveResult():CPageWarLink() {}
+		virtual ~CPageAttackTemplateSaveResult() {}
+		virtual const char *get_name()
+			{ return "/archspace/war/attack_template_save_result.as"; }
+		virtual const char *allow_method() { return "POST"; }
+	protected:
+		virtual bool handler(CPlayer *aPlayer);
+};
+
+/**
+*/
+class CPageAttackTemplateDeleteResult: public CPageWarLink
+{
+	public:
+		CPageAttackTemplateDeleteResult():CPageWarLink() {}
+		virtual ~CPageAttackTemplateDeleteResult() {}
+		virtual const char *get_name()
+			{ return "/archspace/war/attack_template_delete_result.as"; }
+		virtual const char *allow_method() { return "POST"; }
+	protected:
+		virtual bool handler(CPlayer *aPlayer);
+};
+
+/**
+*/
 class CPageDefensePlanSpecialOld: public CPageWarLink
 {
 	public:

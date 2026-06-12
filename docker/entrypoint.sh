@@ -53,6 +53,18 @@ if [ -n "$PLAYER_NAME_TYPE" ] && [ "$PLAYER_NAME_TYPE" != "char(40)" ]; then
     $M "$DB_NAME" -e "ALTER TABLE player MODIFY name char(40) NOT NULL;" || true
 fi
 
+# Attack templates (saved offence deployments). Additive only -- existing DBs
+# never re-run all.sql, so create these if absent. Mirrors plan/defense_fleet
+# but kept in their own tables so they never leak into defender plan scans.
+$M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS attack_plan (
+    owner int NOT NULL, id int NOT NULL,
+    name char(40) NOT NULL, capital int NOT NULL,
+    PRIMARY KEY(owner, id));" || true
+$M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS attack_fleet (
+    owner int NOT NULL, plan_id int NOT NULL, fleet_id int NOT NULL,
+    command int NOT NULL, x int NOT NULL, y int NOT NULL,
+    PRIMARY KEY(owner, plan_id, fleet_id));" || true
+
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.

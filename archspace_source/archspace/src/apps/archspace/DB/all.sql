@@ -414,6 +414,30 @@ CREATE TABLE plan (
 	PRIMARY KEY(owner, id)
 );
 
+DROP TABLE IF EXISTS attack_fleet;
+
+CREATE TABLE attack_fleet (
+	owner int NOT NULL,
+	plan_id int NOT NULL,
+	fleet_id int NOT NULL,
+	command int NOT NULL,
+	x int NOT NULL,
+	y int NOT NULL,
+
+	PRIMARY KEY(owner, plan_id, fleet_id)
+);
+
+DROP TABLE IF EXISTS attack_plan;
+
+CREATE TABLE attack_plan (
+	owner int NOT NULL,
+	id int NOT NULL,
+	name char(40) NOT NULL,
+	capital int NOT NULL,
+
+	PRIMARY KEY(owner, id)
+);
+
 DROP TABLE IF EXISTS council_relation;
 
 CREATE TABLE council_relation

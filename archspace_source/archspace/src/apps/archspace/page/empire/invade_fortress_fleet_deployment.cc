@@ -397,6 +397,9 @@ CPageEmpireInvadeFortressFleetDeployment::handler(CPlayer *aPlayer)
 
 	ITEM("FLEET_NUMBER", FleetIDList.length());
 
+	// Saved attack templates for this player -> the deploy board's picker.
+	ITEM("ATTACK_TEMPLATES", aPlayer->get_attack_plan_list()->deploy_board_blob());
+
 	ITEM("FORTRESS_KEY", FortressKey);
 
 //	system_log( "end page handler %s", get_name() );

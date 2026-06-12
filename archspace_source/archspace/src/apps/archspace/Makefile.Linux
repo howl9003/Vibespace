@@ -35,6 +35,7 @@ HEADERFILES=\
 		ship.h \
 		fleet.h \
 		defense.plan.h \
+		attack.plan.h \
 		action.h \
 		relation.h \
 		battle.h \
@@ -142,6 +143,7 @@ CCFILES=\
 		council.relation.table.cc \
 		battle.cc \
 		defense.plan.cc \
+		attack.plan.cc \
 		effect.cc \
 		event.cc \
 		prerequisite.cc \
@@ -355,6 +357,8 @@ CCFILES=\
 		page/war/defense_plan_special_change_deployment.cc \
 		page/war/defense_plan_special_change_result.cc \
 		page/war/defense_plan_special_delete_result.cc \
+		page/war/attack_template_save_result.cc \
+		page/war/attack_template_delete_result.cc \
 		page/war/battle_report.cc \
 		page/war/battle_report2.cc \
 		page/war/battle_report_detail.cc \

@@ -155,6 +155,41 @@ CPageReassignmentChangeNameIDResult::handler(CPlayer *aPlayer)
 				STORE_CENTER->store(*Plan);
 			}
 		}
+
+		// Same re-pointing for saved attack templates (fleet-id keyed too), so a
+		// renumbered fleet keeps its place in them instead of being silently dropped.
+		CAttackPlanList *
+			AttackPlanList = aPlayer->get_attack_plan_list();
+		for (int p=0 ; p<AttackPlanList->length() ; p++)
+		{
+			CAttackPlan *
+				APlan = (CAttackPlan *)AttackPlanList->get(p);
+			if (APlan == NULL) continue;
+
+			CAttackFleetList *
+				AFList = APlan->get_fleet_list();
+			CAttackFleet *
+				AF = AFList->get_by_id(OldID);
+			if (AF)
+			{
+				AF->type(QUERY_DELETE);
+				STORE_CENTER->store(*AF);
+
+				AFList->remove_without_free_attack_fleet(OldID);
+				AF->set_fleet_id(NewID);
+				AFList->add_attack_fleet(AF);
+
+				AF->type(QUERY_INSERT);
+				STORE_CENTER->store(*AF);
+			}
+
+			if (APlan->get_capital() == OldID)
+			{
+				APlan->set_capital(NewID);
+				APlan->type(QUERY_UPDATE);
+				STORE_CENTER->store(*APlan);
+			}
+		}
 	}
 	else
 	{
