@@ -597,259 +597,88 @@ CDefensePlan::init_for_empire(CFleetList *aFleetList, bool aOffenseSide)
 	}
 	if (AvailableFleetList.length() == 0) return false;
 
+	// Packed 5x4 default deployment for AI/empire fleets, identical to the HTML5
+	// deployment board and the engine's no-plan auto_deployment(): the capital is
+	// pinned to the board centre square (309,326) and the other fleets are packed
+	// into a 5-wide block of 20-unit grid squares hugging the capital toward the
+	// enemy, nearest squares filled first, every fleet in the Formation stance.
+	// Positions are built in OFFENSE board->battle coordinates; for the defence
+	// side the existing convert_coordinates() mirrors the whole block (a 180-degree
+	// reflection through the field centre), so a bot now deploys exactly as a
+	// hand-laid 5x4 plan would, instead of the old front/flank/reserve spread.
+	const int
+		CapCol = 15, CapRow = 5,          // board grid: X = 9+col*20, Y = 226+row*20
+		BlockHalf = 2;                    // 5 columns wide (13..17), centred on capital
 	int
-		FleetGroupSize = AvailableFleetList.length(),
-		LineOfFlank = number(6) - 1,
-		LineOfFront = number(LineOfFlank + 1),
-		LineOfReserve = number(LineOfFront) - 1,
-		GapOfFront = number(3),
-		GapOfFlank = number(3),
-		GapOfReserve = number(3),
-		GapBetweenFrontFlank = number(4);
-	int
-		TempFleetGroupSize = FleetGroupSize;
-	int
-		NumberOfCapitalFleet = 0,
-		NumberOfFlankFleet = 0,
-		NumberOfFrontFleet = 0,
-		NumberOfReserveFleet = 0;
+		nFleet   = AvailableFleetList.length(),
+		nNonCap  = nFleet - 1,
+		NeedRows = (nNonCap / 5) + 2;     // rows enough to hold every non-capital fleet
 
-	while(1)
+	// Candidate squares ordered by distance to the capital (weights 42/55 match the
+	// board's px aspect, so the ordering is identical to the JS board).
+	int
+		CandX[256], CandY[256], CandD[256], CandN = 0;
+	for (int rr = CapRow ; rr > CapRow - NeedRows && rr >= 0 ; rr--)
 	{
-		while (1)
+		for (int dc = -BlockHalf ; dc <= BlockHalf ; dc++)
 		{
-			NumberOfCapitalFleet = 1;
-			TempFleetGroupSize -= NumberOfCapitalFleet;
-			if (TempFleetGroupSize <= 0) break;
-
-			NumberOfFlankFleet = (int)(FleetGroupSize / 5) * 2;
-			TempFleetGroupSize -= NumberOfFlankFleet;
-			if (TempFleetGroupSize <= 0) break;
-
-			if (TempFleetGroupSize < 6)
-			{
-				NumberOfFrontFleet = TempFleetGroupSize;
-				NumberOfReserveFleet = 0;
-			}
-			else
-			{
-				NumberOfFrontFleet = (int)(TempFleetGroupSize * 7 / 18);
-				NumberOfReserveFleet = TempFleetGroupSize - NumberOfFrontFleet;
-			}
-
-			break;
+			int cc = CapCol + dc;
+			if (cc < 0)  cc = 0;
+			if (cc > 30) cc = 30;
+			if (cc == CapCol && rr == CapRow) continue;   // the capital's own square
+			if (CandN >= 256) break;
+			int dcw = (cc - CapCol)*42, drw = (rr - CapRow)*55;
+			CandX[CandN] = 9 + cc*20;
+			CandY[CandN] = 226 + rr*20;
+			CandD[CandN] = dcw*dcw + drw*drw;
+			CandN++;
 		}
-
-		int
-			RangeOfFrontFleet = 0,
-			RangeBetweenFrontFlank = 0,
-			RangeOfFlankFleet = 0;
-		if (NumberOfFrontFleet > 0)
+	}
+	for (int a = 1 ; a < CandN ; a++)         // insertion sort by distance (small N)
+	{
+		int kx = CandX[a], ky = CandY[a], kd = CandD[a], b = a - 1;
+		while (b >= 0 && CandD[b] > kd)
 		{
-			RangeOfFrontFleet = (NumberOfFrontFleet - 1) * GapOfFront;
+			CandX[b+1] = CandX[b]; CandY[b+1] = CandY[b]; CandD[b+1] = CandD[b];
+			b--;
 		}
-		if (NumberOfFlankFleet > 0)
-		{
-			RangeBetweenFrontFlank = GapBetweenFrontFlank * 2;
-			RangeOfFlankFleet = ((NumberOfFlankFleet/2) - 1) * GapOfFlank +
-								((NumberOfFlankFleet/2) - 1) * GapOfFlank;
-		}
-
-		int
-			TotalRange = RangeOfFrontFleet + RangeBetweenFrontFlank + RangeOfFlankFleet;
-		if (TotalRange > 30)
-		{
-			while (1)
-			{
-				int
-					Random = number(3);
-				if (Random == 1)
-				{
-					if (GapOfFront == 0) continue;
-					GapOfFront--;
-				}
-				else if (Random == 2)
-				{
-					if (GapOfFlank == 0) continue;
-					GapOfFlank--;
-				}
-				else if (Random == 3)
-				{
-					if (GapBetweenFrontFlank == 0) continue;
-					GapBetweenFrontFlank--;
-				}
-
-				break;
-			}
-		}
-
-		break;
+		CandX[b+1] = kx; CandY[b+1] = ky; CandD[b+1] = kd;
 	}
 
-	int
-		FrontLeftEnd,
-		FrontRightEnd;
-
-	/* Deployment for capital fleet */
+	// The capital is the first available fleet, pinned to the board centre square.
 	CFleet *
-		Fleet = (CFleet *)AvailableFleetList.get(0);
-	mCapital = Fleet->get_id();
+		CapitalFleet = (CFleet *)AvailableFleetList.get(0);
+	mCapital = CapitalFleet->get_id();
 
-	CDefenseFleet *
-		DefenseFleet = new CDefenseFleet();
-	DefenseFleet->set_owner(Fleet->get_owner());
-	DefenseFleet->set_command(CDefenseFleet::COMMAND_RESERVE);
-	DefenseFleet->set_x(2000);
-	DefenseFleet->set_y(5000);
-	DefenseFleet->set_fleet_id(Fleet->get_id());
-
-	mFleetList.add_defense_fleet(DefenseFleet);
-	AvailableFleetList.remove_without_free_fleet(Fleet->get_id());
-
-	/* Deployment for front fleets */
-	for (int i=0 ; ; i += 2)
-	{
-		if ((i+1) > NumberOfFrontFleet) break;
-
-		CFleet *
-			Fleet = (CFleet *)AvailableFleetList.get(i);
-
-		CDefenseFleet *
-			DefenseFleet = new CDefenseFleet();
-		DefenseFleet->set_owner(Fleet->get_owner());
-		DefenseFleet->set_command(CDefenseFleet::COMMAND_FORMATION);
-		DefenseFleet->set_x(2000 + LineOfFront*200);
-		DefenseFleet->set_y(5000 + (GapOfFront*200) * (i/2));
-		DefenseFleet->set_fleet_id(Fleet->get_id());
-
-		mFleetList.add_defense_fleet(DefenseFleet);
-
-		FrontLeftEnd = 5000 + (GapOfFront*200) * (i/2);
-	}
-	for (int i=1 ; ; i += 2)
-	{
-		if ((i+1) > NumberOfFrontFleet) break;
-
-		CFleet *
-			Fleet = (CFleet *)AvailableFleetList.get(i);
-
-		CDefenseFleet *
-			DefenseFleet = new CDefenseFleet();
-		DefenseFleet->set_owner(Fleet->get_owner());
-		DefenseFleet->set_command(CDefenseFleet::COMMAND_FORMATION);
-		DefenseFleet->set_x(2000 + LineOfFront*200);
-		DefenseFleet->set_y(5000 - (GapOfFront*200) * ((i+1)/2));
-		DefenseFleet->set_fleet_id(Fleet->get_id());
-
-		mFleetList.add_defense_fleet(DefenseFleet);
-
-		FrontRightEnd = 5000 - (GapOfFront*200) * ((i+1)/2);
-	}
-
-	for (int i=NumberOfFrontFleet-1 ; i>=0 ; i--)
-	{
-		AvailableFleetList.CList::remove_without_free(i);
-	}
-
-	/* Deployment for flank fleets */
 	int
-		Random = number(2);
-
-	for (int i=0 ; i < (NumberOfFlankFleet/2) ; i++)
+		CandI = 0;
+	for (int i = 0 ; i < nFleet ; i++)
 	{
 		CFleet *
 			Fleet = (CFleet *)AvailableFleetList.get(i);
 
-		CDefenseFleet *
-			DefenseFleet = new CDefenseFleet();
-		DefenseFleet->set_owner(Fleet->get_owner());
-		DefenseFleet->set_command(CDefenseFleet::COMMAND_FLANK);
-		DefenseFleet->set_x(2000 + LineOfFlank*200);
-		if (Random == 1)
+		int
+			LocationX = 309, LocationY = 326;     // capital square by default
+		if (i != 0 && CandI < CandN)
 		{
-			DefenseFleet->set_y(FrontLeftEnd + (GapBetweenFrontFlank*200) + (GapOfFlank*i)*200);
+			LocationX = CandX[CandI];
+			LocationY = CandY[CandI];
+			CandI++;
 		}
-		else
-		{
-			DefenseFleet->set_y(FrontRightEnd - (GapBetweenFrontFlank*200) - (GapOfFlank*i)*200);
-		}
-		DefenseFleet->set_fleet_id(Fleet->get_id());
 
-		mFleetList.add_defense_fleet(DefenseFleet);
-	}
-
-	for (int i=(NumberOfFlankFleet/2)-1 ; i>=0 ; i--)
-	{
-		AvailableFleetList.CList::remove_without_free(i);
-	}
-
-	for (int i=0 ; i < (NumberOfFlankFleet/2) ; i++)
-	{
-		CFleet *
-			Fleet = (CFleet *)AvailableFleetList.get(i);
+		int
+			X = 3000 - (LocationY - 226)*10,      // OFFENSE board->battle mapping;
+			Y = 8000 - (LocationX - 9)*10;        // convert_coordinates() handles defence
 
 		CDefenseFleet *
 			DefenseFleet = new CDefenseFleet();
 		DefenseFleet->set_owner(Fleet->get_owner());
-		DefenseFleet->set_command(CDefenseFleet::COMMAND_FLANK);
-		DefenseFleet->set_x(2000 + LineOfFlank*200);
-		if (Random == 1)
-		{
-			DefenseFleet->set_y(FrontRightEnd - (GapBetweenFrontFlank*200) - (GapOfFlank*i)*200);
-		}
-		else
-		{
-			DefenseFleet->set_y(FrontLeftEnd + (GapBetweenFrontFlank*200) + (GapOfFlank*i)*200);
-		}
+		DefenseFleet->set_command(CDefenseFleet::COMMAND_FORMATION);
+		DefenseFleet->set_x(X);
+		DefenseFleet->set_y(Y);
 		DefenseFleet->set_fleet_id(Fleet->get_id());
 
 		mFleetList.add_defense_fleet(DefenseFleet);
-	}
-
-	for (int i=(NumberOfFlankFleet/2)-1 ; i>=0 ; i--)
-	{
-		AvailableFleetList.CList::remove_without_free(i);
-	}
-
-	/* Deployment for reserve fleets */
-	for (int i=0 ; ; i += 2)
-	{
-		if ((i+1) > NumberOfReserveFleet) break;
-
-		CFleet *
-			Fleet = (CFleet *)AvailableFleetList.get(i);
-
-		CDefenseFleet *
-			DefenseFleet = new CDefenseFleet();
-		DefenseFleet->set_owner(Fleet->get_owner());
-		DefenseFleet->set_command(CDefenseFleet::COMMAND_RESERVE);
-		DefenseFleet->set_x(2000 + LineOfReserve*200);
-		DefenseFleet->set_y(5000 - (GapOfReserve*200) * ((i/2) + 1));
-		DefenseFleet->set_fleet_id(Fleet->get_id());
-
-		mFleetList.add_defense_fleet(DefenseFleet);
-	}
-	for (int i=1 ; ; i += 2)
-	{
-		if ((i+1) > NumberOfReserveFleet) break;
-
-		CFleet *
-			Fleet = (CFleet *)AvailableFleetList.get(i);
-
-		CDefenseFleet *
-			DefenseFleet = new CDefenseFleet();
-		DefenseFleet->set_owner(Fleet->get_owner());
-		DefenseFleet->set_command(CDefenseFleet::COMMAND_RESERVE);
-		DefenseFleet->set_x(2000 + LineOfReserve*200);
-		DefenseFleet->set_y(5000 + (GapOfReserve*200) * ((i + 1)/2));
-		DefenseFleet->set_fleet_id(Fleet->get_id());
-
-		mFleetList.add_defense_fleet(DefenseFleet);
-	}
-
-	for (int i=NumberOfReserveFleet-1 ; i>=0 ; i--)
-	{
-		AvailableFleetList.CList::remove_without_free(i);
 	}
 
 	(void)mName;
