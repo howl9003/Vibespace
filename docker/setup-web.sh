@@ -108,12 +108,13 @@ grep -rlZ -i --include='*.html' --include='*.htm' --include='*.phtml' --include=
 #     /archspace.css, so appending ONE media query here makes all ~352 fixed-width
 #     table pages fit a phone WITHOUT editing any template.
 #     Two guards keep it surgical:
-#       * @media (max-width:760px) -> only narrow viewports (phones), not desktop.
-#       * body:not(.as-menu)       -> EXCLUDES the sidebar menu, which is its own
-#         iframe that also links archspace.css; a bare query matched it and squeezed
-#         off the tree menu's "+" expand column. menu.html's <body> carries
-#         class="as-menu", so the rules deterministically skip it (no fragile
-#         width-guessing about the menu frame's layout width).
+#       * @media (hover:none) and (pointer:coarse) -> TOUCH devices only (phones/
+#         tablets). This is true on a phone and FALSE on any laptop/desktop -- even
+#         when the desktop window is narrowed -- so the computer UI is NEVER altered
+#         (a width media query would wrongly fire on a narrow desktop window).
+#       * body:not(.as-menu) -> EXCLUDES the sidebar menu, which is its own iframe
+#         that also links archspace.css; menu.html's <body class="as-menu"> makes
+#         the rules deterministically skip it (no fragile width-guessing).
 #     Marker-guarded so re-runs don't append twice; step 1 re-unpacks the pristine
 #     css each boot, so this re-adds the block on top of a clean file every time.
 CSS_MAIN="$WWW/archspace.css"
@@ -122,14 +123,15 @@ if [ -f "$CSS_MAIN" ] && ! grep -q 'as-mobile-reflow' "$CSS_MAIN" 2>/dev/null; t
     cat >> "$CSS_MAIN" <<'CSS'
 
 /* === as-mobile-reflow (appended by setup-web.sh) ===========================
-   PHONES ONLY (max-width:760). The sidebar menu is its own iframe that also
-   links this css; body:not(.as-menu) keeps every rule OUT of it so the tree
-   menu's "+" expand column is never squeezed (menu.html's <body class="as-menu">).
-   For the content pages -- 2004-era fixed-width nested tables (610/590/550px)
-   plus hard-coded width= elements like <hr width="550"> -- cap everything to the
-   viewport (no sideways scroll), scale images, and wrap long text. max-width only
-   ever CAPS (never widens), so capping every width= element is safe. */
-@media (max-width: 760px) {
+   TOUCH DEVICES ONLY -- (hover:none) and (pointer:coarse) is true on phones/
+   tablets and FALSE on any laptop/desktop, even with the window narrowed, so the
+   computer UI is never changed. The sidebar menu is its own iframe that also
+   links this css; body:not(.as-menu) keeps every rule OUT of it (menu.html's
+   <body class="as-menu">). For the content pages -- 2004-era fixed-width nested
+   tables (610/590/550px) plus hard-coded width= elements like <hr width="550"> --
+   cap everything to the viewport (no sideways scroll), scale images, wrap text.
+   max-width only ever CAPS (never widens), so capping every width= element is safe. */
+@media (hover: none) and (pointer: coarse) {
   body:not(.as-menu) table   { max-width: 100% !important; }  /* auto + fixed tables */
   body:not(.as-menu) [width] { max-width: 100% !important; }  /* <hr width=550>, cells */
   body:not(.as-menu) img     { max-width: 100%; height: auto; }/* scale images */

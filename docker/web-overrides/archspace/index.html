@@ -24,8 +24,11 @@
      On phones the content frame is full-width; opening the menu slides the
      drawer over it. A dimming backdrop covers the (fixed-width, legacy)
      content behind the drawer so its leftover edges don't read as stray
-     panels, and tapping the backdrop closes the menu. */
-  @media (max-width: 760px) {
+     panels, and tapping the backdrop closes the menu.
+     Gated on a TOUCH device -- (hover:none) and (pointer:coarse) -- NOT on
+     width, so a narrowed laptop/desktop window keeps the full two-column
+     sidebar layout unchanged; only real phones/tablets get the drawer. */
+  @media (hover: none) and (pointer: coarse) {
     .as-shell { grid-template-columns: 1fr; }
     .as-menu {
       position: fixed; top: 0; left: 0; bottom: 0; width: 170px; z-index: 30;

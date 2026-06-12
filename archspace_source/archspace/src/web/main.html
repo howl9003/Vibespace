@@ -7,13 +7,13 @@
 <meta http-equiv="Pragma" content="no-cache"/>
 <LINK REL="stylesheet" HREF="/archspace.css">
 <style>
-/* Phone reflow (MAIN PAGE ONLY). The page is fixed-width tables; the global
-   archspace.css mobile rules cap widths, but the stat block's label cells carry
-   hard width= attributes (130/70/110) that max-width can't shrink below -- so the
-   table stays wider than the screen and pans. On phones, let every cell size to
-   its content (width:auto) and drop cell gutters so it reflows into ~380px.
-   Desktop (>760px) is untouched; scoped to this page so no other page changes. */
-@media (max-width: 760px) {
+/* Phone reflow (MAIN PAGE ONLY). Gated on a TOUCH device -- (hover:none) and
+   (pointer:coarse) is true for phones/tablets and FALSE for any laptop/desktop,
+   so a narrowed desktop window never picks these up (a width media query would).
+   The stat block's label cells carry hard width= attributes (130/70/110) that
+   max-width can't shrink below; on a phone, let every cell size to its content
+   (width:auto) and drop cell gutters so the page fits the narrow screen. */
+@media (hover: none) and (pointer: coarse) {
   td[width], th[width] { width: auto !important; }
   table { border-spacing: 0 !important; }
 }
