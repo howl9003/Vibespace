@@ -50,35 +50,27 @@ CCronTabBotPopulation::handler()
 	int SpawnBatch = bot_cfg("BotSpawnBatch", 100);  // fill all 100 in one run
 
 	// Name maintenance / backfill. make_bot_name only runs when a bot is *created*,
-	// so a standing population keeps whatever names it was last given. Two cheap,
-	// idempotent passes here spread the current naming across existing bots too:
-	//   - legacy "BOT(n)" bots -> a fresh make_bot_name (random style);
-	//   - otherwise, a deterministic ~half (by game_id parity) that aren't already
-	//     faction-named get a FACTION name "<Race> <Suffix>" -- so the faction
-	//     names are visible across the live population, not only on future spawns.
-	// Both are stable once applied (a faction name no longer matches, an odd-id
-	// commander bot is left alone), so this is a no-op in steady state.
-	// player.name isn't part of the player UPDATE set, so persist it directly.
-	int Renamed = 0;
-	for (int i=0 ; i<PLAYER_TABLE->length() ; i++)
+	// so a standing population keeps whatever names it was last given (including
+	// names from earlier naming schemes -- e.g. a race-agnostic pool that could land
+	// an "Evintos Foundry" on a Targoid). This pass renames any bot whose current
+	// name isn't already appropriate for its race (bot_name_fits_race: a commander
+	// name, or one of that race's own faction names) to a fresh, UNIQUE, race-fitting
+	// one. Idempotent -- a fitting name is left alone -- so it settles to a no-op.
+	// rename_player keeps the name index consistent (so get_by_name and the
+	// human-registration duplicate check keep working); player.name isn't in the
+	// normal UPDATE set, so persist it directly too (names may contain apostrophes,
+	// hence add_slashes). Bounded per run so the first sweep doesn't stall the cron.
+	int Renamed = 0, MaxRename = bot_cfg("BotRenamePerRun", 60);
+	for (int i=0 ; i<PLAYER_TABLE->length() && Renamed<MaxRename ; i++)
 	{
 		CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
 		if (P == NULL || !P->is_bot() || P->is_dead()) continue;
-		const char *Nm = P->get_name();
+		if (CGame::bot_name_fits_race(P->get_race(), P->get_real_name())) continue;
 
 		char NewName[41];
-		if (Nm && strncmp(Nm, "BOT(", 4) == 0)
-		{
-			GAME->make_bot_name(P->get_race(), P->bot_band(), NewName, sizeof(NewName));
-		}
-		else if (Nm && !CGame::bot_name_is_faction(Nm) && (P->get_game_id() & 1) == 0)
-		{
-			GAME->make_bot_faction_name(P->get_race(), P->get_game_id(),
-					NewName, sizeof(NewName));
-		}
-		else continue;
+		GAME->make_bot_name(P->get_race(), P->bot_band(), NewName, sizeof(NewName));
+		if (!PLAYER_TABLE->rename_player(P, NewName)) continue;  // clash -> retry next run
 
-		P->set_name(NewName);
 		STORE_CENTER->query("player",
 				(char *)format("UPDATE player SET name = '%s' WHERE game_id = %d",
 						(char *)add_slashes(NewName), P->get_game_id()));

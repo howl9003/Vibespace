@@ -82,14 +82,16 @@ class CGame
 		// fleets (one on a permanent expedition). Used at spawn and to migrate
 		// legacy bots onto the new tier ships.
 		void build_bot_roster(CPlayer *aPlayer, int aBand);
-		// Build a bot display name into aOut (<= aOutSize-1). make_bot_name picks
-		// ~50/50 (Game/BotFactionNamePct) between a FACTION name "<Race> <Suffix>"
-		// and a COMMANDER name "<Rank> <Name>". make_bot_faction_name builds a
-		// faction name deterministically from aSeed (for an idempotent backfill of
-		// existing bots); bot_name_is_faction tells whether a name already is one.
+		// Build a UNIQUE bot display name into aOut (<= aOutSize-1; no living player
+		// holds it). make_bot_name picks ~80/20 (Game/BotFactionNamePct) between a
+		// FACTION name drawn from aRace's own lore-flavoured pool (race-appropriate)
+		// and a COMMANDER name "<Rank> <Name>". make_bot_faction_name fills aOut with
+		// a unique faction name for aRace (false if none free); bot_name_fits_race
+		// tells whether a name is already an appropriate (race-matching faction, or
+		// commander) name -- used to skip already-correct bots in the backfill.
 		void make_bot_name(int aRace, int aBand, char *aOut, int aOutSize);
-		void make_bot_faction_name(int aRace, unsigned int aSeed, char *aOut, int aOutSize);
-		static bool bot_name_is_faction(const char *aName);
+		bool make_bot_faction_name(int aRace, char *aOut, int aOutSize);
+		static bool bot_name_fits_race(int aRace, const char *aName);
 
 		CCouncil *create_new_council(CCluster *aCluster, char *aName = NULL);
 		bool create_new_action( CPlayer *Owner, int aAction, 

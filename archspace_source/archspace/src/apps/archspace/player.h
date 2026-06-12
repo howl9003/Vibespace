@@ -1388,6 +1388,10 @@ class CPlayerTable: public CSortedList
 
 		int add_player(CPlayer* aPlayer);
 		bool remove_player(int aGameID);
+		// Rename a player AND keep the name hash-index (mNameIndex) consistent, so
+		// get_by_name() still finds it under the new name. set_name() alone leaves
+		// the index stale. Returns false if the new name is already taken.
+		bool rename_player(CPlayer* aPlayer, const char* aNewName);
 
 //		void remove_old_player();
 

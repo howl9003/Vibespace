@@ -1832,87 +1832,191 @@ bot_add_fleet(CPlayer *aPlayer, CShipDesign *aDesign, int aLevel, int aExp, bool
 	return Fleet;
 }
 
-// Build a bot display name into aOut: a rank prefix scaled to the band (band 0
-// only Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank up to
-// Admiral; band 4 always Grand Admiral; band 5 always Supreme Admiral) + a
-// commander-style name for aRace. If the full first+last name is over 30 chars,
-// only the last name is kept; the commander name gets its own 30 chars on top of
-// the rank (snprintf bounds the whole thing to player.name's width).
-// Curated faction / collective names, flavoured after the ten races' lore (see
-// the encyclopedia race descriptions) but NOT tied to a bot's own race -- a bot
-// of any race may carry any of these. Shared by the random builder (make_bot_name)
-// and the deterministic one (make_bot_faction_name); bot_name_is_faction matches
-// against this table exactly. Keep each <= player.name's width.
-static const char *sBotFactionName[] =
-{
-	// Human: short-lived, fast-breeding idealists and expansionists
-	"Terran Ascendancy", "Solar Concord", "Concord of Ideals",
-	// Targoid: one mother-body, totalitarian hive
-	"The Targoid Brood", "Mother-Body Collective", "The Hive Totality",
-	// Buckaneer: roaming trader-pirates, swift untraceable fleets
-	"Corsair Confederacy", "Buckaneer Free Companies", "The Freebooter Cartel",
-	// Tecanoid: cybernetic elite, infiltrators
-	"Tecanoid Directorate", "The Synthetic Elite", "Cybernetic Conclave",
-	// Evintos: silicon-and-gold machine-minds, mass production
-	"Evintos Foundry", "The Silicon Hegemony", "Goldforged Union",
-	// Agerus: secretive planet-beings, defensive
-	"Agerus Worldmind", "The Sleeping Worlds", "Communion of Planets",
-	// Bosalian: pacifist psychics and mediators
-	"The Bosalian Accord", "Psionic Concord", "Aurora Communion",
-	// Xeloss: fanatical psychic zealots
-	"Xeloss Theocracy", "Crusade of the One God", "The Devout Swarm",
-	// Xerusian: ancient elite militarists, matter-energy weapons
-	"Xerusian Imperium", "The Iron Legion", "Vanguard of Xerus",
-	// Xesperados: merged rebel exiles, open to all
-	"Xesperados Coalition", "The Free Banners", "Union of Exiles",
-	// unaligned powers
-	"The Outer Dominion", "Rift Hegemony", "Nebula Compact",
-	"The Void Sovereignty", "Starfall Imperium", "The Ashen Confederacy",
+// Per-race faction / collective names, each flavoured after THAT race's own lore
+// (see the encyclopedia race descriptions) so a name always lands on a fitting
+// race -- a Targoid never reads as an "Evintos Foundry". Indexed by race id via
+// sRaceFaction[] below. Keep each <= player.name's width (40).
+static const char *sFactionHuman[] = {        // Classism; fast-breeding idealist expansionists
+	"Terran Ascendancy", "Solar Concord", "Concord of Ideals", "Human Imperium",
+	"Terran Republic", "Sol Dominion", "United Earth Worlds", "Humanity's Vanguard",
+	"Terran Hegemony", "The Idealist Compact", "Earthborn Federation", "Manifest Concord",
 };
-static const int sBotFactionNameCount =
-	sizeof(sBotFactionName) / sizeof(sBotFactionName[0]);
+static const char *sFactionTargoid[] = {      // Totalism; one mother-body hive, DNA-bred
+	"The Targoid Brood", "Mother-Body Collective", "The Hive Totality", "Targoid Swarm",
+	"The Brood Collective", "Gestalt Hive", "Targoid Hegemony", "One-Body Dominion",
+	"The Spawning Throng", "Broodmind Union", "The Teeming Hive", "Carapace Collective",
+};
+static const char *sFactionBuckaneer[] = {    // Personalism; roaming trader-pirates
+	"Buckaneer Free Companies", "Corsair Confederacy", "The Freebooter Cartel",
+	"Buckaneer Trade Combine", "The Gypsy Fleets", "Privateer League", "The Roving Compact",
+	"Buckaneer Merchant Guild", "The Vagrant Armada", "Smuggler's Concord",
+	"The Wayfarer Cartel", "Corsair Free Fleets",
+};
+static const char *sFactionTecanoid[] = {     // Classism; cyborg elite, infiltrators
+	"Tecanoid Directorate", "The Synthetic Elite", "Cybernetic Conclave",
+	"Tecanoid Ascendancy", "Bionic Dominion", "The Augmented Order", "Machine-Flesh Hegemony",
+	"Tecanoid Datasphere", "The Upgraded", "Circuit Imperium", "The Cyber Directorate",
+	"Grafted Union",
+};
+static const char *sFactionEvintos[] = {      // Totalism; silicon-gold machine-minds, mass production
+	"Evintos Foundry", "The Silicon Hegemony", "Goldforged Union", "The Auric Assembly",
+	"Evintos Collective", "Crystalline Order", "The Forge Totality", "Silicon-Gold Compact",
+	"Latticework Dominion", "Evintos Manufactorum", "The Argent Foundry", "Goldsilicon Concord",
+};
+static const char *sFactionAgerus[] = {       // Totalism; secretive planet-beings, defensive
+	"Agerus Worldmind", "The Sleeping Worlds", "Communion of Planets", "Agerus Wardens",
+	"The Spore-Born", "Planetary Bastion", "The Mother-Planet", "Worldspawn Compact",
+	"Agerus Bulwark", "The Quiet Worlds", "The Dreaming Spheres", "Geosentient Communion",
+};
+static const char *sFactionBosalian[] = {     // Personalism; pacifist psychics, mediators
+	"The Bosalian Accord", "Psionic Concord", "Aurora Communion", "Bosalian Mediators",
+	"The Peacekeeper League", "The Serene Compact", "Psychic Aurora", "Bosalian Harmony",
+	"The Impartial Order", "Mindlight Union", "The Tranquil Accord", "Auroral Concord",
+};
+static const char *sFactionXeloss[] = {       // Totalism; fanatical psychic zealots
+	"Xeloss Theocracy", "Crusade of the One God", "The Devout Swarm", "Xeloss Inquisition",
+	"The Zealot Host", "The God-Sworn", "Martyr's Crusade", "Xeloss Faithful",
+	"The Blood Liturgy", "Sanctified Dominion", "The Fervent Host", "Xeloss Convocation",
+};
+static const char *sFactionXerusian[] = {     // Classism; ancient elite militarists
+	"Xerusian Imperium", "The Iron Legion", "Vanguard of Xerus", "Xerusian War-Host",
+	"The Elite Cohort", "Matter-Energy Legion", "Xerusian Bastion", "The Old Guard",
+	"Warforged Imperium", "Xerusian High Command", "The Adamant Legion", "Xerus Praetorian",
+};
+static const char *sFactionXesperados[] = {   // Personalism; merged rebel exiles, open to all
+	"Xesperados Coalition", "The Free Banners", "Union of Exiles", "Rebel Confederacy",
+	"The Open Compact", "Xesperados Alliance", "Banner-Host of Exiles", "The Gathered Banners",
+	"Renegade League", "Xesperados Concord", "The Exile Coalition", "Freeborn Alliance",
+};
 
-// Pick a faction name by aSeed (deterministic, so a backfill keyed on a bot's
-// game_id is stable/idempotent). aRace is unused -- names are race-independent.
-void
-CGame::make_bot_faction_name(int aRace, unsigned int aSeed, char *aOut, int aOutSize)
+struct CRaceFactionPool { const char **mNames; int mCount; };
+#define FPOOL(a) { a, (int)(sizeof(a)/sizeof((a)[0])) }
+// Indexed by (race id - RACE_HUMAN), i.e. race 1..10 -> 0..9.
+static const CRaceFactionPool sRaceFaction[] = {
+	FPOOL(sFactionHuman), FPOOL(sFactionTargoid), FPOOL(sFactionBuckaneer),
+	FPOOL(sFactionTecanoid), FPOOL(sFactionEvintos), FPOOL(sFactionAgerus),
+	FPOOL(sFactionBosalian), FPOOL(sFactionXeloss), FPOOL(sFactionXerusian),
+	FPOOL(sFactionXesperados),
+};
+#undef FPOOL
+static const int sRaceFactionCount =
+	sizeof(sRaceFaction) / sizeof(sRaceFaction[0]);
+
+// Rank words used both as commander-name prefixes and to recognise commander
+// names in bot_name_fits_race.
+static const char *sBotRankNames[] =
+	{ "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
+static const int sBotRankCount =
+	sizeof(sBotRankNames) / sizeof(sBotRankNames[0]);
+
+// True if some LIVING player already holds aName (case-insensitive). Bots are
+// ordinary players, so this also stops a new bot taking an existing bot's name --
+// and, since registration uses the same get_by_name, a human can never take one.
+static bool
+bot_name_taken(const char *aName)
 {
-	(void)aRace;
-	snprintf(aOut, aOutSize, "%.40s", sBotFactionName[aSeed % sBotFactionNameCount]);
+	return PLAYER_TABLE->get_by_name(aName) != NULL;
 }
 
-// True if aName is one of the curated faction names (so a backfill leaves it).
+// Write into aOut a name based on aBase that no living player holds. If aBase is
+// free, use it; otherwise append a roman ordinal ("aBase II", "aBase III", ...).
+// Returns false only if even the ordinals are somehow exhausted.
+static bool
+unique_name_from(const char *aBase, char *aOut, int aOutSize)
+{
+	if (!bot_name_taken(aBase))
+	{
+		snprintf(aOut, aOutSize, "%.40s", aBase);
+		return true;
+	}
+	static const char *Roman[] =
+		{ "II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV",
+		  "XVI","XVII","XVIII","XIX","XX" };
+	int RomanCount = (int)(sizeof(Roman) / sizeof(Roman[0]));
+	for (int i=0 ; i<RomanCount ; i++)
+	{
+		char Buf[64];
+		snprintf(Buf, sizeof(Buf), "%.34s %s", aBase, Roman[i]);
+		if (!bot_name_taken(Buf))
+		{
+			snprintf(aOut, aOutSize, "%.40s", Buf);
+			return true;
+		}
+	}
+	return false;
+}
+
+// Fill aOut with a UNIQUE faction name appropriate to aRace, drawn from that
+// race's own pool. Tries every pool entry (random rotation) for a free one, then
+// falls back to ordinal-extending a random entry. Returns false if aRace has no
+// pool (caller then uses a commander name instead).
 bool
-CGame::bot_name_is_faction(const char *aName)
+CGame::make_bot_faction_name(int aRace, char *aOut, int aOutSize)
+{
+	int Idx = aRace - CRace::RACE_HUMAN;
+	if (Idx < 0 || Idx >= sRaceFactionCount) return false;
+	const char **Names = sRaceFaction[Idx].mNames;
+	int Count = sRaceFaction[Idx].mCount;
+	if (Count <= 0) return false;
+
+	int Start = number(Count) - 1;
+	for (int i=0 ; i<Count ; i++)
+	{
+		const char *Base = Names[(Start + i) % Count];
+		if (!bot_name_taken(Base))
+		{
+			snprintf(aOut, aOutSize, "%.40s", Base);
+			return true;
+		}
+	}
+	return unique_name_from(Names[number(Count) - 1], aOut, aOutSize);
+}
+
+// True if aName is already an appropriate name for aRace: either a commander name
+// (starts with a rank word) or one of aRace's own faction names (optionally
+// ordinal-extended). The backfill uses this to leave already-correct bots alone.
+bool
+CGame::bot_name_fits_race(int aRace, const char *aName)
 {
 	if (!aName || !*aName) return false;
-	for (int i=0 ; i<sBotFactionNameCount ; i++)
-		if (strcmp(aName, sBotFactionName[i]) == 0) return true;
+
+	for (int i=0 ; i<sBotRankCount ; i++)
+	{
+		int L = (int)strlen(sBotRankNames[i]);
+		if (strncmp(aName, sBotRankNames[i], L) == 0 && aName[L] == ' ') return true;
+	}
+
+	int Idx = aRace - CRace::RACE_HUMAN;
+	if (Idx < 0 || Idx >= sRaceFactionCount) return false;
+	const char **Names = sRaceFaction[Idx].mNames;
+	int Count = sRaceFaction[Idx].mCount;
+	for (int i=0 ; i<Count ; i++)
+	{
+		int L = (int)strlen(Names[i]);
+		if (strcmp(aName, Names[i]) == 0) return true;          // exact pool name
+		if (strncmp(aName, Names[i], L) == 0 && aName[L] == ' ') return true; // "<name> II"
+	}
 	return false;
 }
 
 void
 CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 {
-	static const char *RankNames[] =
-		{ "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
 	if (aBand < 0) aBand = 0;
 	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
 	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
 	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
 
-	// Two name styles: a curated FACTION name (e.g. "Xerusian Imperium") most of the
-	// time -- a galaxy of rival powers -- or, for the rest, a single COMMANDER
-	// "<Rank> <Name>" so individual captains still appear. Default 80% faction,
-	// tunable via the Game/BotFactionNamePct INI key.
+	// Two name styles: a FACTION name drawn from aRace's own lore pool (e.g. a
+	// Xeloss "Xeloss Theocracy", a Buckaneer "Corsair Confederacy") most of the
+	// time, or a single COMMANDER "<Rank> <Name>" so individual captains still
+	// appear. Default 80% faction, tunable via the Game/BotFactionNamePct INI key.
+	// Both are guaranteed unique among living players.
 	int FactionPct =
 		ARCHSPACE->configuration().get_integer("Game", "BotFactionNamePct", 80);
 
-	if (number(100) <= FactionPct)
-	{
-		make_bot_faction_name(aRace, number(sBotFactionNameCount) - 1, aOut, aOutSize);
+	if (number(100) <= FactionPct && make_bot_faction_name(aRace, aOut, aOutSize))
 		return;
-	}
 
 	// bands 0-3: a random rank scaled to the band; bands 4-5: a fixed signature
 	// rank shared by every bot in the band.
@@ -1924,7 +2028,10 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 		const char *Space = strrchr(Commander, ' ');
 		if (Space && *(Space + 1)) Commander = Space + 1;
 	}
-	snprintf(aOut, aOutSize, "%s %.30s", RankNames[Rank], Commander);
+	char Candidate[41];
+	snprintf(Candidate, sizeof(Candidate), "%s %.30s", sBotRankNames[Rank], Commander);
+	if (!unique_name_from(Candidate, aOut, aOutSize))
+		snprintf(aOut, aOutSize, "%.40s", Candidate);
 }
 
 // Scrap a bot's existing ships and rebuild its tier roster from scratch. Deletes

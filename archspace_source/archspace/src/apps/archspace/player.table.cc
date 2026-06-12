@@ -1342,6 +1342,44 @@ CPlayerTable::remove_player(int aGameID)
 	return true;
 }
 
+// Hash a player name exactly as add_player/remove_player/get_by_name do
+// (case-insensitive char sum -> bucket). Kept local to mirror the existing inline
+// copies rather than refactor them.
+static int
+player_name_hash_index(const char *aName)
+{
+	unsigned int Sum = 0;
+	for (int i=0 ; aName[i] ; i++)
+	{
+		Sum += (unsigned int)(aName[i]);
+		if (((unsigned int)aName[i]) > 96 && ((unsigned int)aName[i]) < 123) Sum -= 32;
+	}
+	return MAX_HASHTABLE - (Sum % MAX_HASHTABLE) - 1;
+}
+
+bool
+CPlayerTable::rename_player(CPlayer* aPlayer, const char* aNewName)
+{
+	if (aPlayer == NULL || aNewName == NULL || !*aNewName) return false;
+
+	// reject if the new name already belongs to someone else
+	CPlayer *Existing = get_by_name(aNewName);
+	if (Existing != NULL && Existing != aPlayer) return false;
+
+	// pull the player out of the name index under its current name
+	int OldIndex = player_name_hash_index(aPlayer->get_real_name());
+	int Pos = mNameIndex[OldIndex].find_sorted_key((char *)aPlayer->get_real_name());
+	if (Pos >= 0) mNameIndex[OldIndex].CSortedList::remove(Pos);
+
+	// change the name, then re-file under the new name's bucket
+	aPlayer->set_name((char *)aNewName);
+
+	int NewIndex = player_name_hash_index(aPlayer->get_real_name());
+	int Unique;
+	mNameIndex[NewIndex].insert_sorted(aPlayer, &Unique);
+	return true;
+}
+
 void
 CPlayerTable::give_planet_to_owner( CPlanet *aPlanet )
 {
