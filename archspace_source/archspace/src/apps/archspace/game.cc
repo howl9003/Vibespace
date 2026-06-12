@@ -1840,53 +1840,98 @@ static const char *sFactionHuman[] = {        // Classism; fast-breeding idealis
 	"Terran Ascendancy", "Solar Concord", "Concord of Ideals", "Human Imperium",
 	"Terran Republic", "Sol Dominion", "United Earth Worlds", "Humanity's Vanguard",
 	"Terran Hegemony", "The Idealist Compact", "Earthborn Federation", "Manifest Concord",
+	"The Philosopher Kings", "Sol Expansion Front", "Terran Enlightenment", "The Humanist League",
+	"Children of Earth", "The Aspiring Dominion", "Terran Sphere", "Cradle Worlds Union",
+	"The Ascendant Compact", "Promethean Concord", "Humanity Resurgent", "The Boundless Reach",
 };
 static const char *sFactionTargoid[] = {      // Totalism; one mother-body hive, DNA-bred
 	"The Targoid Brood", "Mother-Body Collective", "The Hive Totality", "Targoid Swarm",
 	"The Brood Collective", "Gestalt Hive", "Targoid Hegemony", "One-Body Dominion",
 	"The Spawning Throng", "Broodmind Union", "The Teeming Hive", "Carapace Collective",
+	"The Singular Body", "Chitin Totality", "The Worker Swarm", "Hivemother Dominion",
+	"The Many-as-One", "Brood-Spawn Compact", "The Hatchery Throng", "Genome Collective",
+	"The Endless Brood", "Hive-Sworn Union", "The Drone Totality", "Mother's Multitude",
 };
 static const char *sFactionBuckaneer[] = {    // Personalism; roaming trader-pirates
 	"Buckaneer Free Companies", "Corsair Confederacy", "The Freebooter Cartel",
 	"Buckaneer Trade Combine", "The Gypsy Fleets", "Privateer League", "The Roving Compact",
 	"Buckaneer Merchant Guild", "The Vagrant Armada", "Smuggler's Concord",
-	"The Wayfarer Cartel", "Corsair Free Fleets",
+	"The Wayfarer Cartel", "Corsair Free Fleets", "The Nomad Combine", "Starwind Traders",
+	"The Drifter Compact", "Buccaneer Exchange", "The Voidrunner League", "Fortune's Fleet",
+	"The Black Sail Compact", "Reaver Confederacy", "The Tradewind Guild",
+	"Wandering Star Cartel", "The Loot Compact", "Freeport Combine",
 };
 static const char *sFactionTecanoid[] = {     // Classism; cyborg elite, infiltrators
 	"Tecanoid Directorate", "The Synthetic Elite", "Cybernetic Conclave",
 	"Tecanoid Ascendancy", "Bionic Dominion", "The Augmented Order", "Machine-Flesh Hegemony",
 	"Tecanoid Datasphere", "The Upgraded", "Circuit Imperium", "The Cyber Directorate",
-	"Grafted Union",
+	"Grafted Union", "The Wired Elite", "Servo Dominion", "The Optimized Order",
+	"Datastream Conclave", "The Bionic Vanguard", "Chrome Hegemony", "The Processor Cult",
+	"Augment Compact", "The Cold Logic", "Neural Directorate", "The Spliced Elite",
+	"Mainframe Dominion",
 };
 static const char *sFactionEvintos[] = {      // Totalism; silicon-gold machine-minds, mass production
 	"Evintos Foundry", "The Silicon Hegemony", "Goldforged Union", "The Auric Assembly",
 	"Evintos Collective", "Crystalline Order", "The Forge Totality", "Silicon-Gold Compact",
 	"Latticework Dominion", "Evintos Manufactorum", "The Argent Foundry", "Goldsilicon Concord",
+	"The Mineral Order", "Quartz Collective", "The Smelter Union", "Aurum Dominion",
+	"The Lattice Compact", "Crystalforge Hegemony", "The Tireless Assembly", "Goldvein Union",
+	"The Silicate Order", "Anvil Collective", "The Precise Totality", "Ingot Concord",
 };
 static const char *sFactionAgerus[] = {       // Totalism; secretive planet-beings, defensive
 	"Agerus Worldmind", "The Sleeping Worlds", "Communion of Planets", "Agerus Wardens",
 	"The Spore-Born", "Planetary Bastion", "The Mother-Planet", "Worldspawn Compact",
 	"Agerus Bulwark", "The Quiet Worlds", "The Dreaming Spheres", "Geosentient Communion",
+	"The Slumbering Host", "Worldseed Union", "The Silent Orbits", "Bastion of Spores",
+	"The Living Worlds", "Stoneborn Communion", "The Withdrawn", "Planetsoul Compact",
+	"The Veiled Spheres", "Rootworld Dominion", "The Hidden Gardens", "Continent-Mind Union",
 };
 static const char *sFactionBosalian[] = {     // Personalism; pacifist psychics, mediators
 	"The Bosalian Accord", "Psionic Concord", "Aurora Communion", "Bosalian Mediators",
 	"The Peacekeeper League", "The Serene Compact", "Psychic Aurora", "Bosalian Harmony",
 	"The Impartial Order", "Mindlight Union", "The Tranquil Accord", "Auroral Concord",
+	"The Open Mind", "Oneness Communion", "The Gentle Compact", "Lightbringer League",
+	"The Calm Between Stars", "Empath Concord", "The Unity Accord", "Stillness Union",
+	"The Radiant Mind", "Concord of Being", "The Quiet Light", "Harmony Eternal",
 };
 static const char *sFactionXeloss[] = {       // Totalism; fanatical psychic zealots
 	"Xeloss Theocracy", "Crusade of the One God", "The Devout Swarm", "Xeloss Inquisition",
 	"The Zealot Host", "The God-Sworn", "Martyr's Crusade", "Xeloss Faithful",
 	"The Blood Liturgy", "Sanctified Dominion", "The Fervent Host", "Xeloss Convocation",
+	"The Holy Scourge", "Pyre of the Faithful", "The Anointed", "Doctrine of Ash",
+	"The Burning Creed", "Hands of the God", "The Rapturous Host", "Sermon of Spears",
+	"The Immolate Order", "Choir of Wrath", "The Sacred Cull", "Litany Eternal",
 };
 static const char *sFactionXerusian[] = {     // Classism; ancient elite militarists
 	"Xerusian Imperium", "The Iron Legion", "Vanguard of Xerus", "Xerusian War-Host",
 	"The Elite Cohort", "Matter-Energy Legion", "Xerusian Bastion", "The Old Guard",
 	"Warforged Imperium", "Xerusian High Command", "The Adamant Legion", "Xerus Praetorian",
+	"The Steel Cohort", "Imperial War-College", "The Unbroken Line", "Aegis of Xerus",
+	"The Veteran Host", "Cannonade Imperium", "The Disciplined", "Bulwark Legion",
+	"The Ancient Phalanx", "Xerus Stormguard", "The Marshal's Host", "Ironclad Dominion",
 };
 static const char *sFactionXesperados[] = {   // Personalism; merged rebel exiles, open to all
 	"Xesperados Coalition", "The Free Banners", "Union of Exiles", "Rebel Confederacy",
 	"The Open Compact", "Xesperados Alliance", "Banner-Host of Exiles", "The Gathered Banners",
 	"Renegade League", "Xesperados Concord", "The Exile Coalition", "Freeborn Alliance",
+	"The Many Peoples", "Outcast Union", "The Refugee Banners", "Coalition of the Free",
+	"The Mongrel Host", "Liberty Compact", "The Welcoming Banners", "Dissident Alliance",
+	"The Motley Coalition", "Exodus Union", "The Unbound", "Confluence of Exiles",
+};
+
+// Race-AGNOSTIC names any bot may carry. Static names + cluster-templated ones
+// ("%C" -> a random cluster name, e.g. "Baal Confederacy"). The cluster suffixes
+// double as the tail-match set in bot_name_fits_race.
+static const char *sFactionAgnostic[] = {
+	"Galactic Federation", "United Worlds", "The Galactic Concord", "Free Systems Alliance",
+	"The Stellar Union", "Independent Systems", "The Galactic Compact", "United Star Nations",
+	"The Cosmic Accord", "Pan-Galactic League", "The Frontier Coalition", "Sovereign Worlds",
+	"The Interstellar Union", "Allied Star Systems", "The Galactic Assembly", "United Colonies",
+	"The Outer Coalition", "Free Worlds Pact", "The Stellar Confederacy", "Concord of Worlds",
+};
+static const char *sFactionClusterSuffix[] = {
+	"Confederacy", "Compact", "Coalition", "Star League", "Combine", "Pact",
+	"Free State", "Sector Alliance", "Union", "Dominion",
 };
 
 struct CRaceFactionPool { const char **mNames; int mCount; };
@@ -1901,6 +1946,10 @@ static const CRaceFactionPool sRaceFaction[] = {
 #undef FPOOL
 static const int sRaceFactionCount =
 	sizeof(sRaceFaction) / sizeof(sRaceFaction[0]);
+static const int sFactionAgnosticCount =
+	sizeof(sFactionAgnostic) / sizeof(sFactionAgnostic[0]);
+static const int sFactionClusterSuffixCount =
+	sizeof(sFactionClusterSuffix) / sizeof(sFactionClusterSuffix[0]);
 
 // Rank words used both as commander-name prefixes and to recognise commander
 // names in bot_name_fits_race.
@@ -1946,39 +1995,86 @@ unique_name_from(const char *aBase, char *aOut, int aOutSize)
 	return false;
 }
 
-// Fill aOut with a UNIQUE faction name appropriate to aRace, drawn from that
-// race's own pool. Tries every pool entry (random rotation) for a free one, then
-// falls back to ordinal-extending a random entry. Returns false if aRace has no
-// pool (caller then uses a commander name instead).
+// Build one raw faction-name candidate (no uniqueness check) into aBuf. Draws
+// from the race-agnostic pool BotAgnosticNamePct% of the time -- half static
+// names ("Galactic Federation"), half cluster-templated ("Baal Confederacy") --
+// and otherwise from aRace's own lore pool.
+static void
+gen_faction_candidate(int aRace, char *aBuf, int aBufSize)
+{
+	int AgnosticPct =
+		ARCHSPACE->configuration().get_integer("Game", "BotAgnosticNamePct", 25);
+
+	if (number(100) <= AgnosticPct)
+	{
+		if (number(2) == 1)                                   // static agnostic name
+		{
+			snprintf(aBuf, aBufSize, "%.40s",
+					sFactionAgnostic[number(sFactionAgnosticCount) - 1]);
+		}
+		else                                                  // "<cluster> <suffix>"
+		{
+			// name after a real, in-use cluster (skip the empire cluster); a few
+			// random tries, else a neutral fallback.
+			const char *Cluster = NULL;
+			if (UNIVERSE != NULL && UNIVERSE->length() > 0)
+			{
+				for (int t=0 ; t<8 && Cluster == NULL ; t++)
+				{
+					CCluster *C = (CCluster *)UNIVERSE->get(number(UNIVERSE->length()) - 1);
+					if (C != NULL && C->get_id() != EMPIRE_CLUSTER_ID &&
+					    C->get_name() && *C->get_name())
+						Cluster = C->get_name();
+				}
+			}
+			if (Cluster == NULL || !*Cluster) Cluster = "Rim";
+			snprintf(aBuf, aBufSize, "%.28s %s", Cluster,
+					sFactionClusterSuffix[number(sFactionClusterSuffixCount) - 1]);
+		}
+		return;
+	}
+
+	int Idx = aRace - CRace::RACE_HUMAN;
+	if (Idx < 0 || Idx >= sRaceFactionCount)                  // no race pool -> agnostic
+	{
+		snprintf(aBuf, aBufSize, "%.40s",
+				sFactionAgnostic[number(sFactionAgnosticCount) - 1]);
+		return;
+	}
+	const char **Names = sRaceFaction[Idx].mNames;
+	int Count = sRaceFaction[Idx].mCount;
+	snprintf(aBuf, aBufSize, "%.40s", Names[number(Count) - 1]);
+}
+
+// Fill aOut with a UNIQUE faction name for aRace (its own lore pool, or a shared
+// race-agnostic name). Draws candidates until it finds a free one, then falls
+// back to ordinal-extending the last candidate. Always succeeds (returns true)
+// once the agnostic pool exists, so a bot reliably gets a faction name.
 bool
 CGame::make_bot_faction_name(int aRace, char *aOut, int aOutSize)
 {
-	int Idx = aRace - CRace::RACE_HUMAN;
-	if (Idx < 0 || Idx >= sRaceFactionCount) return false;
-	const char **Names = sRaceFaction[Idx].mNames;
-	int Count = sRaceFaction[Idx].mCount;
-	if (Count <= 0) return false;
-
-	int Start = number(Count) - 1;
-	for (int i=0 ; i<Count ; i++)
+	char Candidate[41];
+	for (int Attempt=0 ; Attempt<64 ; Attempt++)
 	{
-		const char *Base = Names[(Start + i) % Count];
-		if (!bot_name_taken(Base))
+		gen_faction_candidate(aRace, Candidate, sizeof(Candidate));
+		if (!bot_name_taken(Candidate))
 		{
-			snprintf(aOut, aOutSize, "%.40s", Base);
+			snprintf(aOut, aOutSize, "%.40s", Candidate);
 			return true;
 		}
 	}
-	return unique_name_from(Names[number(Count) - 1], aOut, aOutSize);
+	return unique_name_from(Candidate, aOut, aOutSize);
 }
 
-// True if aName is already an appropriate name for aRace: either a commander name
-// (starts with a rank word) or one of aRace's own faction names (optionally
-// ordinal-extended). The backfill uses this to leave already-correct bots alone.
+// True if aName is already appropriate for aRace, so the backfill leaves it: a
+// commander name (rank prefix), one of aRace's own faction names, a static
+// agnostic name, or a cluster-templated agnostic name (ends in a cluster suffix
+// like " Confederacy") -- all optionally ordinal-extended.
 bool
 CGame::bot_name_fits_race(int aRace, const char *aName)
 {
 	if (!aName || !*aName) return false;
+	int NameLen = (int)strlen(aName);
 
 	for (int i=0 ; i<sBotRankCount ; i++)
 	{
@@ -1986,15 +2082,36 @@ CGame::bot_name_fits_race(int aRace, const char *aName)
 		if (strncmp(aName, sBotRankNames[i], L) == 0 && aName[L] == ' ') return true;
 	}
 
+	// this race's own pool (exact or "<name> II")
 	int Idx = aRace - CRace::RACE_HUMAN;
-	if (Idx < 0 || Idx >= sRaceFactionCount) return false;
-	const char **Names = sRaceFaction[Idx].mNames;
-	int Count = sRaceFaction[Idx].mCount;
-	for (int i=0 ; i<Count ; i++)
+	if (Idx >= 0 && Idx < sRaceFactionCount)
 	{
-		int L = (int)strlen(Names[i]);
-		if (strcmp(aName, Names[i]) == 0) return true;          // exact pool name
-		if (strncmp(aName, Names[i], L) == 0 && aName[L] == ' ') return true; // "<name> II"
+		const char **Names = sRaceFaction[Idx].mNames;
+		int Count = sRaceFaction[Idx].mCount;
+		for (int i=0 ; i<Count ; i++)
+		{
+			int L = (int)strlen(Names[i]);
+			if (strcmp(aName, Names[i]) == 0) return true;
+			if (strncmp(aName, Names[i], L) == 0 && aName[L] == ' ') return true;
+		}
+	}
+
+	// static agnostic names (exact or "<name> II")
+	for (int i=0 ; i<sFactionAgnosticCount ; i++)
+	{
+		int L = (int)strlen(sFactionAgnostic[i]);
+		if (strcmp(aName, sFactionAgnostic[i]) == 0) return true;
+		if (strncmp(aName, sFactionAgnostic[i], L) == 0 && aName[L] == ' ') return true;
+	}
+
+	// cluster-templated agnostic names: end in " <cluster suffix>"
+	for (int i=0 ; i<sFactionClusterSuffixCount ; i++)
+	{
+		const char *S = sFactionClusterSuffix[i];
+		int L = (int)strlen(S);
+		if (NameLen > L + 1 && aName[NameLen - L - 1] == ' ' &&
+		    strcmp(aName + NameLen - L, S) == 0)
+			return true;
 	}
 	return false;
 }
