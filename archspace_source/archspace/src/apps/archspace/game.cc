@@ -541,6 +541,44 @@ CGame::remove_old_player()
 	SLOG("Remove old player %d/%d", DeletedPlayers, OldTotalPlayers);
 }
 
+// --- battle-sim harness hook (additive; mirrors the table-loading subset of
+// script_table() but skips encyclopedia HTML generation and all DB loading) ---
+bool
+CGame::boot_scripts_only(CIniFile *aConfig)
+{
+	mConfig = aConfig;
+
+#define ASBS_LOAD(ScriptClass, Key, TableClass, Member)                            \
+	{                                                                              \
+		char *Path = mConfig->get_string("Game", Key, NULL);                       \
+		if (!Path) { SLOG("boot_scripts_only: missing config key " Key); return false; } \
+		ScriptClass Script;                                                        \
+		if (!Script.load(Path))                                                    \
+		{ SLOG("boot_scripts_only: cannot read %s = %s", Key, Path); return false; } \
+		Member = new TableClass();                                                 \
+		Script.get(Member);                                                        \
+		SLOG("boot_scripts_only: loaded %s", Key);                                 \
+	}
+
+	ASBS_LOAD(CTechScript,        "TechScript",        CTechTable,         mTechTable)
+	ASBS_LOAD(CRaceScript,        "RaceScript",        CRaceTable,         mRaceTable)
+	ASBS_LOAD(CAdmiralNameScript, "AdmiralNameScript", CAdmiralNameTable,  mAdmiralNameTable)
+	ASBS_LOAD(CProjectScript,     "ProjectScript",     CProjectTable,      mProjectTable)
+	ASBS_LOAD(CComponentScript,   "ComponentScript",   CComponentTable,    mComponentTable)
+	ASBS_LOAD(CShipScript,        "ShipScript",        CShipSizeTable,      mShipSizeTable)
+
+#undef ASBS_LOAD
+
+	// Empty in-memory stand-ins so battle code touching PLAYER_TABLE /
+	// COUNCIL_TABLE doesn't dereference NULL (no DB rows are loaded in the sim).
+	// CPlayer::get_council() resolves through COUNCIL_TABLE by id, so the sim
+	// registers its stub councils there.
+	if (!mPlayerTable)  mPlayerTable  = new CPlayerTable();
+	if (!mCouncilTable) mCouncilTable = new CCouncilTable();
+
+	return true;
+}
+
 bool
 CGame::script_table()
 {

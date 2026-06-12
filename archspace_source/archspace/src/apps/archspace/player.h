@@ -414,6 +414,9 @@ class CPlayer: public CStore
 
 		CCouncil *get_council();
 		int get_council_id() { return mCouncilID; }
+		// battle-sim harness: point at a council by id WITHOUT the side effects
+		// of set_council() (add_member -> rearrange_cluster needs world data).
+		void sim_set_council_id(int aID) { mCouncilID = aID; }
 		inline int get_council_vote();
 		int get_council_production() { return mCouncilProduction; }
 		inline int get_council_donation();

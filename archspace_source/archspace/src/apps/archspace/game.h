@@ -73,6 +73,13 @@ class CGame
 		bool script_table();
         bool database_table();
 
+		// --- battle-sim harness hook (additive, no game-behavior change) ---
+		// Boots ONLY the script tables battle needs (tech/race/admiral-name/
+		// component/ship-size) directly from the script files, skipping the
+		// encyclopedia HTML generation and ALL database loading. Used by the
+		// standalone apps/battle-sim evaluator to stand the engine up DB-free.
+		bool boot_scripts_only(CIniFile *aConfig);
+
 	public:
 		CPlayer* create_new_player(int aPortalID, const char *aName,
 													int aRace);

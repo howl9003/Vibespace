@@ -1,0 +1,39 @@
+# battle-sim : standalone DB-free Archspace battle evaluator.
+#
+# Links the real engine objects built under ../archspace (battle.o, ship.o,
+# fleet.o, admiral.o, game.o, ...) MINUS main.o (the server entry point), plus
+# our own main in battle_sim.o, plus libarchspace.a. So you must build the game
+# first:  (cd ../archspace && make archspace)   then:  make -f Makefile.Linux
+
+CC=g++
+CFLAGS=-g -pipe -fpermissive -Wall -Wno-write-strings -DTHREAD_SAFE
+LIBDIRS=-L/usr/lib -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -L/usr/lib/pth
+LIBS=-larchspace -lpth -lmariadb
+INCLUDES=-I/usr/include/g++ -I/usr/include -I/usr/include/mariadb -I/usr/include/mysql -I../../libs/include -I/usr/include/pth -I../archspace
+DEFINES=-DDEBUG -DLINUX -DEVENTS -DNOREFFERER
+
+GAME_DIR=../archspace
+
+# Every engine object the server links, except main.o (we supply our own main).
+GAME_OBJS=$(filter-out $(GAME_DIR)/main.o,\
+	$(wildcard $(GAME_DIR)/*.o) \
+	$(wildcard $(GAME_DIR)/page/*.o) \
+	$(wildcard $(GAME_DIR)/page/*/*.o) \
+	$(wildcard $(GAME_DIR)/trigger/*.o))
+
+# main.cc also defines the page/trigger-station + store-center infrastructure
+# (referenced by battle/player code). Recompile it with its int main() renamed
+# away so we keep those definitions but supply our own entry point.
+main_shim.o: $(GAME_DIR)/main.cc
+	$(CC) -c $(GAME_DIR)/main.cc -o main_shim.o $(CFLAGS) $(INCLUDES) $(DEFINES) -Dmain=archspace_server_main_unused
+
+battle-sim: battle_sim.o main_shim.o
+	$(CC) -o battle-sim battle_sim.o main_shim.o $(GAME_OBJS) $(LIBDIRS) $(LIBS)
+
+battle_sim.o: battle_sim.cc
+	$(CC) -c battle_sim.cc -o battle_sim.o $(CFLAGS) $(INCLUDES) $(DEFINES)
+
+clean:
+	rm -f battle_sim.o main_shim.o battle-sim
+
+.PHONY: clean

@@ -9,6 +9,7 @@
 archspace_source/archspace/src/apps/archspace/archspace
 archspace_source/archspace/src/apps/archspace/viewsize
 archspace_source/archspace/src/apps/relay/relay
+archspace_source/archspace/src/apps/battle-sim/battle-sim
 
 # Generated platform Makefile symlinks (created by src/set_platform)
 archspace_source/archspace/src/libs/Makefile
