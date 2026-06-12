@@ -26,6 +26,9 @@ archspace_source/archspace/src/apps/relay/Makefile
 systemlog
 archspace_source/archspace/src/apps/battle-sim/systemlog
 
+# Balance-tester generated run outputs (report.md/json, run_state.json)
+tools/balance-tester/runs/
+
 # Python (balance-tester orchestrator)
 __pycache__/
 *.pyc

@@ -1,0 +1,27 @@
+# Symmetric-race siege: both sides Human, equal PP budget. The question is
+# whether siege is fair when both sides are optimized under identical constraints.
+name: siege_symmetric_human
+run: stackelberg          # assess | stackelberg
+seed: 12345
+turn_cap: 1800
+
+attacker:
+  race: 1                 # Human
+  pp_budget: 200000
+  max_fleets: 3
+  max_ships_per_fleet: 30
+
+defender:
+  race: 1
+  pp_budget: 200000
+  max_fleets: 3
+  max_ships_per_fleet: 30
+
+mode:
+  population: 5           # assess-mode population size per side
+  generations: 8          # inner-oracle generations
+  mu: 5
+  lam: 8
+  replicates: 15
+  rounds: 3               # stackelberg robust rounds
+  epsilon: 0.05
