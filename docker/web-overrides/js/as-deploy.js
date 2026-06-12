@@ -416,17 +416,17 @@
       mkBtn('Save as new…').onclick = function () {
         var name = window.prompt('Name this attack template:', '');
         if (!name) return;
-        submitForm('attack_template_save_result.as', { PLAN_NAME: name }, true);
+        submitForm('/archspace/war/attack_template_save_result.as', { PLAN_NAME: name }, true);
       };
       mkBtn('Overwrite selected').onclick = function () {
         if (!sel.value) { window.alert('Select a template to overwrite.'); return; }
         if (!window.confirm('Overwrite template "' + nameOf(sel.value) + '" with the current layout?')) return;
-        submitForm('attack_template_save_result.as', { PLAN_NAME: nameOf(sel.value), PLAN_ID: sel.value }, true);
+        submitForm('/archspace/war/attack_template_save_result.as', { PLAN_NAME: nameOf(sel.value), PLAN_ID: sel.value }, true);
       };
       mkBtn('Delete selected').onclick = function () {
         if (!sel.value) { window.alert('Select a template to delete.'); return; }
         if (!window.confirm('Delete the selected attack template?')) return;
-        submitForm('attack_template_delete_result.as', { PLAN_ID: sel.value }, false);
+        submitForm('/archspace/war/attack_template_delete_result.as', { PLAN_ID: sel.value }, false);
       };
 
       canvas.parentNode.insertBefore(bar, canvas);
