@@ -328,6 +328,10 @@ class CBattleFleet : public CVector
 		bool is_engaged() { return (bool)mEngaged; }
 
 		bool is_disabled();
+		// Truly destroyed (all ships gone) -- as opposed to is_disabled(), which
+		// also counts a fleet that merely RETREATED (its commander survives). Used
+		// to list only commanders/fleets that are actually dead in the report.
+		bool is_annihilated();
 
 		int get_efficiency();
 		int get_speed();
@@ -587,7 +591,8 @@ class CBattleRecord : public CStore
 			STORE_DEFENDER_LOSE_FLEET,
 			STORE_DEFENDER_LOSE_ADMIRAL,
 			STORE_RECORD_FILE,
-			STORE_THERE_WAS_BATTLE
+			STORE_THERE_WAS_BATTLE,
+			STORE_RESULT_REPORT
 		};
 
 		CBattleRecord();
@@ -635,6 +640,8 @@ class CBattleRecord : public CStore
 			mRecordFile;
 		int
 			mThereWasBattle;
+		CString
+			mResultReport;	// stored both-sides manifest + kills (get_result_report)
 		int
 			mFireID,
 			mTurn;	// temporary value
@@ -696,6 +703,10 @@ class CBattleRecord : public CStore
 		const char *get_defender_lose_fleet() { return (char *)mDefenderLoseFleet; }
 		void set_defender_lose_admiral( char *aStr ) { mDefenderLoseAdmiral = aStr; }
 		const char *get_defender_lose_admiral() { return (char *)mDefenderLoseAdmiral; }
+		// Both-sides fleet manifest + ships killed, captured at battle time
+		// (CBattle::get_result_report) so the report-detail page can show it later.
+		void set_result_report( char *aStr ) { mResultReport = aStr; }
+		const char *get_result_report() { return (char *)mResultReport; }
 
 	public :
 		void add_fleet( CBattleFleet *aFleet );

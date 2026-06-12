@@ -490,6 +490,7 @@ CREATE TABLE battle_record
 	defender_lose_admiral text,
 	record_file char(50) NOT NULL,
 	there_was_battle tinyint NOT NULL,
+	result_report text,
 	PRIMARY KEY(id)
 );
 

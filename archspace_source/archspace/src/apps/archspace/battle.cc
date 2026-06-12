@@ -1566,6 +1566,16 @@ CBattleFleet::is_disabled()
 	return false;
 }
 
+bool
+CBattleFleet::is_annihilated()
+{
+	// Destroyed outright (all ships lost) -- the commander is dead. A RETREATED
+	// fleet is disabled but NOT annihilated; its commander lives, so it must not
+	// be counted among the lost.
+	return get_status() == STATUS_ANNIHILATED
+		|| get_status() == STATUS_ANNIHILATED_THIS_TURN;
+}
+
 int
 CBattleFleet::calc_danger_rating( CBattleFleet *aEnemy )
 {
@@ -3260,6 +3270,10 @@ CBattle::finish_report_after_battle()
 		mRecord->set_draw();
 	}
 
+	// Capture both sides' full manifest + ships killed now (same data the result
+	// page shows), so the report-detail page can display it later from the record.
+	mRecord->set_result_report((char *)get_result_report());
+
 	CString
 		LostFleet,
 		LostAdmiral;
@@ -3270,7 +3284,7 @@ CBattle::finish_report_after_battle()
 	{
 		CBattleFleet *
 			Fleet = (CBattleFleet *)mOffenseFleetList.get(i);
-		if (Fleet->is_disabled() == true)
+		if (Fleet->is_annihilated() == true)
 		{
 			if (IsFirst == false)
 			{	LostFleet += ", ";
@@ -3292,7 +3306,7 @@ CBattle::finish_report_after_battle()
 	{
 		CBattleFleet *
 			Fleet = (CBattleFleet *)mDefenseFleetList.get(i);
-		if (Fleet->is_disabled() == true)
+		if (Fleet->is_annihilated() == true)
 		{
 			if (IsFirst == false)
 			{	LostFleet += ", ";
@@ -6110,6 +6124,15 @@ CBattleRecord::CBattleRecord(MYSQL_ROW aRow)
 
 	mRecordFile = aRow[STORE_RECORD_FILE];
 	mThereWasBattle = atoi(aRow[STORE_THERE_WAS_BATTLE]);
+
+	// result_report is a trailing, additive column: rows written before the
+	// migration (and non-fleet battles) carry NULL -- treat as empty.
+	mResultReport = aRow[STORE_RESULT_REPORT];
+	if (mResultReport == NULL || strcmp(mResultReport, "(null)") == 0)
+	{
+		mResultReport = "";
+	}
+
 	mFireID = 1;
 }
 
@@ -6146,7 +6169,7 @@ CBattleRecord::query()
 				IsDrawString = "NO";
 			}
 
-			Query = "INSERT INTO battle_record (id, attacker_id, defender_id, attacker_name, defender_name, attacker_race, defender_race, attacker_council, defender_council, time, war_type, is_draw, winner, planet_id, battle_field_name, attacker_gain, attacker_lose_fleet, attacker_lose_admiral, defender_lose_fleet, defender_lose_admiral, record_file, there_was_battle) VALUES (";
+			Query = "INSERT INTO battle_record (id, attacker_id, defender_id, attacker_name, defender_name, attacker_race, defender_race, attacker_council, defender_council, time, war_type, is_draw, winner, planet_id, battle_field_name, attacker_gain, attacker_lose_fleet, attacker_lose_admiral, defender_lose_fleet, defender_lose_admiral, record_file, there_was_battle, result_report) VALUES (";
 			Query.format("%d, %d, %d",
 							mID,
 							mAttackerID,
@@ -6205,9 +6228,17 @@ CBattleRecord::query()
 			{
 				Query.format(", '%s'", (char *)add_slashes((char *)mDefenderLoseAdmiral));
 			}
-			Query.format(", '%s', %d)",
+			Query.format(", '%s', %d",
 							(char *)mRecordFile,
 							mThereWasBattle);
+			if (add_slashes((char *)mResultReport).length() == 0)
+			{
+				Query += ", '')";
+			}
+			else
+			{
+				Query.format(", '%s')", (char *)add_slashes((char *)mResultReport));
+			}
 		}
 			break;
 

@@ -75,6 +75,11 @@ CPageBattleReportDetail::handler(CPlayer *aPlayer)
 					buf = "<TR>\n<TD CLASS=\"tabletxt\" WIDTH=\"149\" BGCOLOR=\"#171717\" VALIGN=\"TOP\">&nbsp;Lose</TD>\n<TD CLASS=\"tabletxt\" COLSPAN=\"3\" WIDTH=\"395\">&nbsp;</TD>\n</TR>\n<TR>\n<TD CLASS=\"tabletxt\" COLSPAN=\"4\" ALIGN=\"CENTER\">\n<TABLE BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\" WIDTH=\"450\">\n";
 					buf.format( "<TR>\n<TD CLASS=\"maintext\" WIDTH=\"108\" VALIGN=\"top\">Fleet</TD>\n<TD CLASS=\"maintext\" VALIGN=\"top\" COLSPAN=\"4\">%s</TD>\n</TR>\n", (char*)record->get_attacker_lose_fleet() );
 					buf.format( "<TR>\n<TD CLASS=\"maintext\" WIDTH=\"108\" VALIGN=\"top\">Commander</TD>\n<TD CLASS=\"maintext\" VALIGN=\"top\" COLSPAN=\"4\">%s</TD>\n</TR>\n", (char*)record->get_attacker_lose_admiral() );
+					{
+						const char *Manifest = record->get_result_report();
+						if (record->there_was_battle() == true && Manifest && *Manifest)
+							buf.format( "<TR>\n<TD CLASS=\"maintext\" WIDTH=\"108\" VALIGN=\"top\">Manifest</TD>\n<TD CLASS=\"maintext\" VALIGN=\"top\" COLSPAN=\"4\">%s</TD>\n</TR>\n", Manifest );
+					}
 					buf += "</TABLE>\n<BR>\n</TD>\n</TR>\n";
 					ITEM( "LOSE", buf );
 				}
@@ -95,6 +100,11 @@ CPageBattleReportDetail::handler(CPlayer *aPlayer)
 					buf += "<TD CLASS=\"tabletxt\" COLSPAN=\"4\" ALIGN=\"CENTER\">\n<TABLE BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\" WIDTH=\"450\">\n";
 					buf.format( "<TR>\n<TD CLASS=\"maintext\" WIDTH=\"108\" VALIGN=\"top\">Fleet</TD>\n<TD CLASS=\"maintext\" VALIGN=\"top\" COLSPAN=\"4\">%s</TD></TR>\n", record->get_defender_lose_fleet() );
 					buf.format( "<TR>\n<TD CLASS=\"maintext\" WIDTH=\"108\" VALIGN=\"top\">Commander</TD>\n<TD CLASS=\"maintext\" VALIGN=\"top\" COLSPAN=\"4\">%s</TD>\n</TR>\n", record->get_defender_lose_admiral() );
+					{
+						const char *Manifest = record->get_result_report();
+						if (record->there_was_battle() == true && Manifest && *Manifest)
+							buf.format( "<TR>\n<TD CLASS=\"maintext\" WIDTH=\"108\" VALIGN=\"top\">Manifest</TD>\n<TD CLASS=\"maintext\" VALIGN=\"top\" COLSPAN=\"4\">%s</TD>\n</TR>\n", Manifest );
+					}
 					buf += "</TABLE>\n<BR>\n</TD>\n</TR>\n";
 					ITEM( "LOSE", buf );
 				}

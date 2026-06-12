@@ -65,6 +65,13 @@ $M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS attack_fleet (
     command int NOT NULL, x int NOT NULL, y int NOT NULL,
     PRIMARY KEY(owner, plan_id, fleet_id));" || true
 
+# battle_record.result_report: both-sides manifest + ships killed, captured at
+# battle time so the report-detail page can show it. Additive trailing column;
+# existing DBs never re-run all.sql, so add it if absent. It MUST be the last
+# column (the engine reads battle_record via SELECT * by positional index, and
+# STORE_RESULT_REPORT is the final index). ADD COLUMN IF NOT EXISTS is idempotent.
+$M "$DB_NAME" -e "ALTER TABLE battle_record ADD COLUMN IF NOT EXISTS result_report text;" || true
+
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.
