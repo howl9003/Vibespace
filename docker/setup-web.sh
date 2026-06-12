@@ -104,6 +104,34 @@ grep -rlZ -i --include='*.html' --include='*.htm' --include='*.phtml' --include=
         -e 's/(face=")[^"]*Arial[^"]*(")/\1Times New Roman, Times, serif\2/gI' \
         -e 's/font-family:[^;"}]*Arial[^;"}]*/font-family:Times New Roman, Times, serif/gI'
 
+# 1e) Mobile reflow for the legacy in-game pages. Every in-game template links
+#     /archspace.css, so appending ONE max-width media query here makes all ~352
+#     fixed-width table pages fit a phone WITHOUT editing any template. Desktop is
+#     provably unaffected: every rule lives inside @media (max-width:760px), which
+#     only matches the narrow content iframe on small screens (the in-game pages
+#     render inside the de-framed shell's full-width "contents" iframe, so the
+#     query keys off that frame's width, not the whole monitor). Marker-guarded so
+#     re-runs don't append twice; step 1 re-unpacks the pristine css each boot, so
+#     this re-adds the block on top of a clean file every time.
+CSS_MAIN="$WWW/archspace.css"
+if [ -f "$CSS_MAIN" ] && ! grep -q 'as-mobile-reflow' "$CSS_MAIN" 2>/dev/null; then
+    echo "[web] appending mobile reflow rules to archspace.css"
+    cat >> "$CSS_MAIN" <<'CSS'
+
+/* === as-mobile-reflow (appended by setup-web.sh) ===========================
+   PHONES ONLY. Every rule below is inside this max-width media query, so the
+   desktop look is byte-for-byte unchanged -- the query matches only the narrow
+   content iframe on small screens. The in-game pages are 2004-era fixed-width
+   nested tables (610/590/550px); cap them to the viewport so they stop forcing
+   horizontal scroll, scale oversized banners down, and let text wrap. */
+@media (max-width: 760px) {
+  table  { max-width: 100% !important; }   /* fit the 610/590/550px wrappers */
+  img    { max-width: 100%; height: auto; }/* scale title banners, keep ratio */
+  td, th { overflow-wrap: break-word; }    /* wrap long text instead of widening */
+}
+CSS
+fi
+
 # 2) Modern auth service at /auth/
 if [ -d "$AUTH_SRC" ]; then
     echo "[web] installing auth service at /auth/"
