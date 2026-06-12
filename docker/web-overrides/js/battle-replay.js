@@ -52,7 +52,8 @@
   // ---- colors / sizing ----------------------------------------------------
   var ATT = '#ff8844', ATT_DIM = '#7a3a1c';   // attacker (orange)
   var DEF = '#55bbff', DEF_DIM = '#1c4a6e';   // defender (cyan)
-  var CW = 544, CH = 320;                       // canvas size
+  var CW = 480, CH = 480;                       // canvas size (square: the arena is 10000×10000)
+  var FIELD = 10000;                            // battlefield is clamped to 0..10000 on both axes
   // CBattleFleet morale-break statuses (battle.h enum): each flickers + tints the
   // icon and stamps a label on it (Ro=Rout, Rt=Retreat to keep them distinct; the
   // full name is also shown in the text label).
@@ -176,23 +177,14 @@
       }
     }
 
-    // assign sides, sort samples, compute bounds (header tallies fleets/ships
-    // live per turn in buildHeader, so no static totals are stored here)
-    var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9, any = false;
+    // assign sides + sort samples. The viewport is the fixed full battlefield
+    // (0..FIELD on both axes, see tx/ty), so no per-battle bounds are computed.
     for (var k in B.fleets) {
       var fl3 = B.fleets[k];
       // attacker side vs everyone else (defender + allies render as defender)
       fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
       fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
-      for (var si = 0; si < fl3.samples.length; si++) {
-        var s = fl3.samples[si]; any = true;
-        if (s.x < minX) minX = s.x; if (s.x > maxX) maxX = s.x;
-        if (s.y < minY) minY = s.y; if (s.y > maxY) maxY = s.y;
-      }
     }
-    if (!any) { minX = 0; minY = 0; maxX = 10000; maxY = 10000; }
-    var padX = (maxX - minX) * 0.08 + 200, padY = (maxY - minY) * 0.08 + 200;
-    B.bounds = { minX: minX - padX, minY: minY - padY, maxX: maxX + padX, maxY: maxY + padY };
     return B;
   }
 
@@ -309,8 +301,13 @@
 
     var fleetList = []; for (var k in B.fleets) fleetList.push(B.fleets[k]);
 
-    function tx(x) { return (x - B.bounds.minX) / (B.bounds.maxX - B.bounds.minX) * CW; }
-    function ty(y) { return (y - B.bounds.minY) / (B.bounds.maxY - B.bounds.minY) * CH; }
+    // Fixed full-arena projection. Depth (engine X) is horizontal: attacker (low X)
+    // left, defender (high X) right. Lateral (engine Y) is vertical and FLIPPED so
+    // engine Y increases upward — this matches both deploy boards (attacker's right
+    // -> bottom, defender's right -> top) and pins engine Y=5000 (the engagement
+    // line where both capitals sit) to the exact vertical centre.
+    function tx(x) { return x / FIELD * CW; }
+    function ty(y) { return (FIELD - y) / FIELD * CH; }
 
     function drawFleet(st, fl) {
       var x = tx(st.x), y = ty(st.y);
@@ -326,7 +323,7 @@
         tag = ' ⚠ ' + fx.name;
       }
       var rad = (st.dir || 0) * Math.PI / 180;
-      ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(rad);
+      ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(-rad);   // -rad: ty flips the y axis (cy ∝ −y)
       ctx.fillStyle = col; ctx.beginPath();
       ctx.moveTo(r, 0); ctx.lineTo(-r * 0.7, r * 0.7); ctx.lineTo(-r * 0.7, -r * 0.7);
       ctx.closePath(); ctx.fill();
