@@ -105,26 +105,30 @@ grep -rlZ -i --include='*.html' --include='*.htm' --include='*.phtml' --include=
         -e 's/font-family:[^;"}]*Arial[^;"}]*/font-family:Times New Roman, Times, serif/gI'
 
 # 1e) Mobile reflow for the legacy in-game pages. Every in-game template links
-#     /archspace.css, so appending ONE max-width media query here makes all ~352
-#     fixed-width table pages fit a phone WITHOUT editing any template. Desktop is
-#     provably unaffected: every rule lives inside @media (max-width:760px), which
-#     only matches the narrow content iframe on small screens (the in-game pages
-#     render inside the de-framed shell's full-width "contents" iframe, so the
-#     query keys off that frame's width, not the whole monitor). Marker-guarded so
-#     re-runs don't append twice; step 1 re-unpacks the pristine css each boot, so
-#     this re-adds the block on top of a clean file every time.
+#     /archspace.css, so appending ONE media query here makes all ~352 fixed-width
+#     table pages fit a phone WITHOUT editing any template.
+#     The query is BOUNDED BOTH WAYS -- @media (min-width:200px) and (max-width:760px):
+#       * max-width:760  -> only narrow viewports (phones), never a desktop monitor.
+#       * min-width:200  -> EXCLUDES the 170px sidebar menu iframe, which also links
+#         archspace.css and lays out at its own ~170px width, so a bare max-width
+#         query matched it even on desktop and squeezed off the tree menu's "+"
+#         expand column. The content iframe is always wider than 200px, so it still
+#         reflows; the menu (always 170px) is left exactly as it was.
+#     Marker-guarded so re-runs don't append twice; step 1 re-unpacks the pristine
+#     css each boot, so this re-adds the block on top of a clean file every time.
 CSS_MAIN="$WWW/archspace.css"
 if [ -f "$CSS_MAIN" ] && ! grep -q 'as-mobile-reflow' "$CSS_MAIN" 2>/dev/null; then
     echo "[web] appending mobile reflow rules to archspace.css"
     cat >> "$CSS_MAIN" <<'CSS'
 
 /* === as-mobile-reflow (appended by setup-web.sh) ===========================
-   PHONES ONLY. Every rule below is inside this max-width media query, so the
-   desktop look is byte-for-byte unchanged -- the query matches only the narrow
-   content iframe on small screens. The in-game pages are 2004-era fixed-width
-   nested tables (610/590/550px); cap them to the viewport so they stop forcing
-   horizontal scroll, scale oversized banners down, and let text wrap. */
-@media (max-width: 760px) {
+   PHONES ONLY. Bounded BOTH ways: max-width:760 keeps desktop untouched, and
+   min-width:200 excludes the 170px sidebar menu iframe (which also links this
+   css) so the tree menu's "+" expand column is never squeezed. The content
+   iframe is always wider than 200px, so the in-game pages -- 2004-era fixed-width
+   nested tables (610/590/550px) -- still get capped to the viewport (no sideways
+   scroll), oversized banners scaled, and text wrapped. */
+@media (min-width: 200px) and (max-width: 760px) {
   table  { max-width: 100% !important; }   /* fit the 610/590/550px wrappers */
   img    { max-width: 100%; height: auto; }/* scale title banners, keep ratio */
   td, th { overflow-wrap: break-word; }    /* wrap long text instead of widening */
