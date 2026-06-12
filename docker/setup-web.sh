@@ -107,13 +107,13 @@ grep -rlZ -i --include='*.html' --include='*.htm' --include='*.phtml' --include=
 # 1e) Mobile reflow for the legacy in-game pages. Every in-game template links
 #     /archspace.css, so appending ONE media query here makes all ~352 fixed-width
 #     table pages fit a phone WITHOUT editing any template.
-#     The query is BOUNDED BOTH WAYS -- @media (min-width:200px) and (max-width:760px):
-#       * max-width:760  -> only narrow viewports (phones), never a desktop monitor.
-#       * min-width:200  -> EXCLUDES the 170px sidebar menu iframe, which also links
-#         archspace.css and lays out at its own ~170px width, so a bare max-width
-#         query matched it even on desktop and squeezed off the tree menu's "+"
-#         expand column. The content iframe is always wider than 200px, so it still
-#         reflows; the menu (always 170px) is left exactly as it was.
+#     Two guards keep it surgical:
+#       * @media (max-width:760px) -> only narrow viewports (phones), not desktop.
+#       * body:not(.as-menu)       -> EXCLUDES the sidebar menu, which is its own
+#         iframe that also links archspace.css; a bare query matched it and squeezed
+#         off the tree menu's "+" expand column. menu.html's <body> carries
+#         class="as-menu", so the rules deterministically skip it (no fragile
+#         width-guessing about the menu frame's layout width).
 #     Marker-guarded so re-runs don't append twice; step 1 re-unpacks the pristine
 #     css each boot, so this re-adds the block on top of a clean file every time.
 CSS_MAIN="$WWW/archspace.css"
@@ -122,16 +122,19 @@ if [ -f "$CSS_MAIN" ] && ! grep -q 'as-mobile-reflow' "$CSS_MAIN" 2>/dev/null; t
     cat >> "$CSS_MAIN" <<'CSS'
 
 /* === as-mobile-reflow (appended by setup-web.sh) ===========================
-   PHONES ONLY. Bounded BOTH ways: max-width:760 keeps desktop untouched, and
-   min-width:200 excludes the 170px sidebar menu iframe (which also links this
-   css) so the tree menu's "+" expand column is never squeezed. The content
-   iframe is always wider than 200px, so the in-game pages -- 2004-era fixed-width
-   nested tables (610/590/550px) -- still get capped to the viewport (no sideways
-   scroll), oversized banners scaled, and text wrapped. */
-@media (min-width: 200px) and (max-width: 760px) {
-  table  { max-width: 100% !important; }   /* fit the 610/590/550px wrappers */
-  img    { max-width: 100%; height: auto; }/* scale title banners, keep ratio */
-  td, th { overflow-wrap: break-word; }    /* wrap long text instead of widening */
+   PHONES ONLY (max-width:760). The sidebar menu is its own iframe that also
+   links this css; body:not(.as-menu) keeps every rule OUT of it so the tree
+   menu's "+" expand column is never squeezed (menu.html's <body class="as-menu">).
+   For the content pages -- 2004-era fixed-width nested tables (610/590/550px)
+   plus hard-coded width= elements like <hr width="550"> -- cap everything to the
+   viewport (no sideways scroll), scale images, and wrap long text. max-width only
+   ever CAPS (never widens), so capping every width= element is safe. */
+@media (max-width: 760px) {
+  body:not(.as-menu) table   { max-width: 100% !important; }  /* auto + fixed tables */
+  body:not(.as-menu) [width] { max-width: 100% !important; }  /* <hr width=550>, cells */
+  body:not(.as-menu) img     { max-width: 100%; height: auto; }/* scale images */
+  body:not(.as-menu) td,
+  body:not(.as-menu) th      { overflow-wrap: break-word; }   /* wrap long text */
 }
 CSS
 fi
