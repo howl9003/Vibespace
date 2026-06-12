@@ -3059,6 +3059,27 @@ bot_band_floor(int aBand)
 	return aBand <= 0 ? 0 : bot_band_ceiling(aBand - 1);
 }
 
+// Per-tier bot roster (see player.h). Tiers 1..6 == bands 0..5. mMaxFleets/mCullTo
+// include the one permanent auto-expedition fleet, so the defender counts are
+// 30/30/30/40/30/80 (culling to 20/20/20/20/20/40). Population is a pyramid.
+const CBotTierSpec &
+bot_tier_spec(int aBand)
+{
+	static const CBotTierSpec Specs[NUM_BOT_BANDS] =
+	{
+		//  hull              level  max  cull  pop
+		{  3 /*Frigate*/,      3,    31,  21,   40 },
+		{  5 /*Cruiser*/,      3,    31,  21,   30 },
+		{  7 /*BattleShip*/,   4,    31,  21,   25 },
+		{  8 /*Dreadnaught*/,  4,    41,  21,   20 },
+		{ 10 /*Doomstar*/,     5,    31,  21,   20 },
+		{ 10 /*Doomstar*/,     5,    81,  41,   15 },
+	};
+	if (aBand < 0) aBand = 0;
+	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
+	return Specs[aBand];
+}
+
 bool
 CPlayer::refresh_power()
 {

@@ -297,13 +297,14 @@ class CCronTabBotPopulation : public CCronTab
 		virtual void handler();
 };
 
-// Drive each bot's defensive economy (expedition / train / build / defend).
-class CCronTabBotAI : public CCronTab
+// Slowly grow each bot's roster (+1 fleet ~hourly) and cull it back at the tier
+// cap -- the autonomous rise-and-fall (see trigger/crontab.bot.cc).
+class CCronTabBotRegen : public CCronTab
 {
 	public :
-		virtual ~CCronTabBotAI() {};
-		virtual const char *name() { return "bot_ai"; }
-		virtual int get_run_second() { return 60; }     // every minute
+		virtual ~CCronTabBotRegen() {};
+		virtual const char *name() { return "bot_regen"; }
+		virtual int get_run_second() { return 60 * CGame::mSecondPerTurn; }  // ~every 60 turns
 	private :
 		virtual void handler();
 };

@@ -39,6 +39,32 @@ class CRankTable;
 int bot_band_ceiling(int aBand);
 int bot_band_floor(int aBand);
 
+// Per-tier bot roster. Each tier (= bot band 0..5) flies a distinct hull class
+// at a fixed component (tech) level, grows by one fleet roughly hourly up to
+// mMaxFleets, then is culled back to mCullTo -- a slow rise-and-fall sawtooth.
+// mMaxFleets/mCullTo INCLUDE the one permanent auto-expedition fleet every bot
+// keeps. mPopulation is the target live count for the tier (a pyramid: more weak
+// bots, fewer apex). See bot_tier_spec() and trigger/crontab.bot.cc.
+struct CBotTierSpec
+{
+	int mHull;        // ship size / hull class 1..10 (3=Frigate .. 10=Doomstar)
+	int mLevel;       // component level 1..5
+	int mMaxFleets;   // grow up to this many fleets, then cull
+	int mCullTo;      // cull back down to this many fleets
+	int mPopulation;  // target live bot count for this tier
+};
+const CBotTierSpec &bot_tier_spec(int aBand);
+
+// Add one full fleet flying aDesign to aPlayer, crewed to capacity under a fresh
+// level-aLevel admiral of the player's race at aExp experience, and persist it.
+// aExpedition launches the fleet on an auto-repeat expedition (the one permanent
+// expedition fleet); otherwise it stands by to defend. Returns the fleet or NULL.
+// Shared by bot spawn (game.cc) and the regen cron (trigger/crontab.bot.cc).
+class CFleet;
+class CShipDesign;
+CFleet *bot_add_fleet(CPlayer *aPlayer, CShipDesign *aDesign, int aLevel,
+		int aExp, bool aExpedition);
+
 //------------------------------------------------------- CPlayer
 
 struct LostPlanet

@@ -383,8 +383,8 @@ CArchspaceTriggerStation::registration()
 
 	CCronTabBotPopulation *
 		BotPopulation = new CCronTabBotPopulation();
-	CCronTabBotAI *
-		BotAI = new CCronTabBotAI();
+	CCronTabBotRegen *
+		BotRegen = new CCronTabBotRegen();
 
 	Dummy->load_last_activated_time();
 //	NewPlayer->load_last_activated_time();
@@ -402,7 +402,7 @@ CArchspaceTriggerStation::registration()
 	EmpireCounterattackEmpirePlanet->load_last_activated_time();
 
 	BotPopulation->load_last_activated_time();
-	BotAI->load_last_activated_time();
+	BotRegen->load_last_activated_time();
 
 	CronTabHandler->push(Dummy);
 //	CronTabHandler->push(NewPlayer);
@@ -421,7 +421,7 @@ CArchspaceTriggerStation::registration()
 	CronTabHandler->push(EmpireCounterattackEmpirePlanet);
 
 	CronTabHandler->push(BotPopulation);
-	CronTabHandler->push(BotAI);
+	CronTabHandler->push(BotRegen);
 
 	push(CronTabHandler);
 

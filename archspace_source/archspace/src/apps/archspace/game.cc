@@ -1678,6 +1678,160 @@ make_best_bot_design(CPlayer *aPlayer, int aShipSize)
 	return Design;
 }
 
+// Build a ship design for a SPECIFIC hull (1..10) at a SPECIFIC component level
+// (1..5), independent of the owner's tech: components are selected straight from
+// COMPONENT_TABLE by level, exactly the way the black market builds its named
+// "<Hull> Mk. <level>" designs (blackmarket.cc). Names it the same way so a tier's
+// ships read like a recognizable class. The random weapon/device picks vary call
+// to call, so calling it a few times yields an assortment of distinct designs.
+// Registered (owner = aPlayer) on the player's design list. NULL if a core slot
+// can't be filled for that level.
+static CShipDesign *
+make_design_at_level(CPlayer *aPlayer, int aHull, int aLevel)
+{
+	if (aHull < 1)  aHull = 1;
+	if (aHull > 10) aHull = 10;
+	if (aLevel < 1) aLevel = 1;
+	if (aLevel > 5) aLevel = 5;
+
+	CShipSize *Body = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + aHull);
+	if (Body == NULL) return NULL;
+
+	// Core components at exactly this level; weapons at this level; devices up to
+	// this level (mirrors CBlackMarket::create_new_fleet's selection).
+	int Armor = 0, Engine = 0, Computer = 0, Shield = 0;
+	CComponent *WeaponComp[256]; int WeaponN = 0;
+	CComponent *DeviceComp[256]; int DeviceN = 0;
+	for (int i=0 ; i<COMPONENT_TABLE->length() ; i++)
+	{
+		CComponent *C = (CComponent *)COMPONENT_TABLE->get(i);
+		if (C == NULL) continue;
+		int Cat = C->get_category();
+		int Lvl = C->get_level();
+		if (Lvl == aLevel)
+		{
+			switch (Cat)
+			{
+				case CComponent::CC_ARMOR:    Armor    = C->get_id(); break;
+				case CComponent::CC_ENGINE:   Engine   = C->get_id(); break;
+				case CComponent::CC_COMPUTER: Computer = C->get_id(); break;
+				case CComponent::CC_SHIELD:   Shield   = C->get_id(); break;
+				case CComponent::CC_WEAPON:
+					if (WeaponN < 256) WeaponComp[WeaponN++] = C;
+					break;
+			}
+		}
+		if (Cat == CComponent::CC_DEVICE && Lvl <= aLevel && DeviceN < 256)
+			DeviceComp[DeviceN++] = C;
+	}
+	if (!Armor || !Engine || !Computer || !Shield || WeaponN == 0) return NULL;
+
+	CShipDesignList *DesignList = aPlayer->get_ship_design_list();
+	CShipDesign *Design = new CShipDesign;
+	CString Name = Body->get_name();
+	Name.format(" Mk. %d", aLevel);          // -> "Frigate Mk. 3" etc.
+	Design->set_name((char *)Name);
+	Design->set_design_id(DesignList->max_design_id() + 1);
+	Design->set_owner(aPlayer->get_game_id());
+	Design->set_body(4000 + aHull);
+	Design->set_build_cost(Body->get_cost());
+	Design->set_build_time((int)time((time_t *)0));
+	Design->set_armor(Armor);
+	Design->set_engine(Engine);
+	Design->set_computer(Computer);
+	Design->set_shield(Shield);
+
+	// fill the hull's weapon slots with random level-matched weapons
+	for (int i=0 ; i<WEAPON_MAX_NUMBER ; i++)
+	{
+		if (i < Body->get_weapon())
+		{
+			CWeapon *W = (CWeapon *)WeaponComp[number(WeaponN) - 1];
+			int Space = W->get_space();
+			if (Space < 1) Space = 1;
+			int Num = Body->get_slot() / Space;
+			if (Num < 1) Num = 1;
+			Design->set_weapon(i, W->get_id());
+			Design->set_weapon_number(i, Num);
+		}
+		else
+		{
+			Design->set_weapon(i, 0);
+			Design->set_weapon_number(i, 0);
+		}
+	}
+
+	// fill the hull's device slots with distinct random devices (<= this level)
+	int DevicePlaced[DEVICE_MAX_NUMBER]; int DevicePlacedN = 0;
+	for (int i=0 ; i<DEVICE_MAX_NUMBER ; i++)
+	{
+		int Chosen = 0;
+		if (i < Body->get_device() && DeviceN > 0)
+		{
+			for (int tries=0 ; tries<8 && Chosen==0 ; tries++)
+			{
+				int Id = DeviceComp[number(DeviceN) - 1]->get_id();
+				bool Dup = false;
+				for (int d=0 ; d<DevicePlacedN ; d++)
+					if (DevicePlaced[d] == Id) { Dup = true; break; }
+				if (!Dup) Chosen = Id;
+			}
+		}
+		Design->set_device(i, Chosen);
+		if (Chosen) DevicePlaced[DevicePlacedN++] = Chosen;
+	}
+
+	DesignList->add_ship_design(Design);
+	Design->type(QUERY_INSERT);
+	*STORE_CENTER << *Design;
+	return Design;
+}
+
+// Add one full fleet flying aDesign to aPlayer under a fresh level-aLevel admiral
+// of the bot's race, crewed to the admiral's capacity, at aExp experience; persist
+// fleet + admiral. aExpedition launches it on an auto-repeat expedition (the one
+// permanent expedition fleet every bot keeps); otherwise it stands by to defend.
+// Shared by create_bot_player and the regen cron (see player.h).
+CFleet *
+bot_add_fleet(CPlayer *aPlayer, CShipDesign *aDesign, int aLevel, int aExp, bool aExpedition)
+{
+	if (aPlayer == NULL || aDesign == NULL) return NULL;
+
+	CFleetList   *FleetList   = aPlayer->get_fleet_list();
+	CAdmiralList *AdmiralList = aPlayer->get_admiral_list();
+
+	// a fresh commander of the bot's own race at the requested level
+	CAdmiral *Admiral = new CAdmiral(aLevel, 0, 0, aPlayer->get_race());
+	Admiral->set_owner(aPlayer->get_game_id());
+	AdmiralList->add_admiral(Admiral);
+
+	int Capacity = Admiral->get_fleet_commanding();
+	if (Capacity < 1) Capacity = 1;
+
+	CFleet *Fleet = new CFleet();
+	Fleet->set_id(FleetList->get_new_fleet_id());
+	Fleet->set_owner(aPlayer->get_game_id());
+	Fleet->set_name((char *)format("BOT Fleet(%d)", Fleet->get_id()));
+	Fleet->set_admiral(Admiral->get_id());
+	Fleet->set_ship_class(aDesign);
+	Fleet->set_max_ship(Capacity);
+	Fleet->set_current_ship(Capacity);
+	Fleet->set_exp(aExp);
+	FleetList->add_fleet(Fleet);
+
+	Admiral->set_fleet_number(Fleet->get_id());
+
+	// target=1 -> auto-repeat: the expedition relaunches each time it returns.
+	if (aExpedition)
+		Fleet->init_mission(CMission::MISSION_EXPEDITION, 1);
+
+	Admiral->type(QUERY_INSERT);
+	STORE_CENTER->store(*Admiral);
+	Fleet->type(QUERY_INSERT);
+	STORE_CENTER->store(*Fleet);
+	return Fleet;
+}
+
 // Build a bot display name into aOut: a rank prefix scaled to the band (band 0
 // only Ensign; band 1 Ensign/Captain; band 2 +Commodore; band 3 any rank up to
 // Admiral; band 4 always Grand Admiral; band 5 always Supreme Admiral) + a
@@ -1694,6 +1848,30 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
 	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
 
+	// Two name styles, chosen ~50/50 (tunable via the Game/BotFactionNamePct INI
+	// key): a FACTION name "<Race> <Suffix>" (e.g. "Xesperados Empire") for a sense
+	// of rival powers, or a single COMMANDER "<Rank> <Name>" so individual captains
+	// still appear. Both bounded to player.name's width by snprintf.
+	static const char *FactionSuffix[] =
+	{
+		"Empire", "Supremacy", "Alliance", "Dominion", "Federation", "Hegemony",
+		"Republic", "Imperium", "Coalition", "Collective", "Confederacy",
+		"Ascendancy", "Conclave", "Horde"
+	};
+	int FactionPct =
+		ARCHSPACE->configuration().get_integer("Game", "BotFactionNamePct", 50);
+
+	if (number(100) <= FactionPct)
+	{
+		CRace *Race = (CRace *)RACE_TABLE->get_by_id(aRace);
+		const char *RaceName = (Race && Race->get_name() && *Race->get_name())
+			? Race->get_name() : "Rogue";
+		const char *Suffix =
+			FactionSuffix[number(sizeof(FactionSuffix)/sizeof(FactionSuffix[0])) - 1];
+		snprintf(aOut, aOutSize, "%.24s %s", RaceName, Suffix);
+		return;
+	}
+
 	// bands 0-3: a random rank scaled to the band; bands 4-5: a fixed signature
 	// rank shared by every bot in the band.
 	int Rank = (aBand >= 4) ? aBand : number(aBand + 1) - 1;
@@ -1707,12 +1885,13 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 	snprintf(aOut, aOutSize, "%s %.30s", RankNames[Rank], Commander);
 }
 
-// Create a bot (NPC) player seeded into power band aBand (0..NUM_BOT_BANDS-1).
-// Builds on create_new_player(): grants band-scaled tech (level 3/5/7/9, which
-// also unlocks components), designs a best-components ship, adds planets, then
-// raises fleets flying that design until get_power() reaches the band floor --
-// auto-tuning to the band without hard-coding power-per-ship constants. The band
-// is encoded in the portal id (see player.h); nothing extra is persisted.
+// Create a bot (NPC) player in tier aBand (0..NUM_BOT_BANDS-1). Builds on
+// create_new_player(): grants band-scaled tech, adds planets, builds the tier's
+// ship roster (a distinct hull at a fixed tech level, see bot_tier_spec /
+// make_design_at_level), and seeds the bot with cull_to starting fleets -- one on
+// a permanent auto-repeat expedition, the rest standing by to defend. The regen
+// cron (trigger/crontab.bot.cc) then grows and culls it over time. The tier is
+// encoded in the portal id (see player.h); nothing extra is persisted.
 CPlayer *
 CGame::create_bot_player(int aBand)
 {
@@ -1744,15 +1923,13 @@ CGame::create_bot_player(int aBand)
 	if (Player == NULL) return NULL;
 
 	CPlanetList    *PlanetList     = Player->get_planet_list();
-	CAdmiralList   *AdmiralList    = Player->get_admiral_list();
-	CAdmiralList   *AdmiralPool    = Player->get_admiral_pool();
 	CFleetList     *FleetList      = Player->get_fleet_list();
-	CShipDesignList *ShipDesignList = Player->get_ship_design_list();
 
 	// --- tech: grant every tech up to the band's level -----------------------
-	// Discovering in ascending level order satisfies prerequisites and unlocks
-	// the matching ship components (discover_tech adds them to the component
-	// list), so the best-components design below reflects the band's tech.
+	// Discovering in ascending level order satisfies prerequisites and unlocks the
+	// matching ship components, keeping a bot's tech thematically in step with its
+	// tier (the tier ship designs pick components by level directly, so this is for
+	// flavour/power, not a hard requirement).
 	//   bands 0-3 -> level 3/5/7/9; band 4 (Grand Admiral) -> all level-9 techs;
 	//   band 5 (Supreme Admiral) -> every tech (the tree tops out at level 12).
 	int TechLevel;
@@ -1769,25 +1946,25 @@ CGame::create_bot_player(int aBand)
 		}
 	}
 
-	// --- best-components ship design, hull scaled with band -------------------
-	// bands 0-3: hull 3/5/7/9, clamped to what matter-energy tech allows
-	// (count/2 + 2, the same gate as the design page). Bands 4-5 (Grand/Supreme
-	// Admiral) fly doomstars (class 10): bots design directly, so we set the hull
-	// to 10 and skip the matter-energy gate rather than depend on tech count.
-	int ShipSize;
-	if (aBand >= 4)
+	// --- tier ship roster: 3 varied designs of this tier's hull + tech level ---
+	// Each tier flies a distinct hull class at a fixed component level (see
+	// bot_tier_spec): Frigate/Cruiser/BattleShip/Dreadnaught/Doomstar/Doomstar at
+	// level 3/3/4/4/5/5. We build a small assortment so a tier's fleets vary; the
+	// regen cron picks among them. Fall back to a best-components design if the
+	// level lookup somehow fails, so the bot is never design-less.
+	const CBotTierSpec &Spec = bot_tier_spec(aBand);
+	CShipDesign *TierDesign[3] = { NULL, NULL, NULL };
+	int TierDesignCount = 0;
+	for (int v=0 ; v<3 ; v++)
 	{
-		ShipSize = 10;
+		CShipDesign *D = make_design_at_level(Player, Spec.mHull, Spec.mLevel);
+		if (D != NULL) TierDesign[TierDesignCount++] = D;
 	}
-	else
+	if (TierDesignCount == 0)
 	{
-		int MatterMax = Player->count_tech_by_category(CTech::TYPE_MATTER_ENERGY) / 2 + 2;
-		ShipSize = 3 + aBand * 2;
-		if (ShipSize > MatterMax) ShipSize = MatterMax;
-		if (ShipSize > 10) ShipSize = 10;
-		if (ShipSize < 1)  ShipSize = 1;
+		CShipDesign *D = make_best_bot_design(Player, Spec.mHull);
+		if (D != NULL) TierDesign[TierDesignCount++] = D;
 	}
-	CShipDesign *BotDesign = make_best_bot_design(Player, ShipSize);
 
 	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
 	int TargetPlanets = 4 + aBand * 4;
@@ -1832,93 +2009,18 @@ CGame::create_bot_player(int aBand)
 		STORE_CENTER->store(*Planet);
 	}
 
-	// --- raise fleets until power reaches the MINIMUM (floor) of the band -----
-	// The bot is created at the low end of its band and the last fleet is sized
-	// (its capacity, not just its crew) so it lands just above the floor rather
-	// than deep inside the band. Sizing the *capacity* matters: the AI keeps
-	// fleets manned to max_ship, so a merely under-crewed fleet would be re-
-	// filled and overshoot -- a smaller-capacity fleet stays put near the floor.
-	// Always raise at least the band's defense reserve (5/10/15/20/20/20 by band,
-	// capped at 20; see bot_defense_reserve() in crontab.bot.cc) plus a small
-	// growth buffer, so the bot starts with enough fleets to keep its full reserve
-	// standing by to defend and still have a surplus to expedition. Commanders are
-	// created on demand if the pool runs dry. Bounded by a hard cap.
-	int Floor     = bot_band_floor(aBand);
-	int Reserve   = (aBand + 1) * 5;
-	if (Reserve > 20) Reserve = 20;        // bands 3-5 all hold 20 (also the plan limit)
-	int MinFleets  = Reserve + 2;
-	int MaxFleets  = 500;                  // absolute safety cap
+	// --- starting fleets: cull_to fleets, 1 on auto-expedition, rest defenders -
+	// A bot starts at its tier's cull_to count and the regen cron grows it +1 fleet
+	// roughly hourly up to max_fleets, then culls it back to cull_to -- a slow
+	// rise-and-fall. Every fleet is a full crew under a fresh level-20 commander of
+	// the bot's race. Exactly one fleet permanently runs an auto-repeat expedition
+	// (the +1 the tier caps account for); the rest stand by to defend.
+	for (int n=0 ; n<Spec.mCullTo && TierDesignCount>0 ; n++)
+	{
+		CShipDesign *D = TierDesign[number(TierDesignCount) - 1];
+		bot_add_fleet(Player, D, 20, 100, (n == 0));   // first fleet -> expedition
+	}
 	Player->refresh_power();
-	while (FleetList->length() < MaxFleets &&
-	       (FleetList->length() < MinFleets || Player->get_power() < Floor))
-	{
-		if (AdmiralPool->length() == 0)
-		{
-			CAdmiral *NewAdmiral = new CAdmiral(Player);
-			AdmiralPool->add_admiral(NewAdmiral);
-			NewAdmiral->type(QUERY_INSERT);
-			STORE_CENTER->store(*NewAdmiral);
-		}
-		CAdmiral *Admiral = (CAdmiral *)AdmiralPool->get(0);
-		// fly the best-components design; fall back to the latest stock design
-		// if the best-design build failed for any reason.
-		CShipDesign *ShipDesign = BotDesign
-			? BotDesign
-			: (CShipDesign *)ShipDesignList->get(ShipDesignList->length() - 1);
-		if (Admiral == NULL || ShipDesign == NULL) break;
-
-		int Before    = Player->get_power();
-		int Capacity  = Admiral->get_fleet_commanding();
-
-		CFleet *Fleet = new CFleet();
-		Fleet->set_id(FleetList->get_new_fleet_id());
-		Fleet->set_owner(Player->get_game_id());
-		Fleet->set_name((char *)format("BOT Fleet(%d)", Fleet->get_id()));
-		Fleet->set_admiral(Admiral->get_id());
-		Fleet->set_ship_class(ShipDesign);
-		Fleet->set_max_ship(Capacity);
-		Fleet->set_current_ship(Capacity);
-		Fleet->set_exp(25 + Player->get_control_model()->get_military()*3);
-		FleetList->add_fleet(Fleet);
-		Player->refresh_power();
-
-		// If this full fleet overshot the band floor, shrink its capacity so the
-		// bot settles right at the low end (skip band 0, whose floor is 0).
-		int After = Player->get_power();
-		if (Floor > 0 && Before < Floor && After > Floor && Capacity > 0)
-		{
-			int PerShip = (After - Before) / Capacity;        // ~power per ship
-			if (PerShip > 0)
-			{
-				int WantShips = (Floor - Before) / PerShip + 1;
-				if (WantShips < 1) WantShips = 1;
-				if (WantShips < Capacity)
-				{
-					Fleet->set_max_ship(WantShips);
-					Fleet->set_current_ship(WantShips);
-					Player->refresh_power();
-				}
-			}
-		}
-
-		Admiral->set_fleet_number(Fleet->get_id());
-		AdmiralPool->remove_without_free_admiral(Admiral->get_id());
-		AdmiralList->add_admiral(Admiral);
-
-		Fleet->type(QUERY_INSERT);
-		STORE_CENTER->store(*Fleet);
-		Admiral->type(QUERY_UPDATE);
-		STORE_CENTER->store(*Admiral);
-	}
-
-	// leave a few spare commanders in the pool for the AI to grow into
-	while (AdmiralPool->length() < 5)
-	{
-		CAdmiral *Admiral = new CAdmiral(Player);
-		AdmiralPool->add_admiral(Admiral);
-		Admiral->type(QUERY_INSERT);
-		STORE_CENTER->store(*Admiral);
-	}
 
 	Player->set_last_login(time(0));
 	Player->type(QUERY_UPDATE);
