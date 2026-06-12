@@ -119,7 +119,10 @@ CPageEmpireInvadeEmpirePlanetFleet::handler(CPlayer *aPlayer)
     } 
 	
 	ITEM("SELECT_OPTIONS", (char*)HTMLSelectOptions);
-        	
+
+	// Saved attack templates -> the selection-preset picker (as-select-preset.js),
+	// which ticks the fleet checkboxes + capital from a named template.
+	ITEM("ATTACK_TEMPLATES", aPlayer->get_attack_plan_list()->deploy_board_blob());
 
 //	system_log( "end page handler %s", get_name() );
 
