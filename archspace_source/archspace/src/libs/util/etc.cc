@@ -152,20 +152,32 @@ unescape(char *aString)
 }
 
 // 1 - i ���� ���� �ѹ�
+// File-scope so seed_rng() can flip it (battle-sim needs reproducible RNG).
+static int gRandInitialized = 0;
+
+// battle-sim harness hook: seed the RNG deterministically. Must ALSO set the
+// initialized flag, otherwise the next number() call re-seeds from time/pid
+// and clobbers this seed.
+void seed_rng( unsigned long aSeed )
+{
+	srandom( aSeed );
+	srand48( aSeed );
+	gRandInitialized = 1;
+}
+
 int number( int i )
 {
-  static int initialized;
   double x;
 
   if( i <= 0 ) return 0;
 
-  if( initialized == 0 ){
-  	long 
+  if( gRandInitialized == 0 ){
+  	long
 		seed = time(0) * 1000 + getpid();
 	srandom(seed);
 	srand48(seed);
 
-    initialized = 1;
+    gRandInitialized = 1;
   }
 
   x = drand48() * (double)i + 1.0;

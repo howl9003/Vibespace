@@ -110,6 +110,7 @@ int main(int argc, char **argv)
 	pth_init();
 
 	const char *ConfigPath = (argc > 1) ? argv[1] : "spikeA.config";
+	unsigned long Seed = (argc > 2) ? strtoul(argv[2], NULL, 10) : 12345UL;
 
 	CIniFile Config;
 	if (!Config.load(ConfigPath))
@@ -129,7 +130,12 @@ int main(int argc, char **argv)
 		fprintf(stderr, "battle-sim: boot_scripts_only failed\n");
 		return 1;
 	}
-	fprintf(stderr, "battle-sim: engine booted (DB-free). Building siege...\n");
+	fprintf(stderr, "battle-sim: engine booted (DB-free). Building siege (seed=%lu)...\n", Seed);
+
+	// Deterministic RNG: seed BEFORE any number()-consuming construction
+	// (admiral skills, battle rolls) so identical (config, seed) => identical
+	// outcome, and a shared seed gives Common Random Numbers across compared specs.
+	seed_rng(Seed);
 
 	// --- build the two sides (race 1 = Human on both, for Spike A) ----------
 	CPlayer *Attacker = make_player(1, 1);
@@ -145,10 +151,10 @@ int main(int argc, char **argv)
 	CShipDesign Design;
 	fill_design(&Design);
 
-	// Asymmetric force so the outcome is decisive (validates the mechanics
-	// actually engage): a large attacker fleet vs a small defender fleet.
-	make_fleet(Attacker, 101, "Strike Force", &Design, AtkAdmiral->get_id(), 30);
-	make_fleet(Defender, 201, "Home Guard",   &Design, DefAdmiral->get_id(),  5);
+	// A fairly close matchup so the turn count / outcome is RNG-sensitive
+	// (good for demonstrating determinism and CRN variance reduction).
+	make_fleet(Attacker, 101, "Strike Force", &Design, AtkAdmiral->get_id(), 16);
+	make_fleet(Defender, 201, "Home Guard",   &Design, DefAdmiral->get_id(), 12);
 
 	// Offense plan: charge the capital fleet in.
 	CDefensePlan OffensePlan;
@@ -187,7 +193,8 @@ int main(int argc, char **argv)
 		;
 
 	bool AttackerWon = Battle.attacker_win();
-	printf("RESULT attacker_win=%d turns=%d offense_fleets=%d defense_fleets=%d\n",
+	printf("RESULT seed=%lu attacker_win=%d turns=%d offense_fleets=%d defense_fleets=%d\n",
+		   Seed,
 		   AttackerWon ? 1 : 0,
 		   Battle.get_record()->get_turn(),
 		   Battle.get_offense_battle_fleet_list().length(),

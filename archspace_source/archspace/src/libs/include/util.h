@@ -138,6 +138,7 @@ void system_log(const char *aFormat, ...);
 void system_log_for_pstat(const char *aFormat, ...);
 int number( int i );
 int dice( int n, int m );
+void seed_rng( unsigned long aSeed );  // battle-sim: deterministic RNG seeding
 char *dec2unit(int aNumber);
 char *dec2unit_for_unsigned_int(unsigned int aNumber);
 char *remove_comma(const char *aNumberString);
