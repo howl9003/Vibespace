@@ -45,7 +45,33 @@ sh set_platform linux
 This produces `apps/battle-sim/battle-sim`. The Python client finds it
 automatically.
 
-## Run
+## Run on Windows (or anywhere) via Docker
+
+The engine needs `fork()` / GNU `pth` / POSIX, so there is no native Windows
+`.exe` — but a Docker image runs the whole thing unchanged. On Windows use
+**Docker Desktop (WSL2 backend)**; performance is close to bare-metal Linux
+because battles are CPU-bound and in-memory (the only real Docker-on-Windows
+slowdown — cross-boundary filesystem I/O — doesn't apply, since everything runs
+inside the image). Give Docker Desktop / WSL2 plenty of cores — the search
+scales with them.
+
+```sh
+# build (from the repo ROOT):
+docker build -f tools/balance-tester/Dockerfile -t archspace-balance .
+
+# run a scenario, writing the report to a host folder:
+#   PowerShell:
+docker run --rm -v ${PWD}\runs:/app/tools/balance-tester/runs `
+    archspace-balance scenarios/siege_symmetric.yaml --mode assess --out runs/win
+#   Linux / macOS / WSL:
+docker run --rm -v "$PWD/runs:/app/tools/balance-tester/runs" \
+    archspace-balance scenarios/siege_symmetric.yaml --mode assess --out runs/win
+```
+
+The report lands in `./runs/win/report.md`. To open a shell or run the TUI,
+override the entrypoint: `docker run --rm -it --entrypoint bash archspace-balance`.
+
+## Run (native Linux)
 
 ```sh
 cd tools/balance-tester
