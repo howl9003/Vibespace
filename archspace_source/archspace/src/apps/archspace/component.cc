@@ -366,6 +366,13 @@ CComponent::CComponent()
 {
 	mID = 0;
 	mLevel = 0;
+	// CPrerequisiteList has no constructor and init() is only called for
+	// components that declare a <Prerequisite> section, so initialize the base
+	// list here: otherwise a no-prerequisite component's evaluate() dereferences
+	// an uninitialized pointer (masked in the long-lived server by fresh-zeroed
+	// heap, but a real latent crash - and one the battle-sim hits immediately).
+	mPrerequisiteList = NULL;
+	set_secret(false);
 }
 
 char *

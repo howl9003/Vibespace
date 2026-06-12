@@ -1,18 +1,22 @@
 // battle-sim : standalone, DB-free Archspace battle evaluator.
 //
-// Spike A: boot the real engine loading ONLY the script tables (no MariaDB),
-// build one siege (attacker vs defender) entirely in memory, run the real
-// CBattle, and print attacker_win() + basic result metrics.
+// Boots the real engine without MariaDB and serves a line-oriented JSON
+// protocol on stdin/stdout (one request object per line, one response per
+// line). Requests:
+//   {"cmd":"ping"}                         -> {"ok":true,...}
+//   {"cmd":"pool","race":R,"tech_cap":T}   -> legal components + hulls for R
+//   {"cmd":"quit"}                         -> exits
+// Run with `--demo [seed]` to run the hand-built Spike siege (regression).
 //
-// This links the real engine objects (apps/archspace/*.o, minus main.o) so the
-// battle mechanics are the genuine in-game ones, not a re-implementation.
+// Links the real engine objects so the mechanics are the genuine in-game ones.
 
-#include "archspace.h"   // application/game framework
+#include "archspace.h"
 #include "frame.h"       // extern CApplication* gApplication
 #include "game.h"
 #include "player.h"
 #include "council.h"
 #include "race.h"
+#include "tech.h"
 #include "component.h"
 #include "ship.h"
 #include "fleet.h"
@@ -24,52 +28,148 @@
 #include <pth.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+#include <string>
+#include <sstream>
+#include <iostream>
+
+#include "json_mini.h"
 
 // ---- inject a DB-free booted CGame into a real CArchspace ------------------
-// The global-table macros (COMPONENT_TABLE / SHIP_SIZE_TABLE / RACE_TABLE ...)
-// resolve through ((CArchspace*)gApplication)->game(), so we need a real
-// CArchspace-layout object whose protected mGame points at our booted game.
 class CBattleSimApp : public CArchspace
 {
 	public:
 		void set_game(CGame *aGame) { mGame = aGame; }
 };
 
-// ---- minimal in-memory side builders ---------------------------------------
+static void emit(const std::string &aLine)
+{
+	fputs(aLine.c_str(), stdout);
+	fputc('\n', stdout);
+	fflush(stdout);
+}
+
+static void emit_error(const char *aWhat)
+{
+	std::ostringstream o;
+	o << "{\"ok\":false,\"error\":\"" << aWhat << "\"}";
+	emit(o.str());
+}
+
+// =====================  pool query  =========================================
+
+static const char *category_name(int aCategory)
+{
+	switch (aCategory)
+	{
+		case CComponent::CC_ARMOR:    return "ARMOR";
+		case CComponent::CC_COMPUTER: return "COMP";
+		case CComponent::CC_SHIELD:   return "SHLD";
+		case CComponent::CC_ENGINE:   return "ENGN";
+		case CComponent::CC_DEVICE:   return "DEV";
+		case CComponent::CC_WEAPON:   return "WPN";
+		default:                      return "UNKNOWN";
+	}
+}
+
+// Synthetic player of race R that knows every tech with level <= tech_cap, so
+// CComponent::evaluate() returns the genuinely race/tech-legal component set.
+static CPlayer *make_pool_player(int aRace, int aTechCap)
+{
+	CPlayer *Player = new CPlayer(900 + aRace);
+	Player->set_race(aRace);
+
+	for (int i = 0; i < TECH_TABLE->length(); i++)
+	{
+		CTech *Tech = (CTech *)TECH_TABLE->get(i);
+		if (Tech->get_level() <= aTechCap)
+			Player->add_tech(new CKnownTech(Player->get_game_id(), Tech->get_id(), 0));
+	}
+	return Player;
+}
+
+static void do_pool(const JValue &aReq)
+{
+	int Race    = aReq["race"].as_int(1);
+	int TechCap = aReq["tech_cap"].as_int(999999);
+
+	if (Race < 1 || Race > MAX_RACE) { emit_error("bad race"); return; }
+
+	CPlayer *Player = make_pool_player(Race, TechCap);
+
+	// Components grouped by category.
+	std::ostringstream comp[CComponent::CC_MAX];
+	bool first[CComponent::CC_MAX];
+	for (int c = 0; c < CComponent::CC_MAX; c++) first[c] = true;
+
+	for (int i = 0; i < COMPONENT_TABLE->length(); i++)
+	{
+		CComponent *Comp = (CComponent *)COMPONENT_TABLE->get(i);
+		if (!Comp->evaluate(Player)) continue;
+		int cat = Comp->get_category();
+		if (cat < 0 || cat >= CComponent::CC_MAX) continue;
+		if (!first[cat]) comp[cat] << ",";
+		first[cat] = false;
+		comp[cat] << "{\"id\":" << Comp->get_id()
+				  << ",\"level\":" << Comp->get_level() << "}";
+	}
+
+	// Hulls (ship sizes).
+	std::ostringstream hulls;
+	bool hfirst = true;
+	for (int i = 0; i < SHIP_SIZE_TABLE->length(); i++)
+	{
+		CShipSize *S = (CShipSize *)SHIP_SIZE_TABLE->get(i);
+		if (!hfirst) hulls << ",";
+		hfirst = false;
+		hulls << "{\"id\":" << S->get_id()
+			  << ",\"class\":" << S->get_class()
+			  << ",\"cost\":" << S->get_cost()
+			  << ",\"space\":" << S->get_space()
+			  << ",\"weapon_slots\":" << S->get_weapon()
+			  << ",\"device_slots\":" << S->get_device() << "}";
+	}
+
+	std::ostringstream o;
+	o << "{\"ok\":true,\"cmd\":\"pool\",\"race\":" << Race
+	  << ",\"tech_cap\":" << TechCap << ",\"hulls\":[" << hulls.str() << "]"
+	  << ",\"components\":{";
+	for (int c = 0; c < CComponent::CC_MAX; c++)
+	{
+		if (c) o << ",";
+		o << "\"" << category_name(c) << "\":[" << comp[c].str() << "]";
+	}
+	o << "}}";
+	emit(o.str());
+}
+
+// =====================  demo siege (regression)  ============================
 
 static CPlayer *make_player(int aGameID, int aRace)
 {
 	CPlayer *Player = new CPlayer(aGameID);
-	Player->set_race(aRace);          // resolves CRace* via RACE_TABLE
-	Player->set_honor(50);            // neutral
+	Player->set_race(aRace);
+	Player->set_honor(50);
 
-	// get_council() resolves through COUNCIL_TABLE by id, so register the stub
-	// council there (id = game id) before wiring it to the player.
 	CCouncil *Council = new CCouncil();
 	Council->set_id(aGameID);
-	Council->set_honor(50);           // neutral; battle averages player+council
+	Council->set_honor(50);
 	COUNCIL_TABLE->add_council(Council);
-	Player->sim_set_council_id(aGameID);   // resolves via COUNCIL_TABLE, no add_member
+	Player->sim_set_council_id(aGameID);
 
-	// Battle resolves a fleet's owning player via PLAYER_TABLE->get_by_game_id(),
-	// e.g. CAdmiral::get_overall_attack() checks the owner's racial abilities.
 	PLAYER_TABLE->add_player(Player);
-
 	return Player;
 }
 
-// A simple, valid Frigate (size 4003: 2 weapon slots, 1 device slot).
-// Component IDs are real entries from script/component.en; battle reads their
-// stats from COMPONENT_TABLE by id (tech-gating is a design-time concern).
 static void fill_design(CShipDesign *aDesign)
 {
-	aDesign->set_body(4003);          // Frigate
-	aDesign->set_armor(5101);         // Titanium
+	aDesign->set_body(4003);
+	aDesign->set_armor(5101);
 	aDesign->set_computer(5201);
 	aDesign->set_shield(5301);
 	aDesign->set_engine(5401);
-	aDesign->set_weapon(0, 6101);     // basic beam
+	aDesign->set_weapon(0, 6101);
 	aDesign->set_weapon_number(0, 2);
 	aDesign->set_weapon(1, 6101);
 	aDesign->set_weapon_number(1, 2);
@@ -79,21 +179,21 @@ static CFleet *make_fleet(CPlayer *aOwner, int aFleetID, const char *aName,
 						  CShipDesign *aDesign, int aAdmiralID, int aShipCount)
 {
 	CFleet *Fleet = new CFleet();
-	Fleet->set_ship_class(aDesign);   // copies the CShipDesign sub-object FIRST
+	Fleet->set_ship_class(aDesign);
 	Fleet->set_owner(aOwner->get_game_id());
 	Fleet->set_id(aFleetID);
 	Fleet->set_name(aName);
 	Fleet->set_admiral(aAdmiralID);
 	Fleet->set_max_ship(aShipCount);
 	Fleet->set_current_ship(aShipCount);
-	Fleet->set_exp(100);              // engine max; pins one morale confounder
+	Fleet->set_exp(100);
 	Fleet->set_status(CFleet::FLEET_STAND_BY);
 	aOwner->get_fleet_list()->add_fleet(Fleet);
 	return Fleet;
 }
 
-static CDefenseFleet *add_deploy(CDefensePlan *aPlan, CPlayer *aOwner,
-								 int aFleetID, int aCommand, int aX, int aY)
+static void add_deploy(CDefensePlan *aPlan, CPlayer *aOwner,
+					   int aFleetID, int aCommand, int aX, int aY)
 {
 	CDefenseFleet *DF = new CDefenseFleet();
 	DF->set_owner(aOwner->get_game_id());
@@ -102,42 +202,12 @@ static CDefenseFleet *add_deploy(CDefensePlan *aPlan, CPlayer *aOwner,
 	DF->set_x(aX);
 	DF->set_y(aY);
 	aPlan->add_defense_fleet(DF);
-	return DF;
 }
 
-int main(int argc, char **argv)
+static void run_demo(unsigned long aSeed)
 {
-	pth_init();
+	seed_rng(aSeed);
 
-	const char *ConfigPath = (argc > 1) ? argv[1] : "spikeA.config";
-	unsigned long Seed = (argc > 2) ? strtoul(argv[2], NULL, 10) : 12345UL;
-
-	CIniFile Config;
-	if (!Config.load(ConfigPath))
-	{
-		fprintf(stderr, "battle-sim: cannot load config '%s'\n", ConfigPath);
-		return 1;
-	}
-
-	// Stand up the engine DB-free.
-	CBattleSimApp App;
-	gApplication = &App;
-	CGame *Game = new CGame();
-	App.set_game(Game);
-
-	if (!Game->boot_scripts_only(&Config))
-	{
-		fprintf(stderr, "battle-sim: boot_scripts_only failed\n");
-		return 1;
-	}
-	fprintf(stderr, "battle-sim: engine booted (DB-free). Building siege (seed=%lu)...\n", Seed);
-
-	// Deterministic RNG: seed BEFORE any number()-consuming construction
-	// (admiral skills, battle rolls) so identical (config, seed) => identical
-	// outcome, and a shared seed gives Common Random Numbers across compared specs.
-	seed_rng(Seed);
-
-	// --- build the two sides (race 1 = Human on both, for Spike A) ----------
 	CPlayer *Attacker = make_player(1, 1);
 	CPlayer *Defender = make_player(2, 1);
 
@@ -151,59 +221,98 @@ int main(int argc, char **argv)
 	CShipDesign Design;
 	fill_design(&Design);
 
-	// A fairly close matchup so the turn count / outcome is RNG-sensitive
-	// (good for demonstrating determinism and CRN variance reduction).
 	make_fleet(Attacker, 101, "Strike Force", &Design, AtkAdmiral->get_id(), 16);
 	make_fleet(Defender, 201, "Home Guard",   &Design, DefAdmiral->get_id(), 12);
 
-	// Offense plan: charge the capital fleet in.
 	CDefensePlan OffensePlan;
 	OffensePlan.set_owner(Attacker->get_game_id());
 	OffensePlan.set_capital(101);
 	add_deploy(&OffensePlan, Attacker, 101, CDefenseFleet::COMMAND_FREE, 4500, 5000);
 
-	// Defense plan: hold the line.
 	CDefensePlan DefensePlan;
 	DefensePlan.set_owner(Defender->get_game_id());
 	DefensePlan.set_capital(201);
 	add_deploy(&DefensePlan, Defender, 201, CDefenseFleet::COMMAND_FREE, 5500, 5000);
 
-	// Minimal battlefield planet (siege reads id/name; Spike A stops before the
-	// ground siege_war() phase, so no defense-system data is required).
 	CPlanet Planet;
 	Planet.set_id(1);
-	Planet.set_name("Spike-A Test Planet");
+	Planet.set_name("Demo Planet");
 
 	CBattle Battle(CBattle::WAR_SIEGE, Attacker, Defender, (void *)&Planet);
-
 	if (!Battle.init_battle_fleet(&OffensePlan,
 								  Attacker->get_fleet_list(), Attacker->get_admiral_list(),
 								  &DefensePlan,
 								  Defender->get_fleet_list(), Defender->get_admiral_list()))
 	{
-		fprintf(stderr, "battle-sim: init_battle_fleet returned false (no deployment)\n");
+		emit_error("demo init_battle_fleet failed");
+		return;
+	}
+	while (Battle.run_step()) ;
+
+	std::ostringstream o;
+	o << "{\"ok\":true,\"cmd\":\"demo\",\"seed\":" << aSeed
+	  << ",\"attacker_win\":" << (Battle.attacker_win() ? 1 : 0)
+	  << ",\"turns\":" << Battle.get_record()->get_turn() << "}";
+	emit(o.str());
+}
+
+// =====================  server loop  ========================================
+
+static void serve()
+{
+	std::string line;
+	while (std::getline(std::cin, line))
+	{
+		if (line.empty()) continue;
+		JValue req;
+		if (!JParser::parse(line, req) || !req.is_obj()) { emit_error("parse"); continue; }
+
+		std::string cmd = req["cmd"].as_str();
+		if (cmd == "pool")      do_pool(req);
+		else if (cmd == "ping") emit("{\"ok\":true,\"cmd\":\"ping\"}");
+		else if (cmd == "quit") break;
+		else                    emit_error("unknown cmd");
+	}
+}
+
+int main(int argc, char **argv)
+{
+	pth_init();
+
+	const char *ConfigPath = (argc > 1) ? argv[1] : "spikeA.config";
+
+	CIniFile Config;
+	if (!Config.load(ConfigPath))
+	{
+		fprintf(stderr, "battle-sim: cannot load config '%s'\n", ConfigPath);
 		return 1;
 	}
 
-	fprintf(stderr, "battle-sim: deployed offense=%d defense=%d fleets; running...\n",
-			Battle.get_offense_battle_fleet_list().length(),
-			Battle.get_defense_battle_fleet_list().length());
+	CBattleSimApp App;
+	gApplication = &App;
+	CGame *Game = new CGame();
+	App.set_game(Game);
 
-	while (Battle.run_step())
-		;
+	if (!Game->boot_scripts_only(&Config))
+	{
+		fprintf(stderr, "battle-sim: boot_scripts_only failed\n");
+		return 1;
+	}
+	fprintf(stderr, "battle-sim: engine booted (DB-free).\n");
 
-	bool AttackerWon = Battle.attacker_win();
-	printf("RESULT seed=%lu attacker_win=%d turns=%d offense_fleets=%d defense_fleets=%d\n",
-		   Seed,
-		   AttackerWon ? 1 : 0,
-		   Battle.get_record()->get_turn(),
-		   Battle.get_offense_battle_fleet_list().length(),
-		   Battle.get_defense_battle_fleet_list().length());
+	if (argc > 2 && strcmp(argv[2], "--demo") == 0)
+	{
+		unsigned long Seed = (argc > 3) ? strtoul(argv[3], NULL, 10) : 12345UL;
+		run_demo(Seed);
+	}
+	else
+	{
+		serve();
+	}
 
-	// Skip the engine's global/CGame teardown: its table destructors
-	// double-free (the real long-lived server never destructs CGame either).
-	// A per-battle worker process is short-lived, so _exit() is the clean exit.
+	// Skip the engine's buggy global/CGame teardown (table dtors double-free;
+	// the long-lived server never destructs CGame either).
 	fflush(stdout);
 	fflush(stderr);
-	_exit(AttackerWon ? 0 : 0);
+	_exit(0);
 }
