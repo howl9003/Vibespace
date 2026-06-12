@@ -77,9 +77,14 @@ class CGame
 		CPlayer* create_new_player(int aPortalID, const char *aName,
 													int aRace);
 		CPlayer* create_bot_player(int aBand);
-		// Build a bot display name: band-scaled rank prefix (Ensign..Admiral) +
-		// a commander-style name for aRace. Written into aOut (<= aOutSize-1).
+		// Build a bot display name into aOut (<= aOutSize-1). make_bot_name picks
+		// ~50/50 (Game/BotFactionNamePct) between a FACTION name "<Race> <Suffix>"
+		// and a COMMANDER name "<Rank> <Name>". make_bot_faction_name builds a
+		// faction name deterministically from aSeed (for an idempotent backfill of
+		// existing bots); bot_name_is_faction tells whether a name already is one.
 		void make_bot_name(int aRace, int aBand, char *aOut, int aOutSize);
+		void make_bot_faction_name(int aRace, unsigned int aSeed, char *aOut, int aOutSize);
+		static bool bot_name_is_faction(const char *aName);
 
 		CCouncil *create_new_council(CCluster *aCluster, char *aName = NULL);
 		bool create_new_action( CPlayer *Owner, int aAction, 

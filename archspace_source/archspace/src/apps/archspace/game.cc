@@ -1838,6 +1838,51 @@ bot_add_fleet(CPlayer *aPlayer, CShipDesign *aDesign, int aLevel, int aExp, bool
 // commander-style name for aRace. If the full first+last name is over 30 chars,
 // only the last name is kept; the commander name gets its own 30 chars on top of
 // the rank (snprintf bounds the whole thing to player.name's width).
+// Faction-name suffixes, shared by the random (make_bot_name) and deterministic
+// (make_bot_faction_name) builders and by the detector (bot_name_is_faction).
+static const char *sBotFactionSuffix[] =
+{
+	"Empire", "Supremacy", "Alliance", "Dominion", "Federation", "Hegemony",
+	"Republic", "Imperium", "Coalition", "Collective", "Confederacy",
+	"Ascendancy", "Conclave", "Horde"
+};
+static const int sBotFactionSuffixCount =
+	sizeof(sBotFactionSuffix) / sizeof(sBotFactionSuffix[0]);
+
+// Build a faction name "<Race> <Suffix>" with the suffix chosen deterministically
+// from aSeed (so a backfill keyed on a bot's game_id is stable/idempotent).
+void
+CGame::make_bot_faction_name(int aRace, unsigned int aSeed, char *aOut, int aOutSize)
+{
+	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
+	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
+
+	CRace *Race = (CRace *)RACE_TABLE->get_by_id(aRace);
+	const char *RaceName = (Race && Race->get_name() && *Race->get_name())
+		? Race->get_name() : "Rogue";
+	const char *Suffix = sBotFactionSuffix[aSeed % sBotFactionSuffixCount];
+	snprintf(aOut, aOutSize, "%.24s %s", RaceName, Suffix);
+}
+
+// True if aName ends in " <Suffix>" for one of the faction suffixes -- i.e. it is
+// already a faction-style name (so the backfill leaves it alone).
+bool
+CGame::bot_name_is_faction(const char *aName)
+{
+	if (!aName || !*aName) return false;
+	int NameLen = (int)strlen(aName);
+	for (int i=0 ; i<sBotFactionSuffixCount ; i++)
+	{
+		const char *S = sBotFactionSuffix[i];
+		int SLen = (int)strlen(S);
+		if (NameLen > SLen + 1 &&
+		    aName[NameLen - SLen - 1] == ' ' &&
+		    strcmp(aName + NameLen - SLen, S) == 0)
+			return true;
+	}
+	return false;
+}
+
 void
 CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 {
@@ -1852,23 +1897,12 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 	// key): a FACTION name "<Race> <Suffix>" (e.g. "Xesperados Empire") for a sense
 	// of rival powers, or a single COMMANDER "<Rank> <Name>" so individual captains
 	// still appear. Both bounded to player.name's width by snprintf.
-	static const char *FactionSuffix[] =
-	{
-		"Empire", "Supremacy", "Alliance", "Dominion", "Federation", "Hegemony",
-		"Republic", "Imperium", "Coalition", "Collective", "Confederacy",
-		"Ascendancy", "Conclave", "Horde"
-	};
 	int FactionPct =
 		ARCHSPACE->configuration().get_integer("Game", "BotFactionNamePct", 50);
 
 	if (number(100) <= FactionPct)
 	{
-		CRace *Race = (CRace *)RACE_TABLE->get_by_id(aRace);
-		const char *RaceName = (Race && Race->get_name() && *Race->get_name())
-			? Race->get_name() : "Rogue";
-		const char *Suffix =
-			FactionSuffix[number(sizeof(FactionSuffix)/sizeof(FactionSuffix[0])) - 1];
-		snprintf(aOut, aOutSize, "%.24s %s", RaceName, Suffix);
+		make_bot_faction_name(aRace, number(sBotFactionSuffixCount) - 1, aOut, aOutSize);
 		return;
 	}
 
