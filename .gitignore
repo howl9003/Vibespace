@@ -26,6 +26,11 @@ archspace_source/archspace/src/apps/relay/Makefile
 systemlog
 archspace_source/archspace/src/apps/battle-sim/systemlog
 
+# Python (balance-tester orchestrator)
+__pycache__/
+*.pyc
+*.pyo
+
 # Persisted server-side deploy config (written by ec2-bootstrap.sh)
 docker/deploy/.deploy.env
 
