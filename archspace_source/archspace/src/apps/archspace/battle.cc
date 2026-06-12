@@ -2099,28 +2099,6 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 {
 	int
 		ActiveShip = count_active_ship();
-		int NumberofShipsToHit = 0;
-	if(number(mCommander->get_efficiency()) > 100)
-		NumberofShipsToHit = aEnemy->count_active_ship()/2;
-	else if(number(mCommander->get_efficiency()) > 90)
-		NumberofShipsToHit = (float)aEnemy->count_active_ship() * (float).75 ;
-	else if(number(mCommander->get_efficiency()) > 80)
-		NumberofShipsToHit = (float)aEnemy->count_active_ship() * (float).90 ;
-	else
-		NumberofShipsToHit = aEnemy->count_active_ship();
-
-	if(NumberofShipsToHit < 1 || NumberofShipsToHit >= aEnemy->count_active_ship())
-	{
-		NumberofShipsToHit = 0;
-	}
-
-
-
-
-	//NumberofShipsToHit = aEnemy->count_active_ship() / NumberofShipsToHit;
-	//if(NumberofShipsToHit < 1)
-		//NumberofShipsToHit = 1;
-
 
 	for( int i = 0; i < ActiveShip; i++ )
 	{
@@ -2194,51 +2172,35 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 
 			int
 				Index = -1;
-			int pq;
-			if(NumberofShipsToHit < 1 || NumberofShipsToHit >= aEnemy->count_active_ship())
-			{
-				NumberofShipsToHit = 0;
-			}
-			Index = NumberofShipsToHit;
-			for(pq = NumberofShipsToHit; pq < aEnemy->count_active_ship(); pq++)
-			{
-				if(Index < 1 || Index >= aEnemy->count_active_ship())
-				{
-					Index = 0;
-				}
-				if(aEnemy->get_hp(Index) < 1)
-				{
-					Index++;
-				}
-				else
-				{
-					Index = pq;
-				}
-			}
-			if(Index < 1 || Index >= aEnemy->count_active_ship())
-			{
-				Index = 0;
-			}
-			if(aEnemy->get_hp(Index) < 1)
-			{
-				for(pq = NumberofShipsToHit; pq > 0; pq--)
-				{
-					if(aEnemy->get_hp(Index) < 1)
-					{
-						Index--;
-					}
-					else
-					{
-						Index = pq;
-					}
-				}
 
-			}
-			if(Index < 1 || Index >= aEnemy->count_active_ship())
+			if( number(100) <= get_efficiency() )
 			{
-					Index = 0;
+				for( int i = 0; i < aEnemy->get_max_ship(); i++ )
+				{
+					if( aEnemy->get_hp(i) > 0 )
+					{
+						Index = i;
+						break;
+					}
+				}
 			}
-			NumberofShipsToHit--;
+			else
+			{
+				int
+					Nth = number( aEnemy->count_active_ship() );
+				for( int i = 0; i < aEnemy->get_max_ship(); i++ )
+				{
+					if( aEnemy->get_hp(i) > 0 )
+					{
+						Nth--;
+						if( Nth == 0 )
+						{
+							Index = i;
+							break;
+						}
+					}
+				}
+			}
 
 			int
 				RealDam = 0;
