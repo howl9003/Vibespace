@@ -114,7 +114,10 @@ static void do_pool(const JValue &aReq)
 		if (!first[cat]) comp[cat] << ",";
 		first[cat] = false;
 		comp[cat] << "{\"id\":" << Comp->get_id()
-				  << ",\"level\":" << Comp->get_level() << "}";
+				  << ",\"level\":" << Comp->get_level();
+		if (cat == CComponent::CC_WEAPON)   // weapon space -> how many fit per slot
+			comp[cat] << ",\"space\":" << ((CWeapon *)Comp)->get_space();
+		comp[cat] << "}";
 	}
 
 	// Hulls (ship sizes).
@@ -129,6 +132,7 @@ static void do_pool(const JValue &aReq)
 			  << ",\"class\":" << S->get_class()
 			  << ",\"cost\":" << S->get_cost()
 			  << ",\"space\":" << S->get_space()
+			  << ",\"slot\":" << S->get_slot()          // space per weapon slot
 			  << ",\"weapon_slots\":" << S->get_weapon()
 			  << ",\"device_slots\":" << S->get_device() << "}";
 	}
