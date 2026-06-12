@@ -8,6 +8,14 @@
   Mount point (set by src/web/war/battle_report2.html):
     <div id="battle-replay" data-log="$LOG_URL" data-player="$PLAYER_ID"></div>
 
+  Two layouts, switchable from the controls bar and remembered in localStorage:
+    - inline    : the compact 480² board with the ticker stacked below, sized to
+                  fit the cramped 610px report page.
+    - widescreen: a full-viewport overlay with a large board and the event ticker
+                  as a tall side column — easier to read on a wide monitor. The
+                  "⛶ Widescreen" button opts in; "▭ Standard view" / Esc / a click
+                  on the backdrop returns. The current turn + play state carry over.
+
   $LOG_URL is the engine's absolute path
   (/var/archspace/data/battle/<dayIdx>/<id>); nginx serves that dir at
   /battle_log/, so we map the path and fetch it. The log format (battle.cc):
@@ -52,8 +60,13 @@
   // ---- colors / sizing ----------------------------------------------------
   var ATT = '#ff8844', ATT_DIM = '#7a3a1c';   // attacker (orange)
   var DEF = '#55bbff', DEF_DIM = '#1c4a6e';   // defender (cyan)
-  var CW = 480, CH = 480;                       // canvas size (square: the arena is 10000×10000)
+  var CW = 480, CH = 480;                       // inline canvas size (square: the arena is 10000×10000)
   var FIELD = 10000;                            // battlefield is clamped to 0..10000 on both axes
+  var BTN = 'background:#16243a;color:#cde;border:1px solid #2a4a6a;' +
+            'border-radius:4px;padding:3px 12px;cursor:pointer;';
+  var WIDE_KEY = 'as.battleReplay.wide';        // remembered layout opt-in
+  function prefWide() { try { return localStorage.getItem(WIDE_KEY) === '1'; } catch (e) { return false; } }
+  function setPrefWide(v) { try { localStorage.setItem(WIDE_KEY, v ? '1' : '0'); } catch (e) {} }
   // CBattleFleet morale-break statuses (battle.h enum): each flickers + tints the
   // icon and stamps a label on it (Ro=Rout, Rt=Retreat to keep them distinct; the
   // full name is also shown in the text label).
@@ -264,26 +277,44 @@
     return { el: hdr, update: update };
   }
 
-  // ---- build UI + run -----------------------------------------------------
-  function build(B) {
-    mount.innerHTML = '';
-    var wrap = el('div', 'width:' + CW + 'px;max-width:100%;margin:0 auto;text-align:left;');
-    mount.appendChild(wrap);
+  // ---- one replay UI instance --------------------------------------------
+  // Build a full replay UI (header, canvas, controls, ticker) into `host`.
+  //   opts.wide       : widescreen layout (board left, ticker as a tall side rail)
+  //   opts.cw         : square canvas size in px
+  //   opts.modeBtn    : { label, onClick } for the layout-switch button
+  //   opts.turn       : turn to start at (carried over when switching layout)
+  //   opts.playing    : resume playing immediately
+  // Returns { dispose, getTurn, isPlaying }.
+  function renderInto(B, host, opts) {
+    var cw = opts.cw, ch = opts.cw;          // arena is square
+    var wide = !!opts.wide;
+    host.innerHTML = '';
+
+    var wrap = el('div', wide
+      ? 'display:inline-block;text-align:left;'
+      : 'width:' + cw + 'px;max-width:100%;margin:0 auto;text-align:left;');
+    host.appendChild(wrap);
 
     // ---- combatant header: race logo, name(serial), fleets & ships per side --
     var header = buildHeader(B);
     wrap.appendChild(header.el);
 
-    var canvas = el('canvas', 'display:block;width:100%;background:#04040c;border:1px solid #223355;');
-    canvas.width = CW; canvas.height = CH;
-    wrap.appendChild(canvas);
+    // stage: widescreen lays the board and ticker side by side; inline stacks them.
+    var stage = el('div', wide ? 'display:flex;gap:10px;align-items:stretch;' : '');
+    wrap.appendChild(stage);
+    var leftcol = wide ? el('div', 'display:flex;flex-direction:column;flex:none;') : stage;
+    if (wide) stage.appendChild(leftcol);
+
+    var canvas = el('canvas', 'display:block;background:#04040c;border:1px solid #223355;' +
+      (wide ? 'width:' + cw + 'px;height:' + ch + 'px;' : 'width:100%;'));
+    canvas.width = cw; canvas.height = ch;
+    leftcol.appendChild(canvas);
     var ctx = canvas.getContext('2d');
 
     // controls
     var bar = el('div', 'display:flex;align-items:center;gap:8px;margin:8px 0;' +
       'font:12px sans-serif;color:#9ab;');
-    var playBtn = el('button', 'background:#16243a;color:#cde;border:1px solid #2a4a6a;' +
-      'border-radius:4px;padding:3px 12px;cursor:pointer;', '▶ Play');
+    var playBtn = el('button', BTN, '▶ Play');
     var slider = el('input'); slider.type = 'range'; slider.min = 0; slider.max = B.endTurn || 1;
     slider.value = 0; slider.style.cssText = 'flex:1;';
     var turnLbl = el('span', 'min-width:96px;text-align:right;', 'Turn 0 / ' + B.endTurn);
@@ -291,13 +322,19 @@
     [['1×', 1], ['2×', 2], ['4×', 4], ['8×', 8]].forEach(function (o) {
       var op = el('option', '', o[0]); op.value = o[1]; if (o[1] === 2) op.selected = true; speedSel.appendChild(op);
     });
-    bar.appendChild(playBtn); bar.appendChild(slider); bar.appendChild(speedSel); bar.appendChild(turnLbl);
-    wrap.appendChild(bar);
+    var modeBtn = el('button', BTN, opts.modeBtn.label);
+    modeBtn.onclick = opts.modeBtn.onClick;
+    bar.appendChild(playBtn); bar.appendChild(slider); bar.appendChild(speedSel);
+    bar.appendChild(turnLbl); bar.appendChild(modeBtn);
+    leftcol.appendChild(bar);
 
-    // ticker
-    var ticker = el('div', 'height:120px;overflow-y:auto;background:#05050f;border:1px solid #223355;' +
-      'font:12px/1.5 monospace;color:#9ab;padding:6px 10px;');
-    wrap.appendChild(ticker);
+    // ticker — below the board (inline) or a tall side rail (widescreen)
+    var ticker = el('div', (wide
+        ? 'flex:1 1 300px;min-width:240px;height:' + (ch + 44) + 'px;'
+        : 'height:120px;') +
+      'overflow-y:auto;background:#05050f;border:1px solid #223355;' +
+      'font:12px/1.5 monospace;color:#9ab;padding:6px 10px;box-sizing:border-box;');
+    if (wide) stage.appendChild(ticker); else wrap.appendChild(ticker);
 
     var fleetList = []; for (var k in B.fleets) fleetList.push(B.fleets[k]);
 
@@ -306,8 +343,8 @@
     // engine Y increases upward — this matches both deploy boards (attacker's right
     // -> bottom, defender's right -> top) and pins engine Y=5000 (the engagement
     // line where both capitals sit) to the exact vertical centre.
-    function tx(x) { return x / FIELD * CW; }
-    function ty(y) { return (FIELD - y) / FIELD * CH; }
+    function tx(x) { return x / FIELD * cw; }
+    function ty(y) { return (FIELD - y) / FIELD * ch; }
 
     function drawFleet(st, fl) {
       var x = tx(st.x), y = ty(st.y);
@@ -347,7 +384,7 @@
     }
 
     function render(t) {
-      ctx.clearRect(0, 0, CW, CH);
+      ctx.clearRect(0, 0, cw, ch);
       // fire lines for this turn
       var fires = B.firesByTurn[Math.round(t)] || [];
       for (var i = 0; i < fires.length; i++) {
@@ -425,7 +462,75 @@
     playBtn.onclick = function () { playing ? stop() : play(); };
     slider.oninput = function () { stop(); setTurn(num(slider.value)); };
 
-    setTurn(0);
+    setTurn(opts.turn || 0);
+    if (opts.playing) play();
+
+    return {
+      // cancel every pending rAF so a layout switch never leaks a repaint loop.
+      dispose: function () {
+        playing = false;
+        if (raf) cancelAnimationFrame(raf);
+        if (flickerReq) cancelAnimationFrame(flickerReq);
+      },
+      getTurn: function () { return cur; },
+      isPlaying: function () { return playing; }
+    };
+  }
+
+  // ---- layout controller (inline <-> widescreen overlay) ------------------
+  var disposeActive = null;   // tears down whatever viewer is currently live
+
+  // Square board size for the overlay: as big as the viewport allows while
+  // leaving room for the header/controls (height) and the side ticker (width).
+  function wideSize() {
+    var byH = window.innerHeight - 170;
+    var byW = window.innerWidth - 360;
+    return Math.max(340, Math.min(720, byH, byW));
+  }
+
+  function showInline(B, turn, playing) {
+    if (disposeActive) { disposeActive(); disposeActive = null; }
+    var h = renderInto(B, mount, {
+      wide: false, cw: CW, turn: turn, playing: playing,
+      modeBtn: {
+        label: '⛶ Widescreen',
+        onClick: function () { setPrefWide(true); showWide(B, h.getTurn(), h.isPlaying()); }
+      }
+    });
+    disposeActive = h.dispose;
+  }
+
+  function showWide(B, turn, playing) {
+    if (disposeActive) { disposeActive(); disposeActive = null; }
+
+    var backdrop = el('div', 'position:fixed;inset:0;z-index:99998;background:rgba(2,2,10,0.93);' +
+      'display:flex;align-items:center;justify-content:center;padding:2vh;box-sizing:border-box;overflow:auto;');
+    var panel = el('div', 'position:relative;background:#070713;border:1px solid #2a4a6a;border-radius:6px;' +
+      'padding:16px 18px;box-shadow:0 10px 50px rgba(0,0,0,.75);max-width:97vw;max-height:96vh;overflow:auto;text-align:center;');
+    backdrop.appendChild(panel);
+    document.body.appendChild(backdrop);
+
+    var h = renderInto(B, panel, {
+      wide: true, cw: wideSize(), turn: turn, playing: playing,
+      modeBtn: { label: '▭ Standard view', onClick: close }
+    });
+
+    var closeBtn = el('button', 'position:absolute;top:6px;right:8px;z-index:1;background:transparent;' +
+      'color:#9ab;border:none;font:18px/1 sans-serif;cursor:pointer;', '✕');
+    closeBtn.onclick = close;
+    panel.appendChild(closeBtn);
+
+    function onKey(e) { if (e.key === 'Escape' || e.keyCode === 27) close(); }
+    document.addEventListener('keydown', onKey);
+    backdrop.addEventListener('mousedown', function (e) { if (e.target === backdrop) close(); });
+
+    function close() { setPrefWide(false); showInline(B, h.getTurn(), h.isPlaying()); }
+
+    disposeActive = function () {
+      document.removeEventListener('keydown', onKey);
+      h.dispose();
+      if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
+    };
   }
 
   // ---- fetch + go ---------------------------------------------------------
@@ -437,7 +542,9 @@
         notice('This battle replay is no longer available (logs are kept for a limited time).');
         return;
       }
-      build(parse(text));
+      var B = parse(text);
+      // Honour the remembered opt-in: open straight into widescreen if chosen.
+      if (prefWide()) showWide(B, 0, false); else showInline(B, 0, false);
     })
     .catch(function () {
       notice('This battle replay is no longer available (logs are kept for a limited time).');
