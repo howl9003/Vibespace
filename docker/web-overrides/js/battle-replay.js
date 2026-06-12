@@ -288,11 +288,18 @@
   function renderInto(B, host, opts) {
     var cw = opts.cw, ch = opts.cw;          // arena is square
     var wide = !!opts.wide;
+    // Side-rail (summary) width is fixed up front so the pane is full size from
+    // turn 0 — never shrink-to-fit on the log text (which would start narrow and
+    // widen as longer attack lines stream in).
+    var railW = Math.max(260, Math.min(380, Math.round(cw * 0.6)));
+    var STAGE_GAP = 10;
     host.innerHTML = '';
 
-    var wrap = el('div', wide
-      ? 'display:inline-block;text-align:left;'
-      : 'width:' + cw + 'px;max-width:100%;margin:0 auto;text-align:left;');
+    // Fixed total width in widescreen (board + gap + rail) so nothing reflows as
+    // the ticker fills; inline stays its single-column width.
+    var wrap = el('div', (wide
+      ? 'width:' + (cw + STAGE_GAP + railW) + 'px;'
+      : 'width:' + cw + 'px;') + 'max-width:100%;margin:0 auto;text-align:left;');
     host.appendChild(wrap);
 
     // ---- combatant header: race logo, name(serial), fleets & ships per side --
@@ -300,7 +307,7 @@
     wrap.appendChild(header.el);
 
     // stage: widescreen lays the board and ticker side by side; inline stacks them.
-    var stage = el('div', wide ? 'display:flex;gap:10px;align-items:stretch;' : '');
+    var stage = el('div', wide ? 'display:flex;gap:' + STAGE_GAP + 'px;align-items:stretch;' : '');
     wrap.appendChild(stage);
     var leftcol = wide ? el('div', 'display:flex;flex-direction:column;flex:none;') : stage;
     if (wide) stage.appendChild(leftcol);
@@ -328,11 +335,13 @@
     bar.appendChild(turnLbl); bar.appendChild(modeBtn);
     leftcol.appendChild(bar);
 
-    // ticker — below the board (inline) or a tall side rail (widescreen)
+    // ticker — below the board (inline) or a tall side rail (widescreen). The rail
+    // has a FIXED width/height so the summary pane is full size from the start and
+    // doesn't grow as longer attack lines stream in; long lines wrap inside it.
     var ticker = el('div', (wide
-        ? 'flex:1 1 300px;min-width:240px;height:' + (ch + 44) + 'px;'
+        ? 'flex:none;width:' + railW + 'px;height:' + (ch + 44) + 'px;'
         : 'height:120px;') +
-      'overflow-y:auto;background:#05050f;border:1px solid #223355;' +
+      'overflow-y:auto;overflow-wrap:break-word;background:#05050f;border:1px solid #223355;' +
       'font:12px/1.5 monospace;color:#9ab;padding:6px 10px;box-sizing:border-box;');
     if (wide) stage.appendChild(ticker); else wrap.appendChild(ticker);
 
