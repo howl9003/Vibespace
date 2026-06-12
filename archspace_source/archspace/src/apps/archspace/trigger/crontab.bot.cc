@@ -86,6 +86,36 @@ CCronTabBotPopulation::handler()
 	}
 	if (Renamed) SLOG("SYSTEM : bot population crontab renamed %d bot(s)", Renamed);
 
+	// One-time migration: convert bots still flying their pre-tier ships onto the
+	// tier roster -- scrap their old ships and rebuild the tier's named designs +
+	// fleets (build_bot_roster). A migrated bot has a tier design (named
+	// "<Hull> Mk. <level>"), so detect the absence of one; this is then a no-op.
+	// Bounded per run (BotRerollPerRun) so the whole population converts over a few
+	// runs rather than thousands of deletes/inserts in a single tick.
+	int Reseeded = 0, MaxReseed = bot_cfg("BotRerollPerRun", 20);
+	for (int i=0 ; i<PLAYER_TABLE->length() && Reseeded<MaxReseed ; i++)
+	{
+		CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
+		if (P == NULL || !P->is_bot() || P->is_dead()) continue;
+
+		CShipDesignList *DL = P->get_ship_design_list();
+		bool HasTierDesign = false;
+		for (int d=0 ; d<DL->length() ; d++)
+		{
+			CShipDesign *D = (CShipDesign *)DL->get(d);
+			if (D != NULL && D->get_name() && strstr(D->get_name(), " Mk. "))
+			{ HasTierDesign = true; break; }
+		}
+		if (HasTierDesign) continue;
+
+		GAME->build_bot_roster(P, P->bot_band());
+		P->refresh_power();
+		P->type(QUERY_UPDATE);
+		STORE_CENTER->store(*P);
+		Reseeded++;
+	}
+	if (Reseeded) SLOG("SYSTEM : bot population crontab reseeded %d bot(s) to tier ships", Reseeded);
+
 	int Spawned = 0;
 	for (int band=0 ; band<NUM_BOT_BANDS && Spawned<SpawnBatch ; band++)
 	{

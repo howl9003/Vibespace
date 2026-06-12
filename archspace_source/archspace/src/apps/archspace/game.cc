@@ -1838,48 +1838,56 @@ bot_add_fleet(CPlayer *aPlayer, CShipDesign *aDesign, int aLevel, int aExp, bool
 // commander-style name for aRace. If the full first+last name is over 30 chars,
 // only the last name is kept; the commander name gets its own 30 chars on top of
 // the rank (snprintf bounds the whole thing to player.name's width).
-// Faction-name suffixes, shared by the random (make_bot_name) and deterministic
-// (make_bot_faction_name) builders and by the detector (bot_name_is_faction).
-static const char *sBotFactionSuffix[] =
+// Curated faction / collective names, flavoured after the ten races' lore (see
+// the encyclopedia race descriptions) but NOT tied to a bot's own race -- a bot
+// of any race may carry any of these. Shared by the random builder (make_bot_name)
+// and the deterministic one (make_bot_faction_name); bot_name_is_faction matches
+// against this table exactly. Keep each <= player.name's width.
+static const char *sBotFactionName[] =
 {
-	"Empire", "Supremacy", "Alliance", "Dominion", "Federation", "Hegemony",
-	"Republic", "Imperium", "Coalition", "Collective", "Confederacy",
-	"Ascendancy", "Conclave", "Horde"
+	// Human: short-lived, fast-breeding idealists and expansionists
+	"Terran Ascendancy", "Solar Concord", "Concord of Ideals",
+	// Targoid: one mother-body, totalitarian hive
+	"The Targoid Brood", "Mother-Body Collective", "The Hive Totality",
+	// Buckaneer: roaming trader-pirates, swift untraceable fleets
+	"Corsair Confederacy", "Buckaneer Free Companies", "The Freebooter Cartel",
+	// Tecanoid: cybernetic elite, infiltrators
+	"Tecanoid Directorate", "The Synthetic Elite", "Cybernetic Conclave",
+	// Evintos: silicon-and-gold machine-minds, mass production
+	"Evintos Foundry", "The Silicon Hegemony", "Goldforged Union",
+	// Agerus: secretive planet-beings, defensive
+	"Agerus Worldmind", "The Sleeping Worlds", "Communion of Planets",
+	// Bosalian: pacifist psychics and mediators
+	"The Bosalian Accord", "Psionic Concord", "Aurora Communion",
+	// Xeloss: fanatical psychic zealots
+	"Xeloss Theocracy", "Crusade of the One God", "The Devout Swarm",
+	// Xerusian: ancient elite militarists, matter-energy weapons
+	"Xerusian Imperium", "The Iron Legion", "Vanguard of Xerus",
+	// Xesperados: merged rebel exiles, open to all
+	"Xesperados Coalition", "The Free Banners", "Union of Exiles",
+	// unaligned powers
+	"The Outer Dominion", "Rift Hegemony", "Nebula Compact",
+	"The Void Sovereignty", "Starfall Imperium", "The Ashen Confederacy",
 };
-static const int sBotFactionSuffixCount =
-	sizeof(sBotFactionSuffix) / sizeof(sBotFactionSuffix[0]);
+static const int sBotFactionNameCount =
+	sizeof(sBotFactionName) / sizeof(sBotFactionName[0]);
 
-// Build a faction name "<Race> <Suffix>" with the suffix chosen deterministically
-// from aSeed (so a backfill keyed on a bot's game_id is stable/idempotent).
+// Pick a faction name by aSeed (deterministic, so a backfill keyed on a bot's
+// game_id is stable/idempotent). aRace is unused -- names are race-independent.
 void
 CGame::make_bot_faction_name(int aRace, unsigned int aSeed, char *aOut, int aOutSize)
 {
-	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
-	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
-
-	CRace *Race = (CRace *)RACE_TABLE->get_by_id(aRace);
-	const char *RaceName = (Race && Race->get_name() && *Race->get_name())
-		? Race->get_name() : "Rogue";
-	const char *Suffix = sBotFactionSuffix[aSeed % sBotFactionSuffixCount];
-	snprintf(aOut, aOutSize, "%.24s %s", RaceName, Suffix);
+	(void)aRace;
+	snprintf(aOut, aOutSize, "%.40s", sBotFactionName[aSeed % sBotFactionNameCount]);
 }
 
-// True if aName ends in " <Suffix>" for one of the faction suffixes -- i.e. it is
-// already a faction-style name (so the backfill leaves it alone).
+// True if aName is one of the curated faction names (so a backfill leaves it).
 bool
 CGame::bot_name_is_faction(const char *aName)
 {
 	if (!aName || !*aName) return false;
-	int NameLen = (int)strlen(aName);
-	for (int i=0 ; i<sBotFactionSuffixCount ; i++)
-	{
-		const char *S = sBotFactionSuffix[i];
-		int SLen = (int)strlen(S);
-		if (NameLen > SLen + 1 &&
-		    aName[NameLen - SLen - 1] == ' ' &&
-		    strcmp(aName + NameLen - SLen, S) == 0)
-			return true;
-	}
+	for (int i=0 ; i<sBotFactionNameCount ; i++)
+		if (strcmp(aName, sBotFactionName[i]) == 0) return true;
 	return false;
 }
 
@@ -1893,16 +1901,16 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 	if (aRace < CRace::RACE_HUMAN)      aRace = CRace::RACE_HUMAN;
 	if (aRace > CRace::RACE_XESPERADOS) aRace = CRace::RACE_XESPERADOS;
 
-	// Two name styles, chosen ~50/50 (tunable via the Game/BotFactionNamePct INI
-	// key): a FACTION name "<Race> <Suffix>" (e.g. "Xesperados Empire") for a sense
-	// of rival powers, or a single COMMANDER "<Rank> <Name>" so individual captains
-	// still appear. Both bounded to player.name's width by snprintf.
+	// Two name styles: a curated FACTION name (e.g. "Xerusian Imperium") most of the
+	// time -- a galaxy of rival powers -- or, for the rest, a single COMMANDER
+	// "<Rank> <Name>" so individual captains still appear. Default 80% faction,
+	// tunable via the Game/BotFactionNamePct INI key.
 	int FactionPct =
-		ARCHSPACE->configuration().get_integer("Game", "BotFactionNamePct", 50);
+		ARCHSPACE->configuration().get_integer("Game", "BotFactionNamePct", 80);
 
 	if (number(100) <= FactionPct)
 	{
-		make_bot_faction_name(aRace, number(sBotFactionSuffixCount) - 1, aOut, aOutSize);
+		make_bot_faction_name(aRace, number(sBotFactionNameCount) - 1, aOut, aOutSize);
 		return;
 	}
 
@@ -1917,6 +1925,85 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 		if (Space && *(Space + 1)) Commander = Space + 1;
 	}
 	snprintf(aOut, aOutSize, "%s %.30s", RankNames[Rank], Commander);
+}
+
+// Scrap a bot's existing ships and rebuild its tier roster from scratch. Deletes
+// every fleet (and its commander), any bench commanders, and every ship design,
+// then builds the tier's 3 named designs and seeds cull_to starting fleets (one
+// on a permanent auto-repeat expedition, the rest defenders). At spawn the bot is
+// empty so the scrap is a no-op; for an existing bot this swaps its old ships out
+// for the tier's. The bot's planets/tech are left untouched.
+void
+CGame::build_bot_roster(CPlayer *aPlayer, int aBand)
+{
+	if (aPlayer == NULL) return;
+	if (aBand < 0) aBand = 0;
+	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
+
+	CFleetList      *FleetList   = aPlayer->get_fleet_list();
+	CAdmiralList    *AdmiralList = aPlayer->get_admiral_list();
+	CAdmiralList    *AdmiralPool = aPlayer->get_admiral_pool();
+	CShipDesignList *DesignList  = aPlayer->get_ship_design_list();
+
+	// scrap every fleet and its commander (backward scan -- delete shrinks the list)
+	for (int i=FleetList->length()-1 ; i>=0 ; i--)
+	{
+		CFleet *F = (CFleet *)FleetList->get(i);
+		if (F == NULL) continue;
+		CAdmiral *A = AdmiralList->get_by_id(F->get_admiral_id());
+		int FID = F->get_id();
+		F->type(QUERY_DELETE);
+		STORE_CENTER->store(*F);
+		FleetList->remove_fleet(FID);
+		if (A != NULL)
+		{
+			A->set_fleet_number(0);
+			A->type(QUERY_DELETE);
+			STORE_CENTER->store(*A);
+			AdmiralList->remove_admiral(A->get_id());
+		}
+	}
+	// scrap any leftover bench commanders
+	for (int i=AdmiralPool->length()-1 ; i>=0 ; i--)
+	{
+		CAdmiral *A = (CAdmiral *)AdmiralPool->get(i);
+		if (A == NULL) continue;
+		A->type(QUERY_DELETE);
+		STORE_CENTER->store(*A);
+		AdmiralPool->remove_admiral(A->get_id());
+	}
+	// scrap every existing ship design (fleets referencing them are already gone)
+	for (int i=DesignList->length()-1 ; i>=0 ; i--)
+	{
+		CShipDesign *D = (CShipDesign *)DesignList->get(i);
+		if (D == NULL) continue;
+		int DID = D->get_design_id();
+		D->type(QUERY_DELETE);
+		STORE_CENTER->store(*D);
+		DesignList->remove_ship_design(DID);
+	}
+
+	// build the tier's 3 designs (fall back to a best-components design) and seed
+	// cull_to fleets: the first on a permanent auto-repeat expedition, rest defend.
+	const CBotTierSpec &Spec = bot_tier_spec(aBand);
+	CShipDesign *TierDesign[3] = { NULL, NULL, NULL };
+	int TierDesignCount = 0;
+	for (int v=0 ; v<3 ; v++)
+	{
+		CShipDesign *D = make_design_at_level(aPlayer, Spec.mHull, Spec.mLevel);
+		if (D != NULL) TierDesign[TierDesignCount++] = D;
+	}
+	if (TierDesignCount == 0)
+	{
+		CShipDesign *D = make_best_bot_design(aPlayer, Spec.mHull);
+		if (D != NULL) TierDesign[TierDesignCount++] = D;
+	}
+	for (int n=0 ; n<Spec.mCullTo && TierDesignCount>0 ; n++)
+	{
+		CShipDesign *D = TierDesign[number(TierDesignCount) - 1];
+		bot_add_fleet(aPlayer, D, 20, 100, (n == 0));   // first fleet -> expedition
+	}
+	aPlayer->refresh_power();
 }
 
 // Create a bot (NPC) player in tier aBand (0..NUM_BOT_BANDS-1). Builds on
@@ -1980,26 +2067,6 @@ CGame::create_bot_player(int aBand)
 		}
 	}
 
-	// --- tier ship roster: 3 varied designs of this tier's hull + tech level ---
-	// Each tier flies a distinct hull class at a fixed component level (see
-	// bot_tier_spec): Frigate/Cruiser/BattleShip/Dreadnaught/Doomstar/Doomstar at
-	// level 3/3/4/4/5/5. We build a small assortment so a tier's fleets vary; the
-	// regen cron picks among them. Fall back to a best-components design if the
-	// level lookup somehow fails, so the bot is never design-less.
-	const CBotTierSpec &Spec = bot_tier_spec(aBand);
-	CShipDesign *TierDesign[3] = { NULL, NULL, NULL };
-	int TierDesignCount = 0;
-	for (int v=0 ; v<3 ; v++)
-	{
-		CShipDesign *D = make_design_at_level(Player, Spec.mHull, Spec.mLevel);
-		if (D != NULL) TierDesign[TierDesignCount++] = D;
-	}
-	if (TierDesignCount == 0)
-	{
-		CShipDesign *D = make_best_bot_design(Player, Spec.mHull);
-		if (D != NULL) TierDesign[TierDesignCount++] = D;
-	}
-
 	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
 	int TargetPlanets = 4 + aBand * 4;
 	int PlanetGuard = 0;
@@ -2043,18 +2110,10 @@ CGame::create_bot_player(int aBand)
 		STORE_CENTER->store(*Planet);
 	}
 
-	// --- starting fleets: cull_to fleets, 1 on auto-expedition, rest defenders -
-	// A bot starts at its tier's cull_to count and the regen cron grows it +1 fleet
-	// roughly hourly up to max_fleets, then culls it back to cull_to -- a slow
-	// rise-and-fall. Every fleet is a full crew under a fresh level-20 commander of
-	// the bot's race. Exactly one fleet permanently runs an auto-repeat expedition
-	// (the +1 the tier caps account for); the rest stand by to defend.
-	for (int n=0 ; n<Spec.mCullTo && TierDesignCount>0 ; n++)
-	{
-		CShipDesign *D = TierDesign[number(TierDesignCount) - 1];
-		bot_add_fleet(Player, D, 20, 100, (n == 0));   // first fleet -> expedition
-	}
-	Player->refresh_power();
+	// --- tier ship roster: the tier's named designs + cull_to starting fleets ----
+	// (one on a permanent auto-repeat expedition, the rest defenders). The regen
+	// cron then grows the bot +1 fleet/hour to max_fleets and culls back to cull_to.
+	build_bot_roster(Player, aBand);
 
 	Player->set_last_login(time(0));
 	Player->type(QUERY_UPDATE);

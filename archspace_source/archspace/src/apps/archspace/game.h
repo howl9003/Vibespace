@@ -77,6 +77,11 @@ class CGame
 		CPlayer* create_new_player(int aPortalID, const char *aName,
 													int aRace);
 		CPlayer* create_bot_player(int aBand);
+		// Scrap a bot's existing ships (fleets, commanders, designs) and rebuild
+		// its tier roster from scratch: the tier's named designs + cull_to starting
+		// fleets (one on a permanent expedition). Used at spawn and to migrate
+		// legacy bots onto the new tier ships.
+		void build_bot_roster(CPlayer *aPlayer, int aBand);
 		// Build a bot display name into aOut (<= aOutSize-1). make_bot_name picks
 		// ~50/50 (Game/BotFactionNamePct) between a FACTION name "<Race> <Suffix>"
 		// and a COMMANDER name "<Rank> <Name>". make_bot_faction_name builds a
