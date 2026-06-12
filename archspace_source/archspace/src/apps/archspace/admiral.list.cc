@@ -125,15 +125,15 @@ CAdmiralList::attached_fleet_commander_info_html(CPlayer *aPlayer)
 		Info = GETTEXT("There are no fleet commanders attached to a fleet.");
 		return (char *)Info;
 	}
-	
-	CPreference *aPreference = 
+
+	CPreference *aPreference =
 		parent->get_preference();
 
 	Info = "<TABLE WIDTH=\"550\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"0\" BORDERCOLOR=\"#2A2A2A\">\n";
 	Info += "<TR BGCOLOR=\"#171717\">\n";
 
 	Info += "<TH CLASS=\"tabletxt\" WIDTH=\"45\"><FONT COLOR=\"666666\">";
-	Info += GETTEXT("ID");
+	Info += GETTEXT("Fleet ID");
 	Info += "</FONT></TH>\n";
 
 	Info += "<TH WIDTH=\"118\" CLASS=\"tabletxt\"><FONT COLOR=\"666666\">";
@@ -171,14 +171,26 @@ CAdmiralList::attached_fleet_commander_info_html(CPlayer *aPlayer)
 
 	Info += "</TR>\n";
 
-	for (int i=0 ; i<length() ; i++)
+	// Iterate existing fleets in ascending fleet-ID order (the fleet list is
+	// kept sorted by its zero-padded "owner id" key, so plain iteration is
+	// already ascending by fleet ID for this player), showing each fleet's
+	// attached commander keyed by the fleet's ID rather than the commander's.
+	CFleetList *
+		FleetList = aPlayer->get_fleet_list();
+
+	for (int i=0 ; i<FleetList->length() ; i++)
 	{
+		CFleet *
+			Fleet = (CFleet *)FleetList->get(i);
+		if (Fleet == NULL) continue;
+
 		CAdmiral *
-			Admiral = (CAdmiral *)get(i);
+			Admiral = get_by_id(Fleet->get_admiral_id());
+		if (Admiral == NULL) continue;
 
 		Info += "<TR>\n";
 		Info.format("<TD CLASS=\"tabletxt\" WIDTH=\"45\" ALIGN=\"CENTER\">%d</TD>\n",
-					Admiral->get_id());
+					Fleet->get_id());
 
 		Info += "<TD CLASS=\"tabletxt\" ALIGN=\"LEFT\" WIDTH=\"118\">";
 		Info.format("<A HREF=\"/archspace/fleet/fleet_commander_information.as?ADMIRAL_ID=%d\">%s</A>",
@@ -218,17 +230,8 @@ CAdmiralList::attached_fleet_commander_info_html(CPlayer *aPlayer)
 
 #undef COMMANDER_STAT
 
-		CFleetList *
-			FleetList = aPlayer->get_fleet_list();
-
-		CFleet *
-			Fleet = FleetList->get_by_id(Admiral->get_fleet_number());
-
-		if( Fleet )
-			Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"134\">%s</TD>\n",
+		Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"134\">%s</TD>\n",
 					Fleet->get_nick());
-		else
-			Info.format("<TD CLASS=\"tabletxt\" ALIGN=\"CENTER\" WIDTH=\"134\">-</TD>\n");
 		Info += "</TR>\n";
 	}
 
