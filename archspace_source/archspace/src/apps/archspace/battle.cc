@@ -2615,51 +2615,91 @@ CBattleFleetList::auto_deployment(CBattle *aBattle, CFleetList *aFleetList, CAdm
 
 	mCapitalFleet->set_capital_fleet();
 
+	// Faithful "packed 5x4" default deployment, used whenever no deployment plan
+	// was submitted. It mirrors the HTML5 deployment board (as-deploy.js): the
+	// capital is pinned to the board centre square (309,326) and the other fleets
+	// are packed into a 5-wide block of 20-unit grid squares hugging the capital
+	// toward the enemy, nearest squares filled first. Every fleet defaults to the
+	// Formation stance. Positions are built in board coordinates (X 9..609,
+	// Y 226..426) and mapped into the battle space with the same per-side formula
+	// the .as result handlers use, so a no-plan battle deploys identically to one
+	// the player would have laid out by hand.
 	int
-		Interval = 6000 / length(),
-		DeployedFleetNumber = 0;
+		Offense = (get_side() == CBattle::SIDE_OFFENSE) ? 1 : 0;
 
-	if (get_side() == CBattle::SIDE_OFFENSE)
-	{
-		for (int i=0 ; i<length() ; i++)
-		{
-			CBattleFleet *
-				BattleFleet = (CBattleFleet *)get(i);
-			if (BattleFleet->is_capital_fleet())
-			{
-				BattleFleet->set_vector(1000, 5000, 0);
-			} else
-			{
-				if (2000+Interval*(DeployedFleetNumber + 1) == 5000)
-				{
-					DeployedFleetNumber++;
-				}
-				BattleFleet->set_vector(2500, 2000+Interval*(DeployedFleetNumber + 1), 0);
-				DeployedFleetNumber++;
-			}
-			BattleRecord->add_fleet(BattleFleet);
-		}
-	} else
-	{
-		for (int i=0 ; i<length() ; i++)
-		{
-			CBattleFleet *
-				BattleFleet = (CBattleFleet *)get(i);
-			if (BattleFleet->is_capital_fleet())
-			{
-				BattleFleet->set_vector(9000, 5000, 180);
-			} else
-			{
-				if (2000+Interval*(DeployedFleetNumber + 1) == 5000)
-				{
-					DeployedFleetNumber++;
-				}
-				BattleFleet->set_vector(7500, 2000+Interval*(DeployedFleetNumber + 1), 180);
-				DeployedFleetNumber++;
-			}
+	const int
+		CapCol = 15, CapRow = 5,          // board grid: X = 9+col*20, Y = 226+row*20
+		BlockHalf = 2;                    // 5 columns wide (13..17), centred on capital
+	int
+		nNonCap = length() - 1,
+		NeedRows = (nNonCap / 5) + 2;     // rows enough to hold every non-capital fleet
 
-			BattleRecord->add_fleet(BattleFleet);
+	// Candidate squares ordered by distance to the capital (weights 42/55 match the
+	// board's px aspect GX≈21 / GY≈27.5, so the ordering is identical to the JS board).
+	int
+		CandX[256], CandY[256], CandD[256], CandN = 0;
+	for (int rr = CapRow ; rr > CapRow - NeedRows && rr >= 0 ; rr--)
+	{
+		for (int dc = -BlockHalf ; dc <= BlockHalf ; dc++)
+		{
+			int cc = CapCol + dc;
+			if (cc < 0)  cc = 0;
+			if (cc > 30) cc = 30;
+			if (cc == CapCol && rr == CapRow) continue;   // the capital's own square
+			if (CandN >= 256) break;
+			int dcw = (cc - CapCol)*42, drw = (rr - CapRow)*55;
+			CandX[CandN] = 9 + cc*20;
+			CandY[CandN] = 226 + rr*20;
+			CandD[CandN] = dcw*dcw + drw*drw;
+			CandN++;
 		}
+	}
+	for (int a = 1 ; a < CandN ; a++)         // insertion sort by distance (small N)
+	{
+		int kx = CandX[a], ky = CandY[a], kd = CandD[a], b = a - 1;
+		while (b >= 0 && CandD[b] > kd)
+		{
+			CandX[b+1] = CandX[b]; CandY[b+1] = CandY[b]; CandD[b+1] = CandD[b];
+			b--;
+		}
+		CandX[b+1] = kx; CandY[b+1] = ky; CandD[b+1] = kd;
+	}
+
+	int
+		CandI = 0;
+	for (int i=0 ; i<length() ; i++)
+	{
+		CBattleFleet *
+			BattleFleet = (CBattleFleet *)get(i);
+
+		int
+			LocationX = 309, LocationY = 326;     // capital square by default
+		if (!BattleFleet->is_capital_fleet() && CandI < CandN)
+		{
+			LocationX = CandX[CandI];
+			LocationY = CandY[CandI];
+			CandI++;
+		}
+
+		int X, Y, Dir;
+		if (Offense)
+		{
+			X   = 3000 - (LocationY - 226)*10;
+			Y   = 8000 - (LocationX - 9)*10;
+			Dir = 0;
+		}
+		else
+		{
+			X   = 7000 + (LocationY - 226)*10;
+			Y   = 2000 + (LocationX - 9)*10;
+			Dir = 180;
+		}
+
+		BattleFleet->set_vector(X, Y, Dir);
+		BattleFleet->set_command(CBattleFleet::COMMAND_FORMATION);
+
+		BattleRecord->add_fleet(BattleFleet);
+		add_formation_info(BattleFleet);
 	}
 }
 

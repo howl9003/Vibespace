@@ -96,12 +96,40 @@
        behind the capital free for the player to drag fleets into if they want. */
     var GCOLS = Math.max(1, Math.round(BOARD_W / GX));
     var GROWS = Math.max(1, Math.round(BOARD_H / GY));
-    function snap(cx, cy) {
-      var col = clamp(Math.round(cx / GX), 0, GCOLS);
-      var row = clamp(Math.round(cy / GY), 0, GROWS);
-      return { x: Math.round(col * GX), y: Math.round(row * GY) };
+    function cellOf(cx, cy) {
+      return { col: clamp(Math.round(cx / GX), 0, GCOLS), row: clamp(Math.round(cy / GY), 0, GROWS) };
     }
     function cellXY(col, row) { return { x: Math.round(col * GX), y: Math.round(row * GY) }; }
+    // Snap (cx,cy) to the nearest FREE grid square, treating every other fleet's
+    // square (capital included) as occupied. The engine rejects a deployment with
+    // two fleets sharing a square, so dropping onto a taken cell spills outward to
+    // the closest empty one rather than stacking.
+    function snapFree(idx, cx, cy) {
+      var occ = {}, i, c;
+      for (i = 0; i < fleets.length; i++) {
+        if (i === idx) continue;
+        c = cellOf(fleets[i].x, fleets[i].y);
+        occ[c.col + ',' + c.row] = true;
+      }
+      var t = cellOf(cx, cy);
+      if (!occ[t.col + ',' + t.row]) return cellXY(t.col, t.row);
+      var maxR = Math.max(GCOLS, GROWS);
+      for (var rad = 1; rad <= maxR; rad++) {
+        var best = null, bestD = Infinity;
+        for (var dc = -rad; dc <= rad; dc++) {
+          for (var dr = -rad; dr <= rad; dr++) {
+            if (Math.max(Math.abs(dc), Math.abs(dr)) !== rad) continue;   // ring only
+            var col = t.col + dc, row = t.row + dr;
+            if (col < 0 || col > GCOLS || row < 0 || row > GROWS) continue;
+            if (occ[col + ',' + row]) continue;
+            var px = col * GX - cx, py = row * GY - cy, d = px * px + py * py;
+            if (d < bestD) { bestD = d; best = { col: col, row: row }; }
+          }
+        }
+        if (best) return cellXY(best.col, best.row);
+      }
+      return cellXY(t.col, t.row);
+    }
 
     var capCol = Math.round(GCOLS / 2);    // centre column, vertical middle
     var capRow = Math.round(GROWS / 2);
@@ -245,7 +273,7 @@
       clearLP();
       if (lpFired) { lpFired = false; dragIndex = -1; return; }   // long-press handled; don't snap/move
       if (dragIndex === -1) return;
-      var f = fleets[dragIndex], s = snap(f.x, f.y);              // snap to nearest grid square
+      var f = fleets[dragIndex], s = snapFree(dragIndex, f.x, f.y);   // snap to nearest free grid square
       f.x = s.x; f.y = s.y; dragIndex = -1; draw();
     }
     canvas.addEventListener('mousedown', down);
