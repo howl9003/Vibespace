@@ -11,6 +11,7 @@ within the commander's fleet_commanding, and a soft PP budget.
 
 from __future__ import annotations
 
+import copy
 import random
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
@@ -279,3 +280,74 @@ def pp_cost(lo: Loadout, pool: P.Pool, tech_cap: int) -> int:
     """Faithful side PP cost = sum ships * hull cost (components are 0 PP)."""
     return sum(fl.ships * pool.hull_by_id(lo.race, fl.design.hull, tech_cap)["cost"]
                for fl in lo.fleets)
+
+
+# ----------------------------- genetic operators -----------------------------
+
+def _mutate_commander(c: Commander, rng: random.Random, is_capital: bool) -> None:
+    if rng.random() < 0.5:
+        if is_capital:
+            c.bb = 2
+            c.det, c.man, c.fc = _capital_rest(rng)
+        else:
+            c.bb, c.det, c.man, c.fc = _zero_sum4(rng)
+    else:
+        c.special = rng.choice([-1] + P.SPECIAL_ABILITIES)
+
+
+def _mutate_design(d: Design, pool: P.Pool, race: int, tech_cap: int,
+                   rng: random.Random) -> None:
+    pick = rng.randint(0, 2)
+    if pick == 0:                                   # hull (repair re-fits weapons/budget)
+        d.hull = rng.choice(pool.hulls(race, tech_cap))["id"]
+    elif pick == 1:                                 # armor
+        d.armor = rng.choice(pool.armor_ids(race, tech_cap))
+    elif d.weapons:                                 # one weapon slot
+        d.weapons[rng.randrange(len(d.weapons))] = rng.choice(pool.weapons(race, tech_cap))["id"]
+    if rng.random() < 0.3:                          # occasionally a device
+        devs = pool.device_ids(race, tech_cap)
+        if devs:
+            d.devices = rng.sample(devs, min(max(1, len(d.devices)), len(devs)))
+
+
+def mutate(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
+           pp_budget: Optional[int], max_ships_per_fleet: int,
+           rng: random.Random, rate: float = 0.35) -> Loadout:
+    """Per-gene resample over the searched genes, then repair()."""
+    lo = copy.deepcopy(lo)
+
+    # structural: add or drop a (non-capital) fleet
+    if rng.random() < 0.12 and len(lo.fleets) < 20:
+        clone = copy.deepcopy(rng.choice(lo.fleets))
+        clone.is_capital = False
+        lo.fleets.append(clone)
+    elif rng.random() < 0.12 and len(lo.fleets) > 1:
+        del lo.fleets[rng.randrange(1, len(lo.fleets))]
+
+    xs, ys, _ = P.grid(side)
+    for fl in lo.fleets:
+        if rng.random() < rate:
+            _mutate_design(fl.design, pool, lo.race, tech_cap, rng)
+        if rng.random() < rate:
+            _mutate_commander(fl.commander, rng, fl.is_capital)
+        if rng.random() < rate:
+            fl.command = rng.randint(0, 7)
+        if rng.random() < rate:
+            fl.cell = (rng.choice(xs), rng.choice(ys))
+        if rng.random() < rate:
+            fl.ships = max(1, fl.ships + rng.choice([-3, -1, 1, 3]))
+    return repair(lo, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng)
+
+
+def crossover(a: Loadout, b: Loadout, pool: P.Pool, side: str, tech_cap: int,
+              pp_budget: Optional[int], max_ships_per_fleet: int,
+              rng: random.Random) -> Loadout:
+    """Uniform per-fleet crossover (whole-fleet swaps), then repair()."""
+    child = Loadout(race=a.race)
+    for i in range(max(len(a.fleets), len(b.fleets))):
+        src = a if rng.random() < 0.5 else b
+        if i < len(src.fleets):
+            child.fleets.append(copy.deepcopy(src.fleets[i]))
+    if not child.fleets:
+        child.fleets.append(copy.deepcopy(a.fleets[0]))
+    return repair(child, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng)
