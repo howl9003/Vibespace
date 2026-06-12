@@ -313,13 +313,13 @@
       var x = tx(st.x), y = ty(st.y);
       var r = Math.max(4, Math.min(16, 3 + Math.sqrt(st.ships || 1) * 1.6));
       var col = fl.side === 'att' ? ATT : DEF;
-      // morale-break status: flicker + tint the marker, stamp its letter on the
+      // morale-break status: flicker the marker (keeping its side colour so blue
+      // fleets flicker blue and orange flicker orange), stamp its letter on the
       // icon, and show the full name in the label.
       var fx = STATUS_FX[st.cmd];
       var alpha = 1, tag = '';
       if (fx) {
         alpha = 0.3 + 0.7 * Math.abs(Math.sin(Date.now() / 120));
-        col = fx.color;
         tag = ' ⚠ ' + fx.name;
       }
       var rad = (st.dir || 0) * Math.PI / 180;
