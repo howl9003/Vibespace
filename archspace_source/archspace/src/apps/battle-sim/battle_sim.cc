@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
+#include <sys/wait.h>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -256,6 +258,197 @@ static void run_demo(unsigned long aSeed)
 	emit(o.str());
 }
 
+// =====================  match (MatchSpec -> MatchResult)  ===================
+
+static void build_design(const JValue &aD, CShipDesign *aOut)
+{
+	aOut->set_body(aD["body"].as_int(4003));
+	aOut->set_armor(aD["armor"].as_int(5101));
+	aOut->set_computer(aD["computer"].as_int(5201));
+	aOut->set_shield(aD["shield"].as_int(5301));
+	aOut->set_engine(aD["engine"].as_int(5401));
+
+	const JValue &W = aD["weapons"];
+	for (size_t i = 0; i < W.size() && i < WEAPON_MAX_NUMBER; i++)
+	{
+		aOut->set_weapon((int)i, W[i]["id"].as_int(0));
+		aOut->set_weapon_number((int)i, W[i]["n"].as_int(1));
+	}
+	const JValue &D = aD["devices"];
+	for (size_t i = 0; i < D.size() && i < DEVICE_MAX_NUMBER; i++)
+		aOut->set_device((int)i, D[i].as_int(0));
+}
+
+// Build one side (race + fleets) into a CPlayer and populate its deployment plan.
+static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan)
+{
+	int Race = aSide["race"].as_int(1);
+	CPlayer *Player = make_player(aGameID, Race);
+	aPlan->set_owner(Player->get_game_id());
+
+	const JValue &Fleets = aSide["fleets"];
+	bool capitalSet = false;
+	for (size_t f = 0; f < Fleets.size(); f++)
+	{
+		const JValue &F = Fleets[f];
+		int fid = F["id"].as_int(aGameID * 100 + (int)f + 1);
+
+		CShipDesign *Design = new CShipDesign();
+		build_design(F["design"], Design);
+
+		CAdmiral *Adm = new CAdmiral(20, 5, 0, Race);
+		Adm->set_owner(Player->get_game_id());
+		Player->get_admiral_list()->add_admiral(Adm);
+
+		make_fleet(Player, fid, "F", Design, Adm->get_id(), F["ships"].as_int(1));
+
+		int cmd = F["command"].as_int(CDefenseFleet::COMMAND_FREE);
+		int x   = F["x"].as_int(aGameID == 1 ? 4500 : 5500);
+		int y   = F["y"].as_int(5000);
+		if (F["capital"].as_bool(false) && !capitalSet) { aPlan->set_capital(fid); capitalSet = true; }
+		add_deploy(aPlan, Player, fid, cmd, x, y);
+	}
+	if (!capitalSet && Fleets.size() > 0)
+		aPlan->set_capital(Fleets[(size_t)0]["id"].as_int(aGameID * 100 + 1));
+	return Player;
+}
+
+// PP lost by a side = sum over its battle fleets of destroyed_ships * hull_cost.
+static long side_pp_lost(CBattleFleetList &aList)
+{
+	long pp = 0;
+	for (int i = 0; i < aList.length(); i++)
+	{
+		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
+		int killed = BF->get_max_ship() - BF->count_active_ship();
+		if (killed < 0) killed = 0;
+		CShipSize *S = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(BF->get_body());
+		long cost = S ? S->get_cost() : 0;
+		pp += (long)killed * cost;
+	}
+	return pp;
+}
+
+struct RepResult { int win; int turns; long pp_atk_lost; long pp_atk_dest; };
+
+// Run ONE battle (called inside a forked child). Returns false if it couldn't deploy.
+static bool run_one_match(const JValue &aReq, unsigned long aSeed, RepResult &aOut)
+{
+	seed_rng(aSeed);
+	int turn_cap = aReq["turn_cap"].as_int(1800);
+
+	CDefensePlan Offense, Defense;
+	CPlayer *Atk = build_side(aReq["attacker"], 1, &Offense);
+	CPlayer *Def = build_side(aReq["defender"], 2, &Defense);
+
+	CPlanet Planet; Planet.set_id(1); Planet.set_name("P");
+
+	CBattle Battle(CBattle::WAR_SIEGE, Atk, Def, (void *)&Planet);
+	if (!Battle.init_battle_fleet(&Offense, Atk->get_fleet_list(), Atk->get_admiral_list(),
+								  &Defense, Def->get_fleet_list(), Def->get_admiral_list()))
+		return false;
+
+	int steps = 0;
+	while (Battle.run_step()) { if (++steps >= turn_cap) break; }
+
+	aOut.win   = Battle.attacker_win() ? 1 : 0;
+	aOut.turns = Battle.get_record()->get_turn();
+	aOut.pp_atk_lost = side_pp_lost(Battle.get_offense_battle_fleet_list());
+	aOut.pp_atk_dest = side_pp_lost(Battle.get_defense_battle_fleet_list());
+	return true;
+}
+
+// SplitMix64-style derivation so replicate seeds aren't linearly correlated.
+static unsigned long mix_seed(unsigned long aBase, int aK)
+{
+	unsigned long x = aBase + 0x9E3779B97F4A7C15UL * (unsigned long)(aK + 1);
+	x ^= x >> 30; x *= 0xBF58476D1CE4E5B9UL;
+	x ^= x >> 27; x *= 0x94D049BB133111EBUL;
+	x ^= x >> 31;
+	return x;
+}
+
+static double wilson_bound(int k, int n, int sign)
+{
+	if (n == 0) return 0.0;
+	double z = 1.96, phat = (double)k / n;
+	double denom  = 1.0 + z * z / n;
+	double center = phat + z * z / (2.0 * n);
+	double margin = z * sqrt(phat * (1.0 - phat) / n + z * z / (4.0 * (double)n * n));
+	double r = (center + sign * margin) / denom;
+	if (r < 0.0) r = 0.0;
+	if (r > 1.0) r = 1.0;
+	return r;
+}
+
+// Run N replicates, each in a forked COW child (crash isolation + no global-state
+// accumulation in the long-lived parent), and aggregate into a MatchResult.
+static void do_match(const JValue &aReq)
+{
+	int N = aReq["replicates"].as_int(20);
+	if (N < 1) N = 1;
+	unsigned long base = (unsigned long)aReq["seed"].as_int(12345);
+	int turn_cap = aReq["turn_cap"].as_int(1800);
+
+	int wins = 0, completed = 0, crashes = 0, cap_hits = 0;
+	long sum_turns = 0;
+	long long pp_lost_sum = 0, pp_dest_sum = 0;
+
+	for (int k = 0; k < N; k++)
+	{
+		int fds[2];
+		if (pipe(fds) != 0) { crashes++; continue; }
+
+		pid_t pid = fork();
+		if (pid == 0)
+		{
+			close(fds[0]);
+			RepResult r;
+			if (run_one_match(aReq, mix_seed(base, k), r))
+				dprintf(fds[1], "OK %d %d %ld %ld\n", r.win, r.turns, r.pp_atk_lost, r.pp_atk_dest);
+			else
+				dprintf(fds[1], "ERR\n");
+			close(fds[1]);
+			_exit(0);
+		}
+		close(fds[1]);
+
+		char buf[160];
+		ssize_t n = (pid > 0) ? read(fds[0], buf, sizeof(buf) - 1) : -1;
+		close(fds[0]);
+		int status = 0;
+		if (pid > 0) waitpid(pid, &status, 0);
+
+		int win, turns; long ppl, ppd;
+		if (n > 0 && buf[0] == 'O' && (buf[n] = 0, sscanf(buf, "OK %d %d %ld %ld", &win, &turns, &ppl, &ppd) == 4))
+		{
+			wins += win; completed++; sum_turns += turns;
+			pp_lost_sum += ppl; pp_dest_sum += ppd;
+			if (turns >= turn_cap) cap_hits++;
+		}
+		else crashes++;   // child died (signal) or failed to deploy
+	}
+
+	double wr   = completed ? (double)wins / completed : 0.0;
+	double lo   = wilson_bound(wins, completed, -1);
+	double hi   = wilson_bound(wins, completed, +1);
+	double appl = completed ? (double)pp_lost_sum / completed : 0.0;
+	double appd = completed ? (double)pp_dest_sum / completed : 0.0;
+
+	std::ostringstream o;
+	o << "{\"ok\":true,\"cmd\":\"match\",\"seed\":" << base
+	  << ",\"replicates\":" << N << ",\"completed\":" << completed
+	  << ",\"attacker_wins\":" << wins
+	  << ",\"win_rate\":" << wr
+	  << ",\"wilson_lo\":" << lo << ",\"wilson_hi\":" << hi
+	  << ",\"avg_turns\":" << (completed ? (double)sum_turns / completed : 0.0)
+	  << ",\"cap_hits\":" << cap_hits << ",\"crashes\":" << crashes
+	  << ",\"attacker_pp_lost\":" << appl
+	  << ",\"attacker_pp_destroyed\":" << appd
+	  << ",\"econ\":" << (appd - appl) << "}";
+	emit(o.str());
+}
+
 // =====================  server loop  ========================================
 
 static void serve()
@@ -269,6 +462,7 @@ static void serve()
 
 		std::string cmd = req["cmd"].as_str();
 		if (cmd == "pool")      do_pool(req);
+		else if (cmd == "match") do_match(req);
 		else if (cmd == "ping") emit("{\"ok\":true,\"cmd\":\"ping\"}");
 		else if (cmd == "quit") break;
 		else                    emit_error("unknown cmd");
