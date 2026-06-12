@@ -233,6 +233,15 @@ class CDefensePlan: public CStore
 	public :
 		bool init_for_empire(CFleetList *aFleetList, bool aOffenseSide);
 
+	/* Shared "packed 5x4" default layout. Fills aOutBoardX/aOutBoardY (each at
+	   least aMax long) with the non-capital deployment-board squares ordered
+	   nearest-first around the centre/capital square (309,326), and returns how
+	   many were written. One source of truth for the engine's auto_deployment and
+	   the bot AI so every default deployment matches the HTML5 board. aFleetCount
+	   is the total fleet count including the capital. */
+	public :
+		static int packed_5x4_squares(int aFleetCount, int *aOutBoardX, int *aOutBoardY, int aMax);
+
 	RECYCLE(gDefensePlanZone);
 };
 

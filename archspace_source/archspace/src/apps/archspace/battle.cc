@@ -2580,52 +2580,19 @@ CBattleFleetList::auto_deployment(CBattle *aBattle, CFleetList *aFleetList, CAdm
 	// Faithful "packed 5x4" default deployment, used whenever no deployment plan
 	// was submitted. It mirrors the HTML5 deployment board (as-deploy.js): the
 	// capital is pinned to the board centre square (309,326) and the other fleets
-	// are packed into a 5-wide block of 20-unit grid squares hugging the capital
-	// toward the enemy, nearest squares filled first. Every fleet defaults to the
-	// Formation stance. Positions are built in board coordinates (X 9..609,
-	// Y 226..426) and mapped into the battle space with the same per-side formula
-	// the .as result handlers use, so a no-plan battle deploys identically to one
-	// the player would have laid out by hand.
+	// are packed into a 5-wide block of grid squares hugging the capital toward the
+	// enemy, nearest squares first, every fleet on the Formation stance. The square
+	// ordering is shared with the bot AI via CDefensePlan::packed_5x4_squares();
+	// here we map each board square into the battle space with the same per-side
+	// formula the .as result handlers use, so a no-plan battle deploys identically
+	// to one the player would have laid out by hand.
 	int
 		Offense = (get_side() == CBattle::SIDE_OFFENSE) ? 1 : 0;
 
-	const int
-		CapCol = 15, CapRow = 5,          // board grid: X = 9+col*20, Y = 226+row*20
-		BlockHalf = 2;                    // 5 columns wide (13..17), centred on capital
 	int
-		nNonCap = length() - 1,
-		NeedRows = (nNonCap / 5) + 2;     // rows enough to hold every non-capital fleet
-
-	// Candidate squares ordered by distance to the capital (weights 42/55 match the
-	// board's px aspect GX≈21 / GY≈27.5, so the ordering is identical to the JS board).
+		CandX[256], CandY[256];
 	int
-		CandX[256], CandY[256], CandD[256], CandN = 0;
-	for (int rr = CapRow ; rr > CapRow - NeedRows && rr >= 0 ; rr--)
-	{
-		for (int dc = -BlockHalf ; dc <= BlockHalf ; dc++)
-		{
-			int cc = CapCol + dc;
-			if (cc < 0)  cc = 0;
-			if (cc > 30) cc = 30;
-			if (cc == CapCol && rr == CapRow) continue;   // the capital's own square
-			if (CandN >= 256) break;
-			int dcw = (cc - CapCol)*42, drw = (rr - CapRow)*55;
-			CandX[CandN] = 9 + cc*20;
-			CandY[CandN] = 226 + rr*20;
-			CandD[CandN] = dcw*dcw + drw*drw;
-			CandN++;
-		}
-	}
-	for (int a = 1 ; a < CandN ; a++)         // insertion sort by distance (small N)
-	{
-		int kx = CandX[a], ky = CandY[a], kd = CandD[a], b = a - 1;
-		while (b >= 0 && CandD[b] > kd)
-		{
-			CandX[b+1] = CandX[b]; CandY[b+1] = CandY[b]; CandD[b+1] = CandD[b];
-			b--;
-		}
-		CandX[b+1] = kx; CandY[b+1] = ky; CandD[b+1] = kd;
-	}
+		CandN = CDefensePlan::packed_5x4_squares(length(), CandX, CandY, 256);
 
 	int
 		CandI = 0;

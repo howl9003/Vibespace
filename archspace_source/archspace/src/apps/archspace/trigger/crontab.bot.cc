@@ -482,8 +482,12 @@ bot_sync_defense_plan(CPlayer *aPlayer)
 	CDefensePlanList *PlanList = aPlayer->get_defense_plan_list();
 	CDefensePlan     *Plan     = PlanList->get_generic_plan();
 
-	// Already covers exactly this defender set (same capital, same ids)? Promotions
-	// only swap commanders, not fleet ids, so a settled bot returns here untouched.
+	// Already covers exactly this defender set (same capital, same ids) AND already
+	// uses the current 5x4 layout? Promotions only swap commanders, not fleet ids,
+	// so a settled bot returns here untouched. The capital-position check also
+	// migrates bots whose stored plan predates the 5x4 layout (old layout pinned
+	// the capital to 7000,3000 rather than the centred 8000,5000) -- they rebuild
+	// once and then settle.
 	if (Plan != NULL && Plan->get_capital() == DefenderID[0])
 	{
 		CDefenseFleetList *DFList = Plan->get_fleet_list();
@@ -492,6 +496,11 @@ bot_sync_defense_plan(CPlayer *aPlayer)
 			bool Same = true;
 			for (int i=0 ; i<DefenderCount ; i++)
 				if (DFList->get_by_id(DefenderID[i]) == NULL) { Same = false; break; }
+			if (Same)
+			{
+				CDefenseFleet *Cap = DFList->get_by_id(DefenderID[0]);
+				if (Cap == NULL || Cap->get_x() != 8000 || Cap->get_y() != 5000) Same = false;
+			}
 			if (Same) return;
 		}
 	}
@@ -529,15 +538,34 @@ bot_sync_defense_plan(CPlayer *aPlayer)
 	}
 
 	int PlanID = Plan->get_id();
+
+	// Packed 5x4 layout in DEFENCE-side battle coordinates, shared with the engine's
+	// auto_deployment via CDefensePlan::packed_5x4_squares(): the capital
+	// (DefenderID[0]) is pinned to the centre square (-> 8000,5000) and the rest
+	// hug it toward the enemy, every fleet on FORMATION. Stored plans are used
+	// as-is by deploy_by_plan (no convert_coordinates), so we apply the defence-side
+	// board->battle mapping here directly. Cells are 200 apart -> no stacked fleets.
+	int CandBoardX[64], CandBoardY[64];
+	int CandN = CDefensePlan::packed_5x4_squares(DefenderCount, CandBoardX, CandBoardY, 64);
+
+	int CandI = 0;
 	for (int i=0 ; i<DefenderCount ; i++)
 	{
+		int LocationX = 309, LocationY = 326;   // capital square by default
+		if (i != 0 && CandI < CandN)
+		{
+			LocationX = CandBoardX[CandI];
+			LocationY = CandBoardY[CandI];
+			CandI++;
+		}
+
 		CDefenseFleet *DF = new CDefenseFleet();
 		DF->set_owner(aPlayer->get_game_id());
 		DF->set_plan_id(PlanID);
 		DF->set_fleet_id(DefenderID[i]);
 		DF->set_command(CDefenseFleet::COMMAND_FORMATION);
-		DF->set_x(7000 + (i % 5) * 500);   // distinct cells -> no stacked fleets
-		DF->set_y(3000 + (i / 5) * 500);
+		DF->set_x(7000 + (LocationY - 226)*10);   // defence-side board->battle mapping
+		DF->set_y(2000 + (LocationX - 9)*10);
 		Plan->add_defense_fleet(DF);
 		DF->type(QUERY_INSERT);
 		STORE_CENTER->store(*DF);
