@@ -286,6 +286,17 @@ class CAdmiral: public CStore
 		void set_level_by_effect( int aAbility, int aLevel );
 		void clear_level_by_effect();
 
+		// --- battle-sim harness setters (additive) ---------------------------
+		// Build exact, reproducible commanders by setting the BASE stats
+		// directly; the getters still apply racial-ability adjustments on top,
+		// so this stays faithful to the engine's combat math.
+		void sim_set_skill(int aSkill, int aLevel) { mSkill[aSkill][LEVEL] = aLevel; }
+		void sim_set_efficiency(int aEff)          { mEfficiency = aEff; }
+		void sim_set_fleet_commanding(int aFC)     { mFleetCommanding = aFC; }
+		void sim_set_armada_commanding(int aAC)    { mArmadaCommanding = aAC; }
+		void sim_set_racial_ability(int aRA)       { mRacialAbility = aRA; }
+		void sim_set_special_ability(int aSA)      { mSpecialAbility = aSA; }
+
 	public:
 		bool distribute_exp();
 

@@ -296,8 +296,28 @@ static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan
 		CShipDesign *Design = new CShipDesign();
 		build_design(F["design"], Design);
 
+		bool isCap = F["capital"].as_bool(false);
+
+		// Build the commander, then overwrite the constructor's randomized base
+		// skills with the exact resolved stats from the spec (the orchestrator's
+		// commander point-model produces these values; defaults = "good commander"
+		// baseline). Racial-ability effects still layer on via the getters.
+		const JValue &A = F["admiral"];
 		CAdmiral *Adm = new CAdmiral(20, 5, 0, Race);
 		Adm->set_owner(Player->get_game_id());
+		int siege = A["siege"].as_int(13);
+		Adm->sim_set_skill(CAdmiral::SIEGE_PLANET,    siege);
+		Adm->sim_set_skill(CAdmiral::SIEGE_REPELLING, siege);
+		Adm->sim_set_skill(CAdmiral::DETECTION, A["detection"].as_int(11));
+		Adm->sim_set_skill(CAdmiral::MANEUVER,  A["maneuver"].as_int(11));
+		Adm->sim_set_efficiency(A["efficiency"].as_int(100));
+		Adm->sim_set_fleet_commanding(A["fleet_commanding"].as_int(37));
+		if (A.has("racial"))  Adm->sim_set_racial_ability(A["racial"].as_int(0));
+		if (A.has("special")) Adm->sim_set_special_ability(A["special"].as_int(0));
+		// Capital commander's armada class is broadcast to every fleet; default
+		// AC_A (best) for the capital, none for the rest.
+		if (A.has("armada"))  Adm->sim_set_armada_commanding(A["armada"].as_int(CAdmiral::AC_A));
+		else if (isCap)       Adm->sim_set_armada_commanding(CAdmiral::AC_A);
 		Player->get_admiral_list()->add_admiral(Adm);
 
 		make_fleet(Player, fid, "F", Design, Adm->get_id(), F["ships"].as_int(1));
@@ -305,7 +325,7 @@ static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan
 		int cmd = F["command"].as_int(CDefenseFleet::COMMAND_FREE);
 		int x   = F["x"].as_int(aGameID == 1 ? 4500 : 5500);
 		int y   = F["y"].as_int(5000);
-		if (F["capital"].as_bool(false) && !capitalSet) { aPlan->set_capital(fid); capitalSet = true; }
+		if (isCap && !capitalSet) { aPlan->set_capital(fid); capitalSet = true; }
 		add_deploy(aPlan, Player, fid, cmd, x, y);
 	}
 	if (!capitalSet && Fleets.size() > 0)
