@@ -86,5 +86,83 @@ fi
 # Record what we just deployed so the next run can diff against it.
 echo "$NEW_REV" > "$MARKER"
 
+# --- notify: email a deploy summary (what was built + what changed) ---------
+# Reuses the stack's SMTP_* convention (the same vars the app uses for
+# password-reset mail). Configure these in docker/deploy/.deploy.env (or export
+# them in the runner environment):
+#   NOTIFY_EMAIL  recipient address                         -- required to send
+#   SMTP_HOST     SMTP server (e.g. email-smtp.us-east-1.amazonaws.com / SES)
+#   SMTP_PORT     587 (STARTTLS, default) or 465 (implicit TLS)
+#   SMTP_USER     SMTP username
+#   SMTP_PASS     SMTP password
+#   SMTP_FROM     From/envelope address (default: SMTP_USER)
+# If any of NOTIFY_EMAIL/SMTP_HOST/SMTP_USER/SMTP_PASS is unset, the summary is
+# just logged (never an error), mirroring the app's "no SMTP -> reset links are
+# logged" behaviour. A mail failure warns but never fails the deploy.
+notify_deploy() {
+  local action="$1"
+  local short subject range_desc changed subj body from port url msg
+
+  short="$(git rev-parse --short HEAD)"
+  subject="$(git log -1 --pretty=%s 2>/dev/null || echo '')"
+
+  if [ -n "$OLD_REV" ] && [ "$OLD_REV" != "$NEW_REV" ]; then
+    range_desc="$(git log --oneline "$OLD_REV..$NEW_REV" 2>/dev/null | head -50)"
+    changed="$(git diff --name-only "$OLD_REV" "$NEW_REV" 2>/dev/null | head -100)"
+  else
+    range_desc="$(git log --oneline -5 "$NEW_REV" 2>/dev/null)"
+    changed="$([ -n "$OLD_REV" ] && echo '(no file changes)' || echo '(initial deploy)')"
+  fi
+
+  subj="[Archspace deploy] ${action} ${short} - ${subject}"
+  body="$(cat <<EOF
+Archspace deploy completed.
+
+When:    $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+Host:    $(hostname 2>/dev/null || echo '?')
+Branch:  ${BRANCH}
+Action:  ${action}  ($([ "$action" = REBUILD ] && echo 'image rebuilt - engine/CGI/Dockerfile change' || echo 'restart only - web/template/config'))
+Commit:  ${short}  ${subject}
+Range:   ${OLD_REV:-<none>} -> ${NEW_REV}
+
+Commits in this deploy:
+${range_desc:-<none>}
+
+Files changed:
+${changed:-<none>}
+
+Containers:
+$($COMPOSE ps 2>/dev/null | head -20)
+EOF
+)"
+
+  if [ -z "${NOTIFY_EMAIL:-}" ] || [ -z "${SMTP_HOST:-}" ] || [ -z "${SMTP_USER:-}" ] || [ -z "${SMTP_PASS:-}" ]; then
+    echo "==> deploy: NOTIFY_EMAIL/SMTP_* not fully set -> logging summary instead of emailing"
+    printf '%s\n%s\n' "Subject: $subj" "$body"
+    return 0
+  fi
+
+  port="${SMTP_PORT:-587}"
+  from="${SMTP_FROM:-$SMTP_USER}"
+  if [ "$port" = "465" ]; then url="smtps://${SMTP_HOST}:${port}"; else url="smtp://${SMTP_HOST}:${port}"; fi
+
+  # RFC822 message (CRLF line endings) piped to curl's SMTP client over stdin.
+  msg="$(printf 'From: %s\r\nTo: %s\r\nSubject: %s\r\nDate: %s\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n' \
+           "$from" "$NOTIFY_EMAIL" "$subj" "$(date -R 2>/dev/null || date)")"
+  msg="$msg$(printf '%s' "$body" | sed 's/$/\r/')"
+
+  if printf '%s\r\n' "$msg" | curl --silent --show-error --ssl-reqd \
+        --url "$url" --user "${SMTP_USER}:${SMTP_PASS}" \
+        --mail-from "$from" --mail-rcpt "$NOTIFY_EMAIL" --upload-file - ; then
+    echo "==> deploy: emailed deploy summary to ${NOTIFY_EMAIL}"
+  else
+    echo "==> deploy: WARNING: deploy email failed (continuing)"
+  fi
+  return 0
+}
+
+ACTION=RESTART; [ "$NEEDS_BUILD" = "1" ] && ACTION=REBUILD
+notify_deploy "$ACTION" || true
+
 echo "==> deploy: done"
 $COMPOSE ps

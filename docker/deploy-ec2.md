@@ -140,6 +140,30 @@ block in `docker/docker-compose.yml`:
       SMTP_FROM: noreply@yourdomain.com
 ```
 
+## Deploy notifications (email after each restart/rebuild)
+
+`docker/deploy/deploy.sh` can email a summary after every deploy so you know
+when a restart or rebuild happened and exactly what was built. The summary
+includes the action (**REBUILD** for engine/CGI/Dockerfile changes vs
+**RESTART** for web/template/config), the new commit, the `OLD -> NEW` range,
+the commit list in that deploy, and the changed files.
+
+It reuses the same `SMTP_*` convention as password-reset mail. Set these on the
+**deploy host** — either in `docker/deploy/.deploy.env` (sourced by the script)
+or exported in the self-hosted runner's environment:
+```sh
+NOTIFY_EMAIL=you@example.com                       # required to send
+SMTP_HOST=email-smtp.us-east-1.amazonaws.com       # e.g. AWS SES
+SMTP_PORT=587                                       # 587 STARTTLS (default) or 465 TLS
+SMTP_USER=<ses-smtp-user>
+SMTP_PASS=<ses-smtp-pass>
+SMTP_FROM=noreply@yourdomain.com                    # default: SMTP_USER
+```
+If any of `NOTIFY_EMAIL`/`SMTP_HOST`/`SMTP_USER`/`SMTP_PASS` is unset, the
+summary is just **logged** in the deploy output (never an error), and a mail
+failure warns but never fails the deploy. Sending uses `curl`'s SMTP client, so
+no MTA needs to be installed on the box.
+
 ## Real-time notifications (push)
 
 Incoming diplomatic/council messages and hostile actions (siege, blockade,
