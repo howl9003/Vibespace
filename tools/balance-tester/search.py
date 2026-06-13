@@ -35,7 +35,8 @@ Fitness = Tuple[float, float]   # lexicographic (primary, secondary)
 
 
 def fitness(sim, pool: P.Pool, cand: G.Loadout, opponents: List[G.Loadout],
-            side: str, tech_cap: int, base_seed: int, replicates: int) -> Fitness:
+            side: str, tech_cap: int, base_seed: int, replicates: int,
+            conc: Optional[int] = None) -> Fitness:
     """Lexicographic fitness of `cand` (on `side`) vs the opponent set.
 
     Attacker: MEAN (win-rate, econ) over the opponent field (exploit the field).
@@ -46,10 +47,10 @@ def fitness(sim, pool: P.Pool, cand: G.Loadout, opponents: List[G.Loadout],
     vals: List[Fitness] = []
     for opp in opponents:
         if side == "attacker":
-            c = T.evaluate_cell(sim, pool, cand, opp, tech_cap, base_seed, replicates)
+            c = T.evaluate_cell(sim, pool, cand, opp, tech_cap, base_seed, replicates, conc=conc)
             vals.append((c.win_rate, c.econ))
         else:
-            c = T.evaluate_cell(sim, pool, opp, cand, tech_cap, base_seed, replicates)
+            c = T.evaluate_cell(sim, pool, opp, cand, tech_cap, base_seed, replicates, conc=conc)
             vals.append((1.0 - c.win_rate, -c.econ))
     if side == "attacker":
         n = len(vals)
@@ -72,13 +73,24 @@ def best_response(sim, pool: P.Pool, opponents: List[G.Loadout], side: str,
                   generations: int = 12, replicates: int = 20, base_seed: int = 999,
                   seed_pop: Optional[List[G.Loadout]] = None, patience: int = 4,
                   rng: Optional[random.Random] = None,
-                  log: Optional[Callable] = None) -> Tuple[G.Loadout, Fitness]:
+                  log: Optional[Callable] = None, mpool=None) -> Tuple[G.Loadout, Fitness]:
     rng = rng or random.Random(0)
 
-    def ev(lo):
-        return fitness(sim, pool, lo, opponents, side, con.tech_cap, base_seed, replicates)
+    def ev_many(cands):
+        """Evaluate a list of candidates' fitness vs the opponents. With `mpool`,
+        each candidate is scored on its own worker, in parallel — same results."""
+        cands = list(cands)
+        if mpool is None or not cands:
+            return [fitness(sim, pool, lo, opponents, side, con.tech_cap,
+                            base_seed, replicates) for lo in cands]
+        # warm the shared Pool cache single-threaded so worker threads only read it
+        for lo in cands + list(opponents):
+            pool.get(lo.race, con.tech_cap)
+        return mpool.map(cands, lambda wsim, lo: fitness(
+            wsim, pool, lo, opponents, side, con.tech_cap, base_seed, replicates, conc=1))
 
-    scored = [(lo, ev(lo)) for lo in _seed_population(pool, side, con, mu, seed_pop, rng)]
+    pop0 = _seed_population(pool, side, con, mu, seed_pop, rng)
+    scored = list(zip(pop0, ev_many(pop0)))
     scored.sort(key=lambda x: x[1], reverse=True)
     best = scored[0]
     stale = 0
@@ -96,7 +108,7 @@ def best_response(sim, pool: P.Pool, opponents: List[G.Loadout], side: str,
                              con.max_ships, rng)
             offspring.append(child)
 
-        scored = sorted(scored + [(lo, ev(lo)) for lo in offspring],
+        scored = sorted(scored + list(zip(offspring, ev_many(offspring))),
                         key=lambda x: x[1], reverse=True)[:mu]
         if scored[0][1] > best[1]:
             best, stale = scored[0], 0
@@ -116,7 +128,7 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
                 base_seed: int = 12345, rng: Optional[random.Random] = None,
                 log: Callable = print,
                 on_progress: Optional[Callable] = None,
-                on_gen: Optional[Callable] = None) -> dict:
+                on_gen: Optional[Callable] = None, mpool=None) -> dict:
     rng = rng or random.Random(1)
 
     # per-generation progress hook: on_gen(round, side, gen, total_gens, best_primary_fit)
@@ -129,7 +141,7 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
     log("Stage 1: attacker best-response vs the fixed defender")
     a0, a0fit = best_response(sim, pool, [fixed_defender], "attacker", atk_con,
                               mu, lam, gens, replicates, base_seed, rng=rng,
-                              log=_gl(0, "seed"))
+                              log=_gl(0, "seed"), mpool=mpool)
     attacker_lib: List[G.Loadout] = [a0]
     log(f"  seed attacker beats the fixed defender at win-rate {a0fit[0]:.3f}")
 
@@ -141,12 +153,12 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
         d_best, d_fit = best_response(sim, pool, attacker_lib, "defender", def_con,
                                       mu, lam, gens, replicates, base_seed,
                                       seed_pop=[robust_def], rng=rng,
-                                      log=_gl(rnd, "defender"))
+                                      log=_gl(rnd, "defender"), mpool=mpool)
         robust_def = d_best
         a_best, a_fit = best_response(sim, pool, [robust_def], "attacker", atk_con,
                                       mu, lam, gens, replicates, base_seed,
                                       seed_pop=attacker_lib, rng=rng,
-                                      log=_gl(rnd, "attacker"))
+                                      log=_gl(rnd, "attacker"), mpool=mpool)
         attacker_lib.append(a_best)
 
         robust_worstcase_defwin = d_fit[0]     # defender's worst case over the gauntlet

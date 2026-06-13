@@ -26,12 +26,14 @@ class Cell:
 
 def evaluate_cell(sim, pool: P.Pool, attacker: G.Loadout, defender: G.Loadout,
                   tech_cap: int, base_seed: int, replicates: int,
-                  turn_cap: int = 1800) -> Cell:
+                  turn_cap: int = 1800, conc: Optional[int] = None) -> Cell:
     spec = {
         "seed": base_seed, "replicates": replicates, "turn_cap": turn_cap,
         "attacker": G.encode_side(attacker, pool, tech_cap, base_id=100),
         "defender": G.encode_side(defender, pool, tech_cap, base_id=200),
     }
+    if conc:                       # per-worker replicate cap when many cells run in parallel
+        spec["conc"] = conc
     r = sim.match(spec)
     return Cell(win_rate=r["win_rate"], econ=r["econ"],
                 lo=r["wilson_lo"], hi=r["wilson_hi"], raw=r)
@@ -39,10 +41,35 @@ def evaluate_cell(sim, pool: P.Pool, attacker: G.Loadout, defender: G.Loadout,
 
 def payoff_matrix(sim, pool: P.Pool, A: List[G.Loadout], D: List[G.Loadout],
                   tech_cap: int, base_seed: int = 12345,
-                  replicates: int = 20, turn_cap: int = 1800) -> List[List[Cell]]:
-    """M[i][j] = attacker A[i] vs defender D[j]. Shared seed = CRN across cells."""
-    return [[evaluate_cell(sim, pool, a, d, tech_cap, base_seed, replicates, turn_cap)
-             for d in D] for a in A]
+                  replicates: int = 20, turn_cap: int = 1800,
+                  mpool=None) -> List[List[Cell]]:
+    """M[i][j] = attacker A[i] vs defender D[j]. Shared seed = CRN across cells.
+
+    With `mpool` (a workers.MatchPool), the cells are evaluated concurrently across
+    worker processes (each worker runs its replicates sequentially, conc=1). The
+    result is identical to the sequential version — only faster.
+    """
+    if mpool is None:
+        return [[evaluate_cell(sim, pool, a, d, tech_cap, base_seed, replicates, turn_cap)
+                 for d in D] for a in A]
+
+    # warm the shared Pool cache single-threaded so per-cell encode_side is pure
+    # (cache reads) and the worker threads never touch the main sim concurrently.
+    for lo in list(A) + list(D):
+        pool.get(lo.race, tech_cap)
+
+    jobs = [(i, j) for i in range(len(A)) for j in range(len(D))]
+
+    def run(wsim, job):
+        i, j = job
+        return evaluate_cell(wsim, pool, A[i], D[j], tech_cap, base_seed,
+                             replicates, turn_cap, conc=1)
+
+    flat = mpool.map(jobs, run)
+    M = [[None] * len(D) for _ in range(len(A))]
+    for (i, j), cell in zip(jobs, flat):
+        M[i][j] = cell
+    return M
 
 
 # --- lexicographic scoring (win-rate first, econ second) ---------------------

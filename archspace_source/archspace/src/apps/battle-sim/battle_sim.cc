@@ -480,6 +480,11 @@ static void do_match(const JValue &aReq)
 	// to go faster. Concurrency is capped at the CPU count.
 	long ncpu = sysconf(_SC_NPROCESSORS_ONLN);
 	int conc = (ncpu > 0) ? (int)ncpu : 1;
+	// Orchestrator hint: when many cells run in parallel across worker processes,
+	// it sends conc=1 so this worker runs its replicates one-at-a-time (avoids
+	// workers x replicates oversubscription). Default 0 -> use all cores.
+	int conc_req = aReq["conc"].as_int(0);
+	if (conc_req > 0 && conc_req < conc) conc = conc_req;
 	if (conc > N) conc = N;
 
 	std::vector<MatchChild> active;

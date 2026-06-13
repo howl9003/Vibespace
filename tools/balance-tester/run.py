@@ -13,6 +13,7 @@ import time
 
 from evaluator import BattleSim
 from pool import Pool
+from workers import MatchPool
 import genome as G
 import tournament as T
 import search as S
@@ -66,7 +67,7 @@ def _scenario_dict(sc: SC.Scenario) -> dict:
             "base_seed": sc.base_seed, "turn_cap": sc.turn_cap, "replicates": sc.replicates}
 
 
-def run_assess(sim, pool, sc, rng, outdir):
+def run_assess(sim, pool, sc, rng, outdir, mpool=None):
     atk, dfn = sc.constraints("attacker"), sc.constraints("defender")
     _write_state(outdir, {"phase": "sampling", "mode": "assess"})
     A_pop = [_sample(pool, "attacker", atk, rng) for _ in range(sc.population)]
@@ -79,7 +80,7 @@ def run_assess(sim, pool, sc, rng, outdir):
                           "configs": {"attackers": dec_atk, "defenders": dec_dfn}})
     M = T.payoff_matrix(sim, pool, A_pop, D_pop, atk.tech_cap,
                         base_seed=sc.base_seed, replicates=sc.replicates,
-                        turn_cap=sc.turn_cap)
+                        turn_cap=sc.turn_cap, mpool=mpool)
     W = _winrates(M)
     an = A.classify(W)
 
@@ -94,7 +95,7 @@ def run_assess(sim, pool, sc, rng, outdir):
     }
 
 
-def run_stackelberg(sim, pool, sc, rng, outdir):
+def run_stackelberg(sim, pool, sc, rng, outdir, mpool=None):
     atk, dfn = sc.constraints("attacker"), sc.constraints("defender")
     fixed_def = _sample(pool, "defender", dfn, rng)
 
@@ -139,7 +140,7 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
                         rounds=sc.rounds, epsilon=sc.epsilon, mu=sc.mu, lam=sc.lam,
                         gens=sc.generations, replicates=sc.replicates,
                         base_seed=sc.base_seed, rng=rng, log=log,
-                        on_progress=on_progress, on_gen=on_gen)
+                        on_progress=on_progress, on_gen=on_gen, mpool=mpool)
     history_acc[:] = out["history"]
 
     # Final meta-game: attacker library vs {fixed, robust} defenders.
@@ -147,7 +148,7 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
     defenders = [fixed_def, robust]
     M = T.payoff_matrix(sim, pool, out["attacker_library"], defenders, atk.tech_cap,
                         base_seed=sc.base_seed, replicates=sc.replicates,
-                        turn_cap=sc.turn_cap)
+                        turn_cap=sc.turn_cap, mpool=mpool)
     W = _winrates(M)
     an = A.classify(W)
     best_exploit = out["history"][-1]["best_exploit_atkwin"] if out["history"] else an["value"]
@@ -183,12 +184,15 @@ def main():
 
     global _START
     _START = t0 = time.time()
-    with BattleSim() as sim:
+    # One worker owns the Pool cache + genetic ops (single-threaded); the MatchPool
+    # of extra workers evaluates many cells/candidates concurrently (cell-level
+    # parallelism). Determinism is preserved — only evaluation is parallelized.
+    with BattleSim() as sim, MatchPool() as mpool:
         pool = Pool(sim)
         if mode == "assess":
-            result = run_assess(sim, pool, sc, rng, args.out)
+            result = run_assess(sim, pool, sc, rng, args.out, mpool)
         else:
-            result = run_stackelberg(sim, pool, sc, rng, args.out)
+            result = run_stackelberg(sim, pool, sc, rng, args.out, mpool)
 
     result["wall_seconds"] = round(time.time() - t0, 1)
     R.write_report(result, args.out)
