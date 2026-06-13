@@ -64,7 +64,8 @@ def _seed_population(pool, side, con: Constraints, mu: int,
     while len(pop) < mu:
         lo = G.sample_loadout(pool, side, con.race, con.tech_cap, con.n_fleets,
                               con.pp_budget, con.max_ships, rng)
-        pop.append(G.repair(lo, pool, side, con.tech_cap, con.pp_budget, con.max_ships, rng))
+        pop.append(G.repair(lo, pool, side, con.tech_cap, con.pp_budget,
+                            con.max_ships, rng, con.n_fleets))
     return pop
 
 
@@ -101,11 +102,11 @@ def best_response(sim, pool: P.Pool, opponents: List[G.Loadout], side: str,
             if rng.random() < 0.6 and len(scored) >= 2:
                 pa, pb = rng.sample(scored, 2)
                 child = G.crossover(pa[0], pb[0], pool, side, con.tech_cap,
-                                    con.pp_budget, con.max_ships, rng)
+                                    con.pp_budget, con.max_ships, rng, con.n_fleets)
             else:
                 child = copy.deepcopy(rng.choice(scored)[0])
             child = G.mutate(child, pool, side, con.tech_cap, con.pp_budget,
-                             con.max_ships, rng)
+                             con.max_ships, rng, n_fleets=con.n_fleets)
             offspring.append(child)
 
         scored = sorted(scored + list(zip(offspring, ev_many(offspring))),

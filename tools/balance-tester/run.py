@@ -25,7 +25,8 @@ import scenario as SC
 def _sample(pool, side, con, rng):
     lo = G.sample_loadout(pool, side, con.race, con.tech_cap, con.n_fleets,
                           con.pp_budget, con.max_ships, rng)
-    return G.repair(lo, pool, side, con.tech_cap, con.pp_budget, con.max_ships, rng)
+    return G.repair(lo, pool, side, con.tech_cap, con.pp_budget, con.max_ships,
+                    rng, con.n_fleets)
 
 
 def _winrates(M):

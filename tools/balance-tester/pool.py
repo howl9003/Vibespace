@@ -20,6 +20,12 @@ FC_VAL  = {-2: 33, -1: 35, 0: 37, 1: 39, 2: 41}   # fleet_commanding (engine cap
 # 5 common special abilities (combat specialists), always legal; -1 = none.
 SPECIAL_ABILITIES = [0, 1, 2, 3, 4]
 
+# Restrict the searched component pool to high-tier gear: drop tier 1-3 weapons
+# and armors (component `level` 1..5), keeping only level >= MIN_TIER. Narrows the
+# search space to the parts a fully-teched empire would actually field. Devices and
+# the pinned computer/shield/engine are unaffected.
+MIN_TIER = 4
+
 # --- verified deploy grids (battlefield coords; step 200) ---------------------
 # Confirmed against siege_planet_result.cc / defense_plan_generic_result.cc:
 # attacker on low-x, defender on high-x, shared lateral y. Capital pinned to the
@@ -76,14 +82,17 @@ class Pool:
         return self.get(race, tc)["components"][cat]
 
     def armor_ids(self, race: int, tc: int = 999999) -> List[int]:
-        return [c["id"] for c in self.category("ARMOR", race, tc)]
+        # tier 1-3 armors removed (keep level >= MIN_TIER)
+        return [c["id"] for c in self.category("ARMOR", race, tc)
+                if c.get("level", 99) >= MIN_TIER]
 
     def device_ids(self, race: int, tc: int = 999999) -> List[int]:
         return [c["id"] for c in self.category("DEV", race, tc)]
 
     def weapons(self, race: int, tc: int = 999999) -> List[dict]:
-        # [{id, level, space}, ...]
-        return self.category("WPN", race, tc)
+        # [{id, level, space}, ...] — tier 1-3 weapons removed (keep level >= MIN_TIER)
+        return [c for c in self.category("WPN", race, tc)
+                if c.get("level", 99) >= MIN_TIER]
 
     def best(self, cat: str, race: int, tc: int = 999999) -> int:
         """Highest-level component in a category (the pinned linear-ladder part)."""

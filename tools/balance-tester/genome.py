@@ -128,119 +128,156 @@ def sample_design(pool: P.Pool, race: int, tech_cap: int, rng: random.Random,
 def sample_loadout(pool: P.Pool, side: str, race: int, tech_cap: int,
                    n_fleets: int, pp_budget: Optional[int],
                    max_ships_per_fleet: int, rng: random.Random) -> Loadout:
-    """Sample a legal random loadout for a side."""
+    """Sample a rough loadout: n_fleets fleets with diverse searched genes
+    (commander / weapons / armor / devices / stance / cell). repair() then assigns
+    the largest affordable hull and the ship counts that spend the PP budget, so
+    hull-size and fleet-size are not free search dimensions."""
     cells = P.free_cells(side)
     rng.shuffle(cells)
     _, _, cap_cell = P.grid(side)
 
     lo = Loadout(race=race)
-    spent = 0
-    for i in range(n_fleets):
-        remaining = (pp_budget - spent) if pp_budget is not None else None
-        if remaining is not None and remaining < 1:
-            break  # out of budget
-        des = sample_design(pool, race, tech_cap, rng, max_hull_cost=remaining)
-        cmd = sample_commander(rng, is_capital=(i == 0))
-        hull_cost = pool.hull_by_id(race, des.hull, tech_cap)["cost"]
-
-        cap = min(cmd.fleet_commanding(), max_ships_per_fleet)
-        if remaining is not None and hull_cost:
-            cap = min(cap, remaining // hull_cost)
-        if cap < 1:
-            break
-        ships = rng.randint(1, cap)
-        spent += ships * hull_cost
-
-        cell = cap_cell if i == 0 else cells[i - 1]
-        lo.fleets.append(Fleet(design=des, commander=cmd, command=rng.randint(0, 7),
-                               cell=cell, ships=ships, is_capital=(i == 0)))
-        if pp_budget is not None and spent >= pp_budget:
-            break
-
-    if not lo.fleets:  # always field at least one affordable (cheapest) fleet
-        des = sample_design(pool, race, tech_cap, rng, max_hull_cost=pp_budget)
-        cmd = sample_commander(rng, is_capital=True)
-        lo.fleets.append(Fleet(design=des, commander=cmd, command=5,
-                               cell=cap_cell, ships=1, is_capital=True))
+    for i in range(max(1, n_fleets)):
+        lo.fleets.append(Fleet(
+            design=sample_design(pool, race, tech_cap, rng),
+            commander=sample_commander(rng, is_capital=(i == 0)),
+            command=rng.randint(0, 7),
+            cell=cap_cell if i == 0 else cells[i - 1],
+            ships=1, is_capital=(i == 0)))
     return lo
 
 
 # ----------------------------- repair ----------------------------------------
 
+def _hulls_by_cost(pool: P.Pool, race: int, tech_cap: int) -> List[dict]:
+    return sorted(pool.hulls(race, tech_cap), key=lambda h: h["cost"])
+
+
+def _largest_affordable(hulls_by_cost: List[dict], remaining: Optional[int]):
+    """Largest (most expensive) hull affordable with `remaining` PP; None if broke.
+    remaining=None means unlimited budget -> the biggest hull."""
+    if remaining is None:
+        return hulls_by_cost[-1]
+    aff = [h for h in hulls_by_cost if h["cost"] <= remaining]
+    return aff[-1] if aff else None
+
+
+def _legalize_design(fl: Fleet, hull: dict, pool: P.Pool, race: int,
+                     tech_cap: int, rng: random.Random) -> None:
+    """Re-fit a fleet's weapons/armor/devices to its hull using the (tier-filtered)
+    pool: weapon-slot count, distinct legal devices, a legal armor."""
+    wp = [w["id"] for w in pool.weapons(race, tech_cap)]
+    ns = hull["weapon_slots"]
+    fl.design.weapons = ([(w if w in wp else rng.choice(wp))
+                          for w in (fl.design.weapons + [0] * ns)[:ns]]
+                         if wp and ns else [])
+    dev_ids = pool.device_ids(race, tech_cap)
+    seen: List[int] = []
+    for d in fl.design.devices:
+        if d in dev_ids and d not in seen:
+            seen.append(d)
+    fl.design.devices = seen[:hull["device_slots"]]
+    armor = pool.armor_ids(race, tech_cap)
+    if armor and fl.design.armor not in armor:
+        fl.design.armor = rng.choice(armor)
+
+
 def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
            pp_budget: Optional[int], max_ships_per_fleet: int,
-           rng: random.Random) -> Loadout:
-    """Re-legalize a (possibly mutated) loadout in place and return it."""
+           rng: random.Random, n_fleets: int = 20) -> Loadout:
+    """Re-legalize a loadout and enforce the 'spend the budget on the largest
+    affordable ships' policy: each fleet takes the largest hull it can afford with
+    the remaining budget, filled to capacity; fleets are added up to n_fleets and
+    then grown until no leftover PP could buy another ship anywhere."""
     xs, ys, cap_cell = P.grid(side)
+    n_fleets = max(1, min(n_fleets, 20))
+    hbc = _hulls_by_cost(pool, lo.race, tech_cap)
+    cheapest = hbc[0]["cost"]
+    grid_cells = {(x, y) for x in xs for y in ys}
 
-    # exactly one capital (the first fleet)
-    for i, fl in enumerate(lo.fleets):
-        fl.is_capital = (i == 0)
-
+    lo.fleets = lo.fleets[:n_fleets] or lo.fleets[:1]
     used = {cap_cell}
     free = P.free_cells(side)
     rng.shuffle(free)
-    spent = 0
-    legal_fleets: List[Fleet] = []
-    for i, fl in enumerate(lo.fleets[:20]):          # hard cap 20 fleets/side
-        # capital lock: battle_bonus = +2, others sum to -2
+
+    # commander locks + stance + distinct cells (preserve the searched genes)
+    for i, fl in enumerate(lo.fleets):
+        fl.is_capital = (i == 0)
         if i == 0:
             fl.commander.bb = 2
             if fl.commander.det + fl.commander.man + fl.commander.fc != -2:
                 fl.commander.det, fl.commander.man, fl.commander.fc = _capital_rest(rng)
+            fl.cell = cap_cell
         else:
             if (fl.commander.bb + fl.commander.det
                     + fl.commander.man + fl.commander.fc) != 0:
                 fl.commander.bb, fl.commander.det, fl.commander.man, fl.commander.fc = _zero_sum4(rng)
-
-        # budget: if this hull is unaffordable, swap to the cheapest affordable one
-        h = pool.hull_by_id(lo.race, fl.design.hull, tech_cap)
-        if pp_budget is not None:
-            remaining = pp_budget - spent
-            if h["cost"] > remaining:
-                cheapest = min(pool.hulls(lo.race, tech_cap), key=lambda hh: hh["cost"])
-                if cheapest["cost"] > remaining and legal_fleets:
-                    continue   # can't afford anything more; drop (keep >=1 fleet)
-                h = cheapest
-                fl.design.hull = h["id"]
-
-        # design legality: pinned ladder parts, weapon-slot count, distinct devices
-        wp = [w["id"] for w in pool.weapons(lo.race, tech_cap)]
-        ns = h["weapon_slots"]
-        fl.design.weapons = [(w if w in wp else rng.choice(wp))
-                             for w in (fl.design.weapons + [0] * ns)[:ns]]
-        dev_ids = pool.device_ids(lo.race, tech_cap)
-        seen = []
-        for d in fl.design.devices:
-            if d in dev_ids and d not in seen:
-                seen.append(d)
-        fl.design.devices = seen[:h["device_slots"]]
-
-        # distinct deploy cell (capital pinned)
-        if i == 0:
-            fl.cell = cap_cell
-        else:
-            if fl.cell in used or fl.cell not in [(x, y) for x in xs for y in ys]:
+            if fl.cell in used or fl.cell not in grid_cells:
                 for c in free:
                     if c not in used:
                         fl.cell = c
                         break
             used.add(fl.cell)
+        fl.command %= 8
 
-        # ship count <= fleet_commanding and budget; stance in range
+    # largest-hull + fill: each fleet gets the biggest hull it can still afford
+    remaining = pp_budget
+    legal: List[Fleet] = []
+    for fl in lo.fleets:
+        h = _largest_affordable(hbc, remaining)
+        if h is None:
+            if not legal:
+                h = hbc[0]            # the capital must field at least the cheapest hull
+            else:
+                continue              # nothing affordable left -> drop this fleet
+        fl.design.hull = h["id"]
+        _legalize_design(fl, h, pool, lo.race, tech_cap, rng)
         cap = min(fl.commander.fleet_commanding(), max_ships_per_fleet)
-        hull_cost = h["cost"]
-        if pp_budget is not None and hull_cost:
-            cap = min(cap, (pp_budget - spent) // hull_cost)
-        fl.ships = max(1, min(fl.ships, cap)) if cap >= 1 else 1
-        fl.command = fl.command % 8
-        spent += fl.ships * hull_cost
+        if remaining is not None and h["cost"]:
+            cap = min(cap, remaining // h["cost"])
+        fl.ships = max(1, cap)
+        if remaining is not None:
+            remaining -= fl.ships * h["cost"]
+        legal.append(fl)
 
-        legal_fleets.append(fl)
-        if pp_budget is not None and spent >= pp_budget and i >= 0:
+    # spend the rest: add fleets (cloning the capital's genes) up to n_fleets...
+    while len(legal) < n_fleets and (remaining is None or remaining >= cheapest):
+        h = _largest_affordable(hbc, remaining)
+        if h is None:
             break
+        nf = copy.deepcopy(legal[0])
+        nf.is_capital = False
+        nf.commander.bb, nf.commander.det, nf.commander.man, nf.commander.fc = _zero_sum4(rng)
+        nf.command = rng.randint(0, 7)
+        spot = next((c for c in free if c not in used), None)
+        if spot is None:
+            break
+        nf.cell = spot
+        used.add(spot)
+        nf.design.hull = h["id"]
+        _legalize_design(nf, h, pool, lo.race, tech_cap, rng)
+        cap = min(nf.commander.fleet_commanding(), max_ships_per_fleet)
+        if remaining is not None and h["cost"]:
+            cap = min(cap, remaining // h["cost"])
+        nf.ships = max(1, cap)
+        if remaining is not None:
+            remaining -= nf.ships * h["cost"]
+        legal.append(nf)
 
-    lo.fleets = legal_fleets or lo.fleets[:1]
+    # ...then grow existing fleets with any leftover (each keeps its own hull)
+    if remaining is not None:
+        changed = True
+        while changed and remaining >= cheapest:
+            changed = False
+            for fl in legal:
+                hc = pool.hull_by_id(lo.race, fl.design.hull, tech_cap)["cost"]
+                capf = min(fl.commander.fleet_commanding(), max_ships_per_fleet)
+                if fl.ships < capf and remaining >= hc:
+                    fl.ships += 1
+                    remaining -= hc
+                    changed = True
+
+    lo.fleets = legal or lo.fleets[:1]
     lo.fleets[0].is_capital = True
     return lo
 
@@ -312,12 +349,15 @@ def _mutate_design(d: Design, pool: P.Pool, race: int, tech_cap: int,
 
 def mutate(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
            pp_budget: Optional[int], max_ships_per_fleet: int,
-           rng: random.Random, rate: float = 0.35) -> Loadout:
-    """Per-gene resample over the searched genes, then repair()."""
+           rng: random.Random, rate: float = 0.35, n_fleets: int = 20) -> Loadout:
+    """Per-gene resample over the searched genes, then repair(). Hull-size and
+    ship counts are set by repair() (largest affordable + spend the budget), so
+    mutation focuses on the genes that matter: weapons/armor/devices, commander,
+    stance, and deploy cell."""
     lo = copy.deepcopy(lo)
 
     # structural: add or drop a (non-capital) fleet
-    if rng.random() < 0.12 and len(lo.fleets) < 20:
+    if rng.random() < 0.12 and len(lo.fleets) < n_fleets:
         clone = copy.deepcopy(rng.choice(lo.fleets))
         clone.is_capital = False
         lo.fleets.append(clone)
@@ -336,12 +376,12 @@ def mutate(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
             fl.cell = (rng.choice(xs), rng.choice(ys))
         if rng.random() < rate:
             fl.ships = max(1, fl.ships + rng.choice([-3, -1, 1, 3]))
-    return repair(lo, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng)
+    return repair(lo, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng, n_fleets)
 
 
 def crossover(a: Loadout, b: Loadout, pool: P.Pool, side: str, tech_cap: int,
               pp_budget: Optional[int], max_ships_per_fleet: int,
-              rng: random.Random) -> Loadout:
+              rng: random.Random, n_fleets: int = 20) -> Loadout:
     """Uniform per-fleet crossover (whole-fleet swaps), then repair()."""
     child = Loadout(race=a.race)
     for i in range(max(len(a.fleets), len(b.fleets))):
@@ -350,4 +390,4 @@ def crossover(a: Loadout, b: Loadout, pool: P.Pool, side: str, tech_cap: int,
             child.fleets.append(copy.deepcopy(src.fleets[i]))
     if not child.fleets:
         child.fleets.append(copy.deepcopy(a.fleets[0]))
-    return repair(child, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng)
+    return repair(child, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng, n_fleets)
