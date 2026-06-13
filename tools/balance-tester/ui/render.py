@@ -113,40 +113,69 @@ def _named_list(ids, names) -> str:
     return ", ".join(out) if out else "—"
 
 
-# ============================ battlefield board ===============================
+# ============================ deployment board ================================
+# Two side-by-side deploy grids (attacker left, defender right) mirroring the
+# in-game deployment screens: each shows the valid fleet cells, with the ships on
+# their cells facing each other across the central battlefield gap. Engine deploy
+# coords (step 200): attacker x 1000..3000, defender x 7000..9000, y 2000..8000.
 
-# board pixels; fleets live in battlefield coords x,y in [0..10000]
-_BW, _BH = 660, 360
-
-
-def _tx(x: int) -> float:
-    return max(0, min(10000, x)) / 10000.0 * _BW
-
-
-def _ty(y: int) -> float:
-    # flip y like battle-replay.js (higher y renders upward)
-    return (10000 - max(0, min(10000, y))) / 10000.0 * _BH
+_BW, _BH = 760, 380
+_PAD = 16
+_ATK_PX, _DEF_PX = (26, 330), (430, 734)      # screen x-band per side (gap between)
+_ATK_WX, _DEF_WX = (1000, 3000), (7000, 9000)  # world x-range per side
 
 
-def _fleet_markers(decoded: dict, side: str) -> str:
+def _sy(worldy: float) -> float:
+    f = max(0.0, min(1.0, (worldy - 2000) / 6000.0))
+    return (_BH - _PAD) - f * (_BH - 2 * _PAD)      # flip: higher engine-y renders upward
+
+
+def _sx(worldx: float, side: str) -> float:
+    px0, px1 = _ATK_PX if side == "attacker" else _DEF_PX
+    wx0, wx1 = _ATK_WX if side == "attacker" else _DEF_WX
+    f = max(0.0, min(1.0, (worldx - wx0) / float(wx1 - wx0)))
+    return px0 + f * (px1 - px0)
+
+
+def _grid_svg(side: str) -> str:
+    px0, px1 = _ATK_PX if side == "attacker" else _DEF_PX
+    wx0, wx1 = _ATK_WX if side == "attacker" else _DEF_WX
+    color = "#ff8844" if side == "attacker" else "#55bbff"
+    yt, yb = _sy(8000), _sy(2000)
+    p = [f'<rect x="{px0}" y="{yt:.1f}" width="{px1-px0}" height="{yb-yt:.1f}" '
+         f'fill="{color}" fill-opacity="0.05"/>']
+    for cx in range(wx0, wx1 + 1, 200):                 # vertical lines (columns)
+        x = _sx(cx, side)
+        p.append(f'<line x1="{x:.1f}" y1="{yt:.1f}" x2="{x:.1f}" y2="{yb:.1f}" '
+                 f'stroke="{color}" stroke-opacity="0.16"/>')
+    for cy in range(2000, 8001, 200):                   # horizontal lines (rows)
+        y = _sy(cy)
+        p.append(f'<line x1="{px0}" y1="{y:.1f}" x2="{px1}" y2="{y:.1f}" '
+                 f'stroke="{color}" stroke-opacity="0.10"/>')
+    return "".join(p)
+
+
+def _fleet_svg(decoded: dict, side: str) -> str:
     if not decoded:
         return ""
     cap_uri = asset_uri(os.path.join("image", "as_game", "fleet", "ship_cap.gif"))
     set_uri = asset_uri(os.path.join("image", "as_game", "fleet", "ship_set.gif"))
-    tint = "#ff8844" if side == "attacker" else "#55bbff"
+    color = "#ff8844" if side == "attacker" else "#55bbff"
+    rot = 90 if side == "attacker" else -90       # ships face the enemy across the gap
     out = []
     for k, fl in enumerate(decoded.get("fleets", [])):
-        cx, cy = fl.get("cell", [0, 0])
-        px, py = _tx(cx), _ty(cy)
+        cell = fl.get("cell") or ([2000, 5000] if side == "attacker" else [8000, 5000])
+        x, y = _sx(cell[0], side), _sy(cell[1])
         cap = fl.get("capital")
         uri = cap_uri if cap else set_uri
-        w = 26 if cap else 20
+        w = 22 if cap else 16
         abbr = STANCE_ABBR.get(fl.get("stance", ""), fl.get("stance", "")[:3])
-        label = f"{'★' if cap else 'F%d' % k} {fl.get('ships', 0)}× · {abbr}"
-        out.append(
-            f'<div class="fl" style="left:{px:.0f}px;top:{py:.0f}px">'
-            f'<img src="{uri}" width="{w}" style="filter:drop-shadow(0 0 3px {tint})"/>'
-            f'<span style="color:{tint}">{html.escape(label)}</span></div>')
+        label = f"{'★' if cap else 'F%d' % k} {fl.get('ships', 0)}× {abbr}"
+        out.append(f'<g transform="rotate({rot} {x:.1f} {y:.1f})">'
+                   f'<image href="{uri}" x="{x-w/2:.1f}" y="{y-w/2:.1f}" '
+                   f'width="{w}" height="{w}"/></g>')
+        out.append(f'<text x="{x:.1f}" y="{y-w/2-2:.1f}" fill="{color}" font-size="8.5" '
+                   f'text-anchor="middle">{html.escape(label)}</text>')
     return "".join(out)
 
 
@@ -164,35 +193,25 @@ def _side_header(decoded: dict, side: str) -> str:
 
 
 def battlefield_html(atk: dict, dfn: dict) -> str:
-    bg = asset_uri(os.path.join("image", "as_game", "fleet", "battle_back610.gif"))
-    bg2 = asset_uri(os.path.join("image", "as_game", "fleet", "battle_back.gif"))
-    bg_uri = bg if bg != _BLANK else bg2
-    css = """
-    <style>
-      .wrap{font-family:'Times New Roman',serif;color:#ddd}
-      .hdrs{display:flex;justify-content:space-between;margin:0 2px 4px}
-      .hdr{font-size:13px}
-      .board{position:relative;width:%dpx;height:%dpx;border:1px solid #333;
-             background:#050510 center/cover no-repeat;overflow:hidden}
-      .zone{position:absolute;top:0;height:100%%;opacity:.10}
-      .za{left:10%%;width:20%%;background:#ff8844}
-      .zd{left:70%%;width:20%%;background:#55bbff}
-      .fl{position:absolute;transform:translate(-50%%,-50%%);text-align:center;
-          white-space:nowrap}
-      .fl span{display:block;font-size:10px;line-height:1.1;
-               text-shadow:0 0 3px #000,0 0 3px #000}
-      .cap{position:absolute;bottom:2px;font-size:10px;color:#888}
-    </style>""" % (_BW, _BH)
-    body = (
-        '<div class="wrap"><div class="hdrs">'
-        + _side_header(atk, "attacker") + _side_header(dfn, "defender")
-        + '</div><div class="board" style="background-image:url(' + bg_uri + ')">'
-        + '<div class="zone za"></div><div class="zone zd"></div>'
-        + _fleet_markers(atk, "attacker") + _fleet_markers(dfn, "defender")
-        + '<span class="cap" style="left:6px">attacker</span>'
-        + '<span class="cap" style="right:6px">defender</span>'
-        + '</div></div>')
-    return css + body
+    midx = (_ATK_PX[1] + _DEF_PX[0]) / 2
+    svg = [
+        f'<svg viewBox="0 0 {_BW} {_BH}" width="100%" style="max-width:{_BW}px;'
+        f'display:block;margin:0 auto;background:#04040c;border:1px solid #333;border-radius:4px">',
+        f'<rect width="{_BW}" height="{_BH}" fill="#04040c"/>',
+        f'<line x1="{midx}" y1="6" x2="{midx}" y2="{_BH-6}" stroke="#33485f" stroke-dasharray="3 7"/>',
+        _grid_svg("attacker"), _grid_svg("defender"),
+        _fleet_svg(atk or {}, "attacker"), _fleet_svg(dfn or {}, "defender"),
+        f'<text x="{(_ATK_PX[0]+_ATK_PX[1])/2:.0f}" y="12" fill="#ff8844" font-size="10" '
+        f'text-anchor="middle">ATTACKER deploy grid</text>',
+        f'<text x="{(_DEF_PX[0]+_DEF_PX[1])/2:.0f}" y="12" fill="#55bbff" font-size="10" '
+        f'text-anchor="middle">DEFENDER deploy grid</text>',
+        '</svg>']
+    css = ("<style>.wrap{font-family:'Times New Roman',serif;color:#ddd}"
+           ".hdrs{display:flex;justify-content:space-between;margin:0 2px 4px}"
+           ".hdr{font-size:13px}</style>")
+    return (css + '<div class="wrap"><div class="hdrs">'
+            + _side_header(atk or {}, "attacker") + _side_header(dfn or {}, "defender")
+            + '</div>' + "".join(svg) + '</div>')
 
 
 # ============================ fleet config cards ==============================
