@@ -42,6 +42,7 @@ CPlayer::CPlayer(MYSQL_ROW aRow)
 	{
 	mNewsCenter.set_owner(this);
 	mRelationList.set_owner(this);
+	mMainNewsViewed = false;
 
 	mGameID = atoi(aRow[STORE_GAME_ID]);
 	mPortalID = atoi(aRow[STORE_PORTAL_ID]);
@@ -167,6 +168,7 @@ CPlayer::CPlayer(int aPortalID, int aGameID,
 {
 	mNewsCenter.set_owner(this);
 	mRelationList.set_owner(this);
+	mMainNewsViewed = false;
 
 	mPortalID = aPortalID;
 	mGameID = aGameID;

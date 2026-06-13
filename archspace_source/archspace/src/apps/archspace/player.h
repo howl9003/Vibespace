@@ -313,6 +313,13 @@ class CPlayer: public CStore
 
 		CNewsCenter mNewsCenter;
 
+		// Transient (not persisted): true once the player has loaded the main
+		// page since the last acknowledge, i.e. they have actually seen the
+		// (read-only, accumulating) news feed. acknowledge_news() must consume
+		// the feed only when this is set -- otherwise browsing other content
+		// pages between turns would silently clear news the player never saw.
+		bool mMainNewsViewed;
+
 		CFleetList mFleetList;
 		CAllyFleetList mAllyFleetList;
 
@@ -741,6 +748,12 @@ class CPlayer: public CStore
 		// feed; part of the /archspace/events.as push fingerprint.
 		inline int get_pending_time_news_count()
 				{ return mNewsCenter.get_time_news_count(); }
+
+		// Main-page news "seen" tracking (see mMainNewsViewed). Set when the
+		// player loads main.as; queried + cleared by the navigate-away consume.
+		inline void set_main_news_viewed()   { mMainNewsViewed = true;  }
+		inline void clear_main_news_viewed() { mMainNewsViewed = false; }
+		inline bool main_news_viewed()       { return mMainNewsViewed;  }
 
 		CPlayerRelation *get_relation(CPlayer *aPlayer);
 

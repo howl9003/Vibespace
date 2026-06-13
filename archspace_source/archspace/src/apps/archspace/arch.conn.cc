@@ -245,18 +245,35 @@ CArchspaceConnection::make_page()
 		{
 			const char *Base = strrchr(URI, '/');
 			Base = Base ? Base + 1 : URI;
-			// main.as / menu.as are the auto-refreshing shell (summary + left
-			// navbar); the death_* variants are terminal status screens; and
-			// events.as is the SSE push fingerprint, polled every couple of
-			// seconds. NONE of these count as "navigating away" -- in
-			// particular consuming on events.as would clear the news feed
-			// before the player ever sees it -- so don't acknowledge there.
-			if (strcmp(Base, "main.as")       != 0 &&
-			    strcmp(Base, "menu.as")       != 0 &&
-			    strcmp(Base, "events.as")     != 0 &&
-			    strcmp(Base, "death_main.as") != 0 &&
-			    strcmp(Base, "death_menu.as") != 0)
-				Player->acknowledge_news();
+
+			// main.as is where the (read-only) news feed is shown: loading it
+			// means the player is now seeing whatever has accumulated. Remember
+			// that so we consume it only once they actually leave.
+			if (strcmp(Base, "main.as") == 0)
+			{
+				Player->set_main_news_viewed();
+			}
+			// menu.as is the auto-refreshing left navbar; death_* are terminal
+			// status screens; events.as is the SSE push fingerprint, polled
+			// every couple of seconds. NONE of these count as "navigating away"
+			// (and consuming on events.as would clear the feed before the
+			// player ever sees it), so leave the news untouched on them.
+			else if (strcmp(Base, "menu.as")       != 0 &&
+			         strcmp(Base, "events.as")     != 0 &&
+			         strcmp(Base, "death_main.as") != 0 &&
+			         strcmp(Base, "death_menu.as") != 0)
+			{
+				// A real content page = navigating away. Consume the feed ONLY
+				// if the player has loaded main.as since the last acknowledge;
+				// otherwise it keeps stacking. Without this guard, clicking
+				// through other pages between turns silently acknowledged news
+				// the player never saw, so the main page later showed blank.
+				if (Player->main_news_viewed())
+				{
+					Player->acknowledge_news();
+					Player->clear_main_news_viewed();
+				}
+			}
 		}
 	}
 
