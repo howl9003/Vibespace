@@ -144,8 +144,11 @@ def view_configure():
         mu = s4.number_input("mu (parents)", min_value=1, value=5, step=1)
         lam = s5.number_input("lam (offspring)", min_value=1, value=8, step=1)
         if mode == "stackelberg":
-            rounds = s6.number_input("Rounds", min_value=1, value=3, step=1)
-            epsilon = st.slider("Epsilon (convergence)", 0.0, 1.0, 0.05, 0.01)
+            rounds = s6.number_input("Rounds (max)", min_value=1, value=3, step=1)
+            epsilon = st.slider("Epsilon (net-PP convergence)", 0.0, 1.0, 0.05, 0.01,
+                                help="Rounds continue while the best attacker exploit's "
+                                     "net PP keeps improving by more than epsilon × the "
+                                     "combined army PP cost. Rounds is the max.")
         else:
             rounds, epsilon = 3, 0.05
 
@@ -213,12 +216,15 @@ def _live_panel():
     leaders = (state or {}).get("leaders")
     configs = (state or {}).get("configs")
     if leaders:
-        st.markdown("#### Current leaders")
+        st.markdown("#### Current leaders — attacker library × defender library")
         atks = leaders.get("attacker_library") or (
             [leaders["best_exploit"]] if leaders.get("best_exploit") else [])
-        dfns = [d for d in [leaders.get("robust_defender")] if d]
+        dfns = leaders.get("defender_library") or (
+            [d for d in [leaders.get("robust_defender")] if d])
+        st.caption(f"attacker library: {len(atks)} · defender library: {len(dfns)}")
         R.render_config_browser(atks, dfns, key="live_lead",
-                                default_a=max(0, len(atks) - 1))
+                                default_a=max(0, len(atks) - 1),
+                                default_d=max(0, len(dfns) - 1))
     elif configs:
         st.markdown("#### Sampled configurations")
         R.render_config_browser(configs.get("attackers"), configs.get("defenders"),

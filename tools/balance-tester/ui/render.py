@@ -369,6 +369,15 @@ def render_convergence(history):
         "best exploit (attacker win)": [h["best_exploit_atkwin"] for h in history],
         "robust worst-case (defender win)": [h["robust_worstcase_defwin"] for h in history],
     })
+    # net-PP convergence: the search runs while the exploit's net PP keeps moving by
+    # more than the threshold (epsilon × combined army PP).
+    if any("exploit_net_pp" in h for h in history):
+        st.caption("Net-PP convergence — rounds continue while the exploit's net PP keeps "
+                   "improving by more than the threshold.")
+        st.line_chart({
+            "exploit net PP": [h.get("exploit_net_pp", 0) for h in history],
+            "convergence threshold (±)": [h.get("net_pp_threshold", 0) for h in history],
+        })
 
 
 def render_progress(state: dict):

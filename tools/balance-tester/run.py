@@ -119,7 +119,8 @@ def run_stackelberg(sim, pool, sc, rng, outdir, mpool=None):
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
                               "log": msg, "history": history_acc, "leaders": leaders_acc})
 
-    def on_progress(history, lib_size, robust_def=None, a_best=None, attacker_lib=None):
+    def on_progress(history, lib_size, robust_def=None, a_best=None, attacker_lib=None,
+                    defender_lib=None):
         leaders = {}
         if robust_def is not None:
             leaders["robust_defender"] = R.decode_loadout(robust_def, pool, dfn.tech_cap)
@@ -128,6 +129,9 @@ def run_stackelberg(sim, pool, sc, rng, outdir, mpool=None):
         if attacker_lib is not None:
             leaders["attacker_library"] = [R.decode_loadout(a, pool, atk.tech_cap)
                                            for a in attacker_lib]
+        if defender_lib is not None:
+            leaders["defender_library"] = [R.decode_loadout(d, pool, dfn.tech_cap)
+                                           for d in defender_lib]
         history_acc[:] = list(history)
         leaders_acc.clear()
         leaders_acc.update(leaders)

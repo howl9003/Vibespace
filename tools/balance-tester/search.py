@@ -149,14 +149,16 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
 
     # Stage 4: alternate robust-defender oracle and a fresh attacker best-response.
     robust_def = fixed_defender
+    defender_lib: List[G.Loadout] = []     # the robust defender found each round
     history = []
-    prev_exploit = None
+    prev_net = None
     for rnd in range(rounds):
         d_best, d_fit = best_response(sim, pool, attacker_lib, "defender", def_con,
                                       mu, lam, gens, replicates, base_seed,
                                       seed_pop=[robust_def], rng=rng,
                                       log=_gl(rnd, "defender"), mpool=mpool)
         robust_def = d_best
+        defender_lib.append(d_best)
         a_best, a_fit = best_response(sim, pool, [robust_def], "attacker", atk_con,
                                       mu, lam, gens, replicates, base_seed,
                                       seed_pop=attacker_lib, rng=rng,
@@ -165,23 +167,33 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
 
         robust_worstcase_defwin = d_fit[0]     # defender's worst case over the gauntlet
         best_exploit_atkwin = a_fit[0]         # best new attacker's win vs robust defender
+        exploit_net_pp = a_fit[1]              # and its net PP (econ = PP killed - lost)
+        # Convergence is judged in net-PP terms, scaled by the combined army PP, so
+        # epsilon is a fraction of "both armies' cost".
+        total_pp = (G.pp_cost(a_best, pool, atk_con.tech_cap)
+                    + G.pp_cost(robust_def, pool, def_con.tech_cap)) or 1
+        threshold = epsilon * total_pp
         history.append({"round": rnd,
                         "robust_worstcase_defwin": robust_worstcase_defwin,
                         "best_exploit_atkwin": best_exploit_atkwin,
+                        "exploit_net_pp": exploit_net_pp,
+                        "net_pp_threshold": threshold,
+                        "total_pp": total_pp,
                         "library_size": len(attacker_lib)})
-        log(f"Round {rnd}: robust defender worst-case def-win={robust_worstcase_defwin:.3f}; "
-            f"best new attacker exploit win={best_exploit_atkwin:.3f}")
+        log(f"Round {rnd}: robust def-win={robust_worstcase_defwin:.3f}; exploit win="
+            f"{best_exploit_atkwin:.3f}; exploit net PP={exploit_net_pp:.0f} "
+            f"(threshold {threshold:.0f} = {epsilon:.0%} of {total_pp:.0f} PP)")
         if on_progress:
-            on_progress(history, len(attacker_lib), robust_def, a_best, attacker_lib)
+            on_progress(history, len(attacker_lib), robust_def, a_best,
+                        attacker_lib, defender_lib)
 
-        # Converged if the best new attacker barely beats the robust defender, or the
-        # exploit stopped improving round-over-round.
-        if best_exploit_atkwin <= epsilon or (
-                prev_exploit is not None and best_exploit_atkwin <= prev_exploit + epsilon
-                and best_exploit_atkwin >= prev_exploit - epsilon):
-            log("  converged (exploitability gate)")
+        # Keep going while the attacker is still finding meaningfully better net-PP
+        # exploits; stop only once the exploit's net PP stops moving round-over-round
+        # (change <= epsilon x combined army PP).
+        if prev_net is not None and abs(exploit_net_pp - prev_net) <= threshold:
+            log("  converged (net-PP stable: round-over-round change <= threshold)")
             break
-        prev_exploit = best_exploit_atkwin
+        prev_net = exploit_net_pp
 
     return {"robust_defender": robust_def, "attacker_library": attacker_lib,
-            "history": history}
+            "defender_library": defender_lib, "history": history}
