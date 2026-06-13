@@ -105,11 +105,17 @@ def _hull_label(fl: dict) -> str:
 
 
 def _named_list(ids, names) -> str:
+    """Comma-joined names, collapsing repeats to 'name ×N' (homogeneous weapons)."""
     names = names or []
-    out = []
+    order, count = [], {}
     for i, x in enumerate(ids or []):
         nm = names[i] if i < len(names) and names[i] else None
-        out.append(html.escape(nm) if nm else f"#{x}")
+        label = html.escape(nm) if nm else f"#{x}"
+        if label not in count:
+            order.append(label)
+            count[label] = 0
+        count[label] += 1
+    out = [f"{label} ×{count[label]}" if count[label] > 1 else label for label in order]
     return ", ".join(out) if out else "—"
 
 

@@ -119,8 +119,9 @@ def _affordable_hulls(pool: P.Pool, race: int, tech_cap: int,
 def sample_design(pool: P.Pool, race: int, tech_cap: int, rng: random.Random,
                   max_hull_cost: Optional[int] = None) -> Design:
     h = rng.choice(_affordable_hulls(pool, race, tech_cap, max_hull_cost))
-    weapons = [rng.choice(pool.weapons(race, tech_cap))["id"]
-               for _ in range(h["weapon_slots"])]
+    wpool = pool.weapons(race, tech_cap)
+    weapon = rng.choice(wpool)["id"] if wpool else 0   # one weapon type, all slots
+    weapons = [weapon] * h["weapon_slots"]
     dev_ids = pool.device_ids(race, tech_cap)
     ndev = min(h["device_slots"], len(dev_ids))
     devices = rng.sample(dev_ids, ndev) if ndev > 0 else []
@@ -169,11 +170,16 @@ def _legalize_design(fl: Fleet, hull: dict, pool: P.Pool, race: int,
                      tech_cap: int, rng: random.Random) -> None:
     """Re-fit a fleet's weapons/armor/devices to its hull using the (tier-filtered)
     pool: weapon-slot count, distinct legal devices, a legal armor."""
+    # homogeneous armament: every weapon slot carries the SAME weapon type. Keep the
+    # design's current (legal) weapon if it has one, else pick a legal one.
     wp = [w["id"] for w in pool.weapons(race, tech_cap)]
     ns = hull["weapon_slots"]
-    fl.design.weapons = ([(w if w in wp else rng.choice(wp))
-                          for w in (fl.design.weapons + [0] * ns)[:ns]]
-                         if wp and ns else [])
+    if wp and ns:
+        cur = next((w for w in fl.design.weapons if w in wp), None)
+        weapon = cur if cur is not None else rng.choice(wp)
+        fl.design.weapons = [weapon] * ns
+    else:
+        fl.design.weapons = []
     # devices: keep the searched ones (distinct, legal), then FILL every remaining
     # device slot — a ship never leaves a device slot empty in-game.
     dev_ids = pool.device_ids(race, tech_cap)
@@ -362,8 +368,10 @@ def _mutate_design(d: Design, pool: P.Pool, race: int, tech_cap: int,
         d.hull = rng.choice(pool.hulls(race, tech_cap))["id"]
     elif pick == 1:                                 # armor
         d.armor = rng.choice(pool.armor_ids(race, tech_cap))
-    elif d.weapons:                                 # one weapon slot
-        d.weapons[rng.randrange(len(d.weapons))] = rng.choice(pool.weapons(race, tech_cap))["id"]
+    elif d.weapons:                                 # swap the (homogeneous) weapon type
+        wpool = pool.weapons(race, tech_cap)
+        if wpool:
+            d.weapons = [rng.choice(wpool)["id"]] * len(d.weapons)
     if rng.random() < 0.3:                          # occasionally a device
         devs = pool.device_ids(race, tech_cap)
         if devs:
