@@ -289,9 +289,26 @@ appears, suspect this pattern and add an `if (!x || !*x)` guard at the source.
 
 ## Local development
 
-- Edit web/UI/templates → `docker compose ... restart` (seconds).
-- Edit engine C++ → `docker compose ... up --build` (recompiles).
-- The auth pages, page templates (`src/web`), and overrides are bind-mounted, so
-  most UI work doesn't need a rebuild.
-- Logs: `docker compose -f docker/docker-compose.yml logs -f`.
-- Health: `curl http://localhost:8080/healthz` → `ok`.
+Start the stack from the repo root:
+```sh
+docker compose -f docker/docker-compose.yml up --build
+```
+
+For web/UI/template changes, restart the existing container instead of
+rebuilding. The auth pages, page templates (`src/web`), and overrides are
+bind-mounted, and the entrypoint re-assembles the web root on start:
+```sh
+docker compose -f docker/docker-compose.yml restart
+curl http://localhost:8080/healthz
+```
+The health check should return `ok`.
+
+For engine C++ or `docker/as-cgi` changes, rebuild the image:
+```sh
+docker compose -f docker/docker-compose.yml up --build
+```
+
+Useful logs while iterating:
+```sh
+docker compose -f docker/docker-compose.yml logs -f
+```
