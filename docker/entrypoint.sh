@@ -103,6 +103,11 @@ if [ -n "$PHP_POOL" ]; then
     sed -i 's#^;\?pm.start_servers = .*#pm.start_servers = 8#' "$PHP_POOL"
     sed -i 's#^;\?pm.min_spare_servers = .*#pm.min_spare_servers = 4#' "$PHP_POOL"
     sed -i 's#^;\?pm.max_spare_servers = .*#pm.max_spare_servers = 16#' "$PHP_POOL"
+    # Allow the legacy logout shims (/game_logout.phtml, /logout.phtml) to run.
+    # PHP-FPM's security.limit_extensions defaults to ".php", so a .phtml script
+    # is refused with "Access denied" even after nginx routes it here.
+    sed -i 's#^;\?security.limit_extensions = .*#security.limit_extensions = .php .phtml#' "$PHP_POOL"
+    grep -q '^security.limit_extensions' "$PHP_POOL" || echo 'security.limit_extensions = .php .phtml' >> "$PHP_POOL"
 fi
 mkdir -p /run/php
 export DB_HOST="${DB_HOST:-127.0.0.1}" DB_USER="${DB_USER:-root}" \
