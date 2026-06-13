@@ -325,14 +325,59 @@ def _labels(loadouts: List[dict], tag: str) -> List[str]:
     return out
 
 
+def _hull_mix(lo: dict) -> str:
+    return ", ".join(f"{(fl.get('hull_name') or '#%s' % fl.get('hull'))}×{fl.get('ships', 0)}"
+                     for fl in lo.get("fleets", [])) or "—"
+
+
+def _weapons_of(lo: dict) -> str:
+    seen = []
+    for fl in lo.get("fleets", []):
+        for nm in (fl.get("weapon_names") or []):
+            if nm and nm not in seen:
+                seen.append(nm)
+    return ", ".join(html.escape(n) for n in seen) or "—"
+
+
+def _capital_cmdr(lo: dict) -> str:
+    for fl in lo.get("fleets", []):
+        if fl.get("capital"):
+            c = fl.get("commander", {})
+            sp = SPECIAL_ABILITIES.get(c.get("special", -1), "—")
+            rc = RACIAL_ABILITIES.get(c.get("racial", -1), "—")
+            return f"{html.escape(sp)} · {html.escape(rc)}"
+    return "—"
+
+
+def render_library(loadouts, side: str):
+    """Compact roster of every loadout in a library (status overview)."""
+    loadouts = loadouts or []
+    tag = "A" if side == "attacker" else "D"
+    st.markdown(f"**{side.upper()} library — {len(loadouts)} loadout(s)**")
+    if not loadouts:
+        st.caption("none yet")
+        return
+    rows = ["| # | pp | fleets (hull×ships) | weapons | capital cmdr |",
+            "|---|---|---|---|---|"]
+    for i, lo in enumerate(loadouts):
+        rows.append(f"| {tag}{i} | {lo.get('pp_cost', 0):,} | {_hull_mix(lo)} "
+                    f"| {_weapons_of(lo)} | {_capital_cmdr(lo)} |")
+    st.markdown("\n".join(rows))
+
+
 def render_config_browser(attackers, defenders, key: str,
                           default_a: int = 0, default_d: int = 0):
-    """Two selectboxes (attacker x defender config) driving one matchup view."""
+    """Both libraries as a status roster, then a selectbox matchup viewer."""
     attackers = attackers or []
     defenders = defenders or []
     if not attackers and not defenders:
         st.info("No configurations to display yet.")
         return
+    lc1, lc2 = st.columns(2)
+    with lc1:
+        render_library(attackers, "attacker")
+    with lc2:
+        render_library(defenders, "defender")
     a_labels, d_labels = _labels(attackers, "A"), _labels(defenders, "D")
     c1, c2 = st.columns(2)
     ai = c1.selectbox("Attacker config", range(len(a_labels)),
