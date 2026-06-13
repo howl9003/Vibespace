@@ -3035,6 +3035,8 @@ CPlayer::get_race_name2()
 			return "xerusian";
 		case CRace::RACE_XESPERADOS:
 			return "xesperados";
+		case CRace::RACE_TRABOTULIN:
+			return "trabotulin";
 		default:
 			return NULL;
 	}

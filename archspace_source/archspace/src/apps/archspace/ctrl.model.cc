@@ -50,7 +50,16 @@ char *AbilityName[] = {
 	"Fanatic Fleet",
 	"High Morale",
 	"Stealth Pirate",
-	"Tactical Mastery"
+	"Tactical Mastery",
+	// --- CVS-merge: names for the 8 appended abilities (same order as the enum) ---
+	"Fanatical Recruiting",
+	"Militaristic Dominance",
+	"Advanced Battle Processing",
+	"Hive Ship Yard",
+	"Enhanced PSI Weaponry",
+	"Natural Stealth",
+	"Stealthed Ambush",
+	"Temporal Mastery"
 };
 
 CControlModel::CControlModel()

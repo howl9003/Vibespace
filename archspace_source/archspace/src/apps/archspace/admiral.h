@@ -6,7 +6,7 @@
 class CPlayer;
 
 //---------------------------------------------------- CAdmiral
-#define MAX_RACE 							10
+#define MAX_RACE 							11
 #define MAX_ADMIRAL_TYPE 					9
 
 #define NUMBER_OF_ADMIRAL_SKILL_LEVEL		26
@@ -154,6 +154,17 @@ class CAdmiral: public CStore
 			RA_RIGID_THINKING,
 			RA_SCAVENGER,
 			RA_BLITZKRIEG,
+			// --- CVS-merge: new commander racial abilities (appended; values don't
+			// matter for a fresh DB, tables/switch reference these by name) ---
+			RA_TRAJECTORY_AUGMENTATION,
+			RA_MANAGEMENT_PROTOCOL,
+			RA_TACTICAL_GENIUS,
+			RA_SHIELD_DISRUPTER,
+			RA_DEFENSIVE_MATRIX,
+			RA_CONSCIOUSNESS_CRYSTAL,
+			RA_CRUSADER,
+			RA_IMPINGEMENT_NEUTRALIZATION_FIELD,
+			RA_ARMADA_SYNERGY_SPECIALIST,
 			RA_MAX
 		};
 

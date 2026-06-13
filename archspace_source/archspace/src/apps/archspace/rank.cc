@@ -933,6 +933,10 @@ CRankTable::get_race_symbol_url(int aRace)
 			ImageURL += "symbol_xesperados.gif";
 			return (char *)ImageURL;
 
+		case CRace::RACE_TRABOTULIN :
+			ImageURL += "symbol_trabotulin.gif";
+			return (char *)ImageURL;
+
 		default :
 			return NULL;
 	}

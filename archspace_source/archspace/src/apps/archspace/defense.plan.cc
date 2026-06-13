@@ -1027,6 +1027,7 @@ CDefensePlanList::get_optimal_plan(int aRace, int aEnemyPower, int aMyPower,
 	if (aRace == CRace::RACE_XELOSS) Race = CDefensePlan::RACE_XELOSS;
 	if (aRace == CRace::RACE_XERUSIAN) Race = CDefensePlan::RACE_XERUSIAN;
 	if (aRace == CRace::RACE_XESPERADOS) Race = CDefensePlan::RACE_XESPERADOS;
+	if (aRace == CRace::RACE_TRABOTULIN) Race = CDefensePlan::RACE_TRABOTULIN;
 
 	CDefensePlan *
 		BestDefensePlan = get_generic_plan();

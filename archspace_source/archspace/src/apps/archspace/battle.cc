@@ -828,6 +828,79 @@ CBattleFleet::init_common()
 			NewEffect = new CFleetEffect( CFleetEffect::FE_CRITICAL_HIT, mCommander->get_level()/4, CFleetEffect::AT_ABSOLUTE );
  			add_static_effect( NewEffect );
 			break;
+		// --- CVS-merge: new commander racial abilities (ported from CVSRoot) ---
+		case CAdmiral::RA_TRAJECTORY_AUGMENTATION :
+			NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_AR, mCommander->get_level()*3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_DAMAGE, mCommander->get_level(), CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_MANAGEMENT_PROTOCOL :
+			NewEffect = new CFleetEffect( CFleetEffect::FE_SPEED, 10+mCommander->get_level()*2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_DEFENSE, mCommander->get_level()*2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_AR, mCommander->get_level(), CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_EFFICIENCY, mCommander->get_level(), CFleetEffect::AT_ABSOLUTE );
+			add_static_effect( NewEffect );
+			mMoraleModifier -= 10;
+			break;
+		case CAdmiral::RA_TACTICAL_GENIUS :
+			mBerserkModifier -= 5;
+			mMoraleModifier -= 15;
+			NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, mCommander->get_level() / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_ABSOLUTE );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_SHIELD_DISRUPTER :
+			NewEffect = new CFleetEffect( CFleetEffect::FE_AR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_DEFENSIVE_MATRIX :
+			mMoraleModifier -= 10;
+			mBerserkModifier -= 10;
+			NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, mCommander->get_level() * 5 / 4, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_CONSCIOUSNESS_CRYSTAL :
+			NewEffect = new CFleetEffect( CFleetEffect::FE_BEAM_DAMAGE, mCommander->get_level() * 5 / 4, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_AR, mCommander->get_level() * 3 / 4, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_DAMAGE, mCommander->get_level() * 3 / 4, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_ATTACK, mCommander->get_level() * 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_CRUSADER :
+			mMoraleModifier -= 20;
+			mBerserkModifier += 10;
+			mAttribute += COMPLETE_CLOAKING_DETECTION;
+			NewEffect = new CFleetEffect( CFleetEffect::FE_DAMAGE, mCommander->get_level() * 5 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_COOLING_TIME, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_IMPINGEMENT_NEUTRALIZATION_FIELD :
+			mMoraleModifier -= 30;
+			mBerserkModifier -= 30;
+			NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			// CVS original also granted FE_SHIELD_INTEGRITY here; that effect type is
+			// not yet in this engine's CFleetEffect set (lives with S4's combat-mechanics
+			// port) -- the impenetrable-shield grant below covers the shield role for now.
+			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_SHIELD, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+			break;
+		case CAdmiral::RA_ARMADA_SYNERGY_SPECIALIST :
+			mMoraleModifier -= 40;
+			NewEffect = new CFleetEffect( CFleetEffect::FE_EFFICIENCY, mCommander->get_level() * 2, CFleetEffect::AT_ABSOLUTE );
+			add_static_effect( NewEffect );
+			break;
 	}
 
 	// under effect things

@@ -129,61 +129,78 @@ char *CAdmiral::mRacialAbilityName[] =
 	"Genetic Throwback",
 	"Rigid Thinking",
 	"Scavenger",
-	"Blitzkreig"
+	"Blitzkreig",
+	// --- CVS-merge: names for the 9 appended racial abilities (same order) ---
+	"Trajectory Augmentation",
+	"Management Protocol",
+	"Tactical Genius",
+	"Shield Disrupter",
+	"Defensive Matrix",
+	"Consciousness Crystal",
+	"Crusader",
+	"Impingement Neutralization Field",
+	"Armada Synergy Specialist"
 };
 
 int
 CAdmiral::mPossibleRacialSkill[MAX_RACE][MAX_RACIAL_SKILL] =
 {
-	{
+	// --- CVS-merge: reworked per-race commander-ability assignments + row 11
+	// (Trabotulin). Every ability referenced exists in the merged RA_ enum. ---
+	{	// 1 Human
 		RA_IRRATIONAL_TACTICS,
 		RA_INTUITION,
 		RA_LONE_WOLF
 	},
-	{
+	{	// 2 Targoid
 		RA_DNA_POISON_REPLICATER,
 		RA_BREEDER_MALE,
 		RA_CLONAL_DOUBLE
 	},
-	{
-		RA_LONE_WOLF,
+	{	// 3 Buckaneer
+		RA_SHIELD_DISRUPTER,
 		RA_FAMOUS_PRIVATEER,
 		RA_COMMERCE_KING
 	},
-	{
+	{	// 4 Tecanoid
 		RA_CYBER_SCAN_UNIT,
-		RA_JURY_RIGGER,
+		RA_TRAJECTORY_AUGMENTATION,
 		RA_PATTERN_BROADCASTER
 	},
-	{
+	{	// 5 Evintos
 		RA_CYBER_SCAN_UNIT,
 		RA_RIGID_THINKING,
-		RA_SCAVENGER
+		RA_MANAGEMENT_PROTOCOL
 	},
-	{
+	{	// 6 Agerus
 		RA_LYING_DORMANT,
 		RA_MISSILE_CRATERS,
 		RA_METEOR_DRONES
 	},
-	{
+	{	// 7 Bosalian
 		RA_MENTAL_GIANT,
 		RA_RETREAT_SHIELD,
 		RA_GENETIC_THROWBACK
 	},
-	{
+	{	// 8 Xeloss
 		RA_XENOPHOBIC_FANATIC,
 		RA_MENTAL_GIANT,
-		RA_ARTIFACT_CRYSTAL
+		RA_CONSCIOUSNESS_CRYSTAL
 	},
-	{
+	{	// 9 Xerusian
 		RA_ARTIFACT_CRYSTAL,
-		RA_RIGID_THINKING,
+		RA_TACTICAL_GENIUS,
 		RA_BLITZKRIEG
 	},
-	{
-		RA_IRRATIONAL_TACTICS,
+	{	// 10 Xesperados
+		RA_DEFENSIVE_MATRIX,
 		RA_PSYCHIC_PROGENITOR,
 		RA_ARTIFACT_COOLING_ENGINE
+	},
+	{	// 11 Trabotulin (CVS-native row)
+		RA_CRUSADER,
+		RA_IMPINGEMENT_NEUTRALIZATION_FIELD,
+		RA_ARMADA_SYNERGY_SPECIALIST
 	}
 };
 
@@ -214,7 +231,8 @@ CAdmiral::mRaceInitialSkill[MAX_RACE][MAX_SKILL] =
 	{-1, -1, -1, -1,  2,  1,  1,  0,  0,  0},
 	{ 2,  0,  2, -1,  0,  0,  0,  0, -2, -1},
 	{ 2,  0,  0,  0,  0,  0,  0, -1,  0, -1},
-	{-1,  0,  0,  0,  0, -1,  0,  2,  0,  0}
+	{-1,  0,  0,  0,  0, -1,  0,  2,  0,  0},
+	{ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0}	// 11 Trabotulin (neutral skill bias)
 };
 
 CAdmiral::CAdmiral(CPlayer *aPlayer)
