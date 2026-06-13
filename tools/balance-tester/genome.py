@@ -100,7 +100,7 @@ def sample_commander(rng: random.Random, is_capital: bool) -> Commander:
     else:
         bb, det, man, fc = _zero_sum4(rng)
         c = Commander(bb=bb, det=det, man=man, fc=fc)
-    c.special = rng.choice([-1] + P.SPECIAL_ABILITIES)
+    c.special = rng.choice(P.SPECIAL_ABILITIES)   # every commander has a special ability
     return c
 
 
@@ -171,12 +171,19 @@ def _legalize_design(fl: Fleet, hull: dict, pool: P.Pool, race: int,
     fl.design.weapons = ([(w if w in wp else rng.choice(wp))
                           for w in (fl.design.weapons + [0] * ns)[:ns]]
                          if wp and ns else [])
+    # devices: keep the searched ones (distinct, legal), then FILL every remaining
+    # device slot — a ship never leaves a device slot empty in-game.
     dev_ids = pool.device_ids(race, tech_cap)
     seen: List[int] = []
     for d in fl.design.devices:
         if d in dev_ids and d not in seen:
             seen.append(d)
-    fl.design.devices = seen[:hull["device_slots"]]
+    nslots = min(hull["device_slots"], len(dev_ids))
+    spare = [d for d in dev_ids if d not in seen]
+    rng.shuffle(spare)
+    while len(seen) < nslots and spare:
+        seen.append(spare.pop())
+    fl.design.devices = seen[:nslots]
     armor = pool.armor_ids(race, tech_cap)
     if armor and fl.design.armor not in armor:
         fl.design.armor = rng.choice(armor)
@@ -219,6 +226,8 @@ def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
                         break
             used.add(fl.cell)
         fl.command %= 8
+        if fl.commander.special not in P.SPECIAL_ABILITIES:   # must have an ability
+            fl.commander.special = rng.choice(P.SPECIAL_ABILITIES)
 
     # largest-hull + fill: each fleet gets the biggest hull it can still afford
     remaining = pp_budget
@@ -248,6 +257,7 @@ def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
         nf = copy.deepcopy(legal[0])
         nf.is_capital = False
         nf.commander.bb, nf.commander.det, nf.commander.man, nf.commander.fc = _zero_sum4(rng)
+        nf.commander.special = rng.choice(P.SPECIAL_ABILITIES)
         nf.command = rng.randint(0, 7)
         spot = next((c for c in free if c not in used), None)
         if spot is None:
@@ -329,7 +339,7 @@ def _mutate_commander(c: Commander, rng: random.Random, is_capital: bool) -> Non
         else:
             c.bb, c.det, c.man, c.fc = _zero_sum4(rng)
     else:
-        c.special = rng.choice([-1] + P.SPECIAL_ABILITIES)
+        c.special = rng.choice(P.SPECIAL_ABILITIES)   # never clear the special ability
 
 
 def _mutate_design(d: Design, pool: P.Pool, race: int, tech_cap: int,

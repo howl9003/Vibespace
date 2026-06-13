@@ -231,7 +231,8 @@ def _commander_panel(c: dict) -> str:
     sp = c.get("special", -1)
     rc = c.get("racial", -1)
     sp_name = SPECIAL_ABILITIES.get(sp, "none") if sp is not None and sp >= 0 else "none"
-    rc_name = RACIAL_ABILITIES.get(rc, "none") if rc is not None and rc >= 0 else "none"
+    # racial abilities are race-innate, not part of the searched genome
+    rc_name = RACIAL_ABILITIES.get(rc, "—") if rc is not None and rc >= 0 else "— (race-innate)"
     arm = c.get("armada", "-")
     arm_lbl = arm if isinstance(arm, str) else ARMADA_CLASS.get(arm, "-")
     pts = c.get("points", [0, 0, 0, 0])
