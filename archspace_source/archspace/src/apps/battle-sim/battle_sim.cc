@@ -35,7 +35,6 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <set>
 
 #include "json_mini.h"
 
@@ -503,56 +502,12 @@ static void do_match(const JValue &aReq)
 
 // =====================  replay (single battle -> turn log)  =================
 //
-// Reproduces ONE deterministic battle (replicate k of a matchup) and serializes
-// it in the exact line log format the in-game HTML5 viewer (battle-replay.js)
-// reads: FL roster + per-turn M position samples + D disables + ENDTURN. The log
-// is built ENTIRELY from the battle's own public fleet state each turn, so this
-// needs no change to the shared game-engine code (no CBattleRecord/save()/DB).
-// Fire lines (F/H) are omitted — the engine only records those into its private
-// buffer — so the replay shows fleet movement/positions/morale, not weapon arcs.
-
-static void emit_roster(std::ostringstream &log, CBattleFleetList &aList,
-						int aOwner, const char *aPrefix)
-{
-	for (int i = 0; i < aList.length(); i++)
-	{
-		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
-		char nick[32]; snprintf(nick, sizeof nick, "%s%d", aPrefix, i + 1);
-		// FL/owner/id/nick/admiral/class/NONE/ships/x/y/dir/cmd
-		log << "FL/" << aOwner << "/" << BF->get_id() << "/" << nick
-			<< "/-/-/NONE/" << BF->count_active_ship()
-			<< "/" << BF->get_x() << "/" << BF->get_y()
-			<< "/" << BF->get_direction() << "/" << BF->get_status() << "\n";
-	}
-}
-
-static void emit_positions(std::ostringstream &log, int aTurn,
-						   CBattleFleetList &aList, int aOwner)
-{
-	for (int i = 0; i < aList.length(); i++)
-	{
-		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
-		// M/turn/owner/id/x/y/dir/cmd/substatus/ships
-		log << "M/" << aTurn << "/" << aOwner << "/" << BF->get_id()
-			<< "/" << BF->get_x() << "/" << BF->get_y()
-			<< "/" << BF->get_direction() << "/" << BF->get_status()
-			<< "/" << BF->get_substatus() << "/" << BF->count_active_ship() << "\n";
-	}
-}
-
-static void emit_disables(std::ostringstream &log, int aTurn, CBattleFleetList &aList,
-						  int aOwner, std::set<int> &aDead)
-{
-	for (int i = 0; i < aList.length(); i++)
-	{
-		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
-		if (BF->count_active_ship() <= 0 && aDead.find(BF->get_id()) == aDead.end())
-		{
-			aDead.insert(BF->get_id());
-			log << "D/" << aTurn << "/" << aOwner << "/" << BF->get_id() << "\n";
-		}
-	}
-}
+// Reproduces ONE deterministic battle (replicate k of a matchup) and returns the
+// engine's OWN turn-by-turn log: the exact FL/M/F/H/D/ENDTURN text — positions
+// AND weapon fire/hit lines — that the in-game viewer (battle-replay.js) renders.
+// The engine already accumulates this during run_step(); we read it back through
+// a read-only accessor (CBattleRecord::get_buffer) and never call save()/the DB,
+// so no game-engine behaviour changes.
 
 static std::string build_replay_json(const JValue &aReq)
 {
@@ -564,9 +519,6 @@ static std::string build_replay_json(const JValue &aReq)
 	CDefensePlan Offense, Defense;
 	CPlayer *Atk = build_side(aReq["attacker"], 1, &Offense);
 	CPlayer *Def = build_side(aReq["defender"], 2, &Defense);
-	int atkRace = aReq["attacker"]["race"].as_int(1);
-	int defRace = aReq["defender"]["race"].as_int(1);
-	int atkId = Atk->get_game_id(), defId = Def->get_game_id();
 
 	CPlanet Planet; Planet.set_id(1); Planet.set_name("P");
 	CBattle Battle(CBattle::WAR_SIEGE, Atk, Def, (void *)&Planet);
@@ -574,42 +526,18 @@ static std::string build_replay_json(const JValue &aReq)
 								  &Defense, Def->get_fleet_list(), Def->get_admiral_list()))
 		return std::string("{\"ok\":false,\"error\":\"replay deploy failed\"}");
 
-	CBattleFleetList &OL = Battle.get_offense_battle_fleet_list();
-	CBattleFleetList &DL = Battle.get_defense_battle_fleet_list();
+	int steps = 0;
+	while (Battle.run_step()) { if (++steps >= turn_cap) break; }
 
-	std::ostringstream log;
-	log << "ATTACKER/Attacker/" << atkId << "/" << atkRace << "\n";
-	log << "DEFENDER/Defender/" << defId << "/" << defRace << "\n";
-	log << "FIELD/Siege\n";
-	emit_roster(log, OL, atkId, "A");
-	emit_roster(log, DL, defId, "D");
-
-	std::set<int> deadA, deadD;
-	const int SAMPLE = 10;   // position sample cadence (matches the engine recorder)
-	int turn = 0;
-	while (Battle.run_step())
-	{
-		turn++;
-		if (turn % SAMPLE == 0)
-		{
-			emit_positions(log, turn, OL, atkId);
-			emit_positions(log, turn, DL, defId);
-		}
-		emit_disables(log, turn, OL, atkId, deadA);
-		emit_disables(log, turn, DL, defId, deadD);
-		if (turn >= turn_cap) break;
-	}
-	emit_positions(log, turn, OL, atkId);   // final frame
-	emit_positions(log, turn, DL, defId);
-	log << "ENDTURN/" << turn << "\n";
-
-	int win = Battle.attacker_win() ? 1 : 0;
+	int win   = Battle.attacker_win() ? 1 : 0;
+	int turns = Battle.get_record()->get_turn();
+	const char *log = Battle.get_record()->get_buffer();   // FL/M/F/H/D/ENDTURN
 
 	std::ostringstream o;
 	o << "{\"ok\":true,\"cmd\":\"replay\",\"seed\":" << base
 	  << ",\"replicate\":" << k << ",\"win\":" << win
-	  << ",\"turns\":" << turn << ",\"log\":\"";
-	json_append_escaped(o, log.str().c_str());
+	  << ",\"turns\":" << turns << ",\"log\":\"";
+	json_append_escaped(o, log ? log : "");
 	o << "\"}";
 	return o.str();
 }

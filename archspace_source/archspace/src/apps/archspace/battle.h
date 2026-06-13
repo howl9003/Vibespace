@@ -663,6 +663,11 @@ class CBattleRecord : public CStore
 		const char *get_attacker_name() { return (char*)mAttackerName; }
 		const char *get_defender_name() { return (char*)mDefenderName; }
 		char *get_record_file() { return (char *)mRecordFile; }
+		// Read-only accessor for the accumulated turn-by-turn log buffer (the
+		// FL/M/F/H/D/ENDTURN text the in-game battle viewer renders). Behaviour-
+		// neutral: returns existing data; no game-engine logic reads it. Used by
+		// the standalone balance-tester replay command (apps/battle-sim).
+		const char *get_buffer() { return (char *)mBuf; }
 		int get_time() { return mTime; }
 
 		int get_fire_id() { return mFireID; }
