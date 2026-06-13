@@ -200,6 +200,12 @@ def _legalize_design(fl: Fleet, hull: dict, pool: P.Pool, race: int,
     while len(seen) < nslots and spare:
         seen.append(spare.pop())
     fl.design.devices = seen[:nslots]
+    # commander special must suit the weapon: a Missile/Ballistic/Energy specialist only
+    # helps its own weapon type, so if the weapon changed away from it, re-pick a valid
+    # special (general, or the matching specialist). The weapon itself is never blocked.
+    allowed_sp = P.allowed_specials(wpn)
+    if fl.commander.special not in allowed_sp:
+        fl.commander.special = rng.choice(allowed_sp)
 
 
 def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,

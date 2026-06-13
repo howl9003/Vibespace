@@ -421,9 +421,13 @@ def view_loadout_lab():
             st.caption("resolved → siege %d · det %d · man %d · fc %d (Σ %+d; search uses net-zero)"
                        % (P.BB_VAL[bb], P.DET_VAL[det], P.MAN_VAL[man], P.FC_VAL[fc], bb + det + man + fc))
             ab = st.columns(3)
-            sp = ab[0].selectbox("Special", P.SPECIAL_ABILITIES,
+            allowed_sp = P.allowed_specials(w)        # only specials that suit this weapon
+            spkey = f"lab_f{i}_sp"
+            if st.session_state.get(spkey) not in allowed_sp:   # weapon changed -> reset
+                st.session_state.pop(spkey, None)
+            sp = ab[0].selectbox("Special", allowed_sp,
                                  format_func=lambda s: R.SPECIAL_ABILITIES.get(s, str(s)),
-                                 key=f"lab_f{i}_sp")
+                                 key=spkey)
             if racials:
                 if st.session_state.get(f"lab_f{i}_rc") not in racials:
                     st.session_state.pop(f"lab_f{i}_rc", None)

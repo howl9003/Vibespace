@@ -113,6 +113,24 @@ def device_allowed(dev: dict, hull_class: int, weapon: Optional[dict],
         return False
     return True
 
+
+# Weapon-type-specific commander specials boost ONLY their own weapon (battle.cc:565-588):
+# Missile Specialist(2)->missile, Ballistic Expert(3)->projectile, Energy System(4)->beam.
+# Engineering(0) and Shield System(1) are general (armor/shield) and suit any weapon.
+SPECIAL_FOR_WTYPE = {WT_MISSILE: 2, WT_PROJECTILE: 3, WT_BEAM: 4}
+GENERAL_SPECIALS = [0, 1]
+
+
+def allowed_specials(weapon: Optional[dict]) -> List[int]:
+    """Combat-specialist abilities valid for a fleet's weapon: the two general ones plus
+    the matching weapon-type specialist. A Missile/Ballistic/Energy specialist only helps
+    that weapon, so it's disallowed on a ship carrying a different weapon type."""
+    out = list(GENERAL_SPECIALS)
+    wt = weapon.get("wtype") if weapon else None
+    if wt in SPECIAL_FOR_WTYPE:
+        out.append(SPECIAL_FOR_WTYPE[wt])
+    return out
+
 # --- verified deploy grids (battlefield coords; step 200) ---------------------
 # Confirmed against siege_planet_result.cc / defense_plan_generic_result.cc:
 # attacker on low-x, defender on high-x, shared lateral y. Capital pinned to the
