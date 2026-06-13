@@ -31,6 +31,14 @@ and visualize them in `battle-replay.js`. This is an **engine change → image
 rebuild**, but stays faithful to the three-tier principle by being
 **observe-only** — log more, never change the combat math.
 
+**Good first slice:** add a checked-in synthetic battle-log fixture and a
+parser-only harness for `battle-replay.js` before changing engine log output.
+The fixture should cover escaped slashes in names, `FL` roster rows, `M`
+movement samples, paired `F`/`H` weapon events, `D` disabled-fleet rows, and
+`ENDTURN`. That gives future replay work a fast web-tier safety check, then the
+engine can add richer observe-only records with less risk of breaking today's
+replay grammar.
+
 Deferred for future consideration.
 
 ---
