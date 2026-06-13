@@ -47,6 +47,16 @@ def race_racials(race: int):
 # the pinned computer/shield/engine are unaffected.
 MIN_TIER = 4
 
+# Tier-4 weapons that a tier-5 of the SAME type strictly dominates on the condensed
+# efficiency stat dmg/space/cooldown (DST) AND accuracy (AR) AND effects -> never
+# worth fielding, so drop them too:
+#   Nova Torpedo (6203)        < Homing Black Hole (DST 188<200, AR 172<250)
+#   Anti-Matter Cannon (6305)  < Distortion Blaster (240<323, AR 90<120, fx subset)
+#   Autofire Gauss Cannon (6306)< Distortion Blaster (216<323, AR 90<120, fx subset)
+# Tachyon Beam (best AR) and Reflexium Missile (beats T5 Time-Wake on DST + unique
+# anti-shield) are NOT dominated and stay.
+WEAPON_EXCLUDE = {6203, 6305, 6306}
+
 # --- verified deploy grids (battlefield coords; step 200) ---------------------
 # Confirmed against siege_planet_result.cc / defense_plan_generic_result.cc:
 # attacker on low-x, defender on high-x, shared lateral y. Capital pinned to the
@@ -111,9 +121,10 @@ class Pool:
         return [c["id"] for c in self.category("DEV", race, tc)]
 
     def weapons(self, race: int, tc: int = 999999) -> List[dict]:
-        # [{id, level, space}, ...] — tier 1-3 weapons removed (keep level >= MIN_TIER)
+        # [{id, level, space}, ...] — keep level >= MIN_TIER and drop tier-4 weapons
+        # a tier-5 strictly dominates on dmg/space/cooldown + accuracy + effects.
         return [c for c in self.category("WPN", race, tc)
-                if c.get("level", 99) >= MIN_TIER]
+                if c.get("level", 99) >= MIN_TIER and c["id"] not in WEAPON_EXCLUDE]
 
     def best(self, cat: str, race: int, tc: int = 999999) -> int:
         """Highest-level component in a category (the pinned linear-ladder part)."""
