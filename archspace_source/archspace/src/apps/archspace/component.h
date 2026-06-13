@@ -91,6 +91,7 @@ class CFleetEffect
 			WE_SHIELD_OVERHEAT,
 			WE_PSI,
 			WE_PSI_EMPOWER,
+			WE_CORROSIVITY,	// CVS-merge: weapon effect
 			FE_MAX
 		};
 		enum {

@@ -158,6 +158,7 @@ char *CFleetEffect::mEffectName[] = {
 	"Shield Overheat",
 	"PSI",
 	"PSI Empower",
+	"Corrosivity",	// CVS-merge: weapon effect (matches WE_CORROSIVITY)
 	""
 };
 
