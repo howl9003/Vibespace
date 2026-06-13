@@ -135,21 +135,20 @@ def run_stackelberg(sim, pool, sc, rng, outdir, mpool=None):
                               "scenario": sc.name, "history": history_acc,
                               "library_size": lib_size, "leaders": leaders_acc})
 
-    def on_gen(rnd, side, gen, total, best_fit, killed=0.0, lost=0.0):
-        # per-generation heartbeat so the UI shows where the oracle is in the cycle,
-        # plus the best loadout's kill-PP : loss-PP (the secondary objective).
-        ratio = ("∞" if lost <= 0 < killed else
-                 ("—" if killed <= 0 and lost <= 0 else f"{killed / lost:.2f}×"))
-        kl = f"kill:loss {_pp(killed)}:{_pp(lost)} ({ratio})"
+    def on_gen(rnd, side, gen, total, best_fit, net_pp=0.0):
+        # per-generation heartbeat: where the oracle is in the cycle, the best
+        # win-rate, and the best loadout's net PP (econ = PP killed - PP lost), the
+        # secondary objective the search maximises.
+        net = f"net PP {'+' if net_pp >= 0 else '-'}{_pp(abs(net_pp))}"
         where = ("stage 1 · seed attacker" if side == "seed"
                  else f"round {rnd} · {side} oracle")
-        stage = f"{where} · gen {gen}/{total} · best {best_fit:.3f} · {kl}"
+        stage = f"{where} · gen {gen}/{total} · best {best_fit:.3f} · {net}"
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
                               "scenario": sc.name, "history": history_acc,
                               "leaders": leaders_acc, "stage": stage,
                               "gen": gen, "gen_total": total,
                               "best_fit": round(best_fit, 4), "round": rnd, "oracle": side,
-                              "kill_pp": round(killed), "loss_pp": round(lost)})
+                              "net_pp": round(net_pp)})
 
     out = S.stackelberg(sim, pool, atk, dfn, fixed_def,
                         rounds=sc.rounds, epsilon=sc.epsilon, mu=sc.mu, lam=sc.lam,
