@@ -20,6 +20,27 @@ FC_VAL  = {-2: 33, -1: 35, 0: 37, 1: 39, 2: 41}   # fleet_commanding (engine cap
 # 5 common special abilities (combat specialists), always legal; -1 = none.
 SPECIAL_ABILITIES = [0, 1, 2, 3, 4]
 
+# Race-specific commander racial abilities. Each race's admirals get ONE of three
+# possible racial abilities (engine: admiral.cc mPossibleRacialSkill[race-1][0..2],
+# RA_* enum ids; names in ui/render.py RACIAL_ABILITIES). Race id 1..10 ->
+# [3 racial-ability ids].
+RACE_RACIAL_SKILLS = {
+    1:  [0, 1, 2],        # Human:      Irrational Tactics, Intuition, Lone Wolf
+    2:  [3, 4, 5],        # Targoid:    DNA Poison Replicater, Breeder Male, Clonal Double
+    3:  [2, 17, 18],      # Buckaneer:  Lone Wolf, Famous Privateer, Commerce King
+    4:  [14, 15, 16],     # Tecanoid:   Cyber Scan Unit, Jury Rigger, Pattern Broadcaster
+    5:  [14, 21, 22],     # Evintos:    Cyber Scan Unit, Rigid Thinking, Scavenger
+    6:  [11, 12, 13],     # Agerus:     Lying Dormant, Missile Craters, Meteor Drones
+    7:  [7, 19, 20],      # Bosalian:   Mental Giant, Retreat Shield, Genetic Throwback
+    8:  [6, 7, 8],        # Xeloss:     Xenophobic Fanatic, Mental Giant, Artifact Crystal
+    9:  [8, 21, 23],      # Xerusian:   Artifact Crystal, Rigid Thinking, Blitzkrieg
+    10: [0, 9, 10],       # Xesperados: Irrational Tactics, Psychic Progenitor, Artifact Cooling Engine
+}
+
+
+def race_racials(race: int):
+    return RACE_RACIAL_SKILLS.get(race, [])
+
 # Restrict the searched component pool to high-tier gear: drop tier 1-3 weapons
 # and armors (component `level` 1..5), keeping only level >= MIN_TIER. Narrows the
 # search space to the parts a fully-teched empire would actually field. Devices and

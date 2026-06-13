@@ -93,14 +93,17 @@ def _capital_rest(rng: random.Random) -> List[int]:
             return v
 
 
-def sample_commander(rng: random.Random, is_capital: bool) -> Commander:
+def sample_commander(rng: random.Random, is_capital: bool, race: int = 1) -> Commander:
     if is_capital:
         det, man, fc = _capital_rest(rng)
         c = Commander(bb=2, det=det, man=man, fc=fc)
     else:
         bb, det, man, fc = _zero_sum4(rng)
         c = Commander(bb=bb, det=det, man=man, fc=fc)
-    c.special = rng.choice(P.SPECIAL_ABILITIES)   # every commander has a special ability
+    c.special = rng.choice(P.SPECIAL_ABILITIES)        # universal combat specialist
+    racials = P.race_racials(race)
+    if racials:
+        c.racial = rng.choice(racials)                 # one of the race's racial abilities
     return c
 
 
@@ -140,7 +143,7 @@ def sample_loadout(pool: P.Pool, side: str, race: int, tech_cap: int,
     for i in range(max(1, n_fleets)):
         lo.fleets.append(Fleet(
             design=sample_design(pool, race, tech_cap, rng),
-            commander=sample_commander(rng, is_capital=(i == 0)),
+            commander=sample_commander(rng, is_capital=(i == 0), race=race),
             command=rng.randint(0, 7),
             cell=cap_cell if i == 0 else cells[i - 1],
             ships=1, is_capital=(i == 0)))
@@ -226,8 +229,11 @@ def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
                         break
             used.add(fl.cell)
         fl.command %= 8
-        if fl.commander.special not in P.SPECIAL_ABILITIES:   # must have an ability
+        if fl.commander.special not in P.SPECIAL_ABILITIES:   # must have a special ability
             fl.commander.special = rng.choice(P.SPECIAL_ABILITIES)
+        racials = P.race_racials(lo.race)                     # and a race-legal racial ability
+        if racials and fl.commander.racial not in racials:
+            fl.commander.racial = rng.choice(racials)
 
     # largest-hull + fill: each fleet gets the biggest hull it can still afford
     remaining = pp_budget
@@ -258,6 +264,7 @@ def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
         nf.is_capital = False
         nf.commander.bb, nf.commander.det, nf.commander.man, nf.commander.fc = _zero_sum4(rng)
         nf.commander.special = rng.choice(P.SPECIAL_ABILITIES)
+        nf.commander.racial = rng.choice(P.race_racials(lo.race) or [nf.commander.racial])
         nf.command = rng.randint(0, 7)
         spot = next((c for c in free if c not in used), None)
         if spot is None:
@@ -331,15 +338,21 @@ def pp_cost(lo: Loadout, pool: P.Pool, tech_cap: int) -> int:
 
 # ----------------------------- genetic operators -----------------------------
 
-def _mutate_commander(c: Commander, rng: random.Random, is_capital: bool) -> None:
-    if rng.random() < 0.5:
+def _mutate_commander(c: Commander, rng: random.Random, is_capital: bool,
+                      race: int = 1) -> None:
+    r = rng.random()
+    if r < 0.5:
         if is_capital:
             c.bb = 2
             c.det, c.man, c.fc = _capital_rest(rng)
         else:
             c.bb, c.det, c.man, c.fc = _zero_sum4(rng)
-    else:
+    elif r < 0.75:
         c.special = rng.choice(P.SPECIAL_ABILITIES)   # never clear the special ability
+    else:
+        racials = P.race_racials(race)                # switch among the race's racials
+        if racials:
+            c.racial = rng.choice(racials)
 
 
 def _mutate_design(d: Design, pool: P.Pool, race: int, tech_cap: int,
@@ -379,7 +392,7 @@ def mutate(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
         if rng.random() < rate:
             _mutate_design(fl.design, pool, lo.race, tech_cap, rng)
         if rng.random() < rate:
-            _mutate_commander(fl.commander, rng, fl.is_capital)
+            _mutate_commander(fl.commander, rng, fl.is_capital, lo.race)
         if rng.random() < rate:
             fl.command = rng.randint(0, 7)
         if rng.random() < rate:
