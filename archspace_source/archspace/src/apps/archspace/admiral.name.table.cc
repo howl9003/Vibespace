@@ -66,9 +66,10 @@ CAdmiralNameTable::get_random_name(int aRace)
 	assert(aRace >= CRace::RACE_HUMAN);
 	assert(aRace <= CRace::RACE_TRABOTULIN);
 
-	// Xesperados and Trabotulin have no dedicated name pool -> borrow a random
-	// existing race's names (CVS-merge: Trabotulin added here).
-	if (aRace == CRace::RACE_XESPERADOS || aRace == CRace::RACE_TRABOTULIN)
+	// Xesperados has no dedicated name pool -> borrow a random existing race's
+	// names. (CVS-merge: Trabotulin now has its own <11> name block in
+	// admiral_name.en, so it is NOT remapped here.)
+	if (aRace == CRace::RACE_XESPERADOS)
 		aRace = number(CRace::RACE_XESPERADOS-1);
 	if (aRace == CRace::RACE_EVINTOS) 
 		return get_evintos_name();
