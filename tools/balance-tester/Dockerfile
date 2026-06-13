@@ -43,6 +43,18 @@ WORKDIR /app
 COPY archspace_source/archspace/src /app/archspace_source/archspace/src
 COPY tools/balance-tester           /app/tools/balance-tester
 
+# Normalize line endings before building. A Windows checkout with
+# core.autocrlf=true (the Git-for-Windows default) rewrites the repo's
+# committed-LF shell scripts and Makefiles to CRLF in the working tree; since the
+# build context is the working tree, those CRLF files get COPYed in, and dash
+# (/bin/sh on Ubuntu) then can't parse them — set_platform's `case "$1" in`
+# becomes `in\r` and fails with "Syntax error: word unexpected (expecting in)".
+# Strip the trailing CR from every COPYed text file so the build is identical
+# regardless of how the host cloned the repo. `grep -I` skips binaries; `-Z`/`-0`
+# keep paths with spaces safe.
+RUN grep -rIlZ . /app/archspace_source /app/tools \
+    | xargs -0r sed -i 's/\r$//'
+
 # Build libs -> libarchspace.a, the engine objects, then the battle-sim binary.
 RUN cd /app/archspace_source/archspace/src \
     && sh set_platform linux \

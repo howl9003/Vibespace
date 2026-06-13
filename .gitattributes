@@ -24,3 +24,16 @@
 *.mp3   binary
 *.wav   binary
 *.ogg   binary
+
+# Force LF on POSIX build scripts and Makefiles. These are committed as LF, but a
+# Windows checkout with core.autocrlf=true (the Git-for-Windows default) rewrites
+# them to CRLF, which breaks the Docker builds: dash (/bin/sh on Ubuntu) can't
+# parse a `case ... in\r` statement, so e.g. `sh set_platform linux` fails with
+# "Syntax error: word unexpected (expecting in)". Pinning eol=lf keeps any
+# checkout — Windows included — building cleanly.
+set_platform text eol=lf
+configure    text eol=lf
+*.sh         text eol=lf
+Makefile     text eol=lf
+Makefile.*   text eol=lf
+*.mk         text eol=lf
