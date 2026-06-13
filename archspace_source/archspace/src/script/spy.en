@@ -183,3 +183,33 @@
 	],
 	Type("HOST")
 }
+
+# === CVS-merge: new spy entries ported from CVSRoot (S4 content) ===
+<Steal Important Technology>
+{
+	Number(8016),
+	Description("This operation focuses on stealing the cutting-edge technology that you don't currently own."),
+	Difficulty(150),
+	Cost(25000),
+	<Prerequisite>
+	[
+		Race(4),
+        Tech(1220)
+	],
+	Type("ORDN")
+},
+
+<Steal Secret Technology>
+{
+	Number(8017),
+	Description("Vastly more difficult and profitable than it's lower level counter-parts, this is the highest level operation available for stealing enemy technologies unknown to your own empire."),
+	Difficulty(200),
+	Cost(200000),
+	<Prerequisite>
+	[
+		Race(4),
+		Tech(1224)
+	],
+	Type("HOST")
+},
+

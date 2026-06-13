@@ -73,6 +73,25 @@ get_attribute_description(CPlanet::EPlanetAttribute aAttribute)
 			return GETTEXT("Frontier Area");
 		case CPlanet::PA_GRAVITY_CONTROLED:
 			return GETTEXT("Gravity Controlled");
+		// --- CVS-merge: 9 new planet special attributes ---
+		case CPlanet::PA_MOON_CLUSTER:
+			return GETTEXT("Moon Cluster");
+		case CPlanet::PA_ANCIENT_RUINS:
+			return GETTEXT("Ancient Ruins");
+		case CPlanet::PA_SHIP_YARD:
+			return GETTEXT("Ship Yard");
+		case CPlanet::PA_MILITARY_STRONGHOLD:
+			return GETTEXT("Military Stronghold");
+		case CPlanet::PA_MAINTENANCE_CENTER:
+			return GETTEXT("Maintenance Center");
+		case CPlanet::PA_COGNITION_AMPLIFIER:
+			return GETTEXT("Cognition Amplifier Relic");
+		case CPlanet::PA_UNDERGROUND_CAVERNS:
+			return GETTEXT("Underground Caverns");
+		case CPlanet::PA_RARE_ORE:
+			return GETTEXT("Rare Ore");
+		case CPlanet::PA_LOST_TRABOTULIN_LIBRARY:
+			return GETTEXT("Lost Trabotulin Library");
 		case CPlanet::PA_END:
 			return "";
 	}
@@ -339,6 +358,25 @@ CPlanet::get_attribute_description(CPlanet::EPlanetAttribute aAttribute)
 			return GETTEXT("Frontier Area");
 		case CPlanet::PA_GRAVITY_CONTROLED:
 			return GETTEXT("Gravity Controlled");
+		// --- CVS-merge: 9 new planet special attributes ---
+		case CPlanet::PA_MOON_CLUSTER:
+			return GETTEXT("Moon Cluster");
+		case CPlanet::PA_ANCIENT_RUINS:
+			return GETTEXT("Ancient Ruins");
+		case CPlanet::PA_SHIP_YARD:
+			return GETTEXT("Ship Yard");
+		case CPlanet::PA_MILITARY_STRONGHOLD:
+			return GETTEXT("Military Stronghold");
+		case CPlanet::PA_MAINTENANCE_CENTER:
+			return GETTEXT("Maintenance Center");
+		case CPlanet::PA_COGNITION_AMPLIFIER:
+			return GETTEXT("Cognition Amplifier Relic");
+		case CPlanet::PA_UNDERGROUND_CAVERNS:
+			return GETTEXT("Underground Caverns");
+		case CPlanet::PA_RARE_ORE:
+			return GETTEXT("Rare Ore");
+		case CPlanet::PA_LOST_TRABOTULIN_LIBRARY:
+			return GETTEXT("Lost Trabotulin Library");
 		case CPlanet::PA_END:
 			return "";
 	}
@@ -1607,6 +1645,55 @@ CPlanet::build_control_model(CPlayer *aOwner)
 		mControlModel.change_commerce(1);
 	}
 
+	// --- CVS-merge: effects for the 9 new planet special attributes ---
+	if (mAttribute.has(PA_MOON_CLUSTER))
+	{
+		mControlModel.change_military(4);
+		mControlModel.change_growth(3);
+		mControlModel.change_commerce(5);
+		mControlModel.change_facility_cost(1);
+	}
+	if (mAttribute.has(PA_ANCIENT_RUINS))
+	{
+		mControlModel.change_research(2);
+		mControlModel.change_commerce(2);
+	}
+	if (mAttribute.has(PA_SHIP_YARD))
+		mControlModel.change_military(5);
+	if (mAttribute.has(PA_MILITARY_STRONGHOLD))
+	{
+		mControlModel.change_military(15);
+		mControlModel.change_commerce(-5);
+	}
+	if (mAttribute.has(PA_MAINTENANCE_CENTER))
+	{
+		mControlModel.change_facility_cost(3);
+		mControlModel.change_commerce(2);
+		mControlModel.change_growth(2);
+	}
+	if (mAttribute.has(PA_COGNITION_AMPLIFIER))
+	{
+		mControlModel.change_facility_cost(3);
+		mControlModel.change_production(6);
+	}
+	if (mAttribute.has(PA_UNDERGROUND_CAVERNS))
+	{
+		mControlModel.change_facility_cost(1);
+		mControlModel.change_military(1);
+		mControlModel.change_growth(3);
+	}
+	if (mAttribute.has(PA_RARE_ORE))
+	{
+		mControlModel.change_production(3);
+		mControlModel.change_commerce(2);
+	}
+	if (mAttribute.has(PA_LOST_TRABOTULIN_LIBRARY))
+	{
+		mControlModel.change_research(30);
+		mControlModel.change_military(5);
+		mControlModel.change_commerce(10);
+	}
+
 	if (mAttribute.has(PA_RADIATION))
 		mControlModel.change_environment(-1);
 
@@ -1922,6 +2009,29 @@ CPlanet::initialize(CRace *aRace)
 
 	if (number(100) <= 3)
 		mAttribute += PA_GRAVITY_CONTROLED;
+
+	// --- CVS-merge: spawn odds for the 9 new planet special attributes ---
+	if (number(100) <= 10)		// 10%: a moon may instead be a moon cluster
+	{
+		if (number(100) <= 15)
+			mAttribute += PA_MOON_CLUSTER;
+	}
+	if (number(200) <= 1)		// 0.5%
+		mAttribute += PA_ANCIENT_RUINS;
+	if (number(100) <= 4)
+		mAttribute += PA_SHIP_YARD;
+	if (number(250) <= 1)		// 0.4%
+		mAttribute += PA_MILITARY_STRONGHOLD;
+	if (number(100) <= 3)
+		mAttribute += PA_MAINTENANCE_CENTER;
+	if (number(250) <= 1)		// 0.4%
+		mAttribute += PA_COGNITION_AMPLIFIER;
+	if (number(100) <= 4)
+		mAttribute += PA_UNDERGROUND_CAVERNS;
+	if (number(100) <= 4)
+		mAttribute += PA_RARE_ORE;
+	if (number(1000) <= 1)		// 0.1%
+		mAttribute += PA_LOST_TRABOTULIN_LIBRARY;
 
 	compute_max_population();
 
