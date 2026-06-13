@@ -47,14 +47,16 @@ def race_racials(race: int):
 # the pinned computer/shield/engine are unaffected.
 MIN_TIER = 4
 
-# Tier-4 weapons that a tier-5 of the SAME type strictly dominates on the condensed
-# efficiency stat dmg/space/cooldown (DST) AND accuracy (AR) AND effects -> never
-# worth fielding, so drop them too:
-#   Nova Torpedo (6203)        < Homing Black Hole (DST 188<200, AR 172<250)
-#   Anti-Matter Cannon (6305)  < Distortion Blaster (240<323, AR 90<120, fx subset)
-#   Autofire Gauss Cannon (6306)< Distortion Blaster (216<323, AR 90<120, fx subset)
-# Tachyon Beam (best AR) and Reflexium Missile (beats T5 Time-Wake on DST + unique
-# anti-shield) are NOT dominated and stay.
+# Tier-4 weapons a tier-5 of the SAME type strictly dominates once damage, space and
+# cooldown are condensed into per-slot throughput. The engine fits guns/slot =
+# floor(ship.Slot / weapon.space) (blackmarket.cc:618, component.cc:861); on a Doomstar
+# (Slot 2200) the slot output = guns * (dmg/shot) / cooldown comes out as:
+#   Nova Torpedo (6203)          41.3 < Homing Black Hole 44.0  (AR 172<250, both no fx)
+#   Anti-Matter Cannon (6305)    52.8 < Distortion Blaster 71.0 (AR 90<120, fx subset)
+#   Autofire Gauss Cannon (6306) 47.1 < Distortion Blaster 71.0 (AR 90<120, fx subset)
+# Each loses on throughput AND accuracy AND effects -> never worth fielding, so drop.
+# Tachyon Beam stays (lowest beam throughput but unmatched AR 273); Reflexium Missile
+# stays (31.0 > T5 Time-Wake 29.9, plus a unique anti-shield effect Black Hole lacks).
 WEAPON_EXCLUDE = {6203, 6305, 6306}
 
 # --- verified deploy grids (battlefield coords; step 200) ---------------------
