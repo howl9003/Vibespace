@@ -43,6 +43,11 @@ class CTech: public CPrerequisiteList
 			TYPE_LIFE,
 			TYPE_MATTER_ENERGY,
 			TYPE_SOCIAL,
+			// --- CVS-merge: advanced tech categories (order matches mTechTypeName).
+			// S2 ships ADV_MATTER_ENERGY content; UPGRADE/SCHEMATICS content in S4. ---
+			TYPE_UPGRADE,
+			TYPE_SCHEMATICS,
+			TYPE_ADV_MATTER_ENERGY,
 			TYPE_MAX
 		};
 
