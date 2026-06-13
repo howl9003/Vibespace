@@ -52,6 +52,60 @@ RACIAL_ABILITIES = {
 }
 ARMADA_CLASS = {0: "A", 1: "B", 2: "C", 3: "D"}
 
+# CFleetEffect::mEffectName[] (component.cc) — effect type id -> display name.
+EFFECT_NAMES = {
+    0: "AR", 1: "Weapon AR", 2: "Computer", 3: "DR", 4: "Armor DR", 5: "Mobility",
+    6: "Speed", 7: "HP", 8: "Detection Range", 9: "Morale", 10: "Complete Cloaking",
+    11: "Weak Cloaking", 12: "Complete Cloaking Detection", 13: "Weak Cloaking Detection",
+    14: "Shield Solidity", 15: "Shield Strength", 16: "Impenetrable Shield",
+    17: "Impenetrable Armor", 18: "Shield Recharge Rate", 19: "Beam Damage", 20: "Beam AR",
+    21: "DR against Beam", 22: "Beam Defense", 23: "Missile Damage", 24: "Missile AR",
+    25: "DR against Missile", 26: "Missile Defense", 27: "Projectile Damage",
+    28: "Projectile AR", 29: "DR against Projectile", 30: "Projectile Defense",
+    31: "PSI Attack", 32: "PSI Defense", 33: "Genetic Defense", 34: "Chain Reaction",
+    35: "Repair", 36: "Repair Speed", 37: "Non-Repairable", 38: "Cooling Time",
+    39: "Beam Cooling Time", 40: "Missile Cooling Time", 41: "Projectile Cooling Time",
+    42: "Stealth", 43: "Panic Modifier", 44: "Berserk Modifier", 45: "Efficiency",
+    46: "Trained", 47: "Damage", 48: "PSI Damage", 49: "Critical Hit", 50: "Misinterpret",
+    51: "Commander Survival", 52: "Never Berserk", 53: "Never Retreat Rout",
+    54: "PSI Defense Panalty", 55: "PSI Neutralization Field", 56: "Space Mining",
+    57: "Shield Piercing", 58: "Armor Piercing", 59: "Additional Damage to Bio Armor",
+    60: "Shield Distortion", 61: "Shield Overheat", 62: "PSI", 63: "PSI Empower",
+}
+WTYPE_NAMES = {0: "Beam", 1: "Missile", 2: "Projectile", 3: "Fighter"}
+ATYPE_NAMES = {0: "Normal", 1: "Bio", 2: "Reactive"}
+
+
+def effects_str(effects) -> str:
+    """'Shield Overheat, Armor Piercing 85, Beam Damage +20%' from an effects list."""
+    out = []
+    for e in (effects or []):
+        nm = EFFECT_NAMES.get(e.get("type"), f"#{e.get('type')}")
+        amt, ap = e.get("amount", 0), e.get("apply", 0)
+        if amt:
+            out.append(f"{nm} {amt}{'%' if ap == 1 else ''}")
+        else:
+            out.append(nm)
+    return ", ".join(out) if out else "—"
+
+
+def weapon_stat_line(w: dict) -> str:
+    dmg = "%dd%d" % (w.get("roll", 0), w.get("dice", 0))
+    return (f"{WTYPE_NAMES.get(w.get('wtype'), '?')} · AR {w.get('ar')} · dmg {dmg} · "
+            f"space {w.get('space')} · CT {w.get('cool')} · rng {w.get('range')} · "
+            f"AOF {w.get('aof')}" + (f" · {effects_str(w.get('effects'))}"
+                                     if w.get("effects") else ""))
+
+
+def armor_stat_line(a: dict) -> str:
+    return (f"{ATYPE_NAMES.get(a.get('atype'), '?')} · DR {a.get('dr')} · "
+            f"HP× {a.get('hp_mult')}" + (f" · {effects_str(a.get('effects'))}"
+                                         if a.get("effects") else ""))
+
+
+def device_stat_line(d: dict) -> str:
+    return (f"class {d.get('min_class')}–{d.get('max_class')} · {effects_str(d.get('effects'))}")
+
 # report.py CMD_NAMES order -> board abbreviations (as-deploy.js style)
 STANCE_ABBR = {
     "NORMAL": "NRM", "FORMATION": "FRM", "PENETRATE": "PEN", "FLANK": "FLK",
@@ -500,6 +554,69 @@ def replay_embed(log_text: str, races) -> None:
       <style>body{background:transparent;margin:0}</style>
     """ % (json.dumps(log_text), json.dumps(racemap))
     components.html(shim + "<script>" + js + "</script>", height=770, scrolling=True)
+
+
+def render_component_reference(components: dict):
+    """Tables of every weapon/armor/device (full stats) + the ability name maps."""
+    wpns = sorted(components.get("WPN", []), key=lambda x: x["id"])
+    arms = sorted(components.get("ARMOR", []), key=lambda x: x["id"])
+    devs = sorted(components.get("DEV", []), key=lambda x: x["id"])
+    st.markdown("**Weapons**")
+    rows = ["| id | name | type | AR | dmg | space | CT | range | AOF | effects |",
+            "|---|---|---|---|---|---|---|---|---|---|"]
+    for w in wpns:
+        rows.append(f"| {w['id']} | {html.escape(w.get('name', ''))} "
+                    f"| {WTYPE_NAMES.get(w.get('wtype'), '?')} | {w.get('ar')} "
+                    f"| {w.get('roll')}d{w.get('dice')} | {w.get('space')} | {w.get('cool')} "
+                    f"| {w.get('range')} | {w.get('aof')} "
+                    f"| {html.escape(effects_str(w.get('effects')))} |")
+    st.markdown("\n".join(rows))
+    st.markdown("**Armor**")
+    rows = ["| id | name | type | DR | HP× | effects |", "|---|---|---|---|---|---|"]
+    for a in arms:
+        rows.append(f"| {a['id']} | {html.escape(a.get('name', ''))} "
+                    f"| {ATYPE_NAMES.get(a.get('atype'), '?')} | {a.get('dr')} | {a.get('hp_mult')} "
+                    f"| {html.escape(effects_str(a.get('effects')))} |")
+    st.markdown("\n".join(rows))
+    st.markdown("**Devices**")
+    rows = ["| id | name | class | effects |", "|---|---|---|---|"]
+    for d in devs:
+        rows.append(f"| {d['id']} | {html.escape(d.get('name', ''))} "
+                    f"| {d.get('min_class')}–{d.get('max_class')} "
+                    f"| {html.escape(effects_str(d.get('effects')))} |")
+    st.markdown("\n".join(rows))
+    st.markdown("**Commander special abilities**: "
+                + " · ".join(f"{k} = {v}" for k, v in SPECIAL_ABILITIES.items()))
+    st.markdown("**Racial abilities**: "
+                + " · ".join(f"{k} = {v}" for k, v in RACIAL_ABILITIES.items()))
+
+
+def render_validation_results(results: list):
+    """One row per attacker in the library: defender win-rate + net PP, plus aggregate."""
+    if not results:
+        return
+    rows = ["| vs attacker | defender win-rate | net PP (defender) |", "|---|---|---|"]
+    for r in results:
+        rows.append(f"| {html.escape(r['label'])} | {r['def_win']:.3f} | {r['net_pp']:+,.0f} |")
+    st.markdown("\n".join(rows))
+    n = len(results)
+    worst = min(results, key=lambda r: (r["def_win"], r["net_pp"]))
+    st.caption(f"mean defender win-rate {sum(r['def_win'] for r in results) / n:.3f} · "
+               f"mean net PP {sum(r['net_pp'] for r in results) / n:+,.0f} · "
+               f"worst case vs {worst['label']}: win {worst['def_win']:.3f}, "
+               f"net PP {worst['net_pp']:+,.0f}")
+
+
+def render_fleet_damage(fleet_list, side_label: str):
+    """Per-fleet damage dealt / taken / avoided for one side of a match."""
+    if not fleet_list:
+        return
+    st.markdown(f"**{side_label} per-fleet damage**")
+    rows = ["| fleet | dealt | taken | avoided (prevented) |", "|---|---|---|---|"]
+    for f in fleet_list:
+        rows.append(f"| #{f.get('id')} | {f.get('dealt', 0):,.0f} | {f.get('taken', 0):,.0f} "
+                    f"| {f.get('avoided', 0):,.0f} |")
+    st.markdown("\n".join(rows))
 
 
 def render_report(report: dict):

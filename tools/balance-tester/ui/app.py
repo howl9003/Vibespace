@@ -308,6 +308,204 @@ def _replay_panel(report: dict):
         R.replay_embed(res.get("log", ""), rp["races"])
 
 
+# ------------------------------- Loadout Lab ----------------------------------
+
+_STANCES = ["NORMAL", "FORMATION", "PENETRATE", "FLANK", "RESERVE",
+            "FREE", "ASSAULT", "STAND_GROUND"]
+
+
+def _lab_pool():
+    """Cached battle-sim worker + Pool for the Lab's dropdowns and validation."""
+    import evaluator
+    import pool as P
+    sim = st.session_state.get("lab_sim")
+    if sim is None or sim.proc.poll() is not None:
+        sim = evaluator.BattleSim()
+        st.session_state.lab_sim = sim
+        st.session_state.lab_pool = P.Pool(sim)
+    return st.session_state.lab_sim, st.session_state.lab_pool
+
+
+def _clamp_idx(key: str, n: int):
+    """Reset a stored selectbox index if the option list shrank (race/tech change)."""
+    v = st.session_state.get(key)
+    if isinstance(v, int) and v >= n:
+        st.session_state[key] = 0
+
+
+def view_loadout_lab():
+    import genome as G
+    import pool as P
+    import report as RPT
+
+    st.subheader("Loadout Lab")
+    st.caption("Hand-build a defender, see every component stat, and validate it against a "
+               "finished run's attacker library.")
+
+    default = st.session_state.get("report_dir") or _run_dir()
+    run_dir = st.sidebar.text_input("Attacker-library run dir", default, key="lab_run")
+    abs_dir = run_dir if os.path.isabs(run_dir) else os.path.join(RUN_CWD, run_dir)
+    report = R.load_json(os.path.join(abs_dir, "report.json"))
+    lox = (report or {}).get("loadouts", {})
+    lib = lox.get("attackers_encoded") or []
+    lib_dec = lox.get("attackers") or []
+    sc = (report or {}).get("scenario", {})
+    if not lib:
+        st.info("Choose a finished run directory whose report.json has an attacker library "
+                "(loadouts.attackers_encoded) — run something in Configure & Run first.")
+        return
+    st.caption(f"Attacker library: **{len(lib)}** loadout(s) from `{run_dir}`")
+
+    sim, pool = _lab_pool()
+
+    base_seed = int(sc.get("base_seed", sc.get("seed", 12345)))
+    turn_cap = int(sc.get("turn_cap", 1800))
+    cc = st.columns(4)
+    race = cc[0].selectbox("Defender race", range(len(R.RACES)),
+                           format_func=lambda i: f"{i + 1} · {R.RACES[i]}", key="lab_race") + 1
+    n_fleets = int(cc[1].number_input("Fleets", 1, 12, 2, key="lab_nf"))
+    replicates = int(cc[2].number_input("Replicates", 1, 100,
+                                        int(sc.get("replicates", 12)), key="lab_rep"))
+    tech_cap = int(cc[3].number_input("Tech cap", 1, 9999999,
+                                      int(sc.get("defender", {}).get("tech_cap", 999999)),
+                                      key="lab_tc"))
+
+    hulls = sorted(pool.hulls(race, tech_cap), key=lambda h: h["cost"])
+    weapons = pool.weapons(race, tech_cap)
+    armors = [pool.armor_by_id(race, a, tech_cap) for a in pool.armor_ids(race, tech_cap)]
+    racials = P.race_racials(race)
+    if not weapons or not armors:
+        st.error("No tier-4/5 weapons or armor for this race/tech cap.")
+        return
+
+    fleets, cells_used = [], []
+    for i in range(n_fleets):
+        cap = (i == 0)
+        with st.expander(f"{'★ Capital fleet' if cap else 'Fleet %d' % i}", expanded=cap):
+            _clamp_idx(f"lab_f{i}_hull", len(hulls))
+            _clamp_idx(f"lab_f{i}_w", len(weapons))
+            _clamp_idx(f"lab_f{i}_a", len(armors))
+            hk = st.selectbox(
+                "Hull", range(len(hulls)), index=len(hulls) - 1, key=f"lab_f{i}_hull",
+                format_func=lambda k: "%s · class %s · %s PP · %sW/%sD" % (
+                    hulls[k]["name"], hulls[k]["class"], format(hulls[k]["cost"], ","),
+                    hulls[k]["weapon_slots"], hulls[k]["device_slots"]))
+            h = hulls[hk]
+            wk = st.selectbox("Weapon (homogeneous across all slots)", range(len(weapons)),
+                              format_func=lambda k: weapons[k]["name"], key=f"lab_f{i}_w")
+            w = weapons[wk]
+            st.caption("⚔ " + R.weapon_stat_line(w))
+            ak = st.selectbox("Armor", range(len(armors)),
+                              format_func=lambda k: armors[k]["name"], key=f"lab_f{i}_a")
+            a = armors[ak]
+            st.caption("🛡 " + R.armor_stat_line(a))
+
+            elig = pool.eligible_devices(race, h.get("class", 1), w, a, tech_cap)
+            elig_ids = [d["id"] for d in elig]
+            elig_lbl = {d["id"]: "%s — %s" % (d["name"], R.device_stat_line(d)) for d in elig}
+            dkey = f"lab_f{i}_dev"
+            if dkey in st.session_state:        # drop now-ineligible picks
+                st.session_state[dkey] = [d for d in st.session_state[dkey] if d in elig_ids]
+            picks = st.multiselect("Devices (eligible only; up to %d slots)" % h["device_slots"],
+                                   elig_ids, format_func=lambda d: elig_lbl.get(d, str(d)), key=dkey)
+            if len(picks) > h["device_slots"]:
+                st.warning("More devices than the %d slots — extra ignored." % h["device_slots"])
+                picks = picks[:h["device_slots"]]
+
+            st.markdown("Commander")
+            pc = st.columns(4)
+            bb = pc[0].slider("siege", -2, 2, 2 if cap else 0, key=f"lab_f{i}_bb")
+            det = pc[1].slider("detect", -2, 2, 0, key=f"lab_f{i}_det")
+            man = pc[2].slider("maneuver", -2, 2, -1 if cap else 0, key=f"lab_f{i}_man")
+            fc = pc[3].slider("fleet cmd", -2, 2, -1 if cap else 0, key=f"lab_f{i}_fc")
+            st.caption("resolved → siege %d · det %d · man %d · fc %d (Σ %+d; search uses net-zero)"
+                       % (P.BB_VAL[bb], P.DET_VAL[det], P.MAN_VAL[man], P.FC_VAL[fc], bb + det + man + fc))
+            ab = st.columns(3)
+            sp = ab[0].selectbox("Special", P.SPECIAL_ABILITIES,
+                                 format_func=lambda s: R.SPECIAL_ABILITIES.get(s, str(s)),
+                                 key=f"lab_f{i}_sp")
+            if racials:
+                if st.session_state.get(f"lab_f{i}_rc") not in racials:
+                    st.session_state.pop(f"lab_f{i}_rc", None)
+                rc = ab[1].selectbox("Racial", racials,
+                                     format_func=lambda s: R.RACIAL_ABILITIES.get(s, str(s)),
+                                     key=f"lab_f{i}_rc")
+            else:
+                ab[1].caption("no racials")
+                rc = -1
+            stance = ab[2].selectbox("Stance", range(8), index=5,
+                                     format_func=lambda s: _STANCES[s], key=f"lab_f{i}_st")
+
+            pos = st.columns(3)
+            if cap:
+                cell = tuple(P.DEF_CAPITAL)
+                pos[0].caption("cell: capital pinned @ %s" % (cell,))
+            else:
+                # value-based selectboxes (options ARE the coords) — pre-seed a distinct
+                # default y per fleet so non-capital fleets don't collide on first render.
+                ykey = f"lab_f{i}_y"
+                st.session_state.setdefault(ykey, P.DEF_Y[min(i, len(P.DEF_Y) - 1)])
+                cx = pos[0].selectbox("cell x", P.DEF_X, key=f"lab_f{i}_x")
+                cy = pos[1].selectbox("cell y", P.DEF_Y, key=ykey)
+                cell = (cx, cy)
+            ships = int(pos[2].number_input("ships", 1, 41, 10, key=f"lab_f{i}_sh"))
+            cells_used.append(cell)
+
+            des = G.Design(hull=h["id"], armor=a["id"],
+                           weapons=[w["id"]] * h["weapon_slots"], devices=list(picks))
+            cmdr = G.Commander(bb=bb, det=det, man=man, fc=fc, special=sp, racial=rc)
+            fleets.append(G.Fleet(design=des, commander=cmdr, command=stance,
+                                  cell=cell, ships=ships, is_capital=cap))
+
+    if len(set(cells_used)) != len(cells_used):
+        st.error("Two fleets share a deploy cell — give each fleet a distinct cell.")
+        return
+
+    lo = G.Loadout(race=race, fleets=fleets)
+    try:
+        enc = G.encode_side(lo, pool, tech_cap, base_id=200)
+        decoded_def = RPT.decode_loadout(lo, pool, tech_cap)
+    except Exception as e:  # noqa: BLE001
+        st.error("Could not encode the loadout: %s" % e)
+        return
+    st.caption("Defender PP cost: **%s**" % format(decoded_def.get("pp_cost", 0), ","))
+
+    if st.button("✅ Validate vs attacker library", key="lab_go"):
+        results = []
+        with st.spinner("Running %d matchups…" % len(lib)):
+            try:
+                for ai, atk in enumerate(lib):
+                    r = sim.match({"seed": base_seed, "replicates": replicates,
+                                   "turn_cap": turn_cap, "attacker": atk, "defender": enc})
+                    results.append({"label": "A%d" % ai, "def_win": 1.0 - r["win_rate"],
+                                    "net_pp": -r["econ"], "fleets": r.get("fleets")})
+            except Exception as e:  # noqa: BLE001
+                st.error("Validation failed: %s" % e)
+                return
+        st.session_state.lab_out = {"results": results, "decoded_def": decoded_def}
+
+    out = st.session_state.get("lab_out")
+    if out:
+        st.divider()
+        st.markdown("### Validation — defender vs each attacker")
+        R.render_validation_results(out["results"])
+        labels = [r["label"] for r in out["results"]]
+        pk = st.selectbox("Inspect matchup", range(len(labels)),
+                          format_func=lambda i: labels[i], key="lab_inspect")
+        chosen = out["results"][pk]
+        dec_atk = lib_dec[pk] if pk < len(lib_dec) else None
+        R.show_matchup(dec_atk, out["decoded_def"])
+        fl = chosen.get("fleets") or {}
+        d1, d2 = st.columns(2)
+        with d1:
+            R.render_fleet_damage(fl.get("attacker"), "Attacker " + chosen["label"])
+        with d2:
+            R.render_fleet_damage(fl.get("defender"), "Your defender")
+
+    with st.expander("📖 Component & ability stats reference"):
+        R.render_component_reference(pool.get(race, tech_cap)["components"])
+
+
 # --------------------------------- router -------------------------------------
 
 def main():
@@ -320,13 +518,15 @@ def main():
             os.path.join(RUN_CWD, rd, "report.json"))
         st.session_state.view = "View Report" if has_report else "Configure & Run"
 
-    view = st.sidebar.radio("View", ["Configure & Run", "View Report"],
-                            index=0 if st.session_state.view == "Configure & Run" else 1,
-                            key="view")
+    options = ["Configure & Run", "View Report", "Loadout Lab"]
+    cur = st.session_state.view if st.session_state.view in options else options[0]
+    view = st.sidebar.radio("View", options, index=options.index(cur), key="view")
     if view == "Configure & Run":
         view_configure()
-    else:
+    elif view == "View Report":
         view_report()
+    else:
+        view_loadout_lab()
 
 
 if __name__ == "__main__":

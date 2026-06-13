@@ -22,6 +22,7 @@ class Cell:
     lo: float
     hi: float
     raw: dict
+    fleets: Optional[dict] = None   # {"attacker":[{id,dealt,taken,avoided}], "defender":[...]}
 
 
 def evaluate_cell(sim, pool: P.Pool, attacker: G.Loadout, defender: G.Loadout,
@@ -36,7 +37,22 @@ def evaluate_cell(sim, pool: P.Pool, attacker: G.Loadout, defender: G.Loadout,
         spec["conc"] = conc
     r = sim.match(spec)
     return Cell(win_rate=r["win_rate"], econ=r["econ"],
-                lo=r["wilson_lo"], hi=r["wilson_hi"], raw=r)
+                lo=r["wilson_lo"], hi=r["wilson_hi"], raw=r, fleets=r.get("fleets"))
+
+
+def fleet_damage(cell: Cell, side: str, known_ids) -> dict:
+    """Per-fleet (dealt, taken, avoided) for `side` ('attacker'|'defender').
+
+    Defaults (0,0,0) for any spec fleet id absent from the match payload (a fleet
+    that neither fired nor was fired upon over the replicates). This is the dense
+    per-fleet signal the inner search ranks loadout candidates by.
+    """
+    out = {int(i): (0.0, 0.0, 0.0) for i in known_ids}
+    for f in ((cell.fleets or {}).get(side) or []):
+        out[int(f["id"])] = (float(f.get("dealt", 0.0)),
+                             float(f.get("taken", 0.0)),
+                             float(f.get("avoided", 0.0)))
+    return out
 
 
 def payoff_matrix(sim, pool: P.Pool, A: List[G.Loadout], D: List[G.Loadout],

@@ -74,53 +74,130 @@ def best_response(sim, pool: P.Pool, opponents: List[G.Loadout], side: str,
                   generations: int = 12, replicates: int = 20, base_seed: int = 999,
                   seed_pop: Optional[List[G.Loadout]] = None, patience: int = 4,
                   rng: Optional[random.Random] = None,
-                  log: Optional[Callable] = None, mpool=None) -> Tuple[G.Loadout, Fitness]:
+                  log: Optional[Callable] = None, mpool=None,
+                  cd_cycles: Optional[int] = None,
+                  fleet_local: bool = True) -> Tuple[G.Loadout, Fitness]:
+    """Coordinate-descent best response. Each cycle runs a LOADOUT phase then a POSITION
+    phase, repeating until neither improves (or cd_cycles is hit). The LOADOUT phase does
+    PER-FLEET local search: for each fleet, sample K single-fleet candidates and let that
+    fleet pick DONE (maximize its damage dealt) or AVOIDED (maximize damage it prevented),
+    keeping whichever IMPROVES the aggregate fitness — so the dense per-fleet signal guides
+    component choice while aggregate (win, net-PP) stays the only acceptance test."""
     rng = rng or random.Random(0)
+    conc_hint = 1 if mpool is not None else None
+    base_id = 100 if side == "attacker" else 200
 
-    def ev_many(cands):
-        """Evaluate a list of candidates' fitness vs the opponents. With `mpool`,
-        each candidate is scored on its own worker, in parallel — same results."""
-        cands = list(cands)
-        if mpool is None or not cands:
-            return [fitness(sim, pool, lo, opponents, side, con.tech_cap,
-                            base_seed, replicates) for lo in cands]
-        # warm the shared Pool cache single-threaded so worker threads only read it
-        for lo in cands + list(opponents):
-            pool.get(lo.race, con.tech_cap)
-        return mpool.map(cands, lambda wsim, lo: fitness(
-            wsim, pool, lo, opponents, side, con.tech_cap, base_seed, replicates, conc=1))
-
-    pop0 = _seed_population(pool, side, con, mu, seed_pop, rng)
-    scored = list(zip(pop0, ev_many(pop0)))
-    scored.sort(key=lambda x: x[1], reverse=True)
-    best = scored[0]
-    stale = 0
-
-    for gen in range(generations):
-        offspring = []
-        for _ in range(lam):
-            if rng.random() < 0.6 and len(scored) >= 2:
-                pa, pb = rng.sample(scored, 2)
-                child = G.crossover(pa[0], pb[0], pool, side, con.tech_cap,
-                                    con.pp_budget, con.max_ships, rng, con.n_fleets)
+    def score_one(wsim, cand):
+        """(aggregate fitness, {fleet_id: (dealt, taken, avoided)} mean over opponents)."""
+        ids = [base_id + i for i in range(len(cand.fleets))]
+        vals: List[Fitness] = []
+        acc = {i: [0.0, 0.0, 0.0] for i in ids}
+        for opp in opponents:
+            if side == "attacker":
+                c = T.evaluate_cell(wsim, pool, cand, opp, con.tech_cap, base_seed,
+                                    replicates, conc=conc_hint)
+                vals.append((c.win_rate, c.econ))
+                fd = T.fleet_damage(c, "attacker", ids)
             else:
-                child = copy.deepcopy(rng.choice(scored)[0])
-            child = G.mutate(child, pool, side, con.tech_cap, con.pp_budget,
-                             con.max_ships, rng, n_fleets=con.n_fleets)
-            offspring.append(child)
+                c = T.evaluate_cell(wsim, pool, opp, cand, con.tech_cap, base_seed,
+                                    replicates, conc=conc_hint)
+                vals.append((1.0 - c.win_rate, -c.econ))
+                fd = T.fleet_damage(c, "defender", ids)
+            for fid in ids:
+                d = fd.get(fid, (0.0, 0.0, 0.0))
+                acc[fid][0] += d[0]; acc[fid][1] += d[1]; acc[fid][2] += d[2]
+        if not vals:
+            return ((0.0, 0.0), {})
+        if side == "attacker":
+            n = len(vals)
+            fit = (sum(v[0] for v in vals) / n, sum(v[1] for v in vals) / n)
+        else:
+            fit = min(vals)                 # maximin worst-case for the defender
+        nopp = max(1, len(opponents))
+        dmg = {fid: (acc[fid][0] / nopp, acc[fid][1] / nopp, acc[fid][2] / nopp) for fid in ids}
+        return (fit, dmg)
 
-        scored = sorted(scored + list(zip(offspring, ev_many(offspring))),
-                        key=lambda x: x[1], reverse=True)[:mu]
-        if scored[0][1] > best[1]:
-            best, stale = scored[0], 0
+    _WORST = ((float("-inf"), float("-inf")), {})
+
+    def ev_full(cands):
+        """[(fitness, fleet_dmg), ...] — parallel across the pool when mpool is given."""
+        cands = list(cands)
+        if not cands:
+            return []
+        if mpool is None:
+            return [score_one(sim, lo) for lo in cands]
+        for lo in cands + list(opponents):     # warm the shared Pool cache single-threaded
+            pool.get(lo.race, con.tech_cap)
+        return [r if r is not None else _WORST for r in mpool.map(cands, score_one)]
+
+    # ---- seed the incumbent (best-expected of the seeded population) ----
+    pop0 = _seed_population(pool, side, con, mu, seed_pop, rng)
+    s0 = ev_full(pop0)
+    k0 = max(range(len(pop0)), key=lambda k: s0[k][0])
+    incumbent, f_inc = pop0[k0], s0[k0][0]
+
+    cd_cycles = cd_cycles if cd_cycles is not None else max(2, generations // 3)
+    patience_cycles = max(1, patience // 2)
+    block_gens = 2
+
+    def block_cycle(group: str) -> bool:
+        """μ+λ restricted to one gene group; accept on aggregate fitness. Returns improved."""
+        nonlocal incumbent, f_inc
+        pop = [incumbent] + [
+            G.mutate(incumbent, pool, side, con.tech_cap, con.pp_budget, con.max_ships,
+                     rng, n_fleets=con.n_fleets, genes=(group,))
+            for _ in range(max(0, mu - 1))]
+        scored = sorted(zip(pop, [s[0] for s in ev_full(pop)]),
+                        key=lambda x: x[1], reverse=True)
+        for _ in range(block_gens):
+            off = [G.mutate(rng.choice(scored)[0], pool, side, con.tech_cap, con.pp_budget,
+                            con.max_ships, rng, n_fleets=con.n_fleets, genes=(group,))
+                   for _ in range(lam)]
+            scored = sorted(scored + list(zip(off, [s[0] for s in ev_full(off)])),
+                            key=lambda x: x[1], reverse=True)[:mu]
+        if scored[0][1] > f_inc:
+            incumbent, f_inc = scored[0]
+            return True
+        return False
+
+    def loadout_cycle_fleetlocal() -> bool:
+        """Per-fleet local search; each fleet picks DONE vs AVOIDED by whichever accepted
+        candidate gives the better aggregate. Returns whether the incumbent improved."""
+        nonlocal incumbent, f_inc
+        improved = False
+        K = max(4, lam // max(1, len(incumbent.fleets)))
+        i = 0
+        while i < len(incumbent.fleets):
+            cands = [G.mutate_fleet(incumbent, i, "LOADOUT", pool, side, con.tech_cap,
+                                    con.pp_budget, con.max_ships, rng, con.n_fleets)
+                     for _ in range(K)]
+            res = ev_full(cands)
+            fid = base_id + i
+            for axis in (0, 2):     # DONE (max dealt), then AVOIDED (max avoided)
+                k = max(range(len(cands)),
+                        key=lambda j: (res[j][0], res[j][1].get(fid, (0.0, 0.0, 0.0))[axis]))
+                if res[k][0] > f_inc:
+                    incumbent, f_inc = cands[k], res[k][0]
+                    improved = True
+                    break           # keep whichever objective gave the better aggregate
+            i += 1
+        return improved
+
+    stale = 0
+    for cycle in range(cd_cycles):
+        imp_load = loadout_cycle_fleetlocal() if fleet_local else block_cycle("LOADOUT")
+        imp_pos = block_cycle("POSITION")
+        if log:                      # map cycle progress onto the 0..generations bar
+            disp = max(0, round((cycle + 1) / cd_cycles * generations) - 1)
+            log(disp, f_inc, f_inc)
+        if imp_load or imp_pos:
+            stale = 0
         else:
             stale += 1
-        if log:
-            log(gen, scored[0][1], best[1])
-        if stale >= patience:
-            break
+            if stale >= patience_cycles:
+                break
 
-    return best
+    return incumbent, f_inc
 
 
 def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,

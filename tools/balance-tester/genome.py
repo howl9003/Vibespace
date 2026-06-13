@@ -169,7 +169,8 @@ def _largest_affordable(hulls_by_cost: List[dict], remaining: Optional[int]):
 def _legalize_design(fl: Fleet, hull: dict, pool: P.Pool, race: int,
                      tech_cap: int, rng: random.Random) -> None:
     """Re-fit a fleet's weapons/armor/devices to its hull using the (tier-filtered)
-    pool: weapon-slot count, distinct legal devices, a legal armor."""
+    pool: homogeneous weapon, a legal armor, and every device slot filled from the
+    set ELIGIBLE for this hull-class/weapon/armor/race (see pool.device_allowed)."""
     # homogeneous armament: every weapon slot carries the SAME weapon type. Keep the
     # design's current (legal) weapon if it has one, else pick a legal one.
     wp = [w["id"] for w in pool.weapons(race, tech_cap)]
@@ -180,31 +181,38 @@ def _legalize_design(fl: Fleet, hull: dict, pool: P.Pool, race: int,
         fl.design.weapons = [weapon] * ns
     else:
         fl.design.weapons = []
-    # devices: keep the searched ones (distinct, legal), then FILL every remaining
-    # device slot — a ship never leaves a device slot empty in-game.
-    dev_ids = pool.device_ids(race, tech_cap)
+    # armor: keep if legal, else pick a legal one (must precede device eligibility).
+    armor_ids = pool.armor_ids(race, tech_cap)
+    if armor_ids and fl.design.armor not in armor_ids:
+        fl.design.armor = rng.choice(armor_ids)
+    # devices: fill every slot from those eligible for the chosen hull/weapon/armor/race
+    # (drops dead-weight, class-illegal and type-mismatched gear; never leaves one empty).
+    wpn = pool.weapon_by_id(race, fl.design.weapons[0], tech_cap) if fl.design.weapons else None
+    arm = pool.armor_by_id(race, fl.design.armor, tech_cap)
+    elig = [d["id"] for d in pool.eligible_devices(race, hull.get("class", 1), wpn, arm, tech_cap)]
     seen: List[int] = []
     for d in fl.design.devices:
-        if d in dev_ids and d not in seen:
+        if d in elig and d not in seen:
             seen.append(d)
-    nslots = min(hull["device_slots"], len(dev_ids))
-    spare = [d for d in dev_ids if d not in seen]
+    nslots = min(hull["device_slots"], len(elig))
+    spare = [d for d in elig if d not in seen]
     rng.shuffle(spare)
     while len(seen) < nslots and spare:
         seen.append(spare.pop())
     fl.design.devices = seen[:nslots]
-    armor = pool.armor_ids(race, tech_cap)
-    if armor and fl.design.armor not in armor:
-        fl.design.armor = rng.choice(armor)
 
 
 def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
            pp_budget: Optional[int], max_ships_per_fleet: int,
-           rng: random.Random, n_fleets: int = 20) -> Loadout:
-    """Re-legalize a loadout and enforce the 'spend the budget on the largest
-    affordable ships' policy: each fleet takes the largest hull it can afford with
-    the remaining budget, filled to capacity; fleets are added up to n_fleets and
-    then grown until no leftover PP could buy another ship anywhere."""
+           rng: random.Random, n_fleets: int = 20,
+           groups: Tuple[str, ...] = ("POSITION", "LOADOUT")) -> Loadout:
+    """Re-legalize a loadout. `groups` selects which gene group is repaired; the OTHER
+    group is FROZEN. POSITION = deploy cells + stance; LOADOUT = commander, hull (largest
+    affordable), ship counts (spend the budget on the largest ships), device/weapon
+    legality. A POSITION-only pass never reassigns hulls or ship counts; a LOADOUT-only
+    pass never moves cells/stance. Default = both = the original behaviour."""
+    do_pos = "POSITION" in groups
+    do_load = "LOADOUT" in groups
     xs, ys, cap_cell = P.grid(side)
     n_fleets = max(1, min(n_fleets, 20))
     hbc = _hulls_by_cost(pool, lo.race, tech_cap)
@@ -212,34 +220,43 @@ def repair(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
     grid_cells = {(x, y) for x in xs for y in ys}
 
     lo.fleets = lo.fleets[:n_fleets] or lo.fleets[:1]
-    used = {cap_cell}
+    used: set = set()
     free = P.free_cells(side)
     rng.shuffle(free)
 
-    # commander locks + stance + distinct cells (preserve the searched genes)
+    # capital ordering; commander locks (LOADOUT); cell de-dup + stance (POSITION)
     for i, fl in enumerate(lo.fleets):
         fl.is_capital = (i == 0)
         if i == 0:
-            fl.commander.bb = 2
-            if fl.commander.det + fl.commander.man + fl.commander.fc != -2:
-                fl.commander.det, fl.commander.man, fl.commander.fc = _capital_rest(rng)
-            fl.cell = cap_cell
+            if do_load:
+                fl.commander.bb = 2
+                if fl.commander.det + fl.commander.man + fl.commander.fc != -2:
+                    fl.commander.det, fl.commander.man, fl.commander.fc = _capital_rest(rng)
+            if do_pos:
+                fl.cell = cap_cell
         else:
-            if (fl.commander.bb + fl.commander.det
-                    + fl.commander.man + fl.commander.fc) != 0:
+            if do_load and (fl.commander.bb + fl.commander.det
+                            + fl.commander.man + fl.commander.fc) != 0:
                 fl.commander.bb, fl.commander.det, fl.commander.man, fl.commander.fc = _zero_sum4(rng)
-            if fl.cell in used or fl.cell not in grid_cells:
+            if do_pos and (fl.cell in used or fl.cell not in grid_cells):
                 for c in free:
                     if c not in used:
                         fl.cell = c
                         break
-            used.add(fl.cell)
-        fl.command %= 8
-        if fl.commander.special not in P.SPECIAL_ABILITIES:   # must have a special ability
-            fl.commander.special = rng.choice(P.SPECIAL_ABILITIES)
-        racials = P.race_racials(lo.race)                     # and a race-legal racial ability
-        if racials and fl.commander.racial not in racials:
-            fl.commander.racial = rng.choice(racials)
+        used.add(fl.cell)
+        if do_pos:
+            fl.command %= 8
+        if do_load:
+            if fl.commander.special not in P.SPECIAL_ABILITIES:   # must have a special ability
+                fl.commander.special = rng.choice(P.SPECIAL_ABILITIES)
+            racials = P.race_racials(lo.race)                     # and a race-legal racial ability
+            if racials and fl.commander.racial not in racials:
+                fl.commander.racial = rng.choice(racials)
+
+    if not do_load:
+        # POSITION-only: hulls/ships/designs are frozen; cell + stance fixups done above.
+        lo.fleets[0].is_capital = True
+        return lo
 
     # largest-hull + fill: each fleet gets the biggest hull it can still afford
     remaining = pp_budget
@@ -372,48 +389,70 @@ def _mutate_design(d: Design, pool: P.Pool, race: int, tech_cap: int,
         wpool = pool.weapons(race, tech_cap)
         if wpool:
             d.weapons = [rng.choice(wpool)["id"]] * len(d.weapons)
-    if rng.random() < 0.3:                          # occasionally a device
-        devs = pool.device_ids(race, tech_cap)
+    if rng.random() < 0.3:                          # occasionally a device (eligible ones only)
+        h = next((hh for hh in pool.hulls(race, tech_cap) if hh["id"] == d.hull), None)
+        wpn = pool.weapon_by_id(race, d.weapons[0], tech_cap) if d.weapons else None
+        arm = pool.armor_by_id(race, d.armor, tech_cap)
+        devs = ([x["id"] for x in pool.eligible_devices(race, h.get("class", 1), wpn, arm, tech_cap)]
+                if h else [])
         if devs:
             d.devices = rng.sample(devs, min(max(1, len(d.devices)), len(devs)))
 
 
 def mutate(lo: Loadout, pool: P.Pool, side: str, tech_cap: int,
            pp_budget: Optional[int], max_ships_per_fleet: int,
-           rng: random.Random, rate: float = 0.35, n_fleets: int = 20) -> Loadout:
-    """Per-gene resample over the searched genes, then repair(). Hull-size and
-    ship counts are set by repair() (largest affordable + spend the budget), so
-    mutation focuses on the genes that matter: weapons/armor/devices, commander,
-    stance, and deploy cell."""
+           rng: random.Random, rate: float = 0.35, n_fleets: int = 20,
+           genes: Tuple[str, ...] = ("POSITION", "LOADOUT"),
+           only_fleet: Optional[int] = None) -> Loadout:
+    """Per-gene resample over the selected gene group(s), then repair(groups=genes) so
+    the OTHER group stays frozen. POSITION = cell + stance; LOADOUT = design + commander
+    + ships (hull-size and ship counts ultimately come from repair's budget policy).
+    only_fleet=i mutates just that fleet — the per-fleet coordinate-descent step."""
     lo = copy.deepcopy(lo)
+    do_pos = "POSITION" in genes
+    do_load = "LOADOUT" in genes
 
-    # structural: add or drop a (non-capital) fleet
-    if rng.random() < 0.12 and len(lo.fleets) < n_fleets:
-        clone = copy.deepcopy(rng.choice(lo.fleets))
-        clone.is_capital = False
-        lo.fleets.append(clone)
-    elif rng.random() < 0.12 and len(lo.fleets) > 1:
-        del lo.fleets[rng.randrange(1, len(lo.fleets))]
+    # structural add/drop is a LOADOUT change, and never when targeting a single fleet
+    if do_load and only_fleet is None:
+        if rng.random() < 0.12 and len(lo.fleets) < n_fleets:
+            clone = copy.deepcopy(rng.choice(lo.fleets))
+            clone.is_capital = False
+            lo.fleets.append(clone)
+        elif rng.random() < 0.12 and len(lo.fleets) > 1:
+            del lo.fleets[rng.randrange(1, len(lo.fleets))]
 
     xs, ys, _ = P.grid(side)
-    for fl in lo.fleets:
-        if rng.random() < rate:
+    for idx, fl in enumerate(lo.fleets):
+        if only_fleet is not None and idx != only_fleet:
+            continue
+        if do_load and rng.random() < rate:
             _mutate_design(fl.design, pool, lo.race, tech_cap, rng)
-        if rng.random() < rate:
+        if do_load and rng.random() < rate:
             _mutate_commander(fl.commander, rng, fl.is_capital, lo.race)
-        if rng.random() < rate:
+        if do_pos and rng.random() < rate:
             fl.command = rng.randint(0, 7)
-        if rng.random() < rate:
+        if do_pos and rng.random() < rate:
             fl.cell = (rng.choice(xs), rng.choice(ys))
-        if rng.random() < rate:
+        if do_load and rng.random() < rate:
             fl.ships = max(1, fl.ships + rng.choice([-3, -1, 1, 3]))
-    return repair(lo, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng, n_fleets)
+    return repair(lo, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng,
+                  n_fleets, groups=tuple(genes))
+
+
+def mutate_fleet(lo: Loadout, i: int, group: str, pool: P.Pool, side: str, tech_cap: int,
+                 pp_budget: Optional[int], max_ships_per_fleet: int,
+                 rng: random.Random, n_fleets: int = 20) -> Loadout:
+    """Mutate ONLY fleet i within one gene group (the per-fleet coordinate step). rate=1.0
+    so the targeted fleet actually changes (the sub-mutators are themselves selective)."""
+    return mutate(lo, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng,
+                  rate=1.0, n_fleets=n_fleets, genes=(group,), only_fleet=i)
 
 
 def crossover(a: Loadout, b: Loadout, pool: P.Pool, side: str, tech_cap: int,
               pp_budget: Optional[int], max_ships_per_fleet: int,
-              rng: random.Random, n_fleets: int = 20) -> Loadout:
-    """Uniform per-fleet crossover (whole-fleet swaps), then repair()."""
+              rng: random.Random, n_fleets: int = 20,
+              groups: Tuple[str, ...] = ("POSITION", "LOADOUT")) -> Loadout:
+    """Uniform per-fleet crossover (whole-fleet swaps), then repair(groups)."""
     child = Loadout(race=a.race)
     for i in range(max(len(a.fleets), len(b.fleets))):
         src = a if rng.random() < 0.5 else b
@@ -421,4 +460,5 @@ def crossover(a: Loadout, b: Loadout, pool: P.Pool, side: str, tech_cap: int,
             child.fleets.append(copy.deepcopy(src.fleets[i]))
     if not child.fleets:
         child.fleets.append(copy.deepcopy(a.fleets[0]))
-    return repair(child, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng, n_fleets)
+    return repair(child, pool, side, tech_cap, pp_budget, max_ships_per_fleet, rng,
+                  n_fleets, groups=tuple(groups))

@@ -36,6 +36,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include "json_mini.h"
 
@@ -113,6 +114,27 @@ static CPlayer *make_pool_player(int aRace, int aTechCap)
 	return Player;
 }
 
+// Append ,"effects":[{type,amount,apply,target,range,period},...] for a component
+// (the component's declared <Effect> blocks). type is the CFleetEffect enum id; the
+// UI maps it to a name. Lets the pool tell e.g. a PSI weapon (has WE_PSI) from a plain one.
+static void emit_effects(std::ostringstream &o, CComponent *aComp)
+{
+	o << ",\"effects\":[";
+	CFleetEffectListStatic &L = aComp->get_effect_list();
+	for (int i = 0; i < L.length(); i++)
+	{
+		CFleetEffect *E = (CFleetEffect *)L.get(i);
+		if (i) o << ",";
+		o << "{\"type\":" << E->get_type()
+		  << ",\"amount\":" << E->get_amount()
+		  << ",\"apply\":" << E->get_apply_type()
+		  << ",\"target\":" << E->get_target()
+		  << ",\"range\":" << E->get_range()
+		  << ",\"period\":" << E->get_period() << "}";
+	}
+	o << "]";
+}
+
 static void do_pool(const JValue &aReq)
 {
 	int Race    = aReq["race"].as_int(1);
@@ -140,8 +162,55 @@ static void do_pool(const JValue &aReq)
 		comp[cat] << ",\"name\":\"";
 		json_append_escaped(comp[cat], Comp->get_name());
 		comp[cat] << "\"";
-		if (cat == CComponent::CC_WEAPON)   // weapon space -> how many fit per slot
-			comp[cat] << ",\"space\":" << ((CWeapon *)Comp)->get_space();
+		switch (cat)   // full per-category stats for the UI + eligibility rules
+		{
+			case CComponent::CC_WEAPON:
+			{
+				CWeapon *W = (CWeapon *)Comp;
+				comp[cat] << ",\"wtype\":" << W->get_weapon_type()     // 0 BM,1 MSL,2 PRJ,3 FGT
+						  << ",\"ar\":" << W->get_attacking_rate()
+						  << ",\"roll\":" << W->get_damage_roll()
+						  << ",\"dice\":" << W->get_damage_dice()
+						  << ",\"space\":" << W->get_space()           // how many fit per slot
+						  << ",\"cool\":" << W->get_cooling_time()
+						  << ",\"range\":" << W->get_range()
+						  << ",\"aof\":" << W->get_angle_of_fire()
+						  << ",\"wspeed\":" << W->get_speed();
+				break;
+			}
+			case CComponent::CC_ARMOR:
+			{
+				CArmor *A = (CArmor *)Comp;
+				comp[cat] << ",\"atype\":" << A->get_armor_type()      // 0 Norm,1 Bio,2 React
+						  << ",\"dr\":" << A->get_defense_rate()
+						  << ",\"hp_mult\":" << A->get_hp_multiplier();
+				break;
+			}
+			case CComponent::CC_DEVICE:
+			{
+				CDevice *D = (CDevice *)Comp;
+				comp[cat] << ",\"min_class\":" << D->get_min_class()
+						  << ",\"max_class\":" << D->get_max_class()
+						  << ",\"psi_only\":"    << (Comp->has_attribute(CComponent::CA_PSI_RACE_ONLY)     ? 1 : 0)
+						  << ",\"bio_only\":"    << (Comp->has_attribute(CComponent::CA_BIO_ARMOR_ONLY)     ? 1 : 0)
+						  << ",\"nonbio_only\":" << (Comp->has_attribute(CComponent::CA_NON_BIO_ARMOR_ONLY) ? 1 : 0);
+				break;
+			}
+			case CComponent::CC_COMPUTER:
+			{
+				CComputer *C = (CComputer *)Comp;
+				comp[cat] << ",\"ar\":" << C->get_attacking_rate()
+						  << ",\"dr\":" << C->get_defense_rate();
+				break;
+			}
+			case CComponent::CC_SHIELD:
+				comp[cat] << ",\"solidity\":" << ((CShield *)Comp)->get_deflection_solidity();
+				break;
+			case CComponent::CC_ENGINE:
+				comp[cat] << ",\"cruise\":" << ((CEngine *)Comp)->get_cruise_speed();
+				break;
+		}
+		emit_effects(comp[cat], Comp);
 		comp[cat] << "}";
 	}
 
@@ -312,7 +381,10 @@ static void build_design(const JValue &aD, CShipDesign *aOut)
 }
 
 // Build one side (race + fleets) into a CPlayer and populate its deployment plan.
-static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan)
+// If aFleetE is given, record fleet_id -> expected per-gun-shot damage E = roll*(dice+1)/2
+// of the fleet's (homogeneous) weapon, so the record parser can value raw incoming damage.
+static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan,
+						   std::map<int, double> *aFleetE = NULL)
 {
 	int Race = aSide["race"].as_int(1);
 	CPlayer *Player = make_player(aGameID, Race);
@@ -327,6 +399,18 @@ static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan
 
 		CShipDesign *Design = new CShipDesign();
 		build_design(F["design"], Design);
+
+		if (aFleetE)   // E = roll*(dice+1)/2 of the fleet's homogeneous weapon
+		{
+			double E = 0.0;
+			const JValue &W = F["design"]["weapons"];
+			if (W.size() > 0)
+			{
+				CWeapon *Wp = (CWeapon *)COMPONENT_TABLE->get_by_id(W[(size_t)0]["id"].as_int(0));
+				if (Wp) E = (double)Wp->get_damage_roll() * (Wp->get_damage_dice() + 1) / 2.0;
+			}
+			(*aFleetE)[fid] = E;
+		}
 
 		bool isCap = F["capital"].as_bool(false);
 
@@ -381,7 +465,72 @@ static long side_pp_lost(CBattleFleetList &aList)
 	return pp;
 }
 
-struct RepResult { int win; int turns; long pp_atk_lost; long pp_atk_dest; };
+struct FleetDmg { int id; int owner; long dealt; long taken; long avoided; };
+struct RepResult {
+	int win; int turns; long pp_atk_lost; long pp_atk_dest;
+	std::vector<FleetDmg> fleets;   // per-fleet damage (both sides) for this battle
+};
+
+// Sum per-fleet damage from the engine's OWN battle record (the F+H lines it already
+// accumulates). Each fire writes F (attacker/defender ids + shot count) immediately
+// followed by H (actual damage applied), so we pair them by adjacency:
+//   dealt[attacker]   += applied
+//   taken[defender]   += applied
+//   avoided[defender] += max(0, count*E[attacker] - applied)   // evaded + reduced
+// raw incoming (count*E) minus what landed = the damage the defender prevented.
+static void parse_fleet_damage(const char *aBuf, const std::map<int, double> &aFleetE,
+							   RepResult &aOut)
+{
+	if (!aBuf) return;
+	std::map<int, long> dealt, taken, avoided;
+	std::map<int, int>  owner;     // fleet id -> side game-id (1 attacker / 2 defender)
+	int pend_atk = -1, pend_def = -1; long pend_count = 0; bool have_F = false;
+
+	for (const char *p = aBuf; *p; )
+	{
+		const char *eol = strchr(p, '\n');
+		size_t len = eol ? (size_t)(eol - p) : strlen(p);
+		if (len >= 2 && p[0] == 'F' && p[1] == '/')
+		{
+			int fid, turn, ao, ai, dood, di;
+			if (sscanf(p, "F/%d/%d/%d/%d/%d/%d/", &fid, &turn, &ao, &ai, &dood, &di) == 6)
+			{
+				const char *e = p + len, *last = NULL, *prev = NULL;
+				for (const char *q = p; q < e; q++)        // count = 2nd-to-last field
+					if (*q == '/') { prev = last; last = q; }
+				pend_count = (prev && last) ? atol(prev + 1) : 0;
+				pend_atk = ai; pend_def = di; have_F = true;
+				owner[ai] = ao; owner[di] = dood;
+			}
+			else have_F = false;
+		}
+		else if (len >= 2 && p[0] == 'H' && p[1] == '/' && have_F)
+		{
+			int fid, turn, hit, miss, totdmg, sunk;
+			if (sscanf(p, "H/%d/%d/%d/%d/%d/%d/", &fid, &turn, &hit, &miss, &totdmg, &sunk) == 6)
+			{
+				dealt[pend_atk] += totdmg;
+				taken[pend_def] += totdmg;
+				std::map<int, double>::const_iterator it = aFleetE.find(pend_atk);
+				long raw = (long)(pend_count * (it != aFleetE.end() ? it->second : 0.0) + 0.5);
+				if (raw > totdmg) avoided[pend_def] += raw - totdmg;
+			}
+			have_F = false;
+		}
+		if (!eol) break;
+		p = eol + 1;
+	}
+
+	for (std::map<int, int>::iterator oi = owner.begin(); oi != owner.end(); ++oi)
+	{
+		FleetDmg fd;
+		fd.id = oi->first; fd.owner = oi->second;
+		fd.dealt   = dealt.count(fd.id)   ? dealt[fd.id]   : 0;
+		fd.taken   = taken.count(fd.id)   ? taken[fd.id]   : 0;
+		fd.avoided = avoided.count(fd.id) ? avoided[fd.id] : 0;
+		aOut.fleets.push_back(fd);
+	}
+}
 
 // Run ONE battle (called inside a forked child). Returns false if it couldn't deploy.
 static bool run_one_match(const JValue &aReq, unsigned long aSeed, RepResult &aOut)
@@ -389,9 +538,10 @@ static bool run_one_match(const JValue &aReq, unsigned long aSeed, RepResult &aO
 	seed_rng(aSeed);
 	int turn_cap = aReq["turn_cap"].as_int(1800);
 
+	std::map<int, double> fleetE;
 	CDefensePlan Offense, Defense;
-	CPlayer *Atk = build_side(aReq["attacker"], 1, &Offense);
-	CPlayer *Def = build_side(aReq["defender"], 2, &Defense);
+	CPlayer *Atk = build_side(aReq["attacker"], 1, &Offense, &fleetE);
+	CPlayer *Def = build_side(aReq["defender"], 2, &Defense, &fleetE);
 
 	CPlanet Planet; Planet.set_id(1); Planet.set_name("P");
 
@@ -407,6 +557,7 @@ static bool run_one_match(const JValue &aReq, unsigned long aSeed, RepResult &aO
 	aOut.turns = Battle.get_record()->get_turn();
 	aOut.pp_atk_lost = side_pp_lost(Battle.get_offense_battle_fleet_list());
 	aOut.pp_atk_dest = side_pp_lost(Battle.get_defense_battle_fleet_list());
+	parse_fleet_damage(Battle.get_record()->get_buffer(), fleetE, aOut);
 	return true;
 }
 
@@ -435,8 +586,10 @@ static double wilson_bound(int k, int n, int sign)
 
 struct MatchChild { pid_t pid; int fd; };
 
-// Fork one battle into a COW child; the child writes "OK win turns ppl ppd" (or
-// "ERR") to the pipe and exits. Returns false if fork/pipe failed (no slot).
+// Fork one battle into a COW child; the child writes one line and exits:
+//   OK <win> <turns> <ppl> <ppd> A <natk> <id>:<dealt>:<taken>:<avoided> ... D <ndef> ...
+// (or "ERR"). The per-fleet tail is small (<~2 KB for 40 fleets), well under the pipe
+// buffer, so the child never blocks before exiting. Returns false if fork/pipe failed.
 static bool spawn_match(const JValue &aReq, unsigned long aSeed, MatchChild &aOut)
 {
 	int fds[2];
@@ -447,7 +600,22 @@ static bool spawn_match(const JValue &aReq, unsigned long aSeed, MatchChild &aOu
 		close(fds[0]);
 		RepResult r;
 		if (run_one_match(aReq, aSeed, r))
-			dprintf(fds[1], "OK %d %d %ld %ld\n", r.win, r.turns, r.pp_atk_lost, r.pp_atk_dest);
+		{
+			std::ostringstream as, ds; int na = 0, nd = 0;
+			for (size_t i = 0; i < r.fleets.size(); i++)
+			{
+				const FleetDmg &fd = r.fleets[i];
+				std::ostringstream &t = (fd.owner == 1) ? as : ds;
+				((fd.owner == 1) ? na : nd)++;
+				t << " " << fd.id << ":" << fd.dealt << ":" << fd.taken << ":" << fd.avoided;
+			}
+			std::ostringstream os;
+			os << "OK " << r.win << " " << r.turns << " " << r.pp_atk_lost << " " << r.pp_atk_dest
+			   << " A " << na << as.str() << " D " << nd << ds.str() << "\n";
+			std::string out = os.str();
+			const char *q = out.c_str(); size_t n = out.size();
+			while (n) { ssize_t w = write(fds[1], q, n); if (w <= 0) break; q += (size_t)w; n -= (size_t)w; }
+		}
 		else
 			dprintf(fds[1], "ERR\n");
 		close(fds[1]);
@@ -458,6 +626,36 @@ static bool spawn_match(const JValue &aReq, unsigned long aSeed, MatchChild &aOu
 	aOut.pid = pid;
 	aOut.fd = fds[0];
 	return true;
+}
+
+// Accumulate one child's per-fleet tail ("... A <n> id:d:t:a ... D <n> ...") into the
+// parent's running maps (summed across replicates; averaged later over `completed`).
+static void parse_match_fleets(const std::string &aLine,
+							   std::map<int, long> &aDealt, std::map<int, long> &aTaken,
+							   std::map<int, long> &aAvoided, std::map<int, int> &aOwner)
+{
+	const char *s = aLine.c_str();
+	for (int pass = 0; pass < 2; pass++)
+	{
+		char mk = pass == 0 ? 'A' : 'D'; int side = pass == 0 ? 1 : 2;
+		const char *m = NULL;
+		for (const char *q = s; q[0] && q[1] && q[2]; q++)
+			if (q[0] == ' ' && q[1] == mk && q[2] == ' ') { m = q + 3; break; }
+		if (!m) continue;
+		int n = atoi(m);
+		while (*m && *m != ' ') m++;        // skip the count
+		for (int k = 0; k < n; k++)
+		{
+			while (*m == ' ') m++;
+			if (!*m) break;
+			int id; long d, t, a;
+			if (sscanf(m, "%d:%ld:%ld:%ld", &id, &d, &t, &a) == 4)
+			{
+				aDealt[id] += d; aTaken[id] += t; aAvoided[id] += a; aOwner[id] = side;
+			}
+			while (*m && *m != ' ') m++;     // advance to next tuple
+		}
+	}
 }
 
 // Run N replicates, each in a forked COW child (crash isolation + no global-state
@@ -473,6 +671,8 @@ static void do_match(const JValue &aReq)
 	int wins = 0, completed = 0, crashes = 0, cap_hits = 0;
 	long sum_turns = 0;
 	long long pp_lost_sum = 0, pp_dest_sum = 0;
+	std::map<int, long> g_dealt, g_taken, g_avoided;   // per-fleet damage, summed
+	std::map<int, int>  g_owner;                        // fleet id -> side (1/2)
 
 	// Run replicates concurrently across cores, each in its own COW child. The
 	// aggregate is order-independent (sums; each replicate's seed = mix_seed(base,k)),
@@ -512,17 +712,19 @@ static void do_match(const JValue &aReq)
 			if (active[i].pid == done) { idx = (int)i; break; }
 		if (idx < 0) continue;   // not one of our children
 
-		char buf[160];
-		ssize_t n = read(active[idx].fd, buf, sizeof(buf) - 1);
+		std::string acc; char rb[8192]; ssize_t rn;
+		while ((rn = read(active[idx].fd, rb, sizeof rb)) > 0) acc.append(rb, (size_t)rn);
 		close(active[idx].fd);
 		active.erase(active.begin() + idx);
 
 		int win, turns; long ppl, ppd;
-		if (n > 0 && buf[0] == 'O' && (buf[n] = 0, sscanf(buf, "OK %d %d %ld %ld", &win, &turns, &ppl, &ppd) == 4))
+		if (acc.size() >= 2 && acc[0] == 'O' &&
+			sscanf(acc.c_str(), "OK %d %d %ld %ld", &win, &turns, &ppl, &ppd) == 4)
 		{
 			wins += win; completed++; sum_turns += turns;
 			pp_lost_sum += ppl; pp_dest_sum += ppd;
 			if (turns >= turn_cap) cap_hits++;
+			parse_match_fleets(acc, g_dealt, g_taken, g_avoided, g_owner);
 		}
 		else crashes++;   // child died (signal) or failed to deploy
 
@@ -541,6 +743,20 @@ static void do_match(const JValue &aReq)
 	double appl = completed ? (double)pp_lost_sum / completed : 0.0;
 	double appd = completed ? (double)pp_dest_sum / completed : 0.0;
 
+	// per-fleet damage averaged over completed replicates, grouped by side
+	std::ostringstream af, df; bool aff = true, dff = true;
+	for (std::map<int, int>::iterator gi = g_owner.begin(); gi != g_owner.end(); ++gi)
+	{
+		int id = gi->first;
+		std::ostringstream &t = (gi->second == 1) ? af : df;
+		bool &ff = (gi->second == 1) ? aff : dff;
+		if (!ff) t << ","; ff = false;
+		t << "{\"id\":" << id
+		  << ",\"dealt\":"   << (completed ? (double)g_dealt[id]   / completed : 0.0)
+		  << ",\"taken\":"   << (completed ? (double)g_taken[id]   / completed : 0.0)
+		  << ",\"avoided\":" << (completed ? (double)g_avoided[id] / completed : 0.0) << "}";
+	}
+
 	std::ostringstream o;
 	o << "{\"ok\":true,\"cmd\":\"match\",\"seed\":" << base
 	  << ",\"replicates\":" << N << ",\"completed\":" << completed
@@ -551,7 +767,8 @@ static void do_match(const JValue &aReq)
 	  << ",\"cap_hits\":" << cap_hits << ",\"crashes\":" << crashes
 	  << ",\"attacker_pp_lost\":" << appl
 	  << ",\"attacker_pp_destroyed\":" << appd
-	  << ",\"econ\":" << (appd - appl) << "}";
+	  << ",\"econ\":" << (appd - appl)
+	  << ",\"fleets\":{\"attacker\":[" << af.str() << "],\"defender\":[" << df.str() << "]}}";
 	emit(o.str());
 }
 

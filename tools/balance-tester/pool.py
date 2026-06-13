@@ -59,6 +59,60 @@ MIN_TIER = 4
 # stays (31.0 > T5 Time-Wake 29.9, plus a unique anti-shield effect Black Hole lacks).
 WEAPON_EXCLUDE = {6203, 6305, 6306}
 
+# --- device eligibility ------------------------------------------------------
+# Weapon-type ids (engine EWeaponType), armor-type id (AT_BIO), and the WE_PSI weapon
+# effect id (CFleetEffect enum) used to tell a PSI weapon from a plain one.
+WT_BEAM, WT_MISSILE, WT_PROJECTILE = 0, 1, 2
+AT_BIO = 1
+WE_PSI = 62
+
+PSI_RACES = {7, 8}                      # Bosalian, Xeloss: the only Ability("PSI") races
+
+# Devices never worth a slot: Escape Pod (5523) & Homing Beacon (5524) give only
+# FE_COMMANDER_SURVIVAL (post-battle recovery, no combat effect); Space Mining (5525)
+# has no combat effect at all.
+DEVICE_EXCLUDE = {5523, 5524, 5525}
+
+# PSI-flavoured devices with NO Race("Psi") data prerequisite (so the engine pool would
+# otherwise offer them to anyone) that we still restrict to PSI races: Mind Protector
+# (5508), Psi Barrier (5520). The Race("Psi")-gated psi devices are already pool-excluded.
+PSI_RACE_DEVICES = {5508, 5520}
+
+
+def weapon_expected_damage(w: dict) -> float:
+    """E[per-gun-shot damage] = roll*(dice+1)/2 (display + DST)."""
+    return w.get("roll", 0) * (w.get("dice", 0) + 1) / 2.0
+
+
+def device_allowed(dev: dict, hull_class: int, weapon: Optional[dict],
+                   armor: Optional[dict], race: int) -> bool:
+    """Is this device legal/worthwhile on a design with the given hull class, (homogeneous)
+    weapon, armor, and race? Encodes the in-game prerequisites plus the requested rules."""
+    did = dev["id"]
+    if did in DEVICE_EXCLUDE:
+        return False
+    if not (dev.get("min_class", 1) <= hull_class <= dev.get("max_class", 99)):
+        return False
+    # game's own armor/race attributes (emitted from has_attribute)
+    if dev.get("bio_only") and (armor is None or armor.get("atype") != AT_BIO):
+        return False
+    if dev.get("nonbio_only") and (armor is not None and armor.get("atype") == AT_BIO):
+        return False
+    if dev.get("psi_only") and race not in PSI_RACES:
+        return False
+    # requested conditional rules
+    wt = weapon.get("wtype") if weapon else None
+    weff = {e["type"] for e in (weapon.get("effects") or [])} if weapon else set()
+    if did == 5505 and wt != WT_BEAM:            # High Energy Focus -> beam weapon
+        return False
+    if did == 5529 and wt != WT_PROJECTILE:      # Ballistic Accelerator -> projectile weapon
+        return False
+    if did == 5519 and WE_PSI not in weff:       # Mind Tracker -> PSI weapon
+        return False
+    if did in PSI_RACE_DEVICES and race not in PSI_RACES:   # Mind Protector, Psi Barrier
+        return False
+    return True
+
 # --- verified deploy grids (battlefield coords; step 200) ---------------------
 # Confirmed against siege_planet_result.cc / defense_plan_generic_result.cc:
 # attacker on low-x, defender on high-x, shared lateral y. Capital pinned to the
@@ -121,6 +175,29 @@ class Pool:
 
     def device_ids(self, race: int, tc: int = 999999) -> List[int]:
         return [c["id"] for c in self.category("DEV", race, tc)]
+
+    def devices(self, race: int, tc: int = 999999) -> List[dict]:
+        # full device dicts {id, level, name, min_class, max_class, psi/bio/nonbio_only, effects}
+        return list(self.category("DEV", race, tc))
+
+    def weapon_by_id(self, race: int, wid: int, tc: int = 999999):
+        for c in self.category("WPN", race, tc):
+            if c["id"] == wid:
+                return c
+        return None
+
+    def armor_by_id(self, race: int, aid: int, tc: int = 999999):
+        for c in self.category("ARMOR", race, tc):
+            if c["id"] == aid:
+                return c
+        return None
+
+    def eligible_devices(self, race: int, hull_class: int, weapon: dict,
+                         armor: dict, tc: int = 999999) -> List[dict]:
+        """Devices legal/worthwhile on a design with this hull class / weapon / armor /
+        race (see device_allowed): drops dead-weight, class-illegal and mismatched gear."""
+        return [d for d in self.devices(race, tc)
+                if device_allowed(d, hull_class, weapon, armor, race)]
 
     def weapons(self, race: int, tc: int = 999999) -> List[dict]:
         # [{id, level, space}, ...] — keep level >= MIN_TIER and drop tier-4 weapons
