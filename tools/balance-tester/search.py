@@ -43,15 +43,22 @@ def fitness(sim, pool: P.Pool, cand: G.Loadout, opponents: List[G.Loadout],
     Defender: MAXIMIN - the WORST (min) (def-win, -econ) over the attacker gauntlet.
     """
     if not opponents:
+        cand._killed = cand._lost = 0.0
         return (0.0, 0.0)
     vals: List[Fitness] = []
+    killed = lost = 0.0     # PP this candidate destroyed / lost (for the kill:loss ratio)
     for opp in opponents:
         if side == "attacker":
             c = T.evaluate_cell(sim, pool, cand, opp, tech_cap, base_seed, replicates, conc=conc)
             vals.append((c.win_rate, c.econ))
+            killed += c.raw.get("attacker_pp_destroyed", 0.0)
+            lost += c.raw.get("attacker_pp_lost", 0.0)
         else:
             c = T.evaluate_cell(sim, pool, opp, cand, tech_cap, base_seed, replicates, conc=conc)
             vals.append((1.0 - c.win_rate, -c.econ))
+            killed += c.raw.get("attacker_pp_lost", 0.0)       # defender's kills
+            lost += c.raw.get("attacker_pp_destroyed", 0.0)    # defender's losses
+    cand._killed, cand._lost = killed, lost
     if side == "attacker":
         n = len(vals)
         return (sum(v[0] for v in vals) / n, sum(v[1] for v in vals) / n)
@@ -116,7 +123,7 @@ def best_response(sim, pool: P.Pool, opponents: List[G.Loadout], side: str,
         else:
             stale += 1
         if log:
-            log(gen, scored[0][1], best[1])
+            log(gen, scored[0][1], best[1], best[0])   # also pass the best loadout
         if stale >= patience:
             break
 
@@ -132,11 +139,13 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
                 on_gen: Optional[Callable] = None, mpool=None) -> dict:
     rng = rng or random.Random(1)
 
-    # per-generation progress hook: on_gen(round, side, gen, total_gens, best_primary_fit)
+    # per-generation hook: on_gen(round, side, gen, total, best_primary_fit, killed, lost)
     def _gl(rnd: int, side: str):
         if not on_gen:
             return None
-        return lambda g, cur, best: on_gen(rnd, side, g + 1, gens, best[0])
+        return lambda g, cur, bf, bl=None: on_gen(
+            rnd, side, g + 1, gens, bf[0],
+            getattr(bl, "_killed", 0.0), getattr(bl, "_lost", 0.0))
 
     # Stage 1: attacker best-response vs the fixed human-set defender -> seed library.
     log("Stage 1: attacker best-response vs the fixed defender")

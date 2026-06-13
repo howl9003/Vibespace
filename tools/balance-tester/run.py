@@ -37,6 +37,16 @@ def _crashes(M):
     return sum(c.raw["crashes"] for row in M for c in row)
 
 
+def _pp(v: float) -> str:
+    """Compact PP formatting: 1.2M / 340K / 850."""
+    v = float(v)
+    if v >= 1e6:
+        return f"{v / 1e6:.1f}M"
+    if v >= 1e3:
+        return f"{v / 1e3:.0f}K"
+    return f"{v:.0f}"
+
+
 def _verdict(value: float, kind: str) -> str:
     if value > 0.55:
         who = f"**siege favors the ATTACKER** (equilibrium attacker win-rate {value:.2f})"
@@ -125,17 +135,21 @@ def run_stackelberg(sim, pool, sc, rng, outdir, mpool=None):
                               "scenario": sc.name, "history": history_acc,
                               "library_size": lib_size, "leaders": leaders_acc})
 
-    def on_gen(rnd, side, gen, total, best_fit):
-        # per-generation heartbeat so the UI shows where the oracle is in the cycle
-        if side == "seed":
-            stage = f"stage 1 · seed attacker · gen {gen}/{total} · best {best_fit:.3f}"
-        else:
-            stage = f"round {rnd} · {side} oracle · gen {gen}/{total} · best {best_fit:.3f}"
+    def on_gen(rnd, side, gen, total, best_fit, killed=0.0, lost=0.0):
+        # per-generation heartbeat so the UI shows where the oracle is in the cycle,
+        # plus the best loadout's kill-PP : loss-PP (the secondary objective).
+        ratio = ("∞" if lost <= 0 < killed else
+                 ("—" if killed <= 0 and lost <= 0 else f"{killed / lost:.2f}×"))
+        kl = f"kill:loss {_pp(killed)}:{_pp(lost)} ({ratio})"
+        where = ("stage 1 · seed attacker" if side == "seed"
+                 else f"round {rnd} · {side} oracle")
+        stage = f"{where} · gen {gen}/{total} · best {best_fit:.3f} · {kl}"
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
                               "scenario": sc.name, "history": history_acc,
                               "leaders": leaders_acc, "stage": stage,
                               "gen": gen, "gen_total": total,
-                              "best_fit": round(best_fit, 4), "round": rnd, "oracle": side})
+                              "best_fit": round(best_fit, 4), "round": rnd, "oracle": side,
+                              "kill_pp": round(killed), "loss_pp": round(lost)})
 
     out = S.stackelberg(sim, pool, atk, dfn, fixed_def,
                         rounds=sc.rounds, epsilon=sc.epsilon, mu=sc.mu, lam=sc.lam,
