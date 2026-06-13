@@ -1444,6 +1444,18 @@ CPlayerTable::rename_player(CPlayer* aPlayer, const char* aNewName)
 	return true;
 }
 
+int
+CPlayerTable::count_non_bot_players()
+{
+	int Count = 0;
+	for (int i=0 ; i<length() ; i++)
+	{
+		CPlayer *P = (CPlayer *)get(i);
+		if (P != NULL && !P->is_bot()) Count++;
+	}
+	return Count;   // includes the Empire (caller subtracts 1 for the human count)
+}
+
 void
 CPlayerTable::give_planet_to_owner( CPlanet *aPlanet )
 {

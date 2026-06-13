@@ -1398,6 +1398,10 @@ class CPlayerTable: public CSortedList
 		// get_by_name() still finds it under the new name. set_name() alone leaves
 		// the index stale. Returns false if the new name is already taken.
 		bool rename_player(CPlayer* aPlayer, const char* aNewName);
+		// Count of players that are NOT bots (still includes the Empire). The human
+		// account count is this minus 1; used for the max-player registration cap so
+		// NPC bots don't consume human slots.
+		int count_non_bot_players();
 
 //		void remove_old_player();
 

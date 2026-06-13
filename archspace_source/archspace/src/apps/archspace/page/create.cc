@@ -119,7 +119,9 @@ CPageCreate::handle(CConnection &aConnection)
 		return output("ending_score.html");
 	}
 
-	if (PLAYER_TABLE->length() > CGame::mMaxUser)
+	// Count only human accounts (exclude NPC bots and the Empire) against the cap,
+	// so the bot population can't fill up the server's player slots.
+	if (PLAYER_TABLE->count_non_bot_players()-1 >= CGame::mMaxUser)
 	{
 		ITEM("ERROR_MESSAGE",
 				(char *)format(
