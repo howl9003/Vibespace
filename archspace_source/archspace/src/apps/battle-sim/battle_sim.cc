@@ -35,6 +35,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 #include "json_mini.h"
 
@@ -432,8 +433,36 @@ static double wilson_bound(int k, int n, int sign)
 	return r;
 }
 
+struct MatchChild { pid_t pid; int fd; };
+
+// Fork one battle into a COW child; the child writes "OK win turns ppl ppd" (or
+// "ERR") to the pipe and exits. Returns false if fork/pipe failed (no slot).
+static bool spawn_match(const JValue &aReq, unsigned long aSeed, MatchChild &aOut)
+{
+	int fds[2];
+	if (pipe(fds) != 0) return false;
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		close(fds[0]);
+		RepResult r;
+		if (run_one_match(aReq, aSeed, r))
+			dprintf(fds[1], "OK %d %d %ld %ld\n", r.win, r.turns, r.pp_atk_lost, r.pp_atk_dest);
+		else
+			dprintf(fds[1], "ERR\n");
+		close(fds[1]);
+		_exit(0);
+	}
+	if (pid < 0) { close(fds[0]); close(fds[1]); return false; }
+	close(fds[1]);
+	aOut.pid = pid;
+	aOut.fd = fds[0];
+	return true;
+}
+
 // Run N replicates, each in a forked COW child (crash isolation + no global-state
-// accumulation in the long-lived parent), and aggregate into a MatchResult.
+// accumulation in the long-lived parent), concurrently across CPU cores, and
+// aggregate into a MatchResult.
 static void do_match(const JValue &aReq)
 {
 	int N = aReq["replicates"].as_int(20);
@@ -445,30 +474,43 @@ static void do_match(const JValue &aReq)
 	long sum_turns = 0;
 	long long pp_lost_sum = 0, pp_dest_sum = 0;
 
-	for (int k = 0; k < N; k++)
-	{
-		int fds[2];
-		if (pipe(fds) != 0) { crashes++; continue; }
+	// Run replicates concurrently across cores, each in its own COW child. The
+	// aggregate is order-independent (sums; each replicate's seed = mix_seed(base,k)),
+	// so parallelism yields the exact same MatchResult — give Docker/WSL more cores
+	// to go faster. Concurrency is capped at the CPU count.
+	long ncpu = sysconf(_SC_NPROCESSORS_ONLN);
+	int conc = (ncpu > 0) ? (int)ncpu : 1;
+	if (conc > N) conc = N;
 
-		pid_t pid = fork();
-		if (pid == 0)
+	std::vector<MatchChild> active;
+	int next = 0;
+	while (next < N && (int)active.size() < conc)
+	{
+		MatchChild c;
+		if (spawn_match(aReq, mix_seed(base, next), c)) active.push_back(c);
+		else crashes++;
+		next++;
+	}
+
+	while (!active.empty())
+	{
+		pid_t done = waitpid(-1, NULL, 0);
+		if (done <= 0)   // unexpected; drain so we don't spin
 		{
-			close(fds[0]);
-			RepResult r;
-			if (run_one_match(aReq, mix_seed(base, k), r))
-				dprintf(fds[1], "OK %d %d %ld %ld\n", r.win, r.turns, r.pp_atk_lost, r.pp_atk_dest);
-			else
-				dprintf(fds[1], "ERR\n");
-			close(fds[1]);
-			_exit(0);
+			for (size_t i = 0; i < active.size(); i++) { close(active[i].fd); crashes++; }
+			active.clear();
+			break;
 		}
-		close(fds[1]);
+
+		int idx = -1;
+		for (size_t i = 0; i < active.size(); i++)
+			if (active[i].pid == done) { idx = (int)i; break; }
+		if (idx < 0) continue;   // not one of our children
 
 		char buf[160];
-		ssize_t n = (pid > 0) ? read(fds[0], buf, sizeof(buf) - 1) : -1;
-		close(fds[0]);
-		int status = 0;
-		if (pid > 0) waitpid(pid, &status, 0);
+		ssize_t n = read(active[idx].fd, buf, sizeof(buf) - 1);
+		close(active[idx].fd);
+		active.erase(active.begin() + idx);
 
 		int win, turns; long ppl, ppd;
 		if (n > 0 && buf[0] == 'O' && (buf[n] = 0, sscanf(buf, "OK %d %d %ld %ld", &win, &turns, &ppl, &ppd) == 4))
@@ -478,6 +520,14 @@ static void do_match(const JValue &aReq)
 			if (turns >= turn_cap) cap_hits++;
 		}
 		else crashes++;   // child died (signal) or failed to deploy
+
+		if (next < N)   // refill the freed slot
+		{
+			MatchChild c;
+			if (spawn_match(aReq, mix_seed(base, next), c)) active.push_back(c);
+			else crashes++;
+			next++;
+		}
 	}
 
 	double wr   = completed ? (double)wins / completed : 0.0;

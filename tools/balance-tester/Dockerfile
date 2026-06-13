@@ -60,7 +60,7 @@ RUN cd /app/archspace_source/archspace/src \
     && sh set_platform linux \
     && touch libs/util/lex.cc \
     && (cd libs && make) \
-    && (cd apps/archspace && make archspace) \
+    && (cd apps/archspace && make -j"$(nproc)" archspace) \
     && (cd apps/battle-sim && make -f Makefile.Linux battle-sim) \
     && test -x apps/battle-sim/battle-sim \
     # smoke: run from the battle-sim dir so spikeA.config's relative script
