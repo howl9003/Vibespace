@@ -72,6 +72,17 @@ class CFleetEffect
 			FE_PSI_DEFENSE_PANALTY,
 			FE_PSI_NEUTRALIZATION_FIELD,
 			FE_SPACE_MINING,
+			// --- CVS-merge: new fleet-effect types (directional armor, shield
+			// integrity, psi static damage, synergy, fast retreat). Enum + name
+			// mapping added so the new components parse; full battle-application
+			// for directional armor is part of the combat-mechanics port. ---
+			FE_FRONT_ARMOR,
+			FE_REAR_ARMOR,
+			FE_SIDE_ARMOR,
+			FE_SHIELD_INTEGRITY,
+			FE_PSI_STATIC_DAMAGE,
+			FE_SYNGERY,
+			FE_FAST_RETREAT,
 				// WE = Weapon Effect
 			WE_SHIELD_PIERCING,
 			WE_ARMOR_PIERCING,
