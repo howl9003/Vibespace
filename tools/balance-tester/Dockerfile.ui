@@ -1,0 +1,44 @@
+# Streamlit dashboard for the balance-tester — a thin layer on top of the engine
+# image (archspace-balance) that just adds Streamlit. The UI (ui/app.py) is
+# read-only: it visualizes a run's report.json / run_state.json and never calls
+# the engine, so no recompile is needed here.
+#
+# Build (after `archspace-balance` exists — see Dockerfile):
+#   docker build -f tools/balance-tester/Dockerfile.ui -t archspace-balance-ui .
+#
+# Run, pointing it at a run dir under the mounted runs/ folder:
+#   # Windows PowerShell:
+#   docker run --rm -p 8501:8501 -v ${PWD}\runs:/app/tools/balance-tester/runs `
+#       archspace-balance-ui -- runs/win
+#   # Linux/macOS/WSL:
+#   docker run --rm -p 8501:8501 -v "$PWD/runs:/app/tools/balance-tester/runs" \
+#       archspace-balance-ui -- runs/win
+# Then open http://localhost:8501
+
+FROM archspace-balance
+
+USER root
+# Ubuntu 24.04 marks the system Python as externally-managed (PEP 668); this is a
+# throwaway image, so install Streamlit straight into it with --break-system-packages.
+RUN apt-get update && apt-get install -y --no-install-recommends python3-pip \
+    && pip3 install --no-cache-dir --break-system-packages streamlit \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app/tools/balance-tester
+
+# Refresh the tool tree from the build context (the base archspace-balance image
+# may predate the latest UI/orchestrator changes), then vendor the in-game battle
+# viewer + the ship/race image assets the config viewer & replay reuse. Assets are
+# git-tracked .gif under www-new; the viewer JS is the live HTML5 replacement.
+COPY tools/balance-tester /app/tools/balance-tester
+COPY docker/web-overrides/js/battle-replay.js /app/tools/balance-tester/ui/vendor/battle-replay.js
+COPY archspace_source/archspace/www-new/image/as_game/fleet /app/tools/balance-tester/ui/assets/image/as_game/fleet
+COPY archspace_source/archspace/www-new/image/as_game/race  /app/tools/balance-tester/ui/assets/image/as_game/race
+
+EXPOSE 8501
+
+# --server.headless skips the first-run email prompt + browser auto-open;
+# 0.0.0.0 makes it reachable through the published port. Args after the image
+# name (e.g. `-- runs/win`) are forwarded to ui/app.py as the run directory.
+ENTRYPOINT ["streamlit", "run", "ui/app.py", \
+            "--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true"]

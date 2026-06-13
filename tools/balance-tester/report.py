@@ -14,23 +14,47 @@ CMD_NAMES = ["NORMAL", "FORMATION", "PENETRATE", "FLANK", "RESERVE",
 
 
 def decode_loadout(lo: G.Loadout, pool: P.Pool, tech_cap: int) -> dict:
-    """Human-readable decode of a loadout (hulls/weapons/commander/cells)."""
+    """Human-readable decode of a loadout (hulls/weapons/commander/cells).
+
+    Carries both the numeric ids (used by the text report) and game names +
+    pinned best parts + the full raw commander attributes (used by the UI). Names
+    are None until the engine `pool` query exposes them, and the UI falls back to
+    the id in that case.
+    """
+    race = lo.race
+    comp, shld, engn = (pool.best("COMP", race, tech_cap),
+                        pool.best("SHLD", race, tech_cap),
+                        pool.best("ENGN", race, tech_cap))
+    pinned = {
+        "computer": comp, "computer_name": pool.component_name("COMP", comp, race, tech_cap),
+        "shield": shld, "shield_name": pool.component_name("SHLD", shld, race, tech_cap),
+        "engine": engn, "engine_name": pool.component_name("ENGN", engn, race, tech_cap),
+    }
     fleets = []
     for fl in lo.fleets:
         c = fl.commander
         fleets.append({
             "capital": fl.is_capital,
             "hull": fl.design.hull,
+            "hull_name": pool.hull_name(fl.design.hull, race, tech_cap),
             "armor": fl.design.armor,
+            "armor_name": pool.component_name("ARMOR", fl.design.armor, race, tech_cap),
             "weapons": fl.design.weapons,
+            "weapon_names": [pool.component_name("WPN", w, race, tech_cap)
+                             for w in fl.design.weapons],
             "devices": fl.design.devices,
+            "device_names": [pool.component_name("DEV", d, race, tech_cap)
+                             for d in fl.design.devices],
+            "pinned": pinned,
             "ships": fl.ships,
             "stance": CMD_NAMES[fl.command],
             "cell": list(fl.cell),
             "commander": {
                 "siege": P.BB_VAL[c.bb], "detection": P.DET_VAL[c.det],
                 "maneuver": P.MAN_VAL[c.man], "fleet_commanding": P.FC_VAL[c.fc],
-                "special": c.special, "armada": "A" if fl.is_capital else "-",
+                "efficiency": 100,
+                "special": c.special, "racial": c.racial,
+                "armada": "A" if fl.is_capital else "-",
                 "points": [c.bb, c.det, c.man, c.fc],
             },
         })

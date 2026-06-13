@@ -35,6 +35,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <set>
 
 #include "json_mini.h"
 
@@ -57,6 +58,27 @@ static void emit_error(const char *aWhat)
 	std::ostringstream o;
 	o << "{\"ok\":false,\"error\":\"" << aWhat << "\"}";
 	emit(o.str());
+}
+
+// Append a string as JSON-escaped content (no surrounding quotes).
+static void json_append_escaped(std::ostringstream &o, const char *s)
+{
+	if (!s) return;
+	for (const char *p = s; *p; p++)
+	{
+		unsigned char c = (unsigned char)*p;
+		switch (c)
+		{
+			case '"':  o << "\\\""; break;
+			case '\\': o << "\\\\"; break;
+			case '\n': o << "\\n";  break;
+			case '\r': o << "\\r";  break;
+			case '\t': o << "\\t";  break;
+			default:
+				if (c < 0x20) { char b[8]; snprintf(b, sizeof b, "\\u%04x", c); o << b; }
+				else o << (char)c;
+		}
+	}
 }
 
 // =====================  pool query  =========================================
@@ -115,6 +137,9 @@ static void do_pool(const JValue &aReq)
 		first[cat] = false;
 		comp[cat] << "{\"id\":" << Comp->get_id()
 				  << ",\"level\":" << Comp->get_level();
+		comp[cat] << ",\"name\":\"";
+		json_append_escaped(comp[cat], Comp->get_name());
+		comp[cat] << "\"";
 		if (cat == CComponent::CC_WEAPON)   // weapon space -> how many fit per slot
 			comp[cat] << ",\"space\":" << ((CWeapon *)Comp)->get_space();
 		comp[cat] << "}";
@@ -134,7 +159,10 @@ static void do_pool(const JValue &aReq)
 			  << ",\"space\":" << S->get_space()
 			  << ",\"slot\":" << S->get_slot()          // space per weapon slot
 			  << ",\"weapon_slots\":" << S->get_weapon()
-			  << ",\"device_slots\":" << S->get_device() << "}";
+			  << ",\"device_slots\":" << S->get_device();
+		hulls << ",\"name\":\"";
+		json_append_escaped(hulls, S->get_name());
+		hulls << "\"}";
 	}
 
 	std::ostringstream o;
@@ -473,6 +501,146 @@ static void do_match(const JValue &aReq)
 	emit(o.str());
 }
 
+// =====================  replay (single battle -> turn log)  =================
+//
+// Reproduces ONE deterministic battle (replicate k of a matchup) and serializes
+// it in the exact line log format the in-game HTML5 viewer (battle-replay.js)
+// reads: FL roster + per-turn M position samples + D disables + ENDTURN. The log
+// is built ENTIRELY from the battle's own public fleet state each turn, so this
+// needs no change to the shared game-engine code (no CBattleRecord/save()/DB).
+// Fire lines (F/H) are omitted — the engine only records those into its private
+// buffer — so the replay shows fleet movement/positions/morale, not weapon arcs.
+
+static void emit_roster(std::ostringstream &log, CBattleFleetList &aList,
+						int aOwner, const char *aPrefix)
+{
+	for (int i = 0; i < aList.length(); i++)
+	{
+		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
+		char nick[32]; snprintf(nick, sizeof nick, "%s%d", aPrefix, i + 1);
+		// FL/owner/id/nick/admiral/class/NONE/ships/x/y/dir/cmd
+		log << "FL/" << aOwner << "/" << BF->get_id() << "/" << nick
+			<< "/-/-/NONE/" << BF->count_active_ship()
+			<< "/" << BF->get_x() << "/" << BF->get_y()
+			<< "/" << BF->get_direction() << "/" << BF->get_status() << "\n";
+	}
+}
+
+static void emit_positions(std::ostringstream &log, int aTurn,
+						   CBattleFleetList &aList, int aOwner)
+{
+	for (int i = 0; i < aList.length(); i++)
+	{
+		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
+		// M/turn/owner/id/x/y/dir/cmd/substatus/ships
+		log << "M/" << aTurn << "/" << aOwner << "/" << BF->get_id()
+			<< "/" << BF->get_x() << "/" << BF->get_y()
+			<< "/" << BF->get_direction() << "/" << BF->get_status()
+			<< "/" << BF->get_substatus() << "/" << BF->count_active_ship() << "\n";
+	}
+}
+
+static void emit_disables(std::ostringstream &log, int aTurn, CBattleFleetList &aList,
+						  int aOwner, std::set<int> &aDead)
+{
+	for (int i = 0; i < aList.length(); i++)
+	{
+		CBattleFleet *BF = (CBattleFleet *)aList.get(i);
+		if (BF->count_active_ship() <= 0 && aDead.find(BF->get_id()) == aDead.end())
+		{
+			aDead.insert(BF->get_id());
+			log << "D/" << aTurn << "/" << aOwner << "/" << BF->get_id() << "\n";
+		}
+	}
+}
+
+static std::string build_replay_json(const JValue &aReq)
+{
+	int turn_cap     = aReq["turn_cap"].as_int(1800);
+	unsigned long base = (unsigned long)aReq["seed"].as_int(12345);
+	int k            = aReq["replicate"].as_int(0);
+	seed_rng(mix_seed(base, k));   // same seed the payoff matrix used for cell k
+
+	CDefensePlan Offense, Defense;
+	CPlayer *Atk = build_side(aReq["attacker"], 1, &Offense);
+	CPlayer *Def = build_side(aReq["defender"], 2, &Defense);
+	int atkRace = aReq["attacker"]["race"].as_int(1);
+	int defRace = aReq["defender"]["race"].as_int(1);
+	int atkId = Atk->get_game_id(), defId = Def->get_game_id();
+
+	CPlanet Planet; Planet.set_id(1); Planet.set_name("P");
+	CBattle Battle(CBattle::WAR_SIEGE, Atk, Def, (void *)&Planet);
+	if (!Battle.init_battle_fleet(&Offense, Atk->get_fleet_list(), Atk->get_admiral_list(),
+								  &Defense, Def->get_fleet_list(), Def->get_admiral_list()))
+		return std::string("{\"ok\":false,\"error\":\"replay deploy failed\"}");
+
+	CBattleFleetList &OL = Battle.get_offense_battle_fleet_list();
+	CBattleFleetList &DL = Battle.get_defense_battle_fleet_list();
+
+	std::ostringstream log;
+	log << "ATTACKER/Attacker/" << atkId << "/" << atkRace << "\n";
+	log << "DEFENDER/Defender/" << defId << "/" << defRace << "\n";
+	log << "FIELD/Siege\n";
+	emit_roster(log, OL, atkId, "A");
+	emit_roster(log, DL, defId, "D");
+
+	std::set<int> deadA, deadD;
+	const int SAMPLE = 10;   // position sample cadence (matches the engine recorder)
+	int turn = 0;
+	while (Battle.run_step())
+	{
+		turn++;
+		if (turn % SAMPLE == 0)
+		{
+			emit_positions(log, turn, OL, atkId);
+			emit_positions(log, turn, DL, defId);
+		}
+		emit_disables(log, turn, OL, atkId, deadA);
+		emit_disables(log, turn, DL, defId, deadD);
+		if (turn >= turn_cap) break;
+	}
+	emit_positions(log, turn, OL, atkId);   // final frame
+	emit_positions(log, turn, DL, defId);
+	log << "ENDTURN/" << turn << "\n";
+
+	int win = Battle.attacker_win() ? 1 : 0;
+
+	std::ostringstream o;
+	o << "{\"ok\":true,\"cmd\":\"replay\",\"seed\":" << base
+	  << ",\"replicate\":" << k << ",\"win\":" << win
+	  << ",\"turns\":" << turn << ",\"log\":\"";
+	json_append_escaped(o, log.str().c_str());
+	o << "\"}";
+	return o.str();
+}
+
+// Run the replay in a forked child (crash isolation, like do_match) and stream
+// the (possibly large) JSON line back through a pipe.
+static void do_replay(const JValue &aReq)
+{
+	int fds[2];
+	if (pipe(fds) != 0) { emit_error("replay pipe"); return; }
+
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		close(fds[0]);
+		std::string out = build_replay_json(aReq);
+		const char *p = out.c_str(); size_t n = out.size();
+		while (n) { ssize_t w = write(fds[1], p, n); if (w <= 0) break; p += (size_t)w; n -= (size_t)w; }
+		close(fds[1]); _exit(0);
+	}
+	close(fds[1]);
+
+	std::string acc; char buf[8192]; ssize_t r;
+	while ((r = read(fds[0], buf, sizeof buf)) > 0) acc.append(buf, (size_t)r);
+	close(fds[0]);
+	if (pid > 0) waitpid(pid, NULL, 0);
+
+	if (acc.empty()) emit_error("replay crashed");
+	else             emit(acc);
+}
+
 // =====================  server loop  ========================================
 
 static void serve()
@@ -487,6 +655,7 @@ static void serve()
 		std::string cmd = req["cmd"].as_str();
 		if (cmd == "pool")      do_pool(req);
 		else if (cmd == "match") do_match(req);
+		else if (cmd == "replay") do_replay(req);
 		else if (cmd == "ping") emit("{\"ok\":true,\"cmd\":\"ping\"}");
 		else if (cmd == "quit") break;
 		else                    emit_error("unknown cmd");

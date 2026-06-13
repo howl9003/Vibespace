@@ -63,7 +63,7 @@ def _scenario_dict(sc: SC.Scenario) -> dict:
         return {"race": s.race, "tech_cap": s.tech_cap, "pp_budget": s.pp_budget,
                 "n_fleets": s.n_fleets, "max_ships": s.max_ships}
     return {"name": sc.name, "attacker": side(sc.attacker), "defender": side(sc.defender),
-            "base_seed": sc.base_seed, "turn_cap": sc.turn_cap}
+            "base_seed": sc.base_seed, "turn_cap": sc.turn_cap, "replicates": sc.replicates}
 
 
 def run_assess(sim, pool, sc, rng, outdir):
@@ -72,8 +72,11 @@ def run_assess(sim, pool, sc, rng, outdir):
     A_pop = [_sample(pool, "attacker", atk, rng) for _ in range(sc.population)]
     D_pop = [_sample(pool, "defender", dfn, rng) for _ in range(sc.population)]
 
+    dec_atk = [R.decode_loadout(a, pool, atk.tech_cap) for a in A_pop]
+    dec_dfn = [R.decode_loadout(d, pool, dfn.tech_cap) for d in D_pop]
     _write_state(outdir, {"phase": "evaluating matrix", "mode": "assess",
-                          "n": sc.population})
+                          "n": sc.population,
+                          "configs": {"attackers": dec_atk, "defenders": dec_dfn}})
     M = T.payoff_matrix(sim, pool, A_pop, D_pop, atk.tech_cap,
                         base_seed=sc.base_seed, replicates=sc.replicates,
                         turn_cap=sc.turn_cap)
@@ -84,8 +87,9 @@ def run_assess(sim, pool, sc, rng, outdir):
         "scenario": _scenario_dict(sc), "mode": "assess",
         "verdict": _verdict(an["value"], an["kind"]),
         "analysis": an, "matrix": W,
-        "loadouts": {"attackers": [R.decode_loadout(a, pool, atk.tech_cap) for a in A_pop],
-                     "defenders": [R.decode_loadout(d, pool, dfn.tech_cap) for d in D_pop]},
+        "loadouts": {"attackers": dec_atk, "defenders": dec_dfn,
+                     "attackers_encoded": [G.encode_side(a, pool, atk.tech_cap, 100) for a in A_pop],
+                     "defenders_encoded": [G.encode_side(d, pool, dfn.tech_cap, 200) for d in D_pop]},
         "anomalies": {"crashes": _crashes(M)},
     }
 
@@ -102,10 +106,18 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
                               "log": msg, "history": history_acc})
 
-    def on_progress(history, lib_size):
+    def on_progress(history, lib_size, robust_def=None, a_best=None, attacker_lib=None):
+        leaders = {}
+        if robust_def is not None:
+            leaders["robust_defender"] = R.decode_loadout(robust_def, pool, dfn.tech_cap)
+        if a_best is not None:
+            leaders["best_exploit"] = R.decode_loadout(a_best, pool, atk.tech_cap)
+        if attacker_lib is not None:
+            leaders["attacker_library"] = [R.decode_loadout(a, pool, atk.tech_cap)
+                                           for a in attacker_lib]
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
                               "scenario": sc.name, "history": list(history),
-                              "library_size": lib_size})
+                              "library_size": lib_size, "leaders": leaders})
 
     out = S.stackelberg(sim, pool, atk, dfn, fixed_def,
                         rounds=sc.rounds, epsilon=sc.epsilon, mu=sc.mu, lam=sc.lam,
@@ -131,8 +143,11 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
         "verdict": verdict, "analysis": an, "matrix": W, "history": out["history"],
         "loadouts": {
             "robust_defender": R.decode_loadout(robust, pool, dfn.tech_cap),
+            "robust_defender_encoded": G.encode_side(robust, pool, dfn.tech_cap, 200),
             "attackers": [R.decode_loadout(a, pool, atk.tech_cap) for a in out["attacker_library"]],
+            "attackers_encoded": [G.encode_side(a, pool, atk.tech_cap, 100) for a in out["attacker_library"]],
             "defenders": [R.decode_loadout(d, pool, dfn.tech_cap) for d in defenders],
+            "defenders_encoded": [G.encode_side(d, pool, dfn.tech_cap, 200) for d in defenders],
         },
         "anomalies": {"crashes": _crashes(M)},
     }

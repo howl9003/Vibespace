@@ -96,6 +96,15 @@ class BattleSim:
         request["cmd"] = "match"
         return self._rpc(request)
 
+    def replay(self, attacker: Dict[str, Any], defender: Dict[str, Any],
+               seed: int, replicate: int = 0, turn_cap: int = 1800) -> Dict[str, Any]:
+        """Reproduce ONE deterministic battle (replicate k) and return its
+        turn-by-turn log in the in-game battle-replay.js format:
+        {"ok", "win", "turns", "log"}."""
+        return self._rpc({"cmd": "replay", "attacker": attacker, "defender": defender,
+                          "seed": int(seed), "replicate": int(replicate),
+                          "turn_cap": int(turn_cap)})
+
     # -- lifecycle -----------------------------------------------------------
     def close(self) -> None:
         if self.proc.poll() is not None:

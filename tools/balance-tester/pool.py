@@ -89,3 +89,16 @@ class Pool:
         """Highest-level component in a category (the pinned linear-ladder part)."""
         comps = self.category(cat, race, tc)
         return max(comps, key=lambda c: c["level"])["id"] if comps else 0
+
+    # names (present once the engine `pool` query emits them; None otherwise) -----
+    def hull_name(self, hull_id: int, race: int, tc: int = 999999):
+        for h in self.hulls(race, tc):
+            if h["id"] == hull_id:
+                return h.get("name")
+        return None
+
+    def component_name(self, cat: str, cid: int, race: int, tc: int = 999999):
+        for c in self.category(cat, race, tc):
+            if c["id"] == cid:
+                return c.get("name")
+        return None

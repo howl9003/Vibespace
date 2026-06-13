@@ -148,7 +148,7 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
         log(f"Round {rnd}: robust defender worst-case def-win={robust_worstcase_defwin:.3f}; "
             f"best new attacker exploit win={best_exploit_atkwin:.3f}")
         if on_progress:
-            on_progress(history, len(attacker_lib))
+            on_progress(history, len(attacker_lib), robust_def, a_best, attacker_lib)
 
         # Converged if the best new attacker barely beats the robust defender, or the
         # exploit stopped improving round-over-round.
