@@ -99,12 +99,13 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
     fixed_def = _sample(pool, "defender", dfn, rng)
 
     history_acc = []
+    leaders_acc = {}
 
     def log(*a):
         msg = " ".join(str(x) for x in a)
         print(msg)
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
-                              "log": msg, "history": history_acc})
+                              "log": msg, "history": history_acc, "leaders": leaders_acc})
 
     def on_progress(history, lib_size, robust_def=None, a_best=None, attacker_lib=None):
         leaders = {}
@@ -115,14 +116,30 @@ def run_stackelberg(sim, pool, sc, rng, outdir):
         if attacker_lib is not None:
             leaders["attacker_library"] = [R.decode_loadout(a, pool, atk.tech_cap)
                                            for a in attacker_lib]
+        history_acc[:] = list(history)
+        leaders_acc.clear()
+        leaders_acc.update(leaders)
         _write_state(outdir, {"phase": "search", "mode": "stackelberg",
-                              "scenario": sc.name, "history": list(history),
-                              "library_size": lib_size, "leaders": leaders})
+                              "scenario": sc.name, "history": history_acc,
+                              "library_size": lib_size, "leaders": leaders_acc})
+
+    def on_gen(rnd, side, gen, total, best_fit):
+        # per-generation heartbeat so the UI shows where the oracle is in the cycle
+        if side == "seed":
+            stage = f"stage 1 · seed attacker · gen {gen}/{total} · best {best_fit:.3f}"
+        else:
+            stage = f"round {rnd} · {side} oracle · gen {gen}/{total} · best {best_fit:.3f}"
+        _write_state(outdir, {"phase": "search", "mode": "stackelberg",
+                              "scenario": sc.name, "history": history_acc,
+                              "leaders": leaders_acc, "stage": stage,
+                              "gen": gen, "gen_total": total,
+                              "best_fit": round(best_fit, 4), "round": rnd, "oracle": side})
 
     out = S.stackelberg(sim, pool, atk, dfn, fixed_def,
                         rounds=sc.rounds, epsilon=sc.epsilon, mu=sc.mu, lam=sc.lam,
                         gens=sc.generations, replicates=sc.replicates,
-                        base_seed=sc.base_seed, rng=rng, log=log, on_progress=on_progress)
+                        base_seed=sc.base_seed, rng=rng, log=log,
+                        on_progress=on_progress, on_gen=on_gen)
     history_acc[:] = out["history"]
 
     # Final meta-game: attacker library vs {fixed, robust} defenders.

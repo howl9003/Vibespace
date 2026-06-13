@@ -115,13 +115,21 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
                 mu: int = 8, lam: int = 16, gens: int = 10, replicates: int = 20,
                 base_seed: int = 12345, rng: Optional[random.Random] = None,
                 log: Callable = print,
-                on_progress: Optional[Callable] = None) -> dict:
+                on_progress: Optional[Callable] = None,
+                on_gen: Optional[Callable] = None) -> dict:
     rng = rng or random.Random(1)
+
+    # per-generation progress hook: on_gen(round, side, gen, total_gens, best_primary_fit)
+    def _gl(rnd: int, side: str):
+        if not on_gen:
+            return None
+        return lambda g, cur, best: on_gen(rnd, side, g + 1, gens, best[0])
 
     # Stage 1: attacker best-response vs the fixed human-set defender -> seed library.
     log("Stage 1: attacker best-response vs the fixed defender")
     a0, a0fit = best_response(sim, pool, [fixed_defender], "attacker", atk_con,
-                              mu, lam, gens, replicates, base_seed, rng=rng)
+                              mu, lam, gens, replicates, base_seed, rng=rng,
+                              log=_gl(0, "seed"))
     attacker_lib: List[G.Loadout] = [a0]
     log(f"  seed attacker beats the fixed defender at win-rate {a0fit[0]:.3f}")
 
@@ -132,11 +140,13 @@ def stackelberg(sim, pool: P.Pool, atk_con: Constraints, def_con: Constraints,
     for rnd in range(rounds):
         d_best, d_fit = best_response(sim, pool, attacker_lib, "defender", def_con,
                                       mu, lam, gens, replicates, base_seed,
-                                      seed_pop=[robust_def], rng=rng)
+                                      seed_pop=[robust_def], rng=rng,
+                                      log=_gl(rnd, "defender"))
         robust_def = d_best
         a_best, a_fit = best_response(sim, pool, [robust_def], "attacker", atk_con,
                                       mu, lam, gens, replicates, base_seed,
-                                      seed_pop=attacker_lib, rng=rng)
+                                      seed_pop=attacker_lib, rng=rng,
+                                      log=_gl(rnd, "attacker"))
         attacker_lib.append(a_best)
 
         robust_worstcase_defwin = d_fit[0]     # defender's worst case over the gauntlet

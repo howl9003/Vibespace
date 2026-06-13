@@ -356,6 +356,17 @@ def render_progress(state: dict):
     c3.metric("Elapsed", f"{state.get('elapsed', 0):.0f}s")
     if "library_size" in state:
         st.caption(f"attacker library size: {state['library_size']}")
+
+    # live position in the optimization cycle (round · oracle · generation)
+    stage = state.get("stage")
+    if stage:
+        st.markdown(f"**{stage}**")
+        g, gt = state.get("gen"), state.get("gen_total")
+        if g and gt:
+            st.progress(min(1.0, g / gt), text=f"generation {g} / {gt}")
+    elif state.get("log"):
+        st.caption(state["log"])
+
     render_convergence(state.get("history"))
 
 
