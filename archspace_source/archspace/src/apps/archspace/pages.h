@@ -240,6 +240,16 @@ class CBotPageDeletePlayer: public CBotPage
 	virtual bool handle(CConnection &aConnection);
 };
 
+// CVS-merge: end-of-game score dump (bot/admin page)
+class CBotPageEndScore: public CBotPage
+{
+   public:
+    CBotPageEndScore():CBotPage() {}
+    virtual ~CBotPageEndScore() {}
+	virtual const char *get_name() { return "/archspace/a0s/end_score.as"; }
+	virtual bool handle(CConnection &aConnection);
+};
+
 //--------------------------------------------------    GAME
 /**
 */
