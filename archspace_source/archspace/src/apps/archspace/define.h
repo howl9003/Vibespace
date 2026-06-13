@@ -178,4 +178,7 @@
 #define DEVICE_MAX_NUMBER			5
 #define WEAPON_MAX_NUMBER			7
 
+/* CVS-merge: ship hull classes 1..12 (was 10; +Astral Carrier, Suncrusher) */
+#define MAX_SHIP_CLASS				12
+
 #endif

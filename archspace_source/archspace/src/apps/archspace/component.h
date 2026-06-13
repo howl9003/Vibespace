@@ -378,8 +378,8 @@ extern TZone gEngineZone;
 class CEngine: public CComponent
 {	private:
 		int
-			mBattleSpeed[10],
-			mBattleMobility[10],
+			mBattleSpeed[12],	// CVS-merge: MAX_SHIP_CLASS (was 10)
+			mBattleMobility[12],
 			mCruiseSpeed;
 	public:
 		CEngine();
