@@ -59,12 +59,12 @@ CPageShipDesignConfirm::handler( CPlayer *aPlayer)
 	}
 	else
 	{
-		int
-			SchematicsReq = aPlayer->count_tech_by_category( CTech::TYPE_SCHEMATICS );
-		if (SchematicsReq < Size - 10)
+		// CVS-merge (specific-schematic unlock): a megaclass hull requires the
+		// player to own that exact hull's schematic tech (1599 + class).
+		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Size) ))
 		{
 			ITEM("ERROR_MESSAGE",
-					GETTEXT("This hull requires more Schematics research before it can be constructed."));
+					GETTEXT("This hull requires its specific Schematics research before it can be constructed."));
 			return output("fleet/ship_design_error.html");
 		}
 	}

@@ -181,4 +181,17 @@
 /* CVS-merge: ship hull classes 1..12 (was 10; +Astral Carrier, Suncrusher) */
 #define MAX_SHIP_CLASS				12
 
+/* CVS-merge: ship schematic techs. The schematic for hull class C is tech
+ * (SHIP_SCHEMATIC_TECH_BASE + C), i.e. class 1 -> 1600 ... class 12 -> 1611.
+ * Classes 1..FIRST_MEGACLASS-1 are unlocked purely by the Matter-Energy tech
+ * count, so their schematics are LOCKED from acquisition (auto-grant, research
+ * and the black market) -- they exist in the script for flavour only. Classes
+ * FIRST_MEGACLASS..MAX_SHIP_CLASS are gated on the player owning that hull's
+ * own specific schematic tech. */
+#define SHIP_SCHEMATIC_TECH_BASE	1599
+#define SHIP_SCHEMATIC_TECH(c)		(SHIP_SCHEMATIC_TECH_BASE + (c))
+#define FIRST_MEGACLASS				11
+#define IS_LOCKED_SHIP_SCHEMATIC(id)	\
+	((id) >= SHIP_SCHEMATIC_TECH(1) && (id) <= SHIP_SCHEMATIC_TECH(FIRST_MEGACLASS - 1))
+
 #endif

@@ -2494,6 +2494,10 @@ CPlayer::set_available_tech_list()
 		int
 			TechID = Tech->get_id();
 
+		// CVS-merge: schematics for the ME-gated classes 1..10 are locked from
+		// research; only the megaclass schematics (11..) are researchable.
+		if (IS_LOCKED_SHIP_SCHEMATIC(TechID)) continue;
+
 		if ((!mTechList.get_by_id(TechID))&&(Tech->evaluate(this)))
 		{
 			mAvailableTechList.add_tech(Tech);
@@ -2540,6 +2544,10 @@ CPlayer::discover_basic_techs()
 	{
 		CTech
 			*Tech = (CTech*)TECH_TABLE->get(i);
+
+		// CVS-merge: do not auto-grant the locked class 1..10 ship schematics,
+		// even though they are flagged Basic in the script.
+		if (IS_LOCKED_SHIP_SCHEMATIC(Tech->get_id())) continue;
 
 		if (Tech->is_attribute(CTech::ATTR_BASIC))
 		{

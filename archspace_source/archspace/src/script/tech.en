@@ -2,10 +2,10 @@
 # 12XX: info(INFO), 
 # 13XX: matter(MATR) 
 # 14XX: life(LIFE)
-# Project: ³ª¿À´Â Project ¹øÈ£
-# Component: ³ª¿À´Â Component ¹øÈ£(ÀÇ ¹­À½)
-# Spy: ³ª¿À´Â »õ Special Ops ¹øÈ£
-# Control ModelÀº race script¿Í µ¿ÀÏ. ´Ü, ¾È ¾²´Â °ÍÀº ÀÖÀ½.
+# Project: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Project ï¿½ï¿½È£
+# Component: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Component ï¿½ï¿½È£(ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+# Spy: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Special Ops ï¿½ï¿½È£
+# Control Modelï¿½ï¿½ race scriptï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 # Control : Environment, Growth, Efficiency, Genius, Production,
 #      Facility Cost, Military, Ship Mobility, Commerce, Spy,
 #      Diplomacy, Ship Defense, Ship Attack,
@@ -4315,9 +4315,15 @@
 <Astral Carrier Schematics>
 {
 	Number(1610),
+#	cvs-merge: class 1-10 schematics (incl. Doomstar/1609) are locked from play,
+#	so this no longer chains through 1609. Gated directly on the end-game research
+#	techs the Doomstar schematic used, to keep Astral Carrier an end-game unlock.
 	<Prerequisite>
 	[
-        Tech(1609),
+        Tech(1334),
+        Tech(1225),
+        Tech(1131),
+        Tech(1426),
         Tech(1227),
         Tech(1135)
 	],

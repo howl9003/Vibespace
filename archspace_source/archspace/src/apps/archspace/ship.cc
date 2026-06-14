@@ -342,15 +342,14 @@ CShipSizeTable::available_size_list_html(CPlayer *aPlayer)
 						Ship->get_class(), Ship->get_name());
 	}
 
-	// CVS-merge (hybrid unlock): classes 11-12 (Astral Carrier, Suncrusher) are
-	// gated on Schematics (SSCH) techs -- one extra megaclass per schematics tech,
-	// up to 2. Classes 1-10 keep the Matter-Energy formula above unchanged.
-	int Schematics = aPlayer->count_tech_by_category( CTech::TYPE_SCHEMATICS );
-	if (Schematics > MAX_SHIP_CLASS - 10) Schematics = MAX_SHIP_CLASS - 10;
-	for (int i=10 ; i<10+Schematics ; i++)
+	// CVS-merge (specific-schematic unlock): each megaclass (11..MAX_SHIP_CLASS)
+	// is offered only if the player owns that hull's own schematic tech. Classes
+	// 1-10 keep the Matter-Energy formula above unchanged.
+	for (int Class=FIRST_MEGACLASS ; Class<=MAX_SHIP_CLASS ; Class++)
 	{
+		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Class) )) continue;
 		CShipSize *
-			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4001 + i);
+			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + Class);
 		if (Ship)
 			SizeList.format("<OPTION VALUE=\"%d\">%s</OPTION>\n",
 							Ship->get_class(), Ship->get_name());
@@ -428,13 +427,13 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 						Ship->get_device(), dec2unit(Ship->get_cost()));
 	}
 
-	// CVS-merge (hybrid unlock): schematics-gated megaclasses 11-12.
-	int SchematicsInfo = aPlayer->count_tech_by_category( CTech::TYPE_SCHEMATICS );
-	if (SchematicsInfo > MAX_SHIP_CLASS - 10) SchematicsInfo = MAX_SHIP_CLASS - 10;
-	for (int i=10 ; i<10+SchematicsInfo ; i++)
+	// CVS-merge (specific-schematic unlock): megaclasses 11..MAX_SHIP_CLASS each
+	// require the player to own that hull's own schematic tech.
+	for (int Class=FIRST_MEGACLASS ; Class<=MAX_SHIP_CLASS ; Class++)
 	{
+		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Class) )) continue;
 		CShipSize *
-			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4001 + i);
+			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + Class);
 		if (!Ship) continue;
 		SizeInfo.format("<TR ALIGN=\"CENTER\">"
 						"<TD CLASS=\"tabletxt\" WIDTH=\"35\">"
@@ -446,7 +445,7 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 						"<TD CLASS=\"tabletxt\" WIDTH=\"80\">%d</TD>"
 						"<TD CLASS=\"tabletxt\" WIDTH=\"100\">%s</TD>"
 						"</TR>\n",
-						i+1, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
+						Class, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
 						Ship->get_slot(),
 						Ship->get_device(), dec2unit(Ship->get_cost()));
 	}
