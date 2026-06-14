@@ -106,7 +106,9 @@ CRank::initialize_from_player(CPlayer *aPlayer, int aType)
 			CKnownTechList *
 				KnownTechList = aPlayer->get_tech_list();
 			mPower = KnownTechList->get_power();
-			mNumber = KnownTechList->length();
+			// Displayed "Techs" count excludes the locked class 1-10 schematics
+			// so the ranking tops out at the obtainable total (190).
+			mNumber = KnownTechList->count_obtainable();
 		}
 		break;
 

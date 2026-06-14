@@ -372,6 +372,12 @@ class CKnownTechList: public CSortedList, public CStore
 
 		int count_by_category( int aType );
 
+		// Known techs the player could actually acquire -- excludes the locked
+		// class 1-10 ship schematics (IS_LOCKED_SHIP_SCHEMATIC). Used for the
+		// displayed tech total so it tops out at the obtainable count (190),
+		// matching the all-techs ending bonus.
+		int count_obtainable();
+
 		CKnownTech* get_by_id(int aTechID);
 
 		inline int get_power() { return mPower; }
