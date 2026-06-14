@@ -116,7 +116,7 @@
 	Description("The size of a small moon, the Astral Carrier is capable of housing an entire fleet within. Although all races desire to command an armada of Astral Carriers, only a few possess the capability to construct one, and even fewer are capable of deploying more than a handful of these juggernauts in battle."),
 	Class(11),
 	Space(27200),
-	Weapon(7),
+	Weapon(8),
 	Slot(3400),
 	Device(5),
 	Cost(73984000)
@@ -127,7 +127,7 @@
 	Description("A small number of races eventually progress beyond even the mighty Astral Carrier to construct the Suncrusher. One can only hope to imagine the destruction a single one of these can cause, and barely comprehend how it is even capable of mobility. Though it possesses fearsome weapon capabilities, sufficient firepower to destroy entire planets, its sheer size convinces enemies to surrender without even trying. It truly is terror's physical manifestation."),
 	Class(12),
 	Space(48000),
-	Weapon(7),
+	Weapon(10),
 	Slot(4800),
 	Device(5),
 	Cost(230400000)
