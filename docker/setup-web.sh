@@ -74,6 +74,24 @@ if [ -d "$FLEETIMG" ]; then
     find "$WWW/image/as_game/fleet" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1a5) Trabotulin (CVS-merge 11th race) art. A brand-new race, so NONE of its
+#      images ship in the tarball -- they exist only under www-new. Overlay the
+#      specific Trabotulin assets (the create-screen tile, the in-game race art,
+#      and the info icon) so the create screen and the race dashboard resolve.
+#      No-clobber (`cp -n`, tarball wins), consistent with the overlays above --
+#      these are new files, so nothing is ever overwritten.
+TRAB="$SRC_TREE/www-new/image"
+if [ -d "$TRAB/as_game/race/trabotulin" ]; then
+    echo "[web] adding Trabotulin race art (from www-new)"
+    mkdir -p "$WWW/image/as_game/race/trabotulin" \
+             "$WWW/image/as_login/create_character" \
+             "$WWW/image/as_game/info"
+    cp -rn "$TRAB/as_game/race/trabotulin"/. "$WWW/image/as_game/race/trabotulin"/ 2>/dev/null || true
+    cp -n  "$TRAB/as_login/create_character/create_trabotulin.gif" "$WWW/image/as_login/create_character"/ 2>/dev/null || true
+    cp -n  "$TRAB/as_game/info/symbol_trabotulin.gif"              "$WWW/image/as_game/info"/ 2>/dev/null || true
+    find "$WWW/image/as_game/race/trabotulin" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+fi
+
 # 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
 #     with a CSS-grid + named-iframe shell; same look, modern + mobile).
 OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
