@@ -1,15 +1,12 @@
 #include "tech.h"
 #include "prerequisite.h"
 
-static char *mTechTypeName[] = { "INFO", "LIFE", "MATR", "SOCL", "UPG", "SSCH", "AMATR" };
+static char *mTechTypeName[] = { "INFO", "LIFE", "MATR", "SOCL" };
 static char *mTechTypeDescription[] = {
 	"Information Science",
 	"Life Science",
 	"Matter-Energy Science",
-	"Social Science",
-	"Upgrade",
-	"Schematics",
-	"Advanced Matter-Energy Science"
+	"Social Science"
 };
 static char *mTechAttributeName[] = { "Basic", "Normal", "Innate" };
 

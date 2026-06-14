@@ -279,10 +279,16 @@ CPageFormNewFleetConfirm::handler(CPlayer *aPlayer)
 		COMMANDER_STAT_TITLE(EXP, "Exp", 0, 10);
 		COMMANDER_STAT_TITLE(FLEET_COMMANDING, "FC", 0, 10);
 		COMMANDER_STAT_TITLE(EFFICIENCY, "Eff", 0, 10);
-		COMMANDER_STAT_TITLE(OFFENSE, "OS", 0, 10);
-		COMMANDER_STAT_TITLE(DEFENSE, "DS", 0, 10);
+		COMMANDER_STAT_TITLE(SIEGE_PLANET, "SP", 0, 10);
+		COMMANDER_STAT_TITLE(BLOCKADE, "BL", 0, 10);
+		COMMANDER_STAT_TITLE(RAID, "RD", 0, 10);
+		COMMANDER_STAT_TITLE(PRIVATEER, "PV", 0, 10);
+		COMMANDER_STAT_TITLE(SIEGE_REPELLING, "SR", 0, 10);
+		COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "BB", 0, 10);
+		COMMANDER_STAT_TITLE(PREVENT_RAID, "PR", 0, 10);
 		COMMANDER_STAT_TITLE(MANEUVER, "MV", 0, 10);
 		COMMANDER_STAT_TITLE(DETECTION, "DE", 0, 10);
+		COMMANDER_STAT_TITLE(INTERPRETATION, "IN", 0, 10);
 		COMMANDER_STAT_TITLE(ARMADA_CLASS, "AC", 1, 10);
 		COMMANDER_STAT_TITLE(ABILITY, "Ability", 1, 10);
 #undef COMMANDER_STAT_TITLE
@@ -334,10 +340,16 @@ CPageFormNewFleetConfirm::handler(CPlayer *aPlayer)
 					COMMANDER_STAT(EXP, get_exp);
 					COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding);
 					COMMANDER_STAT(EFFICIENCY, get_real_efficiency);
-					COMMANDER_STAT(OFFENSE, get_overall_attack);
-					COMMANDER_STAT(DEFENSE, get_overall_defense);
+					COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level);
+					COMMANDER_STAT(BLOCKADE, get_blockade_level);
+					COMMANDER_STAT(RAID, get_raid_level);
+					COMMANDER_STAT(PRIVATEER, get_privateer_level);
+					COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level);
+					COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level);
+					COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level);
 					COMMANDER_STAT(MANEUVER, get_maneuver_level);
 					COMMANDER_STAT(DETECTION, get_detection_level);
+					COMMANDER_STAT(INTERPRETATION, get_interpretation_level);
 #undef COMMANDER_STAT
 #define COMMANDER_STAT(enum, function) \
 					if (aPreference->hasCommanderStat(CPreference::enum))\

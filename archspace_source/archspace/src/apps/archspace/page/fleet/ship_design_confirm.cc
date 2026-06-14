@@ -39,36 +39,21 @@ CPageShipDesignConfirm::handler( CPlayer *aPlayer)
 	QUERY("SHIP_SIZE", SizeString);
 	int
 		Size = as_atoi(SizeString);
-	// CVS-merge (hybrid unlock): classes 1-10 gate on Matter-Energy techs (as
-	// before); classes 11-12 (Astral Carrier, Suncrusher) gate on Schematics techs.
-	if (Size <= 10)
+	int 
+		TechReq = aPlayer->count_tech_by_category( CTech::TYPE_MATTER_ENERGY ) / 2;
+
+	TechReq += 2;
+	if(TechReq < 5)
 	{
-		int
-			TechReq = aPlayer->count_tech_by_category( CTech::TYPE_MATTER_ENERGY ) / 2;
-		TechReq += 2;
-		if(TechReq < 5)
-		{
-			TechReq = 5;
-		}
-		if(TechReq < Size)
-		{
-			ITEM("ERROR_MESSAGE",
-					GETTEXT("You seem to be trying to build a ship larger then the number of Matter Energy techs would allow, please gain more tech or choose a smaller ship."));
-			return output("fleet/ship_design_error.html");
-		}
+		TechReq == 5;
 	}
-	else
+	if(TechReq < Size)
 	{
-		// CVS-merge (specific-schematic unlock): a megaclass hull requires the
-		// player to own that exact hull's schematic tech (1599 + class).
-		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Size) ))
-		{
-			ITEM("ERROR_MESSAGE",
-					GETTEXT("This hull requires its specific Schematics research before it can be constructed."));
-			return output("fleet/ship_design_error.html");
-		}
+		ITEM("ERROR_MESSAGE",
+				GETTEXT("You seem to be trying to build a ship larger then the number of Matter Energy techs would allow, please gain more tech or choose a smaller ship."));
+		return output("fleet/ship_design_error.html");
 	}
-	if (Size<1 || Size>MAX_SHIP_CLASS)
+	if (Size<1 || Size>10)
 	{
 		ITEM("ERROR_MESSAGE",
 				GETTEXT("Ship size is not valid."));

@@ -828,79 +828,6 @@ CBattleFleet::init_common()
 			NewEffect = new CFleetEffect( CFleetEffect::FE_CRITICAL_HIT, mCommander->get_level()/4, CFleetEffect::AT_ABSOLUTE );
  			add_static_effect( NewEffect );
 			break;
-		// --- CVS-merge: new commander racial abilities (ported from CVSRoot) ---
-		case CAdmiral::RA_TRAJECTORY_AUGMENTATION :
-			NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_AR, mCommander->get_level()*3 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_DAMAGE, mCommander->get_level(), CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_MANAGEMENT_PROTOCOL :
-			NewEffect = new CFleetEffect( CFleetEffect::FE_SPEED, 10+mCommander->get_level()*2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_DEFENSE, mCommander->get_level()*2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_AR, mCommander->get_level(), CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_EFFICIENCY, mCommander->get_level(), CFleetEffect::AT_ABSOLUTE );
-			add_static_effect( NewEffect );
-			mMoraleModifier -= 10;
-			break;
-		case CAdmiral::RA_TACTICAL_GENIUS :
-			mBerserkModifier -= 5;
-			mMoraleModifier -= 15;
-			NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, mCommander->get_level() / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_ABSOLUTE );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_SHIELD_DISRUPTER :
-			NewEffect = new CFleetEffect( CFleetEffect::FE_AR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_DEFENSIVE_MATRIX :
-			mMoraleModifier -= 10;
-			mBerserkModifier -= 10;
-			NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, mCommander->get_level() * 5 / 4, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_CONSCIOUSNESS_CRYSTAL :
-			NewEffect = new CFleetEffect( CFleetEffect::FE_BEAM_DAMAGE, mCommander->get_level() * 5 / 4, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_AR, mCommander->get_level() * 3 / 4, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_DAMAGE, mCommander->get_level() * 3 / 4, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_ATTACK, mCommander->get_level() * 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_CRUSADER :
-			mMoraleModifier -= 20;
-			mBerserkModifier += 10;
-			mAttribute += COMPLETE_CLOAKING_DETECTION;
-			NewEffect = new CFleetEffect( CFleetEffect::FE_DAMAGE, mCommander->get_level() * 5 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_COOLING_TIME, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_IMPINGEMENT_NEUTRALIZATION_FIELD :
-			mMoraleModifier -= 30;
-			mBerserkModifier -= 30;
-			NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			// CVS original also granted FE_SHIELD_INTEGRITY here; that effect type is
-			// not yet in this engine's CFleetEffect set (lives with S4's combat-mechanics
-			// port) -- the impenetrable-shield grant below covers the shield role for now.
-			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_SHIELD, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
-			add_static_effect( NewEffect );
-			break;
-		case CAdmiral::RA_ARMADA_SYNERGY_SPECIALIST :
-			mMoraleModifier -= 40;
-			NewEffect = new CFleetEffect( CFleetEffect::FE_EFFICIENCY, mCommander->get_level() * 2, CFleetEffect::AT_ABSOLUTE );
-			add_static_effect( NewEffect );
-			break;
 	}
 
 	// under effect things
@@ -3565,11 +3492,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 		CCEff = OffenseCapitalCommander->get_armada_commanding_effect_to_efficiency();
 	if (mWarType == WAR_SIEGE)
 	{
-		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::OFFENSE);
+		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::SIEGE_PLANET);
 	}
 	else if (mWarType == WAR_BLOCKADE)
 	{
-		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::OFFENSE);
+		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::BLOCKADE);
 	}
 
 	for (int i=0 ; i<mOffenseFleetList.length() ; i++)
@@ -3624,11 +3551,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 
 		if (mWarType == WAR_SIEGE)
 		{
-			Skill = Admiral->get_overall_attack() + ActualCCSkill;
+			Skill = Admiral->get_overall_attack() + Admiral->get_siege_planet_level() + ActualCCSkill;
 		}
 		else if (mWarType == WAR_BLOCKADE)
 		{
-			Skill = Admiral->get_overall_attack() + ActualCCSkill;
+			Skill = Admiral->get_overall_attack() + Admiral->get_blockade_level() + ActualCCSkill;
 		}
 		else
 		{
@@ -3663,11 +3590,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 	CCEff = DefenseCapitalCommander->get_armada_commanding_effect_to_efficiency();
 	if (mWarType == WAR_SIEGE)
 	{
-		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::DEFENSE);
+		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::SIEGE_REPELLING);
 	}
 	else if (mWarType == WAR_BLOCKADE)
 	{
-		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::DEFENSE);
+		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::BREAK_BLOCKADE);
 	}
 
 	for (int i=0 ; i<mDefenseFleetList.length() ; i++)
@@ -3722,11 +3649,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 
 		if (mWarType == WAR_SIEGE)
 		{
-			Skill = Admiral->get_overall_defense() +  ActualCCSkill;
+			Skill = Admiral->get_overall_defense() + Admiral->get_siege_repelling_level() + ActualCCSkill;
 		}
 		else if (mWarType == WAR_BLOCKADE)
 		{
-			Skill = Admiral->get_overall_defense() +  ActualCCSkill;
+			Skill = Admiral->get_overall_defense() + Admiral->get_break_blockade_level() + ActualCCSkill;
 		}
 		else
 		{
@@ -5506,7 +5433,7 @@ CBattle::raid_fleet_detection_check()
 
 	// by raid bonus
 	CAdmiral *Admiral = BattleFleet->get_admiral();
-	StealthScore += Admiral->get_overall_attack()*5;
+	StealthScore += Admiral->get_raid_level()*5;
 
 	if (!mDefenseFleetList.length()) return false;
 
@@ -5520,7 +5447,7 @@ CBattle::raid_fleet_detection_check()
 		int DetectionScore = 10;
 
 		DetectionScore += Admiral->get_detection_level()*2;
-		DetectionScore += Admiral->get_overall_defense()*2;
+		DetectionScore += Admiral->get_prevent_raid_level()*2;
 
 		DetectionScore += Planet->get_building().get(BUILDING_MILITARY_BASE);
 		int Chance;
@@ -5699,13 +5626,13 @@ CBattle::raid_bomb()
 	CAdmiral *
 		Admiral = RaidFleet->get_admiral();
 
-	int Bonus = Admiral->get_overall_attack();
+	int Bonus = Admiral->get_raid_level();
 
 	for(int i=0; i<mDefenseFleetList.length(); i++)
 	{
 		CBattleFleet *Fleet = (CBattleFleet*)mDefenseFleetList.get(i);
 		CAdmiral *Admiral = Fleet->get_admiral();
-		Bonus -= Admiral->get_overall_defense();
+		Bonus -= Admiral->get_prevent_raid_level();
 	}
 
 	int ShipSize = RaidFleet->get_size();
@@ -5954,7 +5881,7 @@ CBattle::privateer_fleet_detection_check(bool aBattle)
 
 	// by privateer bonus
 	CAdmiral *Admiral = PrivateerFleet->get_admiral();
-	StealthScore += Admiral->get_overall_attack()*5;
+	StealthScore += Admiral->get_privateer_level()*5;
 
 	if (!mDefenseFleetList.length()) return false;
 

@@ -284,26 +284,6 @@ CKnownTechList::count_by_category( int aType )
 	return Known;
 }
 
-int
-CKnownTechList::count_obtainable()
-{
-	// Count known techs excluding the locked class 1-10 ship schematics, which
-	// can no longer be acquired (IS_LOCKED_SHIP_SCHEMATIC). Legacy players who
-	// still hold one from the pre-lock build won't inflate the displayed total
-	// past the obtainable count (190).
-	int
-		Known = 0;
-
-	for( int i = 0; i < length(); i++ ){
-		CKnownTech
-			*Tech = (CKnownTech*)get(i);
-
-		if( Tech && !IS_LOCKED_SHIP_SCHEMATIC(Tech->get_id()) ) Known++;
-	}
-
-	return Known;
-}
-
 CString &
 CKnownTechList::query()
 {

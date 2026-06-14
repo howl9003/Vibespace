@@ -460,21 +460,10 @@ CBlackMarket::create_new_tech()
 	}
 	CTechList*
 		techList = TECH_TABLE->get_by_level( level );
-	// CVS-merge: never auction the locked class 1..10 ship schematics. Re-roll
-	// within this level a few times; give up quietly if we only hit locked ones.
+	int
+		techIndex = number( techList->length() )-1;
 	CTech*
-		tech = NULL;
-	for (int tries=0 ; tries<8 ; tries++)
-	{
-		int techIndex = number( techList->length() )-1;
-		CTech *candidate = (CTech*)techList->get(techIndex);
-		if (candidate && !IS_LOCKED_SHIP_SCHEMATIC(candidate->get_id()))
-		{
-			tech = candidate;
-			break;
-		}
-	}
-	if (!tech) return;
+		tech = (CTech*)techList->get(techIndex);
 	add_new_item(tech);
 
 	ADMIN_TOOL->add_new_bid_log(

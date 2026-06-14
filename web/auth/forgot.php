@@ -18,14 +18,11 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/lib.php';
 
 $submitted = false;
-$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim((string)($_POST['email'] ?? ''));
 
-    if (!verify_csrf_token((string)($_POST['csrf_token'] ?? ''))) {
-        $error = 'Your form session expired. Please try again.';
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
         $db   = db();
 
         // Look up the account.
@@ -63,21 +60,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Intentional: no branch for "email not found" — same response either way.
     }
 
-    $submitted = ($error === '');
+    $submitted = true;
 }
 
 // Output — forgot-password form (original Archspace styling)
-$csrfField = csrf_field();
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Forgot Password');
-echo auth_error($error);
 if (!empty($submitted)) {
     echo auth_ok('If that email exists, a reset link was sent.');
 }
 ?>
 <form method="post" action="/auth/forgot.php">
-<?= $csrfField ?>
 <?= auth_input('Email', 'email', 'email', '', 'email') ?>
 <?= auth_submit('bu_reset.gif', 'reset', 120, 17) ?>
 </form>

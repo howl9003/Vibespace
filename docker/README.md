@@ -26,12 +26,6 @@ First boot initializes the MariaDB data dir, loads `all.sql` + the modern
 `web/auth/schema.sql`, installs the game content layout, and starts the server.
 State persists in named volumes (`db_data`, `game_state`, `logs`).
 
-The nginx front end adds conservative browser security headers:
-`X-Content-Type-Options: nosniff`, `Referrer-Policy: same-origin`,
-`X-Frame-Options: SAMEORIGIN`, and a restrictive `Permissions-Policy`. A CSP is
-intentionally deferred because the preserved 2004 templates still use inline
-scripts and styles throughout the UI.
-
 ## How the build works (validated step-by-step)
 
 The image (`docker/Dockerfile`) reproduces the exact, tested recipe:

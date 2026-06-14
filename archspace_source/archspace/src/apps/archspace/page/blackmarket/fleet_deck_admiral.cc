@@ -114,8 +114,6 @@ CPageBlackMarketFleetDeckAdmiral::handler(CPlayer *aPlayer)
 	SLOG( "fleet max ship %d", fleet->get_max_ship() );
 	CAdmiralList*
 		admiralList = aPlayer->get_admiral_pool();
-	int
-		eligibleCount = 0;
 	for( int i=0 ; i<admiralList->length() ; i++)
 	{
 		CAdmiral*
@@ -124,7 +122,6 @@ CPageBlackMarketFleetDeckAdmiral::handler(CPlayer *aPlayer)
 		admiralHTML.format("<TR>");
 		if( admiral->get_fleet_commanding() >= fleet->get_max_ship() )
 		{
-			eligibleCount++;
 			admiralHTML.format( "<TD CLASS=\"maintext\" ALIGN=\"center\"><INPUT TYPE=RADIO NAME=ADMIRAL_ID VALUE=%d></TD>", admiral->get_id() );
 		}
 		else
@@ -139,16 +136,6 @@ CPageBlackMarketFleetDeckAdmiral::handler(CPlayer *aPlayer)
 		admiralHTML.format("</TR>\n");
 	}
 	admiralHTML.format("</TABLE>");
-
-	// No commander in the pool can lead this fleet -> a fleet needs a commander,
-	// so bidding is impossible. Say so plainly instead of letting the bid fall
-	// through to the misleading "the admiral you selected doesn't exist" error.
-	if (eligibleCount == 0)
-	{
-		ITEM("ERROR_MESSAGE",
-				GETTEXT("You have no available commander in your pool who can lead this fleet. Recruit a commander whose Fleet Commanding is at least this fleet's ship capacity (try the Officer's Lounge) before bidding for it."));
-		return output("black_market/fleet_deck_error.html");
-	}
 
 	ITEM("STRING_FLEET_NAME", GETTEXT("Fleet Name"));
 	ITEM( "FLEET_NAME", fleet->get_name() );

@@ -36,9 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ------------------------------------------------------------------
     // Validation
     // ------------------------------------------------------------------
-    if (!verify_csrf_token((string)($_POST['csrf_token'] ?? ''))) {
-        $error = 'Your form session expired. Please try again.';
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
         $error = 'Please enter a valid email address.';
     } elseif (strlen($password) < 8) {
         $error = 'Password must be at least 8 characters long.';
@@ -86,14 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ---------------------------------------------------------------------------
 // Output — registration form (original Archspace styling)
 // ---------------------------------------------------------------------------
-$csrfField = csrf_field();
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Register');
 echo auth_error($error);
 ?>
 <form method="post" action="/auth/register.php">
-<?= $csrfField ?>
 <?= auth_input('Email', 'email', 'email', (string)($_POST['email'] ?? ''), 'email') ?>
 <?= auth_input('Password (min. 8)', 'password', 'password', '', 'new-password') ?>
 <?= auth_input('Confirm password', 'password2', 'password', '', 'new-password') ?>

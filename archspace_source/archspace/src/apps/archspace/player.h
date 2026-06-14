@@ -35,14 +35,12 @@ class CRankTable;
 //     portal_id = BOT_PORTAL_BASE + band*BOT_BAND_STRIDE + sequence
 #define BOT_PORTAL_BASE   1000000000
 #define BOT_BAND_STRIDE   1000000
-#define NUM_BOT_BANDS     7
-// Bots take game ids from here up; humans keep the low ids 1..BOT_GAME_ID_BASE-1.
-#define BOT_GAME_ID_BASE  501
+#define NUM_BOT_BANDS     6
 // Power ceiling for a band; the floor is the previous band's ceiling (0 for 0).
 int bot_band_ceiling(int aBand);
 int bot_band_floor(int aBand);
 
-// Per-tier bot roster. Each tier (= bot band 0..6) flies a distinct hull class
+// Per-tier bot roster. Each tier (= bot band 0..5) flies a distinct hull class
 // at a fixed component (tech) level, grows by one fleet roughly hourly up to
 // mMaxFleets, then is culled back to mCullTo -- a slow rise-and-fall sawtooth.
 // mMaxFleets/mCullTo INCLUDE the one permanent auto-expedition fleet every bot

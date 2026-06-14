@@ -106,9 +106,7 @@ CRank::initialize_from_player(CPlayer *aPlayer, int aType)
 			CKnownTechList *
 				KnownTechList = aPlayer->get_tech_list();
 			mPower = KnownTechList->get_power();
-			// Displayed "Techs" count excludes the locked class 1-10 schematics
-			// so the ranking tops out at the obtainable total (190).
-			mNumber = KnownTechList->count_obtainable();
+			mNumber = KnownTechList->length();
 		}
 		break;
 
@@ -933,10 +931,6 @@ CRankTable::get_race_symbol_url(int aRace)
 
 		case CRace::RACE_XESPERADOS :
 			ImageURL += "symbol_xesperados.gif";
-			return (char *)ImageURL;
-
-		case CRace::RACE_TRABOTULIN :
-			ImageURL += "symbol_trabotulin.gif";
 			return (char *)ImageURL;
 
 		default :
