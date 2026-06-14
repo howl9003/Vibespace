@@ -81,8 +81,9 @@ $M "$DB_NAME" -e "ALTER TABLE battle_record ADD COLUMN IF NOT EXISTS result_repo
 # presence of the migrated 'offense'/'weapon8' columns so each runs once and is
 # a no-op afterwards and on fresh/old-schema DBs. NOTE: the original per-skill
 # values were already dropped by the forward migration -- maneuver/detection
-# survive; the rest come back at the -10 (untrained) default. Remove this block
-# once the DB is confirmed back on the old schema.
+# survive; the rest are restored to 20 (trained), both skill levels and their
+# up_levels, for existing admirals via the one-time marker-guarded block below.
+# Remove this whole rollback section once the DB is confirmed on the old schema.
 ADMIRAL_MIGRATED=$($M -N -B "$DB_NAME" -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DB_NAME' AND TABLE_NAME='admiral' AND COLUMN_NAME='offense';" 2>/dev/null)
 if [ "$ADMIRAL_MIGRATED" = "1" ]; then
     log "rollback: reverting admiral table to pre-cvs-merge schema"
@@ -105,13 +106,6 @@ if [ "$ADMIRAL_MIGRATED" = "1" ]; then
         ADD COLUMN prevent_raid_up_level    smallint(3) NOT NULL DEFAULT -10 AFTER prevent_raid,
         ADD COLUMN interpretation           smallint(3) NOT NULL DEFAULT -10 AFTER detection_up_level,
         ADD COLUMN interpretation_up_level  smallint(3) NOT NULL DEFAULT -10 AFTER interpretation;" || true
-    # The forward migration deleted these skill values; restore them to 20
-    # (trained) for existing admirals rather than the -10 untrained default.
-    # Only the skill-level columns are set; the _up_level tracking columns keep
-    # the schema default (-10).
-    $M "$DB_NAME" -e "UPDATE admiral SET
-        siege_planet=20, blockade=20, raid=20, privateer=20,
-        siege_repelling=20, break_blockade=20, prevent_raid=20, interpretation=20;" || true
 fi
 CLASS_MIGRATED=$($M -N -B "$DB_NAME" -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DB_NAME' AND TABLE_NAME='class' AND COLUMN_NAME='weapon8';" 2>/dev/null)
 if [ "$CLASS_MIGRATED" = "1" ]; then
@@ -119,6 +113,27 @@ if [ "$CLASS_MIGRATED" = "1" ]; then
     $M "$DB_NAME" -e "ALTER TABLE class
         DROP COLUMN weapon8, DROP COLUMN weapon9, DROP COLUMN weapon10,
         DROP COLUMN weapon_number8, DROP COLUMN weapon_number9, DROP COLUMN weapon_number10;" || true
+fi
+
+# One-time: set the restored commander skill levels AND their up_levels to 20
+# (trained) for existing admirals. Guarded by a marker table so it runs exactly
+# once -- even if the schema-revert above already ran on an earlier boot (then
+# the 'offense'-guarded block is a no-op but this still applies the values).
+# Requires the reverted old schema (siege_planet column present).
+SKILL_RESET_DONE=$($M -N -B "$DB_NAME" -e "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='$DB_NAME' AND TABLE_NAME='_rollback_skill_reset';" 2>/dev/null)
+HAS_OLD_SKILLS=$($M -N -B "$DB_NAME" -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DB_NAME' AND TABLE_NAME='admiral' AND COLUMN_NAME='siege_planet';" 2>/dev/null)
+if [ "$SKILL_RESET_DONE" != "1" ] && [ "$HAS_OLD_SKILLS" = "1" ]; then
+    log "rollback: setting restored commander skills + up_levels to 20"
+    $M "$DB_NAME" -e "UPDATE admiral SET
+        siege_planet=20,    siege_planet_up_level=20,
+        blockade=20,        blockade_up_level=20,
+        raid=20,            raid_up_level=20,
+        privateer=20,       privateer_up_level=20,
+        siege_repelling=20, siege_repelling_up_level=20,
+        break_blockade=20,  break_blockade_up_level=20,
+        prevent_raid=20,    prevent_raid_up_level=20,
+        interpretation=20,  interpretation_up_level=20;" || true
+    $M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS _rollback_skill_reset (done tinyint NOT NULL DEFAULT 1);" || true
 fi
 
 # --- 3. runtime layout ------------------------------------------------------
