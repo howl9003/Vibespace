@@ -2356,7 +2356,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	Range(900),
 	AOF(150),
 	WSpeed(900)
-}
+},
 
 # ============================================================
 # CVS-merge: new components/weapons ported from CVSRoot (S4).

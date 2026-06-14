@@ -182,7 +182,7 @@
 	[
 	],
 	Type("HOST")
-}
+},
 
 # === CVS-merge: new spy entries ported from CVSRoot (S4 content) ===
 <Steal Important Technology>
@@ -211,5 +211,5 @@
 		Tech(1224)
 	],
 	Type("HOST")
-},
+}
 
