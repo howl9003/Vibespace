@@ -155,6 +155,8 @@ CCronTabBotPopulation::handler()
 	{
 		PLAYER_TABLE->refresh_rank_table();
 		COUNCIL_TABLE->refresh_rank_table();
+		SLOG("SYSTEM : bot population crontab refreshed rank tables (spawned %d, reseeded %d)",
+				Spawned, Reseeded);
 	}
 
 	SLOG("SYSTEM : bot population crontab end (spawned %d this run)", Spawned);
@@ -293,6 +295,7 @@ CCronTabBotRegen::handler()
 	{
 		PLAYER_TABLE->refresh_rank_table();
 		COUNCIL_TABLE->refresh_rank_table();
+		SLOG("SYSTEM : bot regen crontab refreshed rank tables (acted on %d bots)", Acted);
 	}
 
 	SLOG("SYSTEM : bot regen crontab end (acted on %d bots)", Acted);
