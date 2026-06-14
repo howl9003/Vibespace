@@ -40,7 +40,9 @@ if ($token !== '' && strlen($token) === 64) {
 // Handle POST (set new password)
 // ---------------------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($account === null) {
+    if (!verify_csrf_token((string)($_POST['csrf_token'] ?? ''))) {
+        $error = 'Your form session expired. Please try again.';
+    } elseif ($account === null) {
         $error = 'This reset link is invalid or has expired. Please request a new one.';
     } else {
         $password  = (string)($_POST['password']  ?? '');
@@ -77,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $tokenValid = ($account !== null);
 
 // Output — set-new-password form (original Archspace styling)
+$csrfField = csrf_field();
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Set New Password');
@@ -85,6 +88,7 @@ echo auth_error($error);
 if ($tokenValid):
 ?>
 <form method="post" action="/auth/reset.php">
+<?= $csrfField ?>
 <input type="hidden" name="token" value="<?= h($token) ?>">
 <?= auth_input('New password (min. 8)', 'password', 'password', '', 'new-password') ?>
 <?= auth_input('Confirm new password', 'password2', 'password', '', 'new-password') ?>
