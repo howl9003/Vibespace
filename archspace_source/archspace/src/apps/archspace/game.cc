@@ -1992,7 +1992,7 @@ static const int sFactionClusterSuffixCount =
 // Rank words used both as commander-name prefixes and to recognise commander
 // names in bot_name_fits_race.
 static const char *sBotRankNames[] =
-	{ "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
+	{ "Newbie", "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
 static const int sBotRankCount =
 	sizeof(sBotRankNames) / sizeof(sBotRankNames[0]);
 
@@ -2173,9 +2173,9 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 	if (number(100) <= FactionPct && make_bot_faction_name(aRace, aOut, aOutSize))
 		return;
 
-	// bands 0-3: a random rank scaled to the band; bands 4-5: a fixed signature
+	// bands 0-4: a random rank scaled to the band; bands 5-6: a fixed signature
 	// rank shared by every bot in the band.
-	int Rank = (aBand >= 4) ? aBand : number(aBand + 1) - 1;
+	int Rank = (aBand >= 5) ? aBand : number(aBand + 1) - 1;
 	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(aRace);
 	if (!Commander || !*Commander) Commander = "Bot";
 	if ((int)strlen(Commander) > 30)
@@ -2313,12 +2313,14 @@ CGame::create_bot_player(int aBand)
 	// matching ship components, keeping a bot's tech thematically in step with its
 	// tier (the tier ship designs pick components by level directly, so this is for
 	// flavour/power, not a hard requirement).
-	//   bands 0-3 -> level 3/5/7/9; band 4 (Grand Admiral) -> all level-9 techs;
-	//   band 5 (Supreme Admiral) -> every tech (the tree tops out at level 12).
+	//   band 0 (Newbie) -> level 2; bands 1-4 -> level 3/5/7/9;
+	//   band 5 (Grand Admiral) -> all level-9 techs;
+	//   band 6 (Supreme Admiral) -> tech up to level 10 (< L11).
 	int TechLevel;
-	if (aBand <= 3)      TechLevel = 3 + aBand * 2;
-	else if (aBand == 4) TechLevel = 9;
-	else                 TechLevel = 99;
+	if (aBand == 0)      TechLevel = 2;
+	else if (aBand <= 4) TechLevel = 1 + aBand * 2;
+	else if (aBand == 5) TechLevel = 9;
+	else                 TechLevel = 10;
 	for (int L=1 ; L<=TechLevel ; L++)
 	{
 		for (int i=0 ; i<TECH_TABLE->length() ; i++)
@@ -2330,7 +2332,7 @@ CGame::create_bot_player(int aBand)
 	}
 
 	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
-	int TargetPlanets = 4 + aBand * 4;
+	int TargetPlanets = (aBand == 0) ? 2 : aBand * 4;
 	int PlanetGuard = 0;
 	while (PlanetList->length() < TargetPlanets && PlanetGuard++ < TargetPlanets * 4)
 	{

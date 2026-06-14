@@ -3048,12 +3048,13 @@ bot_band_ceiling(int aBand)
 {
 	switch (aBand)
 	{
-		case 0: return 10000;
-		case 1: return 50000;
-		case 2: return 100000;
-		case 3: return 200000;
-		case 4: return 500000;     // Grand Admiral band:  200k - 500k
-		case 5: return 1000000;    // Supreme Admiral band: 500k - 1M
+		case 0: return 5000;       // Newbie band:          0 - 5k
+		case 1: return 10000;      // Ensign band:          5k - 10k
+		case 2: return 50000;      // Captain band:         10k - 50k
+		case 3: return 100000;     // Commodore band:       50k - 100k
+		case 4: return 200000;     // Admiral band:         100k - 200k
+		case 5: return 500000;     // Grand Admiral band:   200k - 500k
+		case 6: return 1000000;    // Supreme Admiral band: 500k - 1M
 		default: return 1000000;
 	}
 }
@@ -3064,21 +3065,22 @@ bot_band_floor(int aBand)
 	return aBand <= 0 ? 0 : bot_band_ceiling(aBand - 1);
 }
 
-// Per-tier bot roster (see player.h). Tiers 1..6 == bands 0..5. mMaxFleets/mCullTo
+// Per-tier bot roster (see player.h). Tiers 1..7 == bands 0..6. mMaxFleets/mCullTo
 // include the one permanent auto-expedition fleet, so the defender counts are
-// 30/30/30/40/30/80 (culling to 20/20/20/20/20/40). Population is a pyramid.
+// 10/30/30/30/40/30/40 (culling to 5/20/20/20/20/20/20). Population is a pyramid.
 const CBotTierSpec &
 bot_tier_spec(int aBand)
 {
 	static const CBotTierSpec Specs[NUM_BOT_BANDS] =
 	{
-		//  hull              level  max  cull  pop
-		{  3 /*Frigate*/,      3,    31,  21,   40 },
-		{  5 /*Cruiser*/,      3,    31,  21,   30 },
-		{  7 /*BattleShip*/,   4,    31,  21,   25 },
-		{  8 /*Dreadnaught*/,  4,    41,  21,   20 },
-		{ 10 /*Doomstar*/,     5,    31,  21,   20 },
-		{ 10 /*Doomstar*/,     5,    81,  41,   15 },
+		//  hull                  level  max  cull  pop
+		{  2 /*Corvette*/,        2,    11,   6,   30 },
+		{  3 /*Frigate*/,         3,    31,  21,   40 },
+		{  5 /*Cruiser*/,         3,    31,  21,   30 },
+		{  7 /*BattleShip*/,      4,    31,  21,   25 },
+		{  8 /*Dreadnaught*/,     4,    41,  21,   20 },
+		{ 10 /*Doomstar*/,        5,    31,  21,   20 },
+		{ 11 /*Astral Carrier*/,  5,    41,  21,   15 },
 	};
 	if (aBand < 0) aBand = 0;
 	if (aBand >= NUM_BOT_BANDS) aBand = NUM_BOT_BANDS - 1;
