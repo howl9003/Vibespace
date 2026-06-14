@@ -498,7 +498,10 @@ CAdmiral::get_efficiency()
 		else if( mLevel <= 17 )
 			Skill -= 5;
 	}
-	if( mRacialAbility == RA_JURY_RIGGER ){
+	// cvs-merge: the +efficiency bonus belongs to Trajectory Augmentation (strict
+	// CVSRoot placement), not Jury Rigger. Jury Rigger keeps its in-battle repair
+	// (battle.cc) and its -fleet-commanding penalty (get_fleet_commanding).
+	if( mRacialAbility == RA_TRAJECTORY_AUGMENTATION ){
 		Skill += 10+mLevel;
 	}
 	if( mRacialAbility == RA_RETREAT_SHIELD ){
