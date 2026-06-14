@@ -36,6 +36,8 @@ class CRankTable;
 #define BOT_PORTAL_BASE   1000000000
 #define BOT_BAND_STRIDE   1000000
 #define NUM_BOT_BANDS     7
+// Bots take game ids from here up; humans keep the low ids 1..BOT_GAME_ID_BASE-1.
+#define BOT_GAME_ID_BASE  501
 // Power ceiling for a band; the floor is the previous band's ceiling (0 for 0).
 int bot_band_ceiling(int aBand);
 int bot_band_floor(int aBand);

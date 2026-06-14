@@ -1499,7 +1499,27 @@ CGame::create_new_player(int aPortalID, const char *aName, int aRace)
 		}
 	}
 
-	GameID = PLAYER_TABLE->get_max_id()+1;
+	// Bots take a reserved game-id range (>= BOT_GAME_ID_BASE) so human players
+	// keep the low ids 1..BOT_GAME_ID_BASE-1. Bots dominate the global max once
+	// they exist, so max_id+1 chains them; the floor handles the very first bot.
+	// Humans use the highest human-only id below the bot range.
+	if (aPortalID >= BOT_PORTAL_BASE)
+	{
+		GameID = PLAYER_TABLE->get_max_id() + 1;
+		if (GameID < BOT_GAME_ID_BASE) GameID = BOT_GAME_ID_BASE;
+	}
+	else
+	{
+		int MaxHuman = 0;
+		for (int i=0 ; i<PLAYER_TABLE->length() ; i++)
+		{
+			CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
+			if (P == NULL || P->get_portal_id() >= BOT_PORTAL_BASE) continue;
+			int gid = P->get_game_id();
+			if (gid < BOT_GAME_ID_BASE && gid > MaxHuman) MaxHuman = gid;
+		}
+		GameID = MaxHuman + 1;
+	}
 
 	Player = new CPlayer(aPortalID, GameID, aName, aRace, Council);
 	PLAYER_TABLE->add_player(Player);
