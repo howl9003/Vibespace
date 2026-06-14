@@ -2516,7 +2516,20 @@ CGame::set_global_ending_data()
 			}
 		}
 
-		if (TECH_TABLE->length() == TechList->length())
+		// "All known techs" bonus: compare against the *obtainable* tech count,
+		// not TECH_TABLE->length(). The class 1-10 ship schematics are locked from
+		// acquisition (see IS_LOCKED_SHIP_SCHEMATIC), so the full table (200) can
+		// never be reached; a completed player tops out at the obtainable count
+		// (currently 190). Computed dynamically so it tracks the locked set.
+		int
+			ObtainableTechs = 0;
+		for (int i=0 ; i<TECH_TABLE->length() ; i++)
+		{
+			CTech *
+				Tech = (CTech *)TECH_TABLE->get(i);
+			if (!IS_LOCKED_SHIP_SCHEMATIC(Tech->get_id())) ObtainableTechs++;
+		}
+		if (TechList->length() >= ObtainableTechs)
 		{
 			Multiplier += CGlobalEnding::mMultiplierForAllKnownTechs;
 		}
