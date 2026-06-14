@@ -119,7 +119,7 @@
 	Weapon(7),
 	Slot(3400),
 	Device(5),
-	Cost(7271500)
+	Cost(73984000)
 },
 <Suncrusher>
 {
@@ -130,5 +130,5 @@
 	Weapon(7),
 	Slot(4800),
 	Device(5),
-	Cost(22294000)
+	Cost(230400000)
 }
