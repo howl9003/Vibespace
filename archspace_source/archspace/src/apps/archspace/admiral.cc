@@ -465,6 +465,18 @@ CAdmiral::get_fleet_commanding()
 			Skill -= 3;
 	}
 
+	// Armada Synergy Specialist: signature commanding bonus (the ability's
+	// name effect -- previously only its battle effect was wired up). Scales
+	// with level; lifts fleet capacity since mMaxShip = commanding*sizeRating.
+	if( mRacialAbility == RA_ARMADA_SYNERGY_SPECIALIST ){
+		if( mLevel <= 7 )
+			Skill += 2;
+		else if( mLevel <= 14 )
+			Skill += 4;
+		else
+			Skill += 6;
+	}
+
 	return Skill;
 }
 
