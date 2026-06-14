@@ -25,38 +25,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim((string)($_POST['email']    ?? ''));
     $password = (string)($_POST['password'] ?? '');
 
-    // Fetch account by email using a prepared statement.
-    $db   = db();
-    $stmt = $db->prepare(
-        'SELECT id, password_hash FROM accounts WHERE email = ? LIMIT 1'
-    );
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row    = $result->fetch_assoc();
-    $stmt->close();
+    if (!verify_csrf_token((string)($_POST['csrf_token'] ?? ''))) {
+        $error = 'Your form session expired. Please try again.';
+    } else {
+        // Fetch account by email using a prepared statement.
+        $db   = db();
+        $stmt = $db->prepare(
+            'SELECT id, password_hash FROM accounts WHERE email = ? LIMIT 1'
+        );
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row    = $result->fetch_assoc();
+        $stmt->close();
 
-    // Constant-time-ish check: always call auth_verify to avoid timing oracle.
-    $hashToCheck = $row['password_hash'] ?? '$argon2id$v=19$m=65536,t=4,p=1$x$x';
-    if ($row !== null && auth_verify($password, $hashToCheck)) {
-        $remember = !empty($_POST['remember']);
-        create_session((int)$row['id'], $remember);
-        header('Location: ' . game_entry_url((int)$row['id']), true, 303);
-        exit;
+        // Constant-time-ish check: always call auth_verify to avoid timing oracle.
+        $hashToCheck = $row['password_hash'] ?? '$argon2id$v=19$m=65536,t=4,p=1$x$x';
+        if ($row !== null && auth_verify($password, $hashToCheck)) {
+            $remember = !empty($_POST['remember']);
+            create_session((int)$row['id'], $remember);
+            header('Location: ' . game_entry_url((int)$row['id']), true, 303);
+            exit;
+        }
+
+        $error = 'Invalid email or password.';
     }
-
-    $error = 'Invalid email or password.';
 }
 
 // ---------------------------------------------------------------------------
 // Output — login form (original Archspace styling)
 // ---------------------------------------------------------------------------
+$csrfField = csrf_field();
 require_once __DIR__ . '/theme.php';
 
 auth_page_start('Sign In');
 echo auth_error($error);
 ?>
 <form method="post" action="/auth/login.php">
+<?= $csrfField ?>
 <?= auth_input('Email', 'email', 'email', (string)($_POST['email'] ?? ''), 'email') ?>
 <?= auth_input('Password', 'password', 'password', '', 'current-password') ?>
 <label class="as-remember"><input type="checkbox" name="remember" value="1"> Remember me</label>

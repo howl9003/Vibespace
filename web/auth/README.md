@@ -74,6 +74,12 @@ absent.
 | Lifetime     | 7 days        |
 | Flags        | `HttpOnly`, `SameSite=Lax`, `Secure` (when request is over HTTPS) |
 
+POST forms also use a short-lived `as_csrf` cookie plus a hidden
+`csrf_token` field. The cookie uses the same `HttpOnly`, `SameSite=Lax`, and
+HTTPS-only `Secure` behavior; login, registration, forgot-password, and
+reset-password POSTs reject requests when the submitted token and cookie do not
+match.
+
 ---
 
 ## Endpoints
@@ -83,14 +89,14 @@ All endpoints live under `/auth/`.
 | File | Method | Purpose |
 |------|--------|---------|
 | `register.php` | GET | Show registration form |
-| `register.php` | POST `{email, password, password2}` | Create account; on success set session + redirect 303 to `/main.php` |
+| `register.php` | POST `{csrf_token, email, password, password2}` | Create account; on success set session + redirect 303 to `/main.php` |
 | `login.php` | GET | Show login form |
-| `login.php` | POST `{email, password}` | Authenticate; on success set session + redirect 303 to `/main.php` |
+| `login.php` | POST `{csrf_token, email, password}` | Authenticate; on success set session + redirect 303 to `/main.php` |
 | `logout.php` | GET / any | Delete session row + clear cookie, redirect 303 to `/auth/login.php` |
 | `forgot.php` | GET | Show "enter email" form |
-| `forgot.php` | POST `{email}` | Generate reset token (1 h TTL), email link; always shows neutral confirmation |
+| `forgot.php` | POST `{csrf_token, email}` | Generate reset token (1 h TTL), email link; always shows neutral confirmation |
 | `reset.php` | GET `?token=<hex>` | Show "set new password" form if token valid |
-| `reset.php` | POST `{token, password, password2}` | Update password, clear token, redirect 303 to `/auth/login.php` |
+| `reset.php` | POST `{csrf_token, token, password, password2}` | Update password, clear token, redirect 303 to `/auth/login.php` |
 | `session_lookup.php` | GET | **Internal only.** Resolves `as_session` cookie → JSON account data or 401 |
 
 ### `session_lookup.php` — CGI adapter integration
