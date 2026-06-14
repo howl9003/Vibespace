@@ -2341,7 +2341,7 @@ CFleetList::siege_planet_fleet_list_html(CPlayer *aPlayer)
 					Fleet->CShipDesign::get_name(), Fleet->get_current_ship());
 
 		List.format("<TD WIDTH=129 CLASS=tabletxt ALIGN=CENTER>%d</TD>\n",
-					Admiral->get_siege_planet_level());
+					Admiral->get_overall_attack());
 
 		List += "</TR>\n";
 	}
@@ -2414,7 +2414,7 @@ CFleetList::blockade_fleet_list_html(CPlayer *aPlayer)
 					Fleet->CShipDesign::get_name(), Fleet->get_current_ship());
 
 		List.format("<TD WIDTH=129 CLASS=tabletxt ALIGN=CENTER>%d</TD>\n",
-					Admiral->get_blockade_level());
+					Admiral->get_overall_attack());
 
 		List += "</TR>\n";
 	}
@@ -2477,7 +2477,7 @@ CFleetList::raid_fleet_list_html(CPlayer *aPlayer)
 					Fleet->CShipDesign::get_name(), Fleet->get_current_ship());
 
 		List.format("<TD WIDTH=129 CLASS=tabletxt ALIGN=CENTER>%d</TD>\n",
-					Admiral->get_raid_level());
+					Admiral->get_overall_attack());
 
 		List += "</TR>\n";
 	}
@@ -2540,7 +2540,7 @@ CFleetList::privateer_fleet_list_html(CPlayer *aPlayer)
 					Fleet->CShipDesign::get_name(), Fleet->get_current_ship());
 
 		List.format("<TD WIDTH=129 CLASS=tabletxt ALIGN=CENTER>%d</TD>\n",
-					Admiral->get_privateer_level());
+					Admiral->get_overall_attack());
 
 		List += "</TR>\n";
 	}

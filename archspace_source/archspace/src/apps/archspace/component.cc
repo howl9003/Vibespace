@@ -142,6 +142,14 @@ char *CFleetEffect::mEffectName[] = {
 	"PSI Defense Panalty",
 	"PSI Neutralization Field",
 	"Space Mining",
+	// CVS-merge: names for the new fleet-effect types (order matches the enum)
+	"Front Armor",
+	"Rear Armor",
+	"Side Armor",
+	"Shield Integrity",
+	"Psionic Wave Damage",
+	"Synergy",
+	"Fast Retreat",
 	// weapon effect
 	"Shield Piercing",
 	"Armor Piercing",
@@ -150,6 +158,7 @@ char *CFleetEffect::mEffectName[] = {
 	"Shield Overheat",
 	"PSI",
 	"PSI Empower",
+	"Corrosivity",	// CVS-merge: weapon effect (matches WE_CORROSIVITY)
 	""
 };
 

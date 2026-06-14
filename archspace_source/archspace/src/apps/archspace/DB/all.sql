@@ -175,35 +175,17 @@ CREATE TABLE admiral (
 	fleet_commanding smallint(3) DEFAULT '-10' NOT NULL,
 	efficiency smallint(3) DEFAULT '-10' NOT NULL,
 
-	siege_planet smallint(3) DEFAULT '-10' NOT NULL,
-	siege_planet_up_level smallint(3) DEFAULT '-10' NOT NULL,
+	offense smallint(3) DEFAULT '-10' NOT NULL,
+	offense_up_level smallint(3) DEFAULT '-10' NOT NULL,
 
-	blockade smallint(3) DEFAULT '-10' NOT NULL,
-	blockade_up_level smallint(3) DEFAULT '-10' NOT NULL,
-
-	raid smallint(3) DEFAULT '-10' NOT NULL,
-	raid_up_level smallint(3) DEFAULT '-10' NOT NULL,
-
-	privateer smallint(3) DEFAULT '-10' NOT NULL,
-	privateer_up_level smallint(3) DEFAULT '-10' NOT NULL,
-
-	siege_repelling smallint(3) DEFAULT '-10' NOT NULL,
-	siege_repelling_up_level smallint(3) DEFAULT '-10' NOT NULL,
-
-	break_blockade smallint(3) DEFAULT '-10' NOT NULL,
-	break_blockade_up_level smallint(3) DEFAULT '-10' NOT NULL,
-
-	prevent_raid smallint(3) DEFAULT '-10' NOT NULL,
-	prevent_raid_up_level smallint(3) DEFAULT '-10' NOT NULL,
+	defense smallint(3) DEFAULT '-10' NOT NULL,
+	defense_up_level smallint(3) DEFAULT '-10' NOT NULL,
 
 	maneuver smallint(3) DEFAULT '-10' NOT NULL,
 	maneuver_up_level smallint(3) DEFAULT '-10' NOT NULL,
 
 	detection smallint(3) DEFAULT '-10' NOT NULL,
 	detection_up_level smallint(3) DEFAULT '-10' NOT NULL,
-
-	interpretation smallint(3) DEFAULT '-10' NOT NULL,
-	interpretation_up_level smallint(3) DEFAULT '-10' NOT NULL,
 
 	commonability smallint(2) DEFAULT '-10' NOT NULL,
 	raceability smallint(2) DEFAULT '-10' NOT NULL,
@@ -313,6 +295,9 @@ CREATE TABLE class (
 	weapon5 int NOT NULL,
 	weapon6 int NOT NULL,
 	weapon7 int NOT NULL,
+	weapon8 int NOT NULL DEFAULT 0,
+	weapon9 int NOT NULL DEFAULT 0,
+	weapon10 int NOT NULL DEFAULT 0,
 	weapon_number1 int NOT NULL,
 	weapon_number2 int NOT NULL,
 	weapon_number3 int NOT NULL,
@@ -320,6 +305,9 @@ CREATE TABLE class (
 	weapon_number5 int NOT NULL,
 	weapon_number6 int NOT NULL,
 	weapon_number7 int NOT NULL,
+	weapon_number8 int NOT NULL DEFAULT 0,
+	weapon_number9 int NOT NULL DEFAULT 0,
+	weapon_number10 int NOT NULL DEFAULT 0,
 	device1 int NOT NULL,
 	device2 int NOT NULL,
 	device3 int NOT NULL,

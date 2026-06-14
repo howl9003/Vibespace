@@ -40,7 +40,8 @@ CArchspacePageStation::registration()
 
 	// bot
 	insert_sorted(new CBotPagePlayerPower());
-	insert_sorted(new CBotPageDeletePlayer());	
+	insert_sorted(new CBotPageDeletePlayer());
+	insert_sorted(new CBotPageEndScore());	// CVS-merge
 	// game
 	insert_sorted(new CPageMenu());
 	insert_sorted(new CPageMain());

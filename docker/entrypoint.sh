@@ -72,6 +72,20 @@ $M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS attack_fleet (
 # STORE_RESULT_REPORT is the final index). ADD COLUMN IF NOT EXISTS is idempotent.
 $M "$DB_NAME" -e "ALTER TABLE battle_record ADD COLUMN IF NOT EXISTS result_report text;" || true
 
+# class.weapon8..10 / weapon_number8..10: widen ship designs from 7 to 10 weapon
+# slots (Astral Carrier uses 8, Suncrusher 10). The engine reads the class table
+# via SELECT * by positional index, so these MUST sit contiguously in the weapon
+# block -- ADD ... AFTER places them correctly; appending at the table end would
+# misalign device/time/cost reads. IF NOT EXISTS keeps it idempotent; fresh DBs
+# already have them from all.sql and skip the ALTER.
+$M "$DB_NAME" -e "ALTER TABLE class
+    ADD COLUMN IF NOT EXISTS weapon8  int NOT NULL DEFAULT 0 AFTER weapon7,
+    ADD COLUMN IF NOT EXISTS weapon9  int NOT NULL DEFAULT 0 AFTER weapon8,
+    ADD COLUMN IF NOT EXISTS weapon10 int NOT NULL DEFAULT 0 AFTER weapon9,
+    ADD COLUMN IF NOT EXISTS weapon_number8  int NOT NULL DEFAULT 0 AFTER weapon_number7,
+    ADD COLUMN IF NOT EXISTS weapon_number9  int NOT NULL DEFAULT 0 AFTER weapon_number8,
+    ADD COLUMN IF NOT EXISTS weapon_number10 int NOT NULL DEFAULT 0 AFTER weapon_number9;" || true
+
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.
@@ -138,5 +152,24 @@ for i in $(seq 1 20); do
     if ss -ltn 2>/dev/null | grep -q ':12350'; then log "game server is LISTENING on 12350"; break; fi
     sleep 1
 done
+
+# --- 6. static encyclopedia: same-origin image paths -----------------------
+# The engine regenerates the login encyclopedia under $WWW/encyclopedia during
+# game load() -- which runs HERE, after setup-web.sh (step 4) assembled the web
+# root -- emitting the literal, unsubstituted $IMAGE_SERVER_URL token into every
+# <IMG SRC>/preload. That token is only blanked at request time for dynamic *.as
+# pages; these files are served statically by nginx (location / -> try_files), so
+# the token leaks verbatim and every encyclopedia image 404s. mImageServerURL is
+# "" by design (same-origin), so blank the leftover token now that generation is
+# done -> paths become same-origin /image/.... Bounded to the generated tree and
+# idempotent (re-running on already-blanked files is a no-op). This MUST live
+# here, not in setup-web.sh: the engine rewrites these files on every boot AFTER
+# setup-web.sh runs, so a sed there would be clobbered ~1s later.
+WWW=/var/www/localhost/htdocs
+if [ -d "$WWW/encyclopedia" ]; then
+    log "blanking leftover \$IMAGE_SERVER_URL token in static encyclopedia HTML"
+    find "$WWW/encyclopedia" -name '*.html' -print0 \
+        | xargs -0 -r sed -i 's/\$IMAGE_SERVER_URL//g'
+fi
 
 wait "$GAME_PID"

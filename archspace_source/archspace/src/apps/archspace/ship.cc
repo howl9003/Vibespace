@@ -342,6 +342,19 @@ CShipSizeTable::available_size_list_html(CPlayer *aPlayer)
 						Ship->get_class(), Ship->get_name());
 	}
 
+	// CVS-merge (specific-schematic unlock): each megaclass (11..MAX_SHIP_CLASS)
+	// is offered only if the player owns that hull's own schematic tech. Classes
+	// 1-10 keep the Matter-Energy formula above unchanged.
+	for (int Class=FIRST_MEGACLASS ; Class<=MAX_SHIP_CLASS ; Class++)
+	{
+		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Class) )) continue;
+		CShipSize *
+			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + Class);
+		if (Ship)
+			SizeList.format("<OPTION VALUE=\"%d\">%s</OPTION>\n",
+							Ship->get_class(), Ship->get_name());
+	}
+
 	SizeList += "</SELECT>\n";
 
 	return (char *)SizeList;
@@ -410,6 +423,29 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 						"<TD CLASS=\"tabletxt\" WIDTH=\"100\">%s</TD>"
 						"</TR>\n",
 						i+1, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
+						Ship->get_slot(),
+						Ship->get_device(), dec2unit(Ship->get_cost()));
+	}
+
+	// CVS-merge (specific-schematic unlock): megaclasses 11..MAX_SHIP_CLASS each
+	// require the player to own that hull's own schematic tech.
+	for (int Class=FIRST_MEGACLASS ; Class<=MAX_SHIP_CLASS ; Class++)
+	{
+		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Class) )) continue;
+		CShipSize *
+			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + Class);
+		if (!Ship) continue;
+		SizeInfo.format("<TR ALIGN=\"CENTER\">"
+						"<TD CLASS=\"tabletxt\" WIDTH=\"35\">"
+						"<FONT COLOR=\"#666666\"></FONT>%d</TD>"
+						"<TD WIDTH=\"112\" CLASS=\"tabletxt\">%s</TD>"
+						"<TD WIDTH=\"52\" CLASS=\"tabletxt\">%d</TD>"
+						"<TD WIDTH=\"70\" CLASS=\"tabletxt\">%d</TD>"
+						"<TD CLASS=\"tabletxt\" WIDTH=\"85\">%d</TD>"
+						"<TD CLASS=\"tabletxt\" WIDTH=\"80\">%d</TD>"
+						"<TD CLASS=\"tabletxt\" WIDTH=\"100\">%s</TD>"
+						"</TR>\n",
+						Class, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
 						Ship->get_slot(),
 						Ship->get_device(), dec2unit(Ship->get_cost()));
 	}
@@ -550,6 +586,9 @@ CShipDesign::CShipDesign( MYSQL_ROW aRow )
 		FIELD_WEAPON_4,
 		FIELD_WEAPON_5,
 		FIELD_WEAPON_6,
+		FIELD_WEAPON_7,
+		FIELD_WEAPON_8,
+		FIELD_WEAPON_9,
 		FIELD_WEAPON_NUMBER_0,
 		FIELD_WEAPON_NUMBER_1,
 		FIELD_WEAPON_NUMBER_2,
@@ -557,6 +596,9 @@ CShipDesign::CShipDesign( MYSQL_ROW aRow )
 		FIELD_WEAPON_NUMBER_4,
 		FIELD_WEAPON_NUMBER_5,
 		FIELD_WEAPON_NUMBER_6,
+		FIELD_WEAPON_NUMBER_7,
+		FIELD_WEAPON_NUMBER_8,
+		FIELD_WEAPON_NUMBER_9,
 		FIELD_DEVICE_0,
 		FIELD_DEVICE_1,
 		FIELD_DEVICE_2,
@@ -583,6 +625,9 @@ CShipDesign::CShipDesign( MYSQL_ROW aRow )
 	mWeaponList[4] = atoi( aRow[FIELD_WEAPON_4] );
 	mWeaponList[5] = atoi( aRow[FIELD_WEAPON_5] );
 	mWeaponList[6] = atoi( aRow[FIELD_WEAPON_6] );
+	mWeaponList[7] = atoi( aRow[FIELD_WEAPON_7] );
+	mWeaponList[8] = atoi( aRow[FIELD_WEAPON_8] );
+	mWeaponList[9] = atoi( aRow[FIELD_WEAPON_9] );
 	mWeaponNumberList[0] = atoi( aRow[FIELD_WEAPON_NUMBER_0] );
 	mWeaponNumberList[1] = atoi( aRow[FIELD_WEAPON_NUMBER_1] );
 	mWeaponNumberList[2] = atoi( aRow[FIELD_WEAPON_NUMBER_2] );
@@ -590,6 +635,9 @@ CShipDesign::CShipDesign( MYSQL_ROW aRow )
 	mWeaponNumberList[4] = atoi( aRow[FIELD_WEAPON_NUMBER_4] );
 	mWeaponNumberList[5] = atoi( aRow[FIELD_WEAPON_NUMBER_5] );
 	mWeaponNumberList[6] = atoi( aRow[FIELD_WEAPON_NUMBER_6] );
+	mWeaponNumberList[7] = atoi( aRow[FIELD_WEAPON_NUMBER_7] );
+	mWeaponNumberList[8] = atoi( aRow[FIELD_WEAPON_NUMBER_8] );
+	mWeaponNumberList[9] = atoi( aRow[FIELD_WEAPON_NUMBER_9] );
 	mDeviceList[0] = atoi( aRow[FIELD_DEVICE_0] );
 	mDeviceList[1] = atoi( aRow[FIELD_DEVICE_1] );
 	mDeviceList[2] = atoi( aRow[FIELD_DEVICE_2] );
@@ -662,8 +710,8 @@ CShipDesign::query()
 
 	switch( type() ) {
 		case QUERY_INSERT:
-			query.format( "INSERT INTO class ( owner, design_id, body, name, armor, engine, computer, shield, weapon1, weapon2, weapon3, weapon4, weapon5, weapon6, weapon7, weapon_number1, weapon_number2, weapon_number3, weapon_number4, weapon_number5, weapon_number6, weapon_number7, device1, device2, device3, device4, device5, time, cost, black_market_design, empire_design ) VALUES ( %d, %d, %d, '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)", 
-			mOwner, mDesignID, mBody, (char*)add_slashes((char*)mName), mArmor, mEngine, mComputer, mShield, get_weapon(0), get_weapon(1), get_weapon(2), get_weapon(3), get_weapon(4), get_weapon(5), get_weapon(6), get_weapon_number(0), get_weapon_number(1), get_weapon_number(2), get_weapon_number(3), get_weapon_number(4), get_weapon_number(5), get_weapon_number(6), get_device(0), get_device(1), get_device(2), get_device(3), get_device(4), mBuildTime, mBuildCost, (int)mBlackMarketDesign, (int)mEmpireDesign );
+			query.format( "INSERT INTO class ( owner, design_id, body, name, armor, engine, computer, shield, weapon1, weapon2, weapon3, weapon4, weapon5, weapon6, weapon7, weapon8, weapon9, weapon10, weapon_number1, weapon_number2, weapon_number3, weapon_number4, weapon_number5, weapon_number6, weapon_number7, weapon_number8, weapon_number9, weapon_number10, device1, device2, device3, device4, device5, time, cost, black_market_design, empire_design ) VALUES ( %d, %d, %d, '%s', %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
+			mOwner, mDesignID, mBody, (char*)add_slashes((char*)mName), mArmor, mEngine, mComputer, mShield, get_weapon(0), get_weapon(1), get_weapon(2), get_weapon(3), get_weapon(4), get_weapon(5), get_weapon(6), get_weapon(7), get_weapon(8), get_weapon(9), get_weapon_number(0), get_weapon_number(1), get_weapon_number(2), get_weapon_number(3), get_weapon_number(4), get_weapon_number(5), get_weapon_number(6), get_weapon_number(7), get_weapon_number(8), get_weapon_number(9), get_device(0), get_device(1), get_device(2), get_device(3), get_device(4), mBuildTime, mBuildCost, (int)mBlackMarketDesign, (int)mEmpireDesign );
 			break;
 		case QUERY_UPDATE:
 			query.format( "UPDATE class SET time = %d, black_market_design =%d, empire_design =%d WHERE owner = %d AND design_id = %d", mBuildTime, (int)mBlackMarketDesign, (int)mEmpireDesign, mOwner, mDesignID );

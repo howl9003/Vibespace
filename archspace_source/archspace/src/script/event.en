@@ -1602,4 +1602,180 @@
 			Duration(288)
 		}
 	]
+},
+
+# === CVS-merge: new event entries ported from CVSRoot (S4 content) ===
+<Bribe from a Wealthy Merchant>
+{
+	Number(1272),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("A wealthy trading baron asks to open trade with your planets. In exchange he is offering to help start the local economy by giving you 30m PP."),
+	Duration(72),
+	MinHonor(0),
+	MaxHonor(60),
+	MinTurn(1440),
+	MaxTurn(2879),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			BeginOnly("Yes"),
+			Apply("Absolute"),
+			Arg1(3000000),
+			Duration(0)
+		}
+	]
+},
+
+<Bribe from a Wealthy Merchant>
+{
+	Number(1273),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("A wealthy trading baron asks to open trade with your planets. In exchange he is offering to help start the local economy by giving you 300m PP."),
+	Duration(72),
+	MinHonor(0),
+	MaxHonor(60),
+	MinTurn(2880),
+	MaxTurn(105120),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			BeginOnly("Yes"),
+			Apply("Absolute"),
+			Arg1(30000000),
+			Duration(0)
+		}
+	]
+},
+
+<Pirates in Your Trading Lanes>
+{
+	Number(1274),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("There have been pirates sighted in your system. Your scout ships detected a band of roving pirates in your trade lanes.  After dispatching them, you gained 25m PP reward for their deaths."),
+	Duration(36),
+	MinTurn(1440),
+	MaxTurn(2879),,
+	<EffectList>
+	[
+		<Change Production>
+		{
+			BeginOnly("Yes"),
+			Apply("Absolute"),
+			Arg1(2500000),
+			Duration(0)
+		}
+	]
+},
+
+<Pirates in Your Trading Lanes>
+{
+	Number(1275),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("There have been pirates sighted in your system. Your scout ships detected a band of roving pirates in your trade lanes.  After dispatching them, you gained 100m PP reward for their deaths."),
+	Duration(36),
+	MinTurn(2880),
+	MaxTurn(105120),
+	<EffectList>
+	[
+		<Change Production>
+		{
+			BeginOnly("Yes"),
+			Apply("Absolute"),
+			Arg1(10000000),
+			Duration(0)
+		}
+	]
+},
+
+<Commercial Influx>
+{
+	Number(1276),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your empire enjoys an abnormal increase in commerce temporarily."),
+	Duration(144),
+	MinTurn(576),
+	MaxTurn(105120),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(6),
+			Arg1(3),
+			Duration(144)
+		}
+	]
+},
+
+<Espionage Paranoia>
+{
+	Number(1277),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your empire is being paranoid about invasions and has upped its defences and expanded its network."),
+	Duration(144),
+	MinTurn(576),
+	MaxTurn(105120),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(5),
+			Arg1(2),
+			Duration(144)
+		},
+		<Change Control Model>
+		{
+			Target(9),
+			Arg1(-2),
+			Duration(144)
+		}
+	]
+},
+
+<Vigorous Economic Development>
+{
+	Number(1278),
+	<Type>
+	[
+		Type("System")
+	],
+	Description("Your workers have begin working hard to transform the recent acquasitions for the empire and improve industrial output in general."),
+	Duration(144),
+	MinTurn(576),
+	MaxTurn(105120),
+	<EffectList>
+	[
+		<Change Control Model>
+		{
+			Target(7),
+			Arg1(2),
+			Duration(144)
+		},
+		<Change Control Model>
+		{
+			Target(0),
+			Arg1(2),
+			Duration(144)
+		}
+	]
 }
+

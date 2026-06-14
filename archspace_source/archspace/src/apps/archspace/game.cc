@@ -1499,7 +1499,27 @@ CGame::create_new_player(int aPortalID, const char *aName, int aRace)
 		}
 	}
 
-	GameID = PLAYER_TABLE->get_max_id()+1;
+	// Bots take a reserved game-id range (>= BOT_GAME_ID_BASE) so human players
+	// keep the low ids 1..BOT_GAME_ID_BASE-1. Bots dominate the global max once
+	// they exist, so max_id+1 chains them; the floor handles the very first bot.
+	// Humans use the highest human-only id below the bot range.
+	if (aPortalID >= BOT_PORTAL_BASE)
+	{
+		GameID = PLAYER_TABLE->get_max_id() + 1;
+		if (GameID < BOT_GAME_ID_BASE) GameID = BOT_GAME_ID_BASE;
+	}
+	else
+	{
+		int MaxHuman = 0;
+		for (int i=0 ; i<PLAYER_TABLE->length() ; i++)
+		{
+			CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
+			if (P == NULL || P->get_portal_id() >= BOT_PORTAL_BASE) continue;
+			int gid = P->get_game_id();
+			if (gid < BOT_GAME_ID_BASE && gid > MaxHuman) MaxHuman = gid;
+		}
+		GameID = MaxHuman + 1;
+	}
 
 	Player = new CPlayer(aPortalID, GameID, aName, aRace, Council);
 	PLAYER_TABLE->add_player(Player);
@@ -1992,7 +2012,7 @@ static const int sFactionClusterSuffixCount =
 // Rank words used both as commander-name prefixes and to recognise commander
 // names in bot_name_fits_race.
 static const char *sBotRankNames[] =
-	{ "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
+	{ "Newbie", "Ensign", "Captain", "Commodore", "Admiral", "Grand Admiral", "Supreme Admiral" };
 static const int sBotRankCount =
 	sizeof(sBotRankNames) / sizeof(sBotRankNames[0]);
 
@@ -2173,9 +2193,9 @@ CGame::make_bot_name(int aRace, int aBand, char *aOut, int aOutSize)
 	if (number(100) <= FactionPct && make_bot_faction_name(aRace, aOut, aOutSize))
 		return;
 
-	// bands 0-3: a random rank scaled to the band; bands 4-5: a fixed signature
+	// bands 0-4: a random rank scaled to the band; bands 5-6: a fixed signature
 	// rank shared by every bot in the band.
-	int Rank = (aBand >= 4) ? aBand : number(aBand + 1) - 1;
+	int Rank = (aBand >= 5) ? aBand : number(aBand + 1) - 1;
 	const char *Commander = ADMIRAL_NAME_TABLE->get_random_name(aRace);
 	if (!Commander || !*Commander) Commander = "Bot";
 	if ((int)strlen(Commander) > 30)
@@ -2313,12 +2333,14 @@ CGame::create_bot_player(int aBand)
 	// matching ship components, keeping a bot's tech thematically in step with its
 	// tier (the tier ship designs pick components by level directly, so this is for
 	// flavour/power, not a hard requirement).
-	//   bands 0-3 -> level 3/5/7/9; band 4 (Grand Admiral) -> all level-9 techs;
-	//   band 5 (Supreme Admiral) -> every tech (the tree tops out at level 12).
+	//   band 0 (Newbie) -> level 2; bands 1-4 -> level 3/5/7/9;
+	//   band 5 (Grand Admiral) -> all level-9 techs;
+	//   band 6 (Supreme Admiral) -> tech up to level 10 (< L11).
 	int TechLevel;
-	if (aBand <= 3)      TechLevel = 3 + aBand * 2;
-	else if (aBand == 4) TechLevel = 9;
-	else                 TechLevel = 99;
+	if (aBand == 0)      TechLevel = 2;
+	else if (aBand <= 4) TechLevel = 1 + aBand * 2;
+	else if (aBand == 5) TechLevel = 9;
+	else                 TechLevel = 10;
 	for (int L=1 ; L<=TechLevel ; L++)
 	{
 		for (int i=0 ; i<TECH_TABLE->length() ; i++)
@@ -2330,7 +2352,7 @@ CGame::create_bot_player(int aBand)
 	}
 
 	// --- planets: scale with band (mirrors the NPC-seed planet-claim block) ---
-	int TargetPlanets = 4 + aBand * 4;
+	int TargetPlanets = (aBand == 0) ? 2 : aBand * 4;
 	int PlanetGuard = 0;
 	while (PlanetList->length() < TargetPlanets && PlanetGuard++ < TargetPlanets * 4)
 	{
@@ -2494,7 +2516,20 @@ CGame::set_global_ending_data()
 			}
 		}
 
-		if (TECH_TABLE->length() == TechList->length())
+		// "All known techs" bonus: compare against the *obtainable* tech count,
+		// not TECH_TABLE->length(). The class 1-10 ship schematics are locked from
+		// acquisition (see IS_LOCKED_SHIP_SCHEMATIC), so the full table (200) can
+		// never be reached; a completed player tops out at the obtainable count
+		// (currently 190). Computed dynamically so it tracks the locked set.
+		int
+			ObtainableTechs = 0;
+		for (int i=0 ; i<TECH_TABLE->length() ; i++)
+		{
+			CTech *
+				Tech = (CTech *)TECH_TABLE->get(i);
+			if (!IS_LOCKED_SHIP_SCHEMATIC(Tech->get_id())) ObtainableTechs++;
+		}
+		if (TechList->length() >= ObtainableTechs)
 		{
 			Multiplier += CGlobalEnding::mMultiplierForAllKnownTechs;
 		}

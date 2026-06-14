@@ -28,7 +28,7 @@ CPageShipDesign2::handler( CPlayer *aPlayer)
 	QUERY("SHIP_SIZE", ShipSizeString);
 	int
 		ShipSize = as_atoi(ShipSizeString);
-	if (ShipSize < 1 || ShipSize > 10)
+	if (ShipSize < 1 || ShipSize > MAX_SHIP_CLASS)	// CVS-merge: was 10
 	{
 		ITEM("ERROR_MESSAGE",
 				GETTEXT("You selected wrong ship size. Please try again."));

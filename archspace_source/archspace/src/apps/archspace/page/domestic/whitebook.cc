@@ -81,7 +81,7 @@ CPageWhitebook::handler(CPlayer *aPlayer)
 							dec2unit(aPlayer->get_planet_list()->length())));
 	ITEM("RESEARCHED_TECH",
 			(char *)format(GETTEXT("Total %1$s researched tech(s)"),
-							dec2unit(aPlayer->get_tech_list()->length())));
+							dec2unit(aPlayer->get_tech_list()->count_obtainable())));
 	int
 		TargetTechID = aPlayer->get_target_tech();
 	if (TargetTechID == 0)

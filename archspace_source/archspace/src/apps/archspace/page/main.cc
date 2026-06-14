@@ -42,6 +42,9 @@ CPageMain::handler(CPlayer *aPlayer)
 		case 10:
 			BGColor = "#3E3E00";
 			break;
+		case 11:	// CVS-merge: Trabotulin
+			BGColor = "#1A2233";
+			break;
 		default:
 			BGColor = "";
 	}

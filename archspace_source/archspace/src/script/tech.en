@@ -2,10 +2,10 @@
 # 12XX: info(INFO), 
 # 13XX: matter(MATR) 
 # 14XX: life(LIFE)
-# Project: ³ª¿À´Â Project ¹øÈ£
-# Component: ³ª¿À´Â Component ¹øÈ£(ÀÇ ¹­À½)
-# Spy: ³ª¿À´Â »õ Special Ops ¹øÈ£
-# Control ModelÀº race script¿Í µ¿ÀÏ. ´Ü, ¾È ¾²´Â °ÍÀº ÀÖÀ½.
+# Project: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Project ï¿½ï¿½È£
+# Component: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Component ï¿½ï¿½È£(ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+# Spy: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Special Ops ï¿½ï¿½È£
+# Control Modelï¿½ï¿½ race scriptï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 # Control : Environment, Growth, Efficiency, Genius, Production,
 #      Facility Cost, Military, Ship Mobility, Commerce, Spy,
 #      Diplomacy, Ship Defense, Ship Attack,
@@ -2664,4 +2664,1959 @@
 #	{
 #	},
 	Attr("Normal")
+},
+
+# ============================================================
+# CVS-merge: advanced/new techs ported from CVSRoot (S2 tech tree).
+# 84 nodes: 10 AMATR, 13 SSCH (schematics), 38 UPG (upgrade), 23 base.
+# ============================================================
+<Trait Augmentation Theory>
+{
+	Number(1132),
+	<Prerequisite>
+	[
+		Tech(1131)
+	],
+	Description("Trait Augmentation Theory seeks to amplify existing traits in an individual, and make personalities more pronounced so their effects on others can be more significant. Under such behavior modifications, individuals become more 'themselves', than anything else."),
+	Type("SOCL"),
+	Level(12),
+	Project(7049),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Dynamic Caste Theory>
+{
+	Number(1133),
+	<Prerequisite>
+	[
+		Tech(1131)
+	],
+	Description("Dynamic Caste Theory looks at how a Classism society may eventually overcome its caste barriers to create a more dynamic system where individuals are not bound to certain castes for the rest of their lives and may progress, with some restrictions, up and down the caste system. The theory predicts increased productivity from individuals of the society as they aim to progress up the caste system. Ultimately, this theory aims to reach an equilibrium phase where the society is stable and the nett movement up and down the caste system becomes zero."),
+   	Type("SOCL"),
+	Level(12),
+	Project(7048),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Absolutism>
+{
+	Number(1134),
+	<Prerequisite>
+	[
+		Tech(1131)
+	],
+	Description("Absolutism is the final stage of a Totalism society. Under such a regime, the only will is the will of the one true leader, who has absolutely control over all aspects of every individual's lives. As in Unification, the leader is able to delegate the duties of control to other entities within the society, but in this case, instead of the the society moving on as one entity, it is possible to for societal subdivision to occur, allowing for smaller, but equally complex cells within the society."),
+    Type("SOCL"),
+	Level(12),
+	Project(7050),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Hybridization Theory>
+{
+	Number(1135),
+	<Prerequisite>
+	[
+		Tech(1132),
+		Tech(1133),
+		Tech(1134)
+	],
+	Description("Eventually, when a race progresses this far in terms of social development, they begin to realize that their absolute beliefs in their societal system may be flawed. Hybridization Theory explores the foundations of incorporating elements of other societal structures into an existing one, and ultimately results in the creation of hybrid societal stuctures, which possess many of the strengths of its original structures, yet eliminating some of the more blantant flaws within those structures."),
+	Type("SOCL"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Advanced Hybridization Theory>
+{
+	Number(1136),
+	<Prerequisite>
+	[
+		Tech(1135)
+	],
+	Description("Even with regular Hybridization Theory, it was not possible to create the most perfect society. Many rulers realize this flaw and eventually pursue the development of a deeper understanding of societal hybridization. Advanced Hybridization Theory is the result of these endeavours and provides a ruler with the knowledge to create new societal structures by integrating conflicting ideals by reaching a compromise between the two extremes. As such, it is possible to achieve 'the better of both worlds', but there is certainly still room for improvement on this theory."),
+	Type("SOCL"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Universal Hypothesis>
+{
+	Number(1137),
+	<Prerequisite>
+	[
+		Tech(1136)
+	],
+	Description("A long time after the discovery of societal hybridization, philosophers began to question themselves as to where of not there can exist a unifying theory, much like that which was discovered in Matter-Energy Science ages ago, which links all societal structures to the some set of common goals or parameters. It was not long after that where traits were discovered in every race that existed throughout the universe - the will to survive. It is this will that motivates the creation of complex societal structures to oversee the progression of a race, which is a powerful driving force in the creation of large inter-galactic empires."),
+	Type("SOCL"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Utopia>
+{
+	Number(1138),
+	<Prerequisite>
+	[
+		Tech(1137)
+	],
+	Description("Utopia, once thought an impractical, imaginary setting for the overtly idealistic, has been finally realised. Simply put, perfection is relative, and in any race's eyes, they will be able to judge their own strengths and weaknesses based on other races they encounter. After lengthy generations of observation, a race is capable of assimilating ideas from races they view as stronger as them, and gradually progress towards their concept of the perfect race. Utopia is achieved when a race no longer views any other race as superior to themselves in any aspect."),
+	Type("SOCL"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Self-Advancing Heuristics>
+{
+	Number(1226),
+	<Prerequisite>
+	[
+		Tech(1225)
+	],
+	Description("Self-Advancing Heuristics is the first attempt at creating an artificial intelligence that is able to generate ideas from random data. Normally, computers are only able to act in accordance to preset rules that its creators embed within its virtual memory space. However, this technique attempts to allow the computer to modify its own heuristical database based on rules it draws from randomly generated data. In essence, this technology aims to create the first true sentient computer, which is a feat that is even more remarkable than Oracle Computing. If used correctly, it is possible that it may generate techniques that even its creators had never thought of in the first place."),
+   	Type("INFO"),
+	Level(12),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5532)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Self-Conscious Artificial Intelligence>
+{
+	Number(1227),
+	<Prerequisite>
+	[
+		Tech(1226),
+		Tech(1338)
+	],
+	Description("Like a living organism, a self-conscious AI is able to judge its circumstances without prior information and input. By examining every single possibility that could result from a single scenario, it is possible to create an artificial system of intelligence where decisions are made based on intuition rather than rules."),
+   	Type("INFO"),
+	Level(13),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5206)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Artificial Sentience>
+{
+	Number(1228),
+	<Prerequisite>
+	[
+		Tech(1227)
+	],
+	Description("For many, artificial intelligence is synonymous with artificial sentience, but to the more developed races, there is a distinct difference between the two states. A being may be intelligent, but this does not necessarily mean that the being is sentient. To give an artificial being intelligence is as simple as providing it with heuristical rules for data analysis, as well and input and output channels. But for it to achieve sentience, it must also learn to perceive. It was not until recent times that scientists discovered that this could be achieved by adopting a neural network structure then populating it with useless random data and allowing the artificial intelligence simulation to run for a certain amount of time. Applications of these include creating original individuals not based on copies of existing ones, a technology that even Totalism governments see the benefits of."),
+   	Type("INFO"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#
+#	],
+	<Effect>
+	{
+	    Research(1)
+	},
+	Attr("Normal")
+},
+
+<Inter-Planetary Processor Network>
+{
+	Number(1229),
+	<Prerequisite>
+	[
+		Tech(1228)
+	],
+	Description("The inception of the of the IPPN was not difficult at all, but the designing of the infrastructure and resource allocation for such a large scale project was costly and time-ineffective. After the discovery of artificial sentience, scientists began to let the newly created beings oversee the construction of this large-scale network. Using complex resource allocation algorithms, the network pools its resources, and the entire entity functions as a single processor, with the ability to perform even the most complex quantum calculations within a picosecond."),
+   	Type("INFO"),
+	Level(15),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+        Number(6115)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Advanced Parallel Processing Theory>
+{
+	Number(1230),
+	<Prerequisite>
+	[
+		Tech(1228)
+	],
+	Description("This particular theory involves the use multiple processors of different speeds and configurations and redistributing the workload amongst them. Computers linked up in such a way all operate with the same speed and efficiency as any other terminal in the network, with perfect task allocation routines. This made it possible for old computers to contribute to a large-scale computational project even though their processing power might be limited."),
+   	Type("INFO"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Singularity Manipulation>
+{
+	Number(1337),
+	<Prerequisite>
+	[
+		Tech(1335)
+	],
+	Description("Black Hole creation is spontaneous in nature, but to create small black holes under laboratory conditions is a challenge. Technology used in the creation of the Homing Black Hole missile was only the first step, but to properly manipulate singularity takes extreme precision, and knowledge of dimension manipulation helps provides safety nets should the procedure fail."),
+	Type("MATR"),
+	Level(12),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(6310)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Advanced Predictive Mechanics>
+{
+	Number(1338),
+	<Prerequisite>
+	[
+		Tech(1337),
+		Tech(1226)
+
+	],
+	Description("Founded on the principles of Probability Mechanics, this advanced study seeks to unravel the apparent randomness of chaos. It turns out that if a simulation was run for long periods of time, even chaotic motion will begin to oscillate regularly due to the fact that all possibilities are eliminated. Even in infinite chaotic motion, studies have shown that predictive mechanisms do exist to correctly determine outcome without running any simulations with the initial conditions."),
+	Type("MATR"),
+	Level(13),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5306)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Spatial Anomaly Manipulation>
+{
+	Number(1339),
+	<Prerequisite>
+	[
+		Tech(1338)
+
+	],
+	Description("Space is filled with various anomalies which exist due to fluctuations in the fabric of spacetime. Sometimes, these anomalies are minor and undisruptive, at other times, they can cripple entire fleets. Being able to control and utilize spatial anomalies presents a considerable challenge even for the most advanced races."),
+	Type("MATR"),
+	Level(14),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5534),
+		Number(6212)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<True Enlightenment>
+{
+	Number(1427),
+	<Prerequisite>
+	[
+		Tech(1426)
+	],
+	Description("True Enlightenment- the final stage of ascension and achieved by few. Many have gone through trials and tribulations, devoting life to prayer, meditation, non-violence and life to charity. True Enlightenment is achieved by dropping all of ones burdens, finding the zone between peace and strife, leaving the cares of mortal life behind and focusing on self-reflection."),
+	Type("LIFE"),
+	Level(11),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Psionic-Matter Synthesis>
+{
+	Number(1428),
+	<Prerequisite>
+	[
+		Tech(1427)
+	],
+	Description("Matter and energy are not spontaneous available, and a law exists between the conversion of matter to energy. Recent research has shown psionic abilities to be linked with telekinesis and other non-trivial phenomenon, which culminated in the theory of Psionic Convertibility. This particular technology focuses on the means of converting psionic energies into tangible matter."),
+	Type("LIFE"),
+	Level(12),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(6113)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Psionic-Energy Synthesis>
+{
+	Number(1429),
+	<Prerequisite>
+	[
+		Tech(1427)
+	],
+	Description("Matter and energy are not spontaneous available, and a law exists between the conversion of matter to energy. Recent research has shown psionic abilities to be linked with telekinesis and other non-trivial phenomenon, which culminated in the theory of Psionic Convertibility. This particular technology focuses on the means of converting psionic energies into usable power."),
+	Type("LIFE"),
+	Level(12),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(6112)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Psionic Induction (Organic)>
+{
+	Number(1430),
+	<Prerequisite>
+	[
+		Tech(1428),
+		Tech(1429)
+	],
+	Description("Psionic Induction is the act of inducing a living being to exhibit psionic capabilities. While some races have a natural affiinity to psionic energy, it is believed that with proper conditioning, and appropriate genetic modifications, any living being in the universe may come to possess psionic power."),
+	Type("LIFE"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Psionic Induction (Inorganic)>
+{
+	Number(1431),
+	<Prerequisite>
+	[
+		Tech(1430)
+	],
+	Description("With the advent of Psionic Induction in organic beings, scientists then postulated the possibility of inducing similar effects in inorganic material. As they discovered in previous experiments, when inorganic matter is subject to the same conditioning as organic matter, there can be similar manifestations of psionic power if certain criteria are met."),
+	Type("LIFE"),
+	Level(14),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5117)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Metamorphosis>
+{
+	Number(1432),
+	<Prerequisite>
+	[
+		Tech(1431),
+		Tech(1430)
+	],
+	Description("When a race reaches the higher levels of maturity, metamorphosis begins to occur within their defining racial structures. A thorough understanding of this process enables any race to foresee any biological advantages and disadvantages that such a change could bring about, and selectively eliminate the changes that they deem undesirable. Eventually, Darwin's theory of evolution became increasingly outdated, and new theories on Metamorphosis filled in the gaps which it left."),
+	Type("LIFE"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Diversification>
+{
+	Number(1433),
+	<Prerequisite>
+	[
+		Tech(1432)
+	],
+	Description("The human expression 'no man is an island' turns out to be remarkably true in the field of life sciences. Scientists trying to perfect their theories all encountered a stumbling block - without diversification of species, evolution would not even be possible as there would be no new knowledge coming from the environment. This would mean that an isolated race would never evolve into something beyond their current form, but with the discovery of metamorphosis and means to control the process, scientists are now able to create new life forms to interact with an existing population to determine if the outcome is beneficial or otherwise. From there, the positive results are then manufactured on a large scale and intermingled with current populations to achieve a large-scale effect."),
+	Type("LIFE"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Nirvana>
+{
+	Number(1434),
+	<Prerequisite>
+	[
+        Project(9027)
+	],
+	Description("Nirvana is the ultimate state of enlightenment. It is a mode of being that is free from mind-contaminants such as lust, anger or craving; a state of pure consciousness and bliss unobstructed by psychological conditioning. All passions and emotions are transformed and pacified such that one is no longer subject to suffering. This is not the sense-based happiness of everyday life, but rather an enduring, transcendental happiness integral to the calmness attained through enlightenment."),
+	Type("LIFE"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Population Growth I>
+{
+	Number(1500),
+	<Prerequisite>
+	[
+		Tech(1421)
+	],
+	Description("Increases Growth CM by 1."),
+	Type("UPG"),
+	Level(10),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Growth(1)
+	},
+	Attr("Normal")
+},
+
+<Population Growth II>
+{
+	Number(1501),
+	<Prerequisite>
+	[
+		Tech(1500)
+	],
+	Description("Increases Growth CM by 1."),
+	Type("UPG"),
+	Level(12),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Growth(1)
+	},
+	Attr("Normal")
+},
+
+<Population Growth III>
+{
+	Number(1502),
+	<Prerequisite>
+	[
+		Tech(1501)
+	],
+	Description("Increases Growth CM by 1."),
+	Type("UPG"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Growth(1)
+	},
+	Attr("Normal")
+},
+
+<Sustainable Development I>
+{
+	Number(1503),
+	<Prerequisite>
+	[
+		Tech(1423)
+	],
+	Description("Increases Environment CM by 1."),
+	Type("UPG"),
+	Level(11),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Environment(1)
+	},
+	Attr("Normal")
+},
+
+<Sustainable Development II>
+{
+	Number(1504),
+	<Prerequisite>
+	[
+		Tech(1503)
+	],
+	Description("Increases Environment CM by 1."),
+	Type("UPG"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Environment(1)
+	},
+	Attr("Normal")
+},
+
+<Trade Routes I>
+{
+	Number(1505),
+	<Prerequisite>
+	[
+		Tech(1127)
+	],
+	Description("Increases Commerce CM by 1 and Diplomacy CM by 2."),
+	Type("UPG"),
+	Level(10),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Diplomacy(2),
+        Commerce(1)
+	},
+	Attr("Normal")
+},
+
+<Trade Routes II>
+{
+	Number(1506),
+	<Prerequisite>
+	[
+		Tech(1505),
+		Project(7049)
+	],
+	Description("Increases Commerce CM by 1 and Diplomacy CM by 2."),
+	Type("UPG"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Diplomacy(2),
+        Commerce(1)
+	},
+	Attr("Normal")
+},
+
+<Productivity I>
+{
+	Number(1507),
+	<Prerequisite>
+	[
+		Tech(1337)
+	],
+	Description("Increases Production CM by 2."),
+	Type("UPG"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Production(2)
+	},
+	Attr("Normal")
+},
+
+<Productivity II>
+{
+	Number(1508),
+	<Prerequisite>
+	[
+		Tech(1507)
+	],
+	Description("Increases Production CM by 2."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Production(2)
+	},
+	Attr("Normal")
+},
+
+<Productivity III>
+{
+	Number(1509),
+	<Prerequisite>
+	[
+		Tech(1508),
+		Project(7050)
+	],
+	Description("Increases Production CM by 2."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Production(2)
+	},
+	Attr("Normal")
+},
+
+<Research and Development I>
+{
+	Number(1510),
+	<Prerequisite>
+	[
+		Tech(1227)
+	],
+	Description("Increases Research CM by 3."),
+	Type("UPG"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Research(3)
+	},
+	Attr("Normal")
+},
+
+<Research and Development II>
+{
+	Number(1511),
+	<Prerequisite>
+	[
+		Tech(1510)
+	],
+	Description("Increases Research CM by 3."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Research(3)
+	},
+	Attr("Normal")
+},
+
+<Militarism I>
+{
+	Number(1512),
+	<Prerequisite>
+	[
+		Tech(1133)
+	],
+	Description("Increases Military CM by 1."),
+	Type("UPG"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+        Military(1)
+	},
+	Attr("Normal")
+},
+
+<Improved Missiles I>
+{
+	Number(1513),
+	<Prerequisite>
+	[
+		Tech(1330)
+	],
+	Description("Refines existing missile weaponry, increasing missile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(10),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Missiles II>
+{
+	Number(1514),
+	<Prerequisite>
+	[
+		Tech(1513)
+	],
+	Description("Refines existing missile weaponry, increasing missile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(12),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Missiles III>
+{
+	Number(1515),
+	<Prerequisite>
+	[
+		Tech(1514)
+	],
+	Description("Refines existing missile weaponry, increasing missile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Missiles IV>
+{
+	Number(1516),
+	<Prerequisite>
+	[
+		Tech(1515),
+		Tech(1227)
+	],
+	Description("Refines existing missile weaponry, increasing missile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Missiles V>
+{
+	Number(1517),
+	<Prerequisite>
+	[
+		Tech(1516),
+		NotTech(1522),
+		NotTech(1527)
+	],
+	Description("Refines existing missile weaponry, increasing missile Attack Rate and Damage by 20%."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Projectiles I>
+{
+	Number(1518),
+	<Prerequisite>
+	[
+		Tech(1223)
+	],
+	Description("Refines existing projectile weaponry, increasing projectile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(10),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Projectiles II>
+{
+	Number(1519),
+	<Prerequisite>
+	[
+		Tech(1518)
+	],
+	Description("Refines existing projectile weaponry, increasing projectile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(12),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Projectiles III>
+{
+	Number(1520),
+	<Prerequisite>
+	[
+		Tech(1519)
+	],
+	Description("Refines existing projectile weaponry, increasing projectile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Projectiles IV>
+{
+	Number(1521),
+	<Prerequisite>
+	[
+		Tech(1520),
+        Tech(1227)
+	],
+	Description("Refines existing projectile weaponry, increasing projectile Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Projectiles V>
+{
+	Number(1522),
+	<Prerequisite>
+	[
+		Tech(1521),
+		NotTech(1517),
+		NotTech(1527)
+	],
+	Description("Refines existing projectile weaponry, increasing projectile Attack Rate and Damage by 20%."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Beams I>
+{
+	Number(1523),
+	<Prerequisite>
+	[
+		Tech(1332)
+	],
+	Description("Refines existing beam weaponry, increasing beam Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(10),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Beams II>
+{
+	Number(1524),
+	<Prerequisite>
+	[
+		Tech(1523)
+	],
+	Description("Refines existing beam weaponry, increasing beam Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(12),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Beams III>
+{
+	Number(1525),
+	<Prerequisite>
+	[
+		Tech(1524)
+	],
+	Description("Refines existing beam weaponry, increasing beam Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Beams IV>
+{
+	Number(1526),
+	<Prerequisite>
+	[
+		Tech(1525),
+		Tech(1227)
+	],
+	Description("Refines existing beam weaponry, increasing beam Attack Rate and Damage by 5%."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Beams V>
+{
+	Number(1527),
+	<Prerequisite>
+	[
+		Tech(1526),
+		NotTech(1517),
+		NotTech(1522)
+	],
+	Description("Refines existing beam weaponry, increasing beam Attack Rate and Damage by 20%."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Hulls I>
+{
+	Number(1528),
+	<Prerequisite>
+	[
+        Tech(1428)
+	],
+	Description("Reinforces the hull structure of existing ships, providing 10% more HP."),
+	Type("UPG"),
+	Level(12),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Hulls II>
+{
+	Number(1529),
+	<Prerequisite>
+	[
+         Tech(1528)
+	],
+	Description("Reinforces the hull structure of existing ships, providing 10% more HP."),
+	Type("UPG"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Hulls III>
+{
+	Number(1530),
+	<Prerequisite>
+	[
+         Tech(1529),
+         Race(9)
+	],
+	Description("Reinforces the hull structure of existing ships, providing 10% more HP."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Shields I>
+{
+	Number(1531),
+	<Prerequisite>
+	[
+         Tech(1335)
+	],
+	Description("Reinforces the shields of existing ships, providing 10% more shield strength and 1 deflection solidity."),
+	Type("UPG"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Shields II>
+{
+	Number(1532),
+	<Prerequisite>
+	[
+         Tech(1531),
+         Race(7)
+	],
+	Description("Reinforces the shields of existing ships, providing 10% more shield strength and 1 deflection solidity."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Engines I>
+{
+	Number(1533),
+	<Prerequisite>
+	[
+         Tech(1336)
+	],
+	Description("Enhances existing engine technology, increasing battle speed and mobility by 10%."),
+	Type("UPG"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Engines II>
+{
+	Number(1534),
+	<Prerequisite>
+	[
+         Tech(1533)
+	],
+	Description("Enhances existing engine technology, increasing battle speed and mobility by 10%."),
+	Type("UPG"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Improved Engines III>
+{
+	Number(1535),
+	<Prerequisite>
+	[
+         Tech(1534)
+	],
+	Description("Enhances existing engine technology, increasing battle speed and mobility by 10%."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Grand Assault>
+{
+	Number(1536),
+	<Prerequisite>
+	[
+         Project(9026)
+	],
+	Description("Greatly increases offensive abilities, at the cost of defensive abilities."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Grand Defense>
+{
+	Number(1537),
+	<Prerequisite>
+	[
+         Project(9016)
+	],
+	Description("Greatly increases defensive abilities, at the cost of offensive abilities."),
+	Type("UPG"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#
+#	},
+	Attr("Normal")
+},
+
+<Gunboat Schematics>
+{
+	Number(1600),
+#	<Prerequisite>
+#	[
+#
+#	],
+	Description("These schematics detail the construction of a Gunboat class vessel. It is one of the ship classes that almost every race within the Empire can afford."),
+	Type("SSCH"),
+	Level(1),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Basic")
+},
+
+<Corvette Schematics>
+{
+	Number(1601),
+#	<Prerequisite>
+#	[
+#
+#	],
+	Description("These schematics detail the construction of a Destroyer class vessel. It is another ship class that almost every race within the Empire can afford."),
+	Type("SSCH"),
+	Level(1),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Basic")
+},
+
+<Frigate Schematics>
+{
+	Number(1602),
+#	<Prerequisite>
+#	[
+#
+#	],
+	Description("These schematics detail the construction of a Frigate class vessel. These vessels are the first true ships possessing enough firepower to constitute the bulk of an armada. It is also the first class with enough room to house a device."),
+	Type("SSCH"),
+	Level(2),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Basic")
+},
+
+<Destroyer Schematics>
+{
+	Number(1603),
+	<Prerequisite>
+	[
+        Tech(1308),
+        Tech(1602)
+	],
+	Description("These schematics detail the construction of a Destroyer class vessel. Destroyers form the basis of any serious ruler's starting armada."),
+	Type("SSCH"),
+	Level(3),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Cruiser Schematics>
+{
+	Number(1604),
+	<Prerequisite>
+	[
+        Tech(1603),
+        Tech(1208),
+        Tech(1310),
+        Tech(1312)
+	],
+	Description("These schematics detail the construction of a Cruiser class vessel. This ship class is the most commonly used throughout the Empire."),
+	Type("SSCH"),
+	Level(4),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Battlecruiser Schematics>
+{
+	Number(1605),
+	<Prerequisite>
+	[
+        Tech(1604),
+        Tech(1322),
+        Tech(1410),
+        Tech(1214)
+	],
+	Description("These schematics detail the construction of a Battlecruiser class vessel. Initially, battlecruisers are quite commonly used, however, they eventually get replaced by their larger counterparts, the BattleShip."),
+	Type("SSCH"),
+	Level(6),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<BattleShip Schematics>
+{
+	Number(1606),
+	<Prerequisite>
+	[
+        Tech(1605),
+        Tech(1327),
+        Tech(1417)
+	],
+	Description("These schematics detail the construction of a BattleShip class vessel. Capable of housing a substantial amount of weaponry, these ships are even able to inflict significant damage when facing the larger classes, which is why these ships are so commonly used throughout the Empire."),
+	Type("SSCH"),
+	Level(7),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Dreadnaught Schematics>
+{
+	Number(1607),
+	<Prerequisite>
+	[
+        Tech(1606),
+        Tech(1332),
+        Tech(1221)
+	],
+	Description("These schematics detail the construction of a Dreadnaught class vessel. No ruler in their right mind would underestimate a fleet of these ships, for they are the defining class in space warfare."),
+	Type("SSCH"),
+	Level(9),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Mobile Fortress Schematics>
+{
+	Number(1608),
+	<Prerequisite>
+	[
+        Tech(1607),
+        Tech(1333),
+        Tech(1129)
+	],
+	Description("These schematics detail the construction of a Mobile Fortress class vessel. Races that eventually develop blueprints of a Mobile Fortress are the ones with the ambition and desire to succeed in these times of intergalactic strife."),
+	Type("SSCH"),
+	Level(10),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Impending Doom>
+{
+	Number(1609),
+	<Prerequisite>
+	[
+        Tech(1608),
+        Tech(1334),
+        Tech(1225),
+        Tech(1131),
+        Tech(1426)
+	],
+	Description("These coveted plans contain the information required to construct a mighty Doomstar. To ensure pan-galactic domination, an ruler must ensure that he has the ability to construct not just one of these... but an entire armada of them."),
+	Type("SSCH"),
+	Level(12),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Astral Carrier Schematics>
+{
+	Number(1610),
+#	cvs-merge: class 1-10 schematics (incl. Doomstar/1609) are locked from play,
+#	so this no longer chains through 1609. Gated directly on the end-game research
+#	techs the Doomstar schematic used, to keep Astral Carrier an end-game unlock.
+	<Prerequisite>
+	[
+        Tech(1334),
+        Tech(1225),
+        Tech(1131),
+        Tech(1426),
+        Tech(1227),
+        Tech(1135)
+	],
+	Description("The Astral Carrier is perhaps one of the less frequently sighted ship class, as their development has been fairly recent. It takes non-trivial effort to develop the plans to construct this class, but the endeavour is well worth it."),
+	Type("SSCH"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<The Sun's Demise>
+{
+	Number(1611),
+	<Prerequisite>
+	[
+        Tech(1610)
+	],
+	Description("These highly regarded schematics grant the ability to construct massive Suncrushers. Despite the name, Suncrushers are only as big as a medium-sized planet, but those who underestimate its firepower will be unpleasantly surprised."),
+	Type("SSCH"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Steward of the Universe>
+{
+	Number(1612),
+	<Prerequisite>
+	[
+        Tech(1611)
+	],
+	Description("With power comes responsibility. With great power comes great responsibility. Technology to construct a Worldship is only granted to those in which the ancient race of Trabotulins trust to safeguard the stability of the timespace fabric."),
+	Type("SSCH"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Postulate of Existence>
+{
+	Number(1700),
+#	<Prerequisite>
+#	[
+#		Tech(1339)
+#	],
+	Description("Since the birth of many races, primitive intelligence would eventually ask the question 'Is there more out there?'. It turns out this instinctive question becomes the true motivation for developing Matter-Energy Science to a whole new level... well, that and the vast number of other species out there waiting to tear any fledgling new civilization apart."),
+	Type("AMATR"),
+	Level(1),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Basic")
+},
+
+<Timespace Anomaly Manipulation>
+{
+	Number(1701),
+	<Prerequisite>
+	[
+		Tech(1339)
+	],
+	Description("Timespace anomalies are even trickier than spatial anomalies, when the time-coordinate is involved, the magnitude of the problem is increased two-fold."),
+	Type("AMATR"),
+	Level(15),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5114),
+		Number(5406)
+	],
+	<Effect>
+	{
+	    Research(-2)
+	},
+	Attr("Normal")
+},
+
+<Organic-Inorganic Induction>
+{
+	Number(1702),
+	<Prerequisite>
+	[
+		Tech(1339),
+		Tech(1431)
+	],
+	Description("Organic-Inorganic Induction involves inducing material with inherent inanimate properties to act and behave like an animate object. In essence, this technology looks at the creation of new superior inorganic species from the analysis of existing organic species. Only few races eventually grasp the concept that there is no distinction between animate and inanimate objects, and even fewer are able to replicate this sort of behavior in a technological fashion. But those who accomplish this feat are able to mass manufacture any unit that they lack, and essentially, assimilate another race's knowledge into their own knowledge pool."),
+	Type("AMATR"),
+	Level(15),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5115)
+	],
+	<Effect>
+	{
+	    Research(-2)
+	},
+	Attr("Normal")
+},
+
+<Dimensional Traversal>
+{
+	Number(1703),
+	<Prerequisite>
+	[
+		Tech(1701)
+	],
+	Description("In recent times, it was discovered that dimension was actually no separate from timespace. In fact, many theorists claim to be able to 'prove' the existence and regularity of additional dimensions aside for the current space-time configuration, which adds a fifth coordinate to space-time, creating a whole new coordinate system known as space-time-dim. Dimensional Traversal is the ability to freely move from one dimensional coordinate to another. This technology will eventually solve the spatial limitations of current technology, by reallocating objects to different dimensions, and then recalling them as required."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5116)
+	],
+	<Effect>
+	{
+	    Research(-2)
+	},
+	Attr("Normal")
+},
+
+<Hyperspace Distortion>
+{
+	Number(1704),
+	<Prerequisite>
+	[
+		Tech(1702),
+		Tech(1703)
+	],
+	Description("Technological advancements in Dimensional Traversal technology has reached a point whereby it is possible to defy previously defined laws of physics and bend hyperspace in such a way that travel is nearly instantaneous. Objects with this capability are able to travel at speeds magnitudes faster than photons or tachions, and the laws of relativity break down in this new mode of travel. Whoever possesses this technology will have a huge tactical edge in battle. After all, being able to relocate an entire armada instantly without having to send prior scouts is an eventuality that even the most ready fleets cannot prepare for."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(6213),
+		Number(6311)
+	],
+	<Effect>
+	{
+	    Research(-2)
+	},
+	Attr("Normal")
+},
+
+<Deus Ex Machina>
+{
+	Number(1705),
+	<Prerequisite>
+	[
+		Tech(1704)
+	],
+	Description("Technology has advanced to the point whereby it would seem no further advancements are possible. Every avenue of research, every attempt at discovery, has been met with utter failure in recent years. Theories that have been proven countless times are now at a stage where they are declared undefiable universal laws. Even the most ingenious minds in this field of research are unable to comprehend what possible changes the future could have in store. But recently, during one of their dimensional traversals, a group of scientists stumbled across ancient manuscripts they believe to have originated from the Trabotulins. The only decipherable entry contained technological marvels beyond their wildest imaginations. Clearly, their research was far from being over, very far indeed."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+	<Effect>
+	{
+	    Research(8)
+	},
+	Attr("Normal")
+},
+
+<Reactive-Explosive Theory>
+{
+	Number(1706),
+	<Prerequisite>
+	[
+	    Tech(1517),
+		Project(8004)
+	],
+	Description("Trabotulins first discovered a method of creating a hybrid missile known as the Worldslayer. This would appear to be a key idea on how to create missiles that cause reactive and explosive effects simultaneously."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Self-Conscious Weaponry>
+{
+	Number(1707),
+	<Prerequisite>
+	[
+		Tech(1229),
+        Project(8005)
+	],
+	Description("Trabotulins first discovered a method of creating a hybrid missile known as the Worldslayer. This would appear to be a key idea on how to imbue conventional weaponry with self-consciousness, so that they would be able to correct for errors in their flight path."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Focusing Nexus>
+{
+	Number(1708),
+	<Prerequisite>
+	[
+	    Tech(1432),
+		Project(8006)
+	],
+	Description("Trabotulins first discovered a method of creating a hybrid missile known as the Worldslayer. This would appear to be a key idea on how create a focusing nexus for explosions, maximizing the possible damage given a fixed amount of explosive and reactive material."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<The End of Archspace>
+{
+	Number(1739),
+	<Prerequisite>
+	[
+		Tech(1706),
+		Tech(1707),
+		Tech(1708)
+	],
+	Description("Unity, Ingenuity, Responsibility, the Trabotulins had all of them. What they did not have was foresight. This weapon, the Worldslayer, was filled with all the technological blessings of the Trabotulins, in the hope that it would end their inter-dimensional pan-galactic strife once and for all. Instead, their prototype was seized by the militaristic wing of their government. Infuriated by this act of betrayal, many broke away from the Trabotulin empire and vowed to seek revenge against the government. It didn't take long before a full-scale war erupted, and the Worldslayer saw its first and final war."),
+	Type("AMATR"),
+	Level(16),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(6214)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
 }
+

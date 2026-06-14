@@ -43,6 +43,11 @@ class CTech: public CPrerequisiteList
 			TYPE_LIFE,
 			TYPE_MATTER_ENERGY,
 			TYPE_SOCIAL,
+			// --- CVS-merge: advanced tech categories (order matches mTechTypeName).
+			// S2 ships ADV_MATTER_ENERGY content; UPGRADE/SCHEMATICS content in S4. ---
+			TYPE_UPGRADE,
+			TYPE_SCHEMATICS,
+			TYPE_ADV_MATTER_ENERGY,
 			TYPE_MAX
 		};
 
@@ -366,6 +371,12 @@ class CKnownTechList: public CSortedList, public CStore
 		bool remove_known_tech(int aTechID);
 
 		int count_by_category( int aType );
+
+		// Known techs the player could actually acquire -- excludes the locked
+		// class 1-10 ship schematics (IS_LOCKED_SHIP_SCHEMATIC). Used for the
+		// displayed tech total so it tops out at the obtainable count (190),
+		// matching the all-techs ending bonus.
+		int count_obtainable();
 
 		CKnownTech* get_by_id(int aTechID);
 
