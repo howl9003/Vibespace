@@ -31,6 +31,7 @@
 #include <cstring>
 #include "../triggers.h"
 #include "../archspace.h"
+#include "../council.h"
 
 static int
 bot_cfg(const char *aKey, int aDefault)
@@ -141,6 +142,20 @@ CCronTabBotPopulation::handler()
 	SLOG("SYSTEM : bot tiers bots[%d/%d/%d/%d/%d/%d] fleets[%d/%d/%d/%d/%d/%d]",
 			TierBots[0], TierBots[1], TierBots[2], TierBots[3], TierBots[4], TierBots[5],
 			TierFleets[0], TierFleets[1], TierFleets[2], TierFleets[3], TierFleets[4], TierFleets[5]);
+
+	// Reflect freshly spawned / reseeded bots in the live rankings NOW. create_bot_player
+	// adds its rank entry (via create_new_player) before granting the bot's tech/planets and
+	// building its tier roster -- and the reseed above rebuilds rosters too -- so those rank
+	// entries hold a near-zero, pre-roster power until the next hourly CTriggerRank. That hour
+	// of staleness is exactly why a just-respawned bot population showed up in the rankings at
+	// ~0 power. Rebuilding here (only when something actually changed, so this settles to a
+	// no-op once the population is full) keeps the player AND council rankings in step with
+	// real bot power within a population-cron cycle instead of up to an hour later.
+	if (Spawned || Reseeded)
+	{
+		PLAYER_TABLE->refresh_rank_table();
+		COUNCIL_TABLE->refresh_rank_table();
+	}
 
 	SLOG("SYSTEM : bot population crontab end (spawned %d this run)", Spawned);
 }
@@ -268,6 +283,16 @@ CCronTabBotRegen::handler()
 		Player->type(QUERY_UPDATE);
 		STORE_CENTER->store(*Player);
 		Acted++;
+	}
+
+	// The grow/cull above changed every acted-on bot's fleet power, but rank entries are only
+	// rebuilt by the hourly CTriggerRank -- so without this the rankings would lag a full hour
+	// behind each bot's rise-and-fall. Rebuild the player and council rank tables now so they
+	// track the drift. Bounded to when we actually touched bots.
+	if (Acted)
+	{
+		PLAYER_TABLE->refresh_rank_table();
+		COUNCIL_TABLE->refresh_rank_table();
 	}
 
 	SLOG("SYSTEM : bot regen crontab end (acted on %d bots)", Acted);
