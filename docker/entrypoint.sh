@@ -139,4 +139,23 @@ for i in $(seq 1 20); do
     sleep 1
 done
 
+# --- 6. static encyclopedia: same-origin image paths -----------------------
+# The engine regenerates the login encyclopedia under $WWW/encyclopedia during
+# game load() -- which runs HERE, after setup-web.sh (step 4) assembled the web
+# root -- emitting the literal, unsubstituted $IMAGE_SERVER_URL token into every
+# <IMG SRC>/preload. That token is only blanked at request time for dynamic *.as
+# pages; these files are served statically by nginx (location / -> try_files), so
+# the token leaks verbatim and every encyclopedia image 404s. mImageServerURL is
+# "" by design (same-origin), so blank the leftover token now that generation is
+# done -> paths become same-origin /image/.... Bounded to the generated tree and
+# idempotent (re-running on already-blanked files is a no-op). This MUST live
+# here, not in setup-web.sh: the engine rewrites these files on every boot AFTER
+# setup-web.sh runs, so a sed there would be clobbered ~1s later.
+WWW=/var/www/localhost/htdocs
+if [ -d "$WWW/encyclopedia" ]; then
+    log "blanking leftover \$IMAGE_SERVER_URL token in static encyclopedia HTML"
+    find "$WWW/encyclopedia" -name '*.html' -print0 \
+        | xargs -0 -r sed -i 's/\$IMAGE_SERVER_URL//g'
+fi
+
 wait "$GAME_PID"

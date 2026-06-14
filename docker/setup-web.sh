@@ -61,6 +61,12 @@ if [ -d "$ENCYC" ]; then
         echo "[web] ERROR: encyclopedia images missing after assembly (dest=$ENCYC_DEST)" >&2
     fi
 fi
+# NOTE: the static encyclopedia *HTML* under $WWW/encyclopedia is NOT placed here
+# -- the game engine regenerates it during load(), which runs AFTER this script.
+# Those pages emit a literal $IMAGE_SERVER_URL token that must be blanked for the
+# images to resolve same-origin; that blanking lives in entrypoint.sh AFTER the engine
+# has generated the pages (a sed here would be overwritten on every boot). See the
+# "static encyclopedia: same-origin image paths" step in docker/entrypoint.sh.
 
 # 1a4) Fleet marker icons. The HTML5 battle-deployment board (as-deploy.js) draws
 #      the original ship markers (ship_set.gif / ship_cap.gif from
