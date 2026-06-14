@@ -46,127 +46,40 @@ CPageFleetCommanderInformation::handler(CPlayer *aPlayer)
 	ITEM("EFFICIENCY",
 			(char *)format("%s %%", dec2unit(Admiral->get_real_efficiency())));
 
-	ITEM("STRING_ATTACK_ABILITIES", GETTEXT("Attack Abilities"));
+	ITEM("STRING_COMBAT_ABILITIES", GETTEXT("Combat Abilities"));
 
-	ITEM("STRING_SIEGE_PLANET", GETTEXT("Siege Planet"));
-	if (Admiral->get_siege_planet_race_level())
+	ITEM("STRING_OFFENSIVE_SKILL", GETTEXT("Offensive Skill"));
+	if (Admiral->get_offense_race_level())
 	{
 		CString
-			Level = integer_with_sign(Admiral->get_siege_planet_level()),
-			RaceLevel = integer_with_sign(Admiral->get_siege_planet_race_level());
+			Level = integer_with_sign(Admiral->get_overall_attack()),
+			RaceLevel = integer_with_sign(Admiral->get_offense_race_level());
 
-		ITEM("SIEGE_PLANET",
+		ITEM("OFFENSIVE_SKILL",
 				(char *)format("%s (%s %s)",
 								(char *)Level,
 								(char *)RaceLevel,
 								GETTEXT("Race")));
 	} else
 	{
-		ITEM("SIEGE_PLANET", integer_with_sign(Admiral->get_siege_planet_level()));
+		ITEM("OFFENSIVE_SKILL", integer_with_sign(Admiral->get_overall_attack()));
 	}
 
-	ITEM("STRING_RAID", GETTEXT("Raid"));
-	if (Admiral->get_raid_race_level())
+	ITEM("STRING_DEFENSIVE_SKILL", GETTEXT("Defensive Skill"));
+	if (Admiral->get_defense_race_level())
 	{
 		CString
-			Level = integer_with_sign(Admiral->get_raid_level()),
-			RaceLevel = integer_with_sign(Admiral->get_raid_race_level());
+			Level = integer_with_sign(Admiral->get_overall_defense()),
+			RaceLevel = integer_with_sign(Admiral->get_defense_race_level());
 
-		ITEM("RAID",
+		ITEM("DEFENSIVE_SKILL",
 				(char *)format("%s (%s %s)",
 								(char *)Level,
 								(char *)RaceLevel,
 								GETTEXT("Race")));
 	} else
 	{
-		ITEM("RAID", integer_with_sign(Admiral->get_raid_level()));
-	}
-
-	ITEM("STRING_BLOCKADE_PLANET", GETTEXT("Blockade Planet"));
-	if (Admiral->get_blockade_race_level())
-	{
-		CString
-			Level = integer_with_sign(Admiral->get_blockade_level()),
-			RaceLevel = integer_with_sign(Admiral->get_blockade_race_level());
-
-		ITEM("BLOCKADE_PLANET",
-				(char *)format("%s (%s %s)",
-								(char *)Level,
-								(char *)RaceLevel,
-								GETTEXT("Race")));
-	} else
-	{
-		ITEM("BLOCKADE_PLANET", integer_with_sign(Admiral->get_blockade_level()));
-	}
-
-	ITEM("STRING_PRIVATEER", GETTEXT("Privateer"));
-	if (Admiral->get_privateer_race_level())
-	{
-		CString
-			Level = integer_with_sign(Admiral->get_privateer_level()),
-			RaceLevel = integer_with_sign(Admiral->get_privateer_race_level());
-
-		ITEM("PRIVATEER",
-				(char *)format("%s (%s %s)",
-								(char *)Level,
-								(char *)RaceLevel,
-								GETTEXT("Race")));
-	} else
-	{
-		ITEM("PRIVATEER", integer_with_sign(Admiral->get_privateer_level()));
-	}
-
-	ITEM("STRING_DEFENSE_ABILITIES", GETTEXT("Defense Abilities"));
-
-	ITEM("STRING_SIEGE_REPELLING", GETTEXT("Siege Repelling"));
-	if (Admiral->get_siege_repelling_race_level())
-	{
-		CString
-			Level = integer_with_sign(Admiral->get_siege_repelling_level()),
-			RaceLevel = integer_with_sign(Admiral->get_siege_repelling_race_level());
-
-		ITEM("SIEGE_REPELLING",
-				(char *)format("%s (%s %s)",
-								(char *)Level,
-								(char *)RaceLevel,
-								GETTEXT("Race")));
-	} else
-	{
-		ITEM("SIEGE_REPELLING", integer_with_sign(Admiral->get_siege_repelling_level()));
-	}
-
-	ITEM("STRING_PREVENT_RAID", GETTEXT("Prevent Raid"));
-	if (Admiral->get_prevent_raid_race_level())
-	{
-		CString
-			Level = integer_with_sign(Admiral->get_prevent_raid_level()),
-			RaceLevel = integer_with_sign(Admiral->get_prevent_raid_race_level());
-
-		ITEM("PREVENT_RAID",
-				(char *)format("%s (%s %s)",
-								(char *)Level,
-								(char *)RaceLevel,
-								GETTEXT("Race")));
-	} else
-	{
-		ITEM("PREVENT_RAID", integer_with_sign(Admiral->get_prevent_raid_level()));
-	}
-
-	ITEM("STRING_BREAK_BLOCKADE", GETTEXT("Break Blockade"));
-	if (Admiral->get_break_blockade_race_level())
-	{
-		CString
-			Level = integer_with_sign(Admiral->get_break_blockade_level()),
-			RaceLevel = integer_with_sign(Admiral->get_break_blockade_race_level());
-
-		ITEM("BREAK_BLOCKADE",
-				(char *)format("%s (%s %s)",
-								(char *)Level,
-								(char *)RaceLevel,
-								GETTEXT("Race")));
-	} else
-	{
-		ITEM("BREAK_BLOCKADE", integer_with_sign(Admiral->get_break_blockade_level()));
+		ITEM("DEFENSIVE_SKILL", integer_with_sign(Admiral->get_overall_defense()));
 	}
 
 	ITEM("STRING_EFFECTIVENESS_ABILITIES", GETTEXT("Effectiveness Abilities"));
@@ -205,7 +118,7 @@ CPageFleetCommanderInformation::handler(CPlayer *aPlayer)
 		ITEM("DETECTION", integer_with_sign(Admiral->get_detection_level()));
 	}
 
-	ITEM("STRING_INTERPRETATION", GETTEXT("Interpretation"));
+	/*ITEM("STRING_INTERPRETATION", GETTEXT("Interpretation"));
 	if (Admiral->get_interpretation_race_level())
 	{
 		CString
@@ -220,7 +133,7 @@ CPageFleetCommanderInformation::handler(CPlayer *aPlayer)
 	} else
 	{
 		ITEM("INTERPRETATION", integer_with_sign(Admiral->get_interpretation_level()));
-	}
+	}*/
 
 	ITEM("STRING_ARMADA_MODIFIERS_TO_OTHER_FLEETS___IF_ARMADA_COMMANDER_",
 			GETTEXT("Armada Modifiers to Other Fleets (If Armada Commander)"));
@@ -230,25 +143,13 @@ CPageFleetCommanderInformation::handler(CPlayer *aPlayer)
 			(char *)format("%d %%",
 							Admiral->get_armada_commanding_effect_to_efficiency()));
 
-	ITEM("STRING_SIEGE_REPELLING", GETTEXT("Siege Repelling"));
-	ITEM("SIEGE_REPELLING_MOD",
-			Admiral->get_armada_commanding_effect(CAdmiral::SIEGE_REPELLING));
+	ITEM("STRING_OFFENSIVE_MOD", GETTEXT("Offensive Skill"));
+	ITEM("OFFENSIVE_MOD",
+			Admiral->get_armada_commanding_effect(CAdmiral::OFFENSE));
 
-	ITEM("STRING_SIEGE_PLANET", GETTEXT("Siege Planet"));
-	ITEM("SIEGE_PLANET_MOD",
-			Admiral->get_armada_commanding_effect(CAdmiral::SIEGE_PLANET));
-
-	ITEM("STRING_BREAK_BLOCKADE", GETTEXT("Break Blockade"));
-	ITEM("BREAK_BLOCKADE_MOD",
-			Admiral->get_armada_commanding_effect(CAdmiral::BREAK_BLOCKADE));
-
-	ITEM("STRING_BLOCKADE_PLANET", GETTEXT("Blockade Planet"));
-	ITEM("BLOCKADE_PLANET_MOD",
-			Admiral->get_armada_commanding_effect(CAdmiral::BLOCKADE));
-
-	ITEM("STRING_PREVENT_RAID", GETTEXT("Prevent Raid"));
-	ITEM("PREVENT_RAID_MOD",
-			Admiral->get_armada_commanding_effect(CAdmiral::PREVENT_RAID));
+	ITEM("STRING_DEFENSIVE_MOD", GETTEXT("Defensive Skill"));
+	ITEM("DEFENSIVE_MOD",
+			Admiral->get_armada_commanding_effect(CAdmiral::DEFENSE));
 
 	ITEM("STRING_SPECIAL_ABILITIES", GETTEXT("Special Abilities"));
 

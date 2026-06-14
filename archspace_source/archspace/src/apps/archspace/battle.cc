@@ -3565,11 +3565,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 		CCEff = OffenseCapitalCommander->get_armada_commanding_effect_to_efficiency();
 	if (mWarType == WAR_SIEGE)
 	{
-		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::SIEGE_PLANET);
+		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::OFFENSE);
 	}
 	else if (mWarType == WAR_BLOCKADE)
 	{
-		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::BLOCKADE);
+		CCSkill = OffenseCapitalCommander->get_armada_commanding_effect(CAdmiral::OFFENSE);
 	}
 
 	for (int i=0 ; i<mOffenseFleetList.length() ; i++)
@@ -3624,11 +3624,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 
 		if (mWarType == WAR_SIEGE)
 		{
-			Skill = Admiral->get_overall_attack() + Admiral->get_siege_planet_level() + ActualCCSkill;
+			Skill = Admiral->get_overall_attack() + ActualCCSkill;
 		}
 		else if (mWarType == WAR_BLOCKADE)
 		{
-			Skill = Admiral->get_overall_attack() + Admiral->get_blockade_level() + ActualCCSkill;
+			Skill = Admiral->get_overall_attack() + ActualCCSkill;
 		}
 		else
 		{
@@ -3663,11 +3663,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 	CCEff = DefenseCapitalCommander->get_armada_commanding_effect_to_efficiency();
 	if (mWarType == WAR_SIEGE)
 	{
-		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::SIEGE_REPELLING);
+		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::DEFENSE);
 	}
 	else if (mWarType == WAR_BLOCKADE)
 	{
-		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::BREAK_BLOCKADE);
+		CCSkill = DefenseCapitalCommander->get_armada_commanding_effect(CAdmiral::DEFENSE);
 	}
 
 	for (int i=0 ; i<mDefenseFleetList.length() ; i++)
@@ -3722,11 +3722,11 @@ CBattle::init_battle_fleet(CDefensePlan *aOffensePlan, CFleetList *aOffenseFleet
 
 		if (mWarType == WAR_SIEGE)
 		{
-			Skill = Admiral->get_overall_defense() + Admiral->get_siege_repelling_level() + ActualCCSkill;
+			Skill = Admiral->get_overall_defense() +  ActualCCSkill;
 		}
 		else if (mWarType == WAR_BLOCKADE)
 		{
-			Skill = Admiral->get_overall_defense() + Admiral->get_break_blockade_level() + ActualCCSkill;
+			Skill = Admiral->get_overall_defense() +  ActualCCSkill;
 		}
 		else
 		{
@@ -5506,7 +5506,7 @@ CBattle::raid_fleet_detection_check()
 
 	// by raid bonus
 	CAdmiral *Admiral = BattleFleet->get_admiral();
-	StealthScore += Admiral->get_raid_level()*5;
+	StealthScore += Admiral->get_overall_attack()*5;
 
 	if (!mDefenseFleetList.length()) return false;
 
@@ -5520,7 +5520,7 @@ CBattle::raid_fleet_detection_check()
 		int DetectionScore = 10;
 
 		DetectionScore += Admiral->get_detection_level()*2;
-		DetectionScore += Admiral->get_prevent_raid_level()*2;
+		DetectionScore += Admiral->get_overall_defense()*2;
 
 		DetectionScore += Planet->get_building().get(BUILDING_MILITARY_BASE);
 		int Chance;
@@ -5699,13 +5699,13 @@ CBattle::raid_bomb()
 	CAdmiral *
 		Admiral = RaidFleet->get_admiral();
 
-	int Bonus = Admiral->get_raid_level();
+	int Bonus = Admiral->get_overall_attack();
 
 	for(int i=0; i<mDefenseFleetList.length(); i++)
 	{
 		CBattleFleet *Fleet = (CBattleFleet*)mDefenseFleetList.get(i);
 		CAdmiral *Admiral = Fleet->get_admiral();
-		Bonus -= Admiral->get_prevent_raid_level();
+		Bonus -= Admiral->get_overall_defense();
 	}
 
 	int ShipSize = RaidFleet->get_size();
@@ -5954,7 +5954,7 @@ CBattle::privateer_fleet_detection_check(bool aBattle)
 
 	// by privateer bonus
 	CAdmiral *Admiral = PrivateerFleet->get_admiral();
-	StealthScore += Admiral->get_privateer_level()*5;
+	StealthScore += Admiral->get_overall_attack()*5;
 
 	if (!mDefenseFleetList.length()) return false;
 

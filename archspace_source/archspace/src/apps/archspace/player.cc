@@ -6065,16 +6065,16 @@ CPlayer::privateer(CFleet *aFleet)
 			double PrivStealBonus =  0.0;
 
 			// give famous privateers over 15 privateer auto 100%
-			if (Admiral->get_privateer_level() >= 15 && Admiral->get_racial_ability() == CAdmiral::RA_FAMOUS_PRIVATEER)
+			if (Admiral->get_overall_attack() >= 15 && Admiral->get_racial_ability() == CAdmiral::RA_FAMOUS_PRIVATEER)
                 		PrivStealBonus = 1.0;
             else
             {
-                PrivStealBonus = Admiral->get_privateer_level()/20.0;
+                PrivStealBonus = Admiral->get_overall_attack()/20.0;
                 if (PrivStealBonus < -1.0)
                    PrivStealBonus = -1.0;
                 else if (PrivStealBonus > 0.9)
                    PrivStealBonus = 0.9;
-                for (int i=21; PrivStealBonus <= 1.0 && i < Admiral->get_privateer_level(); i++)
+                for (int i=21; PrivStealBonus <= 1.0 && i < Admiral->get_overall_attack(); i++)
                    PrivStealBonus += 0.02;
 			}
 

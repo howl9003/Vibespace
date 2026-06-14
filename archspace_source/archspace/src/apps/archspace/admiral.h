@@ -31,21 +31,15 @@ class CAdmiral: public CStore
 
 		enum
 		{
-			// attack abilities
-			SIEGE_PLANET = 0,
-			BLOCKADE,
-			RAID,
-			PRIVATEER,
-
-			// defense abilities
-			SIEGE_REPELLING,
-			BREAK_BLOCKADE,
-			PREVENT_RAID,
+			// CVS-merge: 4-skill commander model (was 10). The seven war-skills
+			// collapse into OFFENSE/DEFENSE; every war action reads these.
+			// combat abilities
+			OFFENSE = 0,
+			DEFENSE,
 
 			// effectiveness abilities
 			MANEUVER,
 			DETECTION,
-			INTERPRETATION,
 
 			MAX_SKILL
 		};
@@ -75,32 +69,18 @@ class CAdmiral: public CStore
 			STORE_FLEET_COMMANDING,
 			STORE_EFFICIENCY,
 
-			// attack abilities
-			STORE_SIEGE_PLANET,
-			STORE_SIEGE_PLANET_UP_LEVEL,
-			STORE_BLOCKADE,
-			STORE_BLOCKADE_UP_LEVEL,
-			STORE_RAID,
-			STORE_RAID_UP_LEVEL,
-			STORE_PRIVATEER,
-			STORE_PRIVATEER_UP_LEVEL,
+			// combat abilities (CVS-merge 4-skill model)
+			STORE_OFFENSE,
+			STORE_OFFENSE_UP_LEVEL,
+			STORE_DEFENSE,
+			STORE_DEFENSE_UP_LEVEL,
 
-			// defense abilities
-			STORE_SIEGE_REPELLING,
-			STORE_SIEGE_REPELLING_UP_LEVEL,
-			STORE_BREAK_BLOCKADE,
-			STORE_BREAK_BLOCKADE_UP_LEVEL,
-			STORE_PREVENT_RAID,
-			STORE_PREVENT_RAID_UP_LEVEL,
-	
 			// effectiveness abilities
 			STORE_MANEUVER,
 			STORE_MANEUVER_UP_LEVEL,
 			STORE_DETECTION,
 			STORE_DETECTION_UP_LEVEL,
-			STORE_INTERPRETATION,
-			STORE_INTERPRETATION_UP_LEVEL,
-	
+
 			// special abilities
 			STORE_COMMON_ABILITY,
 			STORE_RACE_ABILITY
@@ -247,39 +227,18 @@ class CAdmiral: public CStore
 		int get_efficiency();
 		int get_real_efficiency() { return mEfficiency; }
 
-		int get_siege_planet_level();
-		int get_blockade_level();
-		int get_raid_level();
-		int get_privateer_level();
-		int get_siege_repelling_level();
-		int get_break_blockade_level();
-		int get_prevent_raid_level();
 		int get_maneuver_level();
 		int get_detection_level();
-		int get_interpretation_level();
 
 		int get_overall_attack();
 		int get_overall_defense();
 
-		int get_siege_planet_race_level()
-				{ return mRaceInitialSkill[mRace-1][SIEGE_PLANET]; }
-		int get_blockade_race_level()
-				{ return mRaceInitialSkill[mRace-1][BLOCKADE]; }
-		int get_raid_race_level() { return mRaceInitialSkill[mRace-1][RAID]; }
-		int get_privateer_race_level() { return mRaceInitialSkill[mRace-1][PRIVATEER]; }
-		int get_siege_repelling_race_level()
-				{ return mRaceInitialSkill[mRace-1][SIEGE_REPELLING]; }
-		int get_break_blockade_race_level()
-				{ return mRaceInitialSkill[mRace-1][BREAK_BLOCKADE]; }
-		int get_prevent_raid_race_level()
-				{ return mRaceInitialSkill[mRace-1][PREVENT_RAID]; }
-
+		int get_offense_race_level()
+				{ return mRaceInitialSkill[mRace-1][OFFENSE]; }
+		int get_defense_race_level()
+				{ return mRaceInitialSkill[mRace-1][DEFENSE]; }
 		int get_maneuver_race_level() { return mRaceInitialSkill[mRace-1][MANEUVER]; }
-
 		int get_detection_race_level() { return mRaceInitialSkill[mRace-1][DETECTION]; }
-
-		int get_interpretation_race_level()
-				{ return mRaceInitialSkill[mRace-1][INTERPRETATION]; }
 
 		int get_special_ability() { return mSpecialAbility; }
 		char *get_special_ability_name();

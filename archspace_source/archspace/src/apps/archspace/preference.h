@@ -23,18 +23,20 @@ class CPreference: public CStore, public CCommandSet
 		FLEET_COMMANDING,
 		EFFICIENCY,
 		// attack abilities
-		SIEGE_PLANET,
-		BLOCKADE,
-		RAID,
-		PRIVATEER,
+		//SIEGE_PLANET,
+		//BLOCKADE,
+		//RAID,
+		//PRIVATEER,
 		// defense abilities
-		SIEGE_REPELLING,
-		BREAK_BLOCKADE,
-		PREVENT_RAID,
+		//SIEGE_REPELLING,
+		//BREAK_BLOCKADE,
+		//PREVENT_RAID,
+		OFFENSE,
+		DEFENSE,
 		// effectiveness abilities
 		MANEUVER,
 		DETECTION,
-		INTERPRETATION,
+		//INTERPRETATION,
 		ARMADA_CLASS,
 		ABILITY,
 		CS_END
