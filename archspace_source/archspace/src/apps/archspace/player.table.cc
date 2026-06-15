@@ -239,6 +239,7 @@ CPlayerTable::load(CMySQL &aMySQL)
 	load_ship_design(aMySQL);
 	load_ship_build_q(aMySQL);
 	load_dock(aMySQL);
+	load_academy(aMySQL);
 	load_repair_bay(aMySQL);
 	load_fleet(aMySQL);	/* telecard 2000/10/19 */
 	load_plan(aMySQL);	/* telecard 2000/10/27 */
@@ -273,7 +274,7 @@ CPlayerTable::load_preferences(CMySQL &aMySQL)
 	CString
 			Query;
 			
-	Query.format( "SELECT player_id, java_choice, accept_truce, accept_pact, accept_ally, commander_view FROM player_pref WHERE player_id=%d", Target->get_game_id());
+	Query.format( "SELECT player_id, java_choice, accept_truce, accept_pact, accept_ally, commander_view, academy_auto_enroll, academy_next_train FROM player_pref WHERE player_id=%d", Target->get_game_id());
 	aMySQL.query( (char*)Query );
 
 	aMySQL.use_result();
@@ -851,6 +852,81 @@ CPlayerTable::load_dock(CMySQL &aMySQL)
 	//aMySQL.query( "UNLOCK TABLES" );
 
 	system_log( "%d/%d docked ships are loaded", CCount, RCount );
+
+	return true;
+}
+
+bool
+CPlayerTable::load_academy(CMySQL &aMySQL)
+{
+	int
+		MaxID;
+
+	if( length() > 0 )
+		MaxID = ((CPlayer*)get(length()-1))->get_game_id();
+	else
+		return true;
+
+	enum {
+		FIELD_OWNER,
+		FIELD_DESIGN_ID,
+		FIELD_NUMBER
+	};
+
+	system_log( "start academy ship loading" );
+	int
+		RCount = 0,
+		CCount = 0;
+
+	for( int i = 0; i < MaxID+100; i += 100 ){
+		CString
+			Query;
+		Query.format( "SELECT owner, design_id, number FROM academy_ship WHERE owner > %d AND owner <= %d", i, i+100 );
+
+		aMySQL.query( (char*)Query );
+		aMySQL.use_result();
+
+		while( aMySQL.fetch_row() ){
+			RCount++;
+
+			int
+				OwnerID = atoi( aMySQL.row()[FIELD_OWNER] ),
+				DesignID = atoi( aMySQL.row()[FIELD_DESIGN_ID] ),
+				Number = atoi( aMySQL.row()[FIELD_NUMBER] );
+
+			CPlayer
+				*Owner = get_by_game_id( OwnerID );
+			if (!Owner)
+			{
+				CString
+					Query;
+				Query.format( "DELETE FROM academy_ship WHERE owner = %d", OwnerID );
+				STORE_CENTER->query("academy_ship", (char *)Query);
+				continue;
+			}
+
+			CShipDesign
+				*Design = Owner->get_ship_design_list()->get_by_id( DesignID );
+			if (!Design)
+			{
+				CString
+					Query;
+				Query.format( "DELETE FROM academy_ship WHERE owner = %d AND design_id = %d", OwnerID, DesignID );
+				STORE_CENTER->query("academy_ship", (char *)Query);
+				continue;
+			}
+
+			CAcademyShip
+				*Ship = new CAcademyShip( Design, Number );
+			Owner->get_academy_dock()->add_docked_ship(Ship);
+
+			CCount++;
+		}
+
+		aMySQL.free_result();
+	}
+
+	system_log( "%d/%d academy ships are loaded", CCount, RCount );
 
 	return true;
 }
