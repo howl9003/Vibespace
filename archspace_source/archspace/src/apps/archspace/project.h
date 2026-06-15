@@ -68,6 +68,10 @@ class CProject : public CPrerequisiteList
 
 		CPlayerEffectList *get_effect_list() { return &mEffectList; }
 
+		// QoL: a plain effect summary (control-model effects + special effects)
+		// used for hover tooltips on the project lists. May contain "<BR>".
+		char *get_effect_tip();
+
 	public:		// set
 		inline void set_id(int aID);
 		inline void set_name(char *aName);
@@ -220,6 +224,7 @@ class CPurchasedProject: public CStore
 		int get_type() { return mProject->get_type(); }
 		inline const CControlModel &get_effect();
 		inline CPlayerEffectList *get_effect_list();
+		char *get_effect_tip() { return mProject->get_effect_tip(); }
 		inline char *get_description();	//telecard 2001/04/02
 
 	public: // set

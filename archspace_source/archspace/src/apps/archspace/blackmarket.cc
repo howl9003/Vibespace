@@ -2033,13 +2033,16 @@ CBlackMarketHTML::get_project_list_html(CPlayer* aPlayer)
 			continue;
 		}
 
+		char *Fx = project->get_effect_tip();   // QoL: effect for hover tooltip
+
 		html += "<TR>\n";
 
 		if(aPlayer->has_project(bid->get_item()))
 		{
 		    html.format("<TR><TD CLASS=\"tabletxt\" ALIGN=\"CENTER\">&nbsp</TD>");
-			html.format("<TD CLASS=\"maintext\" ALIGN=\"center\"><A HREF=\"../../encyclopedia/project/%d.html\"><FONT COLOR=\"#0000FF\">%s</FONT></A></TD>",
+			html.format("<TD CLASS=\"maintext\" ALIGN=\"center\"><A HREF=\"../../encyclopedia/project/%d.html\" data-tip=\"%s\"><FONT COLOR=\"#0000FF\">%s</FONT></A></TD>",
 						project->get_id(),
+						Fx,
                         project->get_name());
 		}
 		else
@@ -2049,12 +2052,12 @@ CBlackMarketHTML::get_project_list_html(CPlayer* aPlayer)
 				bid->get_price()*1.05 <= aPlayer->get_production())
 			{
 				html.format("<TD CLASS=\"maintext\" ALIGN=\"center\"><INPUT TYPE=RADIO NAME=PROJECT_ITEM_ID VALUE=%d></TD>", bid->get_id());
-				html.format("<TD CLASS=\"maintext\" ALIGN=\"center\" style=\"color:#0000FF\"><A HREF=\"../../encyclopedia/project/%d.html\">%s</A></TD>", project->get_id(),project->get_name());
+				html.format("<TD CLASS=\"maintext\" ALIGN=\"center\" style=\"color:#0000FF\"><A HREF=\"../../encyclopedia/project/%d.html\" data-tip=\"%s\">%s</A></TD>", project->get_id(),Fx,project->get_name());
 			}
 			else
 			{
 				html += "<TD CLASS=\"maintext\" ALIGN=\"center\">&nbsp;</TD>";
-				html.format("<TD CLASS=\"maintext\" ALIGN=\"center\" style=\"color:#0000FF\"><FONT COLOR=red><A HREF=\"../../encyclopedia/project/%d.html\">%s</A></FONT></TD>", project->get_id(),project->get_name());
+				html.format("<TD CLASS=\"maintext\" ALIGN=\"center\" style=\"color:#0000FF\"><FONT COLOR=red><A HREF=\"../../encyclopedia/project/%d.html\" data-tip=\"%s\">%s</A></FONT></TD>", project->get_id(),Fx,project->get_name());
 			}
 
 		}
