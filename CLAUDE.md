@@ -84,10 +84,13 @@ tarball now match the tarball bytes. **Rules:**
   (`file x.gif` / open them) before committing.
 - The `www-new`-exclusive assets with **no tarball fallback** (the
   `image/as_game/planets/` thumbnails and the `encyclopedia/special_ops/*`
-  icons) were CRLF-corrupted and are **now repaired** in the served tree
-  (`514` files total). The only files left corrupt are 2 non-game `phpsysinfo`
-  assets (one beyond-CRLF, one 0-byte) and the archival `CVSRoot/` snapshot
-  (1410 copies, never served).
+  icons) were CRLF-corrupted and are **now repaired**: `527` files in the
+  served tree plus `1430` in the archival `CVSRoot/` snapshot. Detection uses
+  the corruption signature (contains `0x0D0A`, has *no* lone `0x0A`, and the
+  reversed bytes form a valid GIF/PNG), validated against the tarball with
+  919/919 agreement. The only files left corrupt are a few non-game assets
+  with no clean source: a beyond-CRLF `phpsysinfo/Suse.gif`, a 0-byte
+  `bar_right.gif`, and the `eol=lf`-attributed `makefile.gif`.
 
 ## Gotchas
 - `CString → char*` now returns `""` (not `NULL`) for empty strings. Old
