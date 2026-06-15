@@ -276,6 +276,8 @@ CAdmiral::CAdmiral(CPlayer *aPlayer)
 
 	mSpecialAbility = number(SA_MAX)-1;
 	mRacialAbility = mPossibleRacialSkill[mRace-1][number(3)-1];
+
+	mAcademy = false;
 }
 
 CAdmiral::CAdmiral(MYSQL_ROW aRow)
@@ -363,6 +365,8 @@ CAdmiral::CAdmiral(MYSQL_ROW aRow)
 	mSpecialAbility = atoi(aRow[STORE_COMMON_ABILITY]);
 	mRacialAbility = atoi(aRow[STORE_RACE_ABILITY]);
 
+	mAcademy = (atoi(aRow[STORE_ACADEMY]) != 0);
+
 	if (mID > mMaxID) mMaxID = mID;
 
 	type(QUERY_NONE);
@@ -430,6 +434,8 @@ CAdmiral::CAdmiral(int aLevel, int geniusLevel, int aFleetCommandingBonus, int a
 
 	mSpecialAbility = number(SA_MAX)-1;
 	mRacialAbility = mPossibleRacialSkill[mRace-1][number(3)-1];
+
+	mAcademy = false;
 
 	give_level(aLevel);
 }
@@ -1297,13 +1303,13 @@ CAdmiral::query()
 					"maneuver, maneuver_up_level, "
 					"detection, detection_up_level, "
 					"interpretation, interpretation_up_level, "
-					"commonability, raceability) "
+					"commonability, raceability, academy) "
 					"VALUES (%d, %d, %d, %d, "
 					"'%s', %d, %d, %d, "
 					"%d, %d, %d, "
 					"%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, "
 					"%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, "
-					"%d, %d)",
+					"%d, %d, %d)",
 					mID, mOwner, mRace, mStartingCircumstance,
 					(char *)add_slashes((char *)mName), mExp, mLevel, mFleetNumber,
 					mArmadaCommanding, mFleetCommanding, mEfficiency,
@@ -1327,7 +1333,7 @@ CAdmiral::query()
 					mSkill[ DETECTION ][ SKILL_UP_LEVEL ],
 					mSkill[ INTERPRETATION ][ LEVEL ],
 					mSkill[ INTERPRETATION ][ SKILL_UP_LEVEL ],
-					mSpecialAbility, mRacialAbility);
+					mSpecialAbility, mRacialAbility, mAcademy);
 			break;
 		case QUERY_UPDATE :
 			Query.format("UPDATE admiral SET exp = %d, level = %d", mExp, mLevel);
@@ -1412,6 +1418,8 @@ CAdmiral::query()
 			STORE(STORE_INTERPRETATION_UP_LEVEL,
 					", interpretation_up_level = %d",
 					mSkill[ INTERPRETATION ][ SKILL_UP_LEVEL ]);
+
+			STORE(STORE_ACADEMY, ", academy = %d", mAcademy);
 			Query.format( " WHERE id = %d", mID );
 
 
