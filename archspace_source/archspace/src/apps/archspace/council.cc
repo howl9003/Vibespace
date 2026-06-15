@@ -716,8 +716,10 @@ CCouncil::select_project_html()
 
 			if ((Project->get_type() == TYPE_COUNCIL)&&(Project->evaluate(Speaker))&&(!has_project(Project->get_id())))
 			{
-				Buf.format("<OPTION VALUE = \"%d\">\n%s(%s %s)\n</OPTION>\n",
+				char *Fx = Project->get_effect_tip();
+				Buf.format("<OPTION VALUE = \"%d\" data-tip=\"%s\">\n%s(%s %s)\n</OPTION>\n",
 						Project->get_id(),
+						Fx,
 						Project->get_name(),
 						dec2unit(Project->get_cost()),
 						GETTEXT("PP"));
@@ -1422,7 +1424,10 @@ CCouncil::achieved_project_html()
 	{
 		CPurchasedProject *Project =
 				(CPurchasedProject*)mPurchasedProjectList.get(i);
-		HTML.format((HTML.length()) ? ", %s":"%s", Project->get_name());
+		char *Fx = Project->get_effect_tip();
+		if (HTML.length()) HTML += ", ";
+		HTML.format("<span class=\"as-projtip\" data-tip=\"%s\">%s</span>",
+				Fx, Project->get_name());
 	}
 
 	return (char*)HTML;
