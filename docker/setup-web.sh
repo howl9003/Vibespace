@@ -114,6 +114,28 @@ if [ -d "$BLACKMARKET" ]; then
     find "$WWW/image/as_game/black_market" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1a7) Replace the legacy Korean "under construction" placeholder with a clean
+#      English one. The original www tier shipped a Korean "no image / 이미지
+#      작업중" placeholder for 35 unfinished art slots: the black market, the 17
+#      diplomacy spy-op icons (image/as_game/diplomacy/spy_*.gif), the 13
+#      fleet-action buttons (image/as_game/fleet/*.gif), and ending_score /
+#      retire / event/meeting / result/new_player_assign. Replace every SERVED
+#      copy -- matched by CONTENT HASH so it catches tarball- and www-new-sourced
+#      copies alike -- with a neutral English placeholder. (black_market_error.gif
+#      is overlaid above with its own "No items available" art, a different hash,
+#      so it is left untouched here.)
+PLACEHOLDER_EN="$SRC_TREE/www-new/image/placeholder_en.gif"
+PH_SHA="915a50c7802b733d88b2ef40d7ed13c7edfe4290419706c5f9ec2b4edcca377f"
+if [ -f "$PLACEHOLDER_EN" ]; then
+    cnt=$(find "$WWW/image" -type f -name '*.gif' -exec sh -c '
+        en="$1"; sha="$2"; shift 2
+        for f; do
+            [ "$(sha256sum "$f" | cut -d" " -f1)" = "$sha" ] && cp -f "$en" "$f" && echo x
+        done
+    ' sh "$PLACEHOLDER_EN" "$PH_SHA" {} + 2>/dev/null | wc -l)
+    echo "[web] replaced $cnt legacy Korean placeholder image(s) with English version"
+fi
+
 # 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
 #     with a CSS-grid + named-iframe shell; same look, modern + mobile).
 OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
