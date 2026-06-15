@@ -362,10 +362,35 @@ class CDock: public CSortedList
 		char *print_html_select();
 		char *print_javascript_select();
 	protected:
+		// virtual factory: change_ship() uses this to create the docked-ship
+		// object for a new class, so subclasses (CAcademyDock) can persist to
+		// their own table without duplicating change_ship().
+		virtual CDockedShip *new_ship( CShipDesign *aClass, int aNumber )
+				{ return new CDockedShip(aClass, aNumber); }
 		virtual bool free_item( TSomething aItem );
 		virtual int compare( TSomething aItem1, TSomething aItem2 ) const;
 		virtual int compare_key( TSomething aItem, TConstSomething aKey ) const;
 		virtual const char *debug_info() const { return "dock"; }
+};
+
+// Fleet Academy: ships allocated/locked for auto-training. Identical shape to
+// CDockedShip/CDock, but persisted to the academy_ship table.
+class CAcademyShip: public CDockedShip
+{
+	public:
+		CAcademyShip() {}
+		CAcademyShip( CShipDesign *aClass, int aNumber = 0 )
+				: CDockedShip(aClass, aNumber) {}
+		virtual const char *table() { return "academy_ship"; }
+		virtual CString& query();
+};
+
+class CAcademyDock: public CDock
+{
+	protected:
+		virtual CDockedShip *new_ship( CShipDesign *aClass, int aNumber )
+				{ return new CAcademyShip(aClass, aNumber); }
+		virtual const char *debug_info() const { return "academy_dock"; }
 };
 
 extern TZone gDamagedShipZone;

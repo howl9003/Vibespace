@@ -283,6 +283,7 @@ class CPlayer: public CStore
 		CShipDesignList mShipDesignList;
 		CShipBuildQ mShipBuildQ;
 		CDock mDock;
+		CAcademyDock mAcademyDock;   // Fleet Academy: ships allocated/locked for auto-training
 		CRepairBay mRepairBay;
 
 		CPlayerActionList mActionList;
@@ -463,6 +464,7 @@ class CPlayer: public CStore
 		CShipDesignList *get_ship_design_list() { return &mShipDesignList; }
 		CShipBuildQ *get_build_q() { return &mShipBuildQ; }
 		CDock *get_dock() { return &mDock; }
+		CDock *get_academy_dock() { return &mAcademyDock; }
 		CRepairBay *get_repair_bay() { return &mRepairBay; }
 		CControlModel *get_control_model() { return &mControlModel; }
 		CControlModel *get_project_CM() { return &mProjectCM; }
@@ -631,6 +633,7 @@ class CPlayer: public CStore
 		void repair_damaged_ship();
 		bool simulate_repair_damaged_ship(int *aReservedPP, int *aMilitaryPoint, int *aLosingProductionPoint, int *aLosingMilitaryPoint);
 		const char *mission_handler();
+		const char *academy_handler();   // Fleet Academy: auto-train enrolled commanders
 		int find_new_planet(bool aAlways = false);
 
 		void save_planet(CStoreCenter &aStoreCenter);
@@ -1455,6 +1458,7 @@ class CPlayerTable: public CSortedList
 		bool load_ship_design(CMySQL &aMySQL);
 		bool load_ship_build_q(CMySQL &aMySQL);
 		bool load_dock(CMySQL &aMySQL);
+		bool load_academy(CMySQL &aMySQL);
 		bool load_repair_bay(CMySQL &aMySQL);
 		bool load_fleet(CMySQL &aMySQL);
 		bool load_plan(CMySQL &aMySQL);

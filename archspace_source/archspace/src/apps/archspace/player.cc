@@ -1329,6 +1329,10 @@ CPlayer::update_turn()
 		MissionNews = mission_handler();
 	if (MissionNews != NULL) time_news(MissionNews);
 
+	const char *
+		AcademyNews = academy_handler();
+	if (AcademyNews != NULL) time_news(AcademyNews);
+
 	if (get_research_invest() > 0)
 	{
 		long long int
@@ -3465,6 +3469,174 @@ CPlayer::return_privateer(CFleet *aFleet)
 	time_news((char*)format(
 				GETTEXT("%1$s fleet is returning from privateer mission."),
 						aFleet->get_nick()));
+}
+
+// Fleet Academy: auto-train enrolled pool commanders. Functionally identical to
+// the player manually forming a homogeneous fleet per commander and sending it on
+// a MISSION_TRAIN every cycle -- same exp (player.cc MISSION_TRAIN block), same
+// cost (mission_train_result.cc), same 24-turn duration (mTrainMissionTime) -- but
+// with no micromanagement. Called from update_turn() right after mission_handler().
+const char *
+CPlayer::academy_handler()
+{
+	static CString
+		News;
+	News.clear();
+
+	CPreference *
+		Pref = get_preference();
+	if (Pref == NULL) return NULL;
+
+	// Every turn: auto-enroll new commanders (if the player opted in) and
+	// auto-remove any maxed ones, so the enrolled set is always pool commanders
+	// below MAX_LEVEL.
+	int
+		Enrolled = 0;
+	for (int i = 0; i < mAdmiralPool.length(); i++)
+	{
+		CAdmiral *
+			A = (CAdmiral *)mAdmiralPool.get(i);
+		if (A == NULL) continue;
+		if (A->is_academy() && A->get_level() >= MAX_LEVEL)
+		{
+			A->set_academy(false);          // maxed: leave the academy
+			A->type(QUERY_UPDATE);
+			STORE_CENTER->store(*A);
+			continue;
+		}
+		if (!A->is_academy() && Pref->getAcademyAutoEnroll()
+				&& A->get_level() < MAX_LEVEL)
+		{
+			A->set_academy(true);           // auto-enroll new commander
+			A->type(QUERY_UPDATE);
+			STORE_CENTER->store(*A);
+		}
+		if (A->is_academy()) Enrolled++;
+	}
+
+	// Shared per-player training-cycle clock. A turn (mSecondPerTurn) is not a
+	// training cycle (mTrainMissionTime = 24 turns), so credit exp only once the
+	// cycle has elapsed -- exactly like a manually repeated 24-turn Train mission.
+	time_t
+		Now = CGame::get_game_time();
+	time_t
+		Next = (time_t)Pref->getAcademyNextTrain();
+
+	if (Enrolled == 0)
+	{
+		if (Next != 0) Pref->setAcademyNextTrain(0);    // nothing enrolled: disarm
+		return NULL;
+	}
+	if (Next == 0)
+	{
+		Pref->setAcademyNextTrain((int)(Now + CMission::mTrainMissionTime));
+		return NULL;                                    // arm: first cycle in 24 turns
+	}
+	if (Now < Next) return NULL;                        // cycle not elapsed yet
+
+	// One training cycle: distribute the allocated ship pool across the enrolled
+	// commanders -- highest-tier class first, one homogeneous virtual fleet each
+	// (no CFleet/CMission objects). The dock itself is untouched (ships stay
+	// allocated across cycles); only a per-cycle working copy is consumed.
+	extern double
+		UpkeepTable[];
+
+	int
+		Len = mAcademyDock.length();
+	int *
+		Remaining = (Len > 0) ? new int[Len] : NULL;
+	for (int i = 0; i < Len; i++)
+	{
+		CDockedShip *
+			S = (CDockedShip *)mAcademyDock.get(i);
+		Remaining[i] = (S != NULL) ? S->get_number() : 0;
+	}
+
+	int
+		Trained = 0,
+		TotalMP = 0,
+		TotalPP = 0;
+
+	for (int p = 0; p < mAdmiralPool.length() && Remaining != NULL; p++)
+	{
+		CAdmiral *
+			A = (CAdmiral *)mAdmiralPool.get(p);
+		if (A == NULL || !A->is_academy()) continue;
+
+		// pick the highest-tier dock class that still has ships this cycle
+		int
+			Best = -1,
+			BestBody = -1;
+		for (int i = 0; i < Len; i++)
+		{
+			if (Remaining[i] <= 0) continue;
+			CDockedShip *
+				S = (CDockedShip *)mAcademyDock.get(i);
+			if (S != NULL && S->get_body() > BestBody)
+			{
+				BestBody = S->get_body();
+				Best = i;
+			}
+		}
+		if (Best < 0) break;                            // pool exhausted this cycle
+
+		CDockedShip *
+			S = (CDockedShip *)mAcademyDock.get(Best);
+		int
+			FC = A->get_fleet_commanding(),
+			N = (FC < Remaining[Best]) ? FC : Remaining[Best];
+		if (N <= 0) continue;
+
+		int
+			Body = S->get_body();
+
+		// cost: identical to mission_train_result.cc for a single fleet
+		// (calc_upkeep == N * UpkeepTable[body-4001], then MP->PP fallback).
+		int
+			UpkeepMP = (int)(N * UpkeepTable[Body-4001]),
+			UpkeepPP;
+		if (UpkeepMP <= get_last_turn_military()) UpkeepPP = 0;
+		else
+		{
+			int
+				Shortfall = UpkeepMP - get_last_turn_military();
+			if (Shortfall > MAX_PLAYER_PP/20) UpkeepPP = MAX_PLAYER_PP;
+			else UpkeepPP = 20 * Shortfall;
+			UpkeepMP = get_last_turn_military();
+		}
+		if (UpkeepPP > get_production()) continue;       // unaffordable: skip, keep ships
+
+		change_last_turn_military(-UpkeepMP);
+		change_reserved_production(-UpkeepPP);
+		Remaining[Best] -= N;                            // ships assigned this cycle
+		TotalMP += UpkeepMP;
+		TotalPP += UpkeepPP;
+
+		// exp: identical to the manual MISSION_TRAIN completion block.
+		int
+			AdmiralExp = N * (Body-4000) * (mControlModel.get_military() + 5);
+		if (AdmiralExp < CMission::mAdmiralExpMinTrain + 500 * A->get_level())
+			AdmiralExp = CMission::mAdmiralExpMinTrain + 500 * A->get_level();
+		A->gain_exp(AdmiralExp);
+
+		if (A->get_level() >= MAX_LEVEL) A->set_academy(false);  // maxed: auto-remove
+		A->type(QUERY_UPDATE);
+		STORE_CENTER->store(*A);
+		Trained++;
+	}
+
+	if (Remaining != NULL) delete [] Remaining;
+
+	Pref->setAcademyNextTrain((int)(Now + CMission::mTrainMissionTime));
+
+	if (Trained > 0)
+	{
+		News.format(GETTEXT("The Fleet Academy trained %1$d commander(s) this cycle (cost %2$d MP, %3$d PP)."),
+					Trained, TotalMP, TotalPP);
+		News += "<BR>\n";
+		return (char *)News;
+	}
+	return NULL;
 }
 
 const char *

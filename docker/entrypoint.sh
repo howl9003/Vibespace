@@ -114,6 +114,21 @@ if [ "$ADMIRAL_OLD_SCHEMA" = "1" ]; then
         DROP COLUMN interpretation,  DROP COLUMN interpretation_up_level;" || true
 fi
 
+# Fleet Academy schema (additive + idempotent, safe on every boot). 'academy' is
+# appended LAST on admiral so it can never shift a positional index in the admiral
+# SELECT * read. player_pref is read by named columns, so its new columns are
+# position-independent. academy_ship mirrors docked_ship. All ADD/CREATE use
+# IF NOT EXISTS -> no-op on fresh (all.sql) and already-migrated DBs.
+log "migrating: Fleet Academy schema (admiral.academy, player_pref flags, academy_ship)"
+$M "$DB_NAME" -e "ALTER TABLE admiral
+    ADD COLUMN IF NOT EXISTS academy tinyint(1) NOT NULL DEFAULT 0;" || true
+$M "$DB_NAME" -e "ALTER TABLE player_pref
+    ADD COLUMN IF NOT EXISTS academy_auto_enroll int(11) NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS academy_next_train  int(11) NOT NULL DEFAULT 0;" || true
+$M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS academy_ship (
+    owner int NOT NULL, design_id int NOT NULL, number int NOT NULL,
+    PRIMARY KEY(owner, design_id));" || true
+
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.

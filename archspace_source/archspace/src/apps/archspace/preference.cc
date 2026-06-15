@@ -22,6 +22,8 @@ CPreference::CPreference(int aGameID)
 {
 	mPlayerID = aGameID;
 	mCommanderView = 0x0000000F;
+	mAcademyAutoEnroll = 0;
+	mAcademyNextTrain = 0;
 	enable_command(PR_JAVASCRIPT);
 	type(QUERY_INSERT);
 	STORE_CENTER->store(*this);
@@ -31,6 +33,8 @@ CPreference::CPreference(MYSQL_ROW aRow)
 {
 	mPlayerID = atoi(aRow[STORE_PLAYER_ID]);
 	mCommanderView = atoi(aRow[STORE_COMMANDER_VIEW]);
+	mAcademyAutoEnroll = atoi(aRow[STORE_ACADEMY_AUTO_ENROLL]);
+	mAcademyNextTrain = atoi(aRow[STORE_ACADEMY_NEXT_TRAIN]);
 	handle(atoi(aRow[STORE_ACCEPT_ALLY]));
 	handle(atoi(aRow[STORE_ACCEPT_PACT]));    
 	handle(atoi(aRow[STORE_ACCEPT_TRUCE]));        
@@ -67,7 +71,9 @@ CString&
 			Query.format(" accept_truce = %d, ", has(PR_ACCEPT_TRUCE) ? (int)PR_ACCEPT_TRUCE : -1);
 			Query.format(" accept_ally = %d, ", has(PR_ACCEPT_ALLY) ? (int)PR_ACCEPT_ALLY : -1 );
 			Query.format(" accept_pact = %d,", has(PR_ACCEPT_PACT) ? (int)PR_ACCEPT_PACT : -1);
-			Query.format(" commander_view = %d", mCommanderView);
+			Query.format(" commander_view = %d,", mCommanderView);
+			Query.format(" academy_auto_enroll = %d, academy_next_train = %d",
+					mAcademyAutoEnroll, mAcademyNextTrain);
 			Query.format(" WHERE player_id = %d", mPlayerID);
 			break;
 
@@ -233,6 +239,20 @@ bool CPreference::hasCommanderStat(unsigned int aCommanderStat)
 void CPreference::setCommanderView(unsigned int aCommanderView)
 {
 	mCommanderView = aCommanderView;
+	type(QUERY_UPDATE);
+	STORE_CENTER->store(*this);
+}
+
+void CPreference::setAcademyAutoEnroll(bool aOn)
+{
+	mAcademyAutoEnroll = aOn ? 1 : 0;
+	type(QUERY_UPDATE);
+	STORE_CENTER->store(*this);
+}
+
+void CPreference::setAcademyNextTrain(int aTime)
+{
+	mAcademyNextTrain = aTime;
 	type(QUERY_UPDATE);
 	STORE_CENTER->store(*this);
 }

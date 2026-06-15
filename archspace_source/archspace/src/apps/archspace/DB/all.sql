@@ -17,6 +17,8 @@ CREATE TABLE player_pref (
   accept_truce int(11) NOT NULL DEFAULT '-1',
   accept_pact int(11) NOT NULL DEFAULT '-1',
   commander_view int(11) UNSIGNED NOT NULL DEFAULT '15',
+  academy_auto_enroll int(11) NOT NULL DEFAULT '0',
+  academy_next_train int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY  (player_id)
 );
 
@@ -189,6 +191,7 @@ CREATE TABLE admiral (
 
 	commonability smallint(2) DEFAULT '-10' NOT NULL,
 	raceability smallint(2) DEFAULT '-10' NOT NULL,
+	academy tinyint(1) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (id)
 );
@@ -334,6 +337,16 @@ CREATE TABLE ship_building_q (
 DROP TABLE IF EXISTS docked_ship;
 
 CREATE TABLE docked_ship (
+	owner int NOT NULL,
+	design_id int NOT NULL,
+	number int NOT NULL,
+
+	PRIMARY KEY(owner, design_id)
+);
+
+DROP TABLE IF EXISTS academy_ship;
+
+CREATE TABLE academy_ship (
 	owner int NOT NULL,
 	design_id int NOT NULL,
 	number int NOT NULL,

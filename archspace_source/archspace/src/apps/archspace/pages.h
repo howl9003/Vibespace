@@ -2058,6 +2058,20 @@ class CPageFleetCommander: public CPageFleetLink
 
 /**
 */
+class CPageAcademyResult: public CPageFleetLink
+{
+	public:
+		CPageAcademyResult():CPageFleetLink() {}
+		virtual ~CPageAcademyResult() {}
+		virtual const char *get_name()
+			{ return "/archspace/fleet/academy_result.as"; }
+		virtual const char *allow_method() { return "POST"; }
+	protected:
+		virtual bool handler(CPlayer *aPlayer);
+};
+
+/**
+*/
 class CPageFleetCommanderInformation: public CPageFleetLink
 {
 	public:

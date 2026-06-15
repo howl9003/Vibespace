@@ -1571,6 +1571,32 @@ CDockedShip::query()
 	return Query;
 }
 
+CString&
+CAcademyShip::query()
+{
+	static CString
+		Query;
+
+	Query.clear();
+
+	switch( type() ){
+		case QUERY_INSERT :
+			Query.format( "INSERT INTO academy_ship ( owner, design_id, number ) VALUES ( %d, %d, %d )",
+				get_owner(), get_design_id(), get_number() );
+			break;
+		case QUERY_DELETE :
+			Query.format( "DELETE FROM academy_ship WHERE owner = %d AND design_id = %d", get_owner(), get_design_id() );
+			break;
+		case QUERY_UPDATE :
+			Query.format( "UPDATE academy_ship SET number = %d WHERE owner = %d AND design_id = %d", get_number(), get_owner(), get_design_id() );
+			break;
+	}
+
+	mStoreFlag.clear();
+
+	return Query;
+}
+
 const char *
 CDockedShip::print_html()
 {
@@ -1769,7 +1795,7 @@ CDock::change_ship( CShipDesign *aClass, int aNumber )
 	{
 		if (aNumber < 0) return false;
 
-		Ship = new CDockedShip(aClass, aNumber);
+		Ship = new_ship(aClass, aNumber);
 
 		add_docked_ship(Ship);
 

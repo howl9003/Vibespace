@@ -83,7 +83,11 @@ class CAdmiral: public CStore
 
 			// special abilities
 			STORE_COMMON_ABILITY,
-			STORE_RACE_ABILITY
+			STORE_RACE_ABILITY,
+
+			// Fleet Academy enrollment flag (must stay last -> matches the
+			// 'academy' column appended last in DB/all.sql + the migration)
+			STORE_ACADEMY
 		};
 
 		enum { // starting circumstance
@@ -172,6 +176,9 @@ class CAdmiral: public CStore
 		int mSpecialAbility;
 		int	mRacialAbility;
 
+		// Fleet Academy: enrolled for auto-training (true/false)
+		bool mAcademy;
+
 		static int mMaxID;
 
 		static int
@@ -247,9 +254,13 @@ class CAdmiral: public CStore
 		
 		char *get_ability_name();
 
+		// Fleet Academy enrollment
+		bool is_academy() { return mAcademy; }
+
 		inline bool is_changed();
 	public: // set
 		inline void set_owner(int aOwner);
+		void set_academy(bool aOn) { mAcademy = aOn; mStoreFlag += STORE_ACADEMY; }
 		void gain_exp(int aExp);
 		void set_fleet_number(int aFleetNumber);
 

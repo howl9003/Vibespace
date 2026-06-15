@@ -53,7 +53,10 @@ class CPreference: public CStore, public CCommandSet
       public:
       int mPlayerID;
       unsigned int mCommanderView;
-      
+      // Fleet Academy: auto-enroll new commanders (0/1) + shared next-train timestamp
+      int mAcademyAutoEnroll;
+      int mAcademyNextTrain;
+
       public:
       char *handle(int aPreference);
       char *handle(EPreference aPreference);      
@@ -65,6 +68,12 @@ class CPreference: public CStore, public CCommandSet
       bool hasCommanderStat(unsigned int aCommanderStat);
       void setCommanderView(unsigned int aCommanderView);
       const char *commander_view_html();
+
+      // Fleet Academy accessors
+      bool getAcademyAutoEnroll() { return mAcademyAutoEnroll != 0; }
+      void setAcademyAutoEnroll(bool aOn);
+      int  getAcademyNextTrain() { return mAcademyNextTrain; }
+      void setAcademyNextTrain(int aTime);
       
       protected:
       enum EStoreFlag
@@ -74,8 +83,10 @@ class CPreference: public CStore, public CCommandSet
            STORE_ACCEPT_TRUCE,
            STORE_ACCEPT_PACT,
            STORE_ACCEPT_ALLY,
-	   STORE_COMMANDER_VIEW
-      };      
+	   STORE_COMMANDER_VIEW,
+	   STORE_ACADEMY_AUTO_ENROLL,
+	   STORE_ACADEMY_NEXT_TRAIN
+      };
       RECYCLE(gPreferenceZone);
 };
 #endif

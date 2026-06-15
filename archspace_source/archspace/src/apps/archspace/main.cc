@@ -189,6 +189,7 @@ CArchspacePageStation::registration()
 	insert_sorted(new CPageMission2());
 
 	insert_sorted(new CPageFleetCommander());
+	insert_sorted(new CPageAcademyResult());
 	insert_sorted(new CPageFleetCommanderViewOptions());
 	insert_sorted(new CPageFleetCommanderInformation());
 	insert_sorted(new CPageFleetCommanderDismissConfirm());

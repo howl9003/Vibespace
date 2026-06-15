@@ -304,6 +304,7 @@ CCFILES=\
 		page/fleet/mission.cc \
 		page/fleet/mission2.cc \
 		page/fleet/fleet_commander.cc \
+		page/fleet/academy_result.cc \
 		page/fleet/fleet_commander_information.cc \
 		page/fleet/fleet_commander_dismiss_confirm.cc \
 		page/fleet/fleet_commander_dismiss_result.cc \
