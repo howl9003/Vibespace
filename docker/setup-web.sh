@@ -165,6 +165,28 @@ if [ -f "$CSS_MAIN" ] && ! grep -q 'as-mobile-reflow' "$CSS_MAIN" 2>/dev/null; t
 CSS
 fi
 
+# 1f) Live top-bar stat flash. When notifications.js updates a PP/Planet/Power
+#     value in place (on a tick/war push or after a spend), it adds .as-stat-flash
+#     to that <span class="as-stat" data-as-stat="..."> (emitted by head_title.cc)
+#     to briefly pulse it so the change is noticeable without a page reload. The
+#     pulse fades back to transparent, so the steady-state look is unchanged.
+#     Marker-guarded (idempotent); re-added each boot on the pristine css.
+if [ -f "$CSS_MAIN" ] && ! grep -q 'as-stat-flash' "$CSS_MAIN" 2>/dev/null; then
+    echo "[web] appending live-stat flash rules to archspace.css"
+    cat >> "$CSS_MAIN" <<'CSS'
+
+/* === as-stat-flash (appended by setup-web.sh) =============================
+   Brief highlight when a live top-bar stat (PP/Planet/Power) updates in place
+   via notifications.js. Inline span; the highlight fades to transparent so the
+   normal appearance is untouched between updates. */
+.as-stat-flash { animation: as-stat-flash 1s ease-out; border-radius: 2px; }
+@keyframes as-stat-flash {
+  0%   { background-color: rgba(255, 214, 0, .85); color: #000; }
+  100% { background-color: transparent; }
+}
+CSS
+fi
+
 # 2) Modern auth service at /auth/
 if [ -d "$AUTH_SRC" ]; then
     echo "[web] installing auth service at /auth/"
