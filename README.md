@@ -6,11 +6,11 @@ repo takes the original 2004–05 source and turns it into a reproducible,
 Dockerized, HTTPS-served deployment with push-to-deploy CI/CD, while keeping the
 game itself faithful to the original.
 
-Live deployments — **two diverging editions** (see [Two editions](#two-editions)):
-- **https://archspace.cc** — the **faithful original** edition (branch `production`).
+Live deployments — **two editions** (see [Two editions](#two-editions)):
+- **https://archspace.cc** — the **faithful original** edition (`main` → `production`).
 - **https://new.archspace.cc** — the **cvs-merge restoration** edition (branch
-  `claude/peng-cvs-merge`): the same engine with a large body of original content
-  restored from the game's CVS history.
+  `claude/peng-cvs-merge` only): the same engine with a large body of original
+  content restored from the game's CVS history.
 
 ---
 
@@ -204,16 +204,16 @@ original `root` / `comconq1` **inside the container network only** (not exposed)
 
 ## Two editions
 
-This repo maintains **two diverging editions** of the game, deployed to two
-separate hosts:
+This repo maintains **two editions** of the game, deployed to two separate hosts:
 
-| Edition | Branch | Live site | Deploy |
+| Edition | Branch(es) | Live site | Deploy |
 |---|---|---|---|
-| **Faithful original** | `production` | **https://archspace.cc** | push-to-deploy (self-hosted runner) |
-| **cvs-merge restoration** | `claude/peng-cvs-merge` (integrated on `main`) | **https://new.archspace.cc** | manual `deploy.sh` over SSH |
+| **Faithful original** | `main` → `production` | **https://archspace.cc** | push-to-deploy (self-hosted runner) |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **https://new.archspace.cc** | manual `deploy.sh` over SSH |
 
 **Faithful original** holds to the three-tier "strictly faithful" rule above:
-the original 2004–05 game — no rule, balance, or formula changes.
+the original 2004–05 game — no rule, balance, or formula changes. `main` is the
+mainline; `production` is its deploy branch.
 
 **cvs-merge restoration** restores a large body of original content recovered
 from the game's CVS history that the faithful edition omits, and reworks some
@@ -228,16 +228,18 @@ mechanics. Highlights:
 - More restored components / projects / events / spy ops.
 
 These are deliberate gameplay divergences, so the "strictly faithful" rule does
-**not** apply to the restoration edition.
+**not** apply to the restoration edition. The restoration lives **only** on
+`claude/peng-cvs-merge` — **do not merge it into `main` or `production`.**
 
-**Why the branches diverged (an incident worth knowing).** The restoration was
-merged into `main` and then shipped to `production`, which **took prod down** —
-the pre-cvs-merge engine can't read the migrated DB (4-skill admiral table,
-widened ship classes) and crashes on load. `production` was **reverted to the
-pre-cvs-merge snapshot** (forward commit `4446f6b0` — no force-push) and now
-tracks the faithful tree. As a result **`main` carries the restoration while
-`production` is faithful**; do **not** fast-forward `production` to `main`, or you
-re-trigger the incident.
+**Why this matters (an incident worth knowing).** The restoration was once merged
+into `main` and then shipped to `production`, which **took prod down** — the
+faithful engine can't read the migrated DB (4-skill admiral table, widened ship
+classes) and crashes on load. `production` was **reverted to the pre-cvs-merge
+snapshot** (forward commit `4446f6b0` — no force-push), and the restoration was
+**reverted out of `main`** (`1a1fd5e4`, `dad0189e`), so both are faithful again.
+The restoration is a separate edition on its own branch; keep it there. (One
+residue: `production` still carries incident-recovery DB-reversal hotfixes in
+`entrypoint.sh` that `main` lacks, so the two faithful trees aren't byte-identical.)
 
 ---
 
@@ -247,15 +249,16 @@ re-trigger the incident.
 
 | Branch | Role |
 |---|---|
-| `production` | deploy branch for the **faithful** edition (archspace.cc) — pushing here triggers a deploy |
-| `main` | integration mainline; **currently carries the cvs-merge restoration** (see [Two editions](#two-editions)) |
-| `claude/peng-cvs-merge` | the **restoration** edition — deployed **manually** to new.archspace.cc (`main` + a small lead) |
+| `main` | mainline for the **faithful** edition (archspace.cc) |
+| `production` | deploy branch for the **faithful** edition — pushing here triggers a deploy |
+| `claude/peng-cvs-merge` | the **restoration** edition — deployed **manually** to new.archspace.cc; **not** merged into `main` |
 | other feature branches (`claude/*`) | active development; do **not** deploy |
 
-Ship by fast-forwarding `production` (faithful) or `claude/peng-cvs-merge`
-(restoration) to your reviewed feature tip — but **never fast-forward
-`production` to `main`**: they carry different editions, and doing so re-triggers
-the prod incident described in [Two editions](#two-editions).
+Ship **faithful** fixes through `main` → `production`; ship **restoration** work
+to `claude/peng-cvs-merge`. **Never merge the restoration into `main`/`production`**
+— that re-triggers the prod incident described in [Two editions](#two-editions).
+`production` carries incident-recovery hotfixes `main` lacks, so reconcile the two
+faithful trees by cherry-pick rather than a blind fast-forward.
 
 > **Multiple contributors:** `main`/`production` can move because another
 > collaborator's agent deploys too. Always `git fetch` before pushing; if the
