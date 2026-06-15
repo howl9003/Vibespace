@@ -86,34 +86,6 @@ $M "$DB_NAME" -e "ALTER TABLE class
     ADD COLUMN IF NOT EXISTS weapon_number9  int NOT NULL DEFAULT 0 AFTER weapon_number8,
     ADD COLUMN IF NOT EXISTS weapon_number10 int NOT NULL DEFAULT 0 AFTER weapon_number9;" || true
 
-# admiral 4-skill commander model: the old per-skill columns (siege_planet,
-# blockade, raid, privateer, siege_repelling, break_blockade, prevent_raid,
-# interpretation -- each with _up_level) were replaced by offense/defense
-# (maneuver + detection were already present and are kept). The engine reads
-# the admiral table via SELECT * positionally, so existing DBs MUST be
-# restructured to the exact new column order or commander loading misaligns.
-# Guarded on the presence of the old 'siege_planet' column so it runs once on
-# an old-schema DB and is a no-op on fresh/already-migrated DBs. Existing
-# admirals keep maneuver/detection and start untrained (-10) in offense/defense,
-# matching a freshly generated admiral.
-ADMIRAL_OLD_SCHEMA=$($M -N -B "$DB_NAME" -e "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$DB_NAME' AND TABLE_NAME='admiral' AND COLUMN_NAME='siege_planet';" 2>/dev/null)
-if [ "$ADMIRAL_OLD_SCHEMA" = "1" ]; then
-    log "migrating: admiral skills -> 4-skill model (offense/defense/maneuver/detection)"
-    $M "$DB_NAME" -e "ALTER TABLE admiral
-        ADD COLUMN offense          smallint(3) NOT NULL DEFAULT -10 AFTER efficiency,
-        ADD COLUMN offense_up_level smallint(3) NOT NULL DEFAULT -10 AFTER offense,
-        ADD COLUMN defense          smallint(3) NOT NULL DEFAULT -10 AFTER offense_up_level,
-        ADD COLUMN defense_up_level smallint(3) NOT NULL DEFAULT -10 AFTER defense,
-        DROP COLUMN siege_planet,    DROP COLUMN siege_planet_up_level,
-        DROP COLUMN blockade,        DROP COLUMN blockade_up_level,
-        DROP COLUMN raid,            DROP COLUMN raid_up_level,
-        DROP COLUMN privateer,       DROP COLUMN privateer_up_level,
-        DROP COLUMN siege_repelling, DROP COLUMN siege_repelling_up_level,
-        DROP COLUMN break_blockade,  DROP COLUMN break_blockade_up_level,
-        DROP COLUMN prevent_raid,    DROP COLUMN prevent_raid_up_level,
-        DROP COLUMN interpretation,  DROP COLUMN interpretation_up_level;" || true
-fi
-
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.
