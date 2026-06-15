@@ -484,8 +484,10 @@ CPageDomestic::handler(CPlayer *aPlayer)
 			CPurchasedProject *
 				Project = (CPurchasedProject *)ProjectList->get(i);
 
+			char *Fx = Project->get_effect_tip();
 			if (Comma) ProjectName += ", ";
-			ProjectName += Project->get_name();
+			ProjectName.format("<span class=\"as-projtip\" data-tip=\"%s\">%s</span>",
+					Fx, Project->get_name());
 
 			Comma = true;
 		}
