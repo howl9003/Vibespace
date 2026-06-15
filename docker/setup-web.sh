@@ -160,6 +160,13 @@ if [ -f "$CSS_MAIN" ] && ! grep -q 'as-stat-flash' "$CSS_MAIN" 2>/dev/null; then
   0%   { background-color: rgba(255, 214, 0, .85); color: #000; }
   100% { background-color: transparent; }
 }
+
+/* Race emblem in the top status bar: center it on the stat line. The legacy
+   <IMG ... ALIGN=absmiddle> aligns the ~17px emblem to the line-box middle,
+   which sits a hair above the 13px Times New Roman text's optical center;
+   vertical-align:middle (baseline + x-height/2) centers it on the text. The
+   emblem is the only image whose src carries "small_symbol", so this is exact. */
+img[src*="small_symbol"] { vertical-align: middle; }
 CSS
 fi
 
