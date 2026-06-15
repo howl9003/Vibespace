@@ -51,7 +51,10 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   │   └── set_platform            # Symlinks Makefile.<Platform> into place
 │   ├── etc/                        # archspace.config, banner, ip_ban
 │   ├── www-new/                    # Newer web tier (forum/phpMyAdmin) — mostly unused,
-│   │                               #   but the only source of planet thumbnails
+│   │                               #   but the only source of planet thumbnails.
+│   │                               #   Its binaries were CRLF-mangled (LF→0D0A) on a
+│   │                               #   Windows/CVS import; the served tree is repaired
+│   │                               #   in place (514 files; see CLAUDE.md image routing)
 │   ├── portal/  mod_as-*/          # Legacy auth portal + Apache module — DROPPED
 │   └── archspace.tar.gz            # Packaged original `www` tier + content (art,
 │                                   #   encyclopedia, static pages) — content source of truth
