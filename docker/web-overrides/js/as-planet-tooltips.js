@@ -59,7 +59,7 @@
     s.border = "1px solid #555"; s.borderRadius = "3px";
     s.font = '12px "Times New Roman", Times, serif'; s.lineHeight = "1.4";
     s.boxShadow = "0 2px 8px rgba(0,0,0,.6)"; s.pointerEvents = "none";
-    s.display = "none"; s.whiteSpace = "normal";
+    s.display = "none"; s.whiteSpace = "pre-line";
     document.body.appendChild(tip);
 
     function move(e) {
@@ -105,6 +105,30 @@
       if (trail) frag.appendChild(document.createTextNode(trail));
       node.parentNode.replaceChild(frag, node);
     });
+
+    // War pages (raid / siege / blockade): the target planet's modifiers are
+    // shown in a readonly <input name="attribute"> as a comma-separated list,
+    // updated by the page's own JS as the attacker picks a planet from the
+    // selector. Read the live value on hover and explain each modifier.
+    Array.prototype.forEach.call(
+      document.querySelectorAll('input[name="attribute"]'),
+      function (inp) {
+        inp.style.cursor = "help";
+        function tipText() {
+          var v = (inp.value || "").trim();
+          if (!v || v.toLowerCase() === "none") return "";
+          var lines = [];
+          v.split(",").forEach(function (part) {
+            var name = norm(part);
+            if (EFFECTS.hasOwnProperty(name)) lines.push(name + " — " + EFFECTS[name]);
+          });
+          return lines.join("\n");
+        }
+        inp.addEventListener("mouseenter", function (e) { var t = tipText(); if (t) show(e, t); });
+        inp.addEventListener("mousemove", function (e) { if (tip.style.display === "block") move(e); });
+        inp.addEventListener("mouseleave", hide);
+      }
+    );
   }
 
   if (document.readyState === "loading") {
