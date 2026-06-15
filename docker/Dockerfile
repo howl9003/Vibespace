@@ -24,9 +24,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ---- build the engine -----------------------------------------------------
 WORKDIR /build
 # NOTE: this also ships www-new/ into the image. setup-web.sh overlays
-# www-new/image/{as_login/encyclopedia,as_game/planets,as_game/fleet} into the
-# web root at boot (those assets aren't in the original www tarball). www-new is
-# NOT bind-mounted by docker-compose, so it only refreshes on an image rebuild.
+# www-new/image/{as_login/encyclopedia,as_game/planets,as_game/fleet,as_game/black_market}
+# into the web root at boot (those assets aren't in the original www tarball) and
+# swaps the legacy Korean "under construction" placeholder for a clean English one.
+# www-new is NOT bind-mounted by docker-compose, so it only refreshes on an image
+# REBUILD -- deploy.sh now treats a www-new change as rebuild-worthy.
 COPY archspace_source/archspace /build/archspace
 COPY archspace_source/archspace.tar.gz /build/archspace.tar.gz
 COPY docker/setup-runtime.sh /usr/local/bin/setup-runtime.sh
