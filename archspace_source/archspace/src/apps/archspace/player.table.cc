@@ -502,7 +502,7 @@ CPlayerTable::load_tech(CMySQL &aMySQL)
 		CString
 			Query;
 
-		Query.format( "SELECT owner, info, life, matter, social FROM tech WHERE owner > %d AND owner <= %d", i, i+1000 );
+		Query.format( "SELECT owner, info, life, matter, social, upgrade, schematics, amatter FROM tech WHERE owner > %d AND owner <= %d", i, i+1000 );
 		aMySQL.query( (char*)Query );
 
 		aMySQL.use_result();
@@ -1782,11 +1782,12 @@ CPlayerTable::select_player_except_one(CPlayer *aPlayer)
 void
 CPlayerTable::verify_player()
 {
-	CCommandSet 
-		BasicTechInfo, 
-		BasicTechLife, 
-		BasicTechMatter, 
-		BasicTechSocial;
+	CCommandSet
+		BasicTechInfo,
+		BasicTechLife,
+		BasicTechMatter,
+		BasicTechSocial,
+		BasicTechSchematics;
 
 	for(int i=0; i<TECH_TABLE->length(); i++)
 	{
@@ -1808,6 +1809,9 @@ CPlayerTable::verify_player()
 				break;
 			case CTech::TYPE_SOCIAL:
 				BasicTechSocial += Tech->get_id() % 100;
+				break;
+			case CTech::TYPE_SCHEMATICS:
+				BasicTechSchematics += Tech->get_id() % 100;
 				break;
 			default:
 				break;
@@ -1849,7 +1853,14 @@ CPlayerTable::verify_player()
 		{
 			Update = true;
 		}
-		if (Update) 
+		// CVS gating needs the Basic ship schematics (Gunboat/Corvette/Frigate);
+		// existing players from the locked-schematic regime have none, so re-grant
+		// on load (otherwise they could not build any ship under the new gating).
+		if ((KnownTechList->get_schematics() & BasicTechSchematics) != BasicTechSchematics)
+		{
+			Update = true;
+		}
+		if (Update)
 		{
 			SLOG("ERROR : %s doesn't have all basic techs", Player->get_nick());
 

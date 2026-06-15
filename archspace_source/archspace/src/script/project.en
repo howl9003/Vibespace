@@ -63,18 +63,16 @@
 #	[
 #		Number(1408)
 #	],
-#	Type("Planet"),
+#	Type("BM"),
 #	<Effect>
 #	{
-#		<Defend>
+#		<Commander Survival>
 #		{
-#			<Destroy>
-#			{
-#				Population(15)
-#			}
+#			Amount(10),
+#			Type( "Absolute" )
 #		}
 #	},
-#	Cost(9000)
+#	Cost(9000000)
 #},
 
 <Earth Elevator>
@@ -130,7 +128,7 @@
 #		},
 		Environment(1)
 	},
-	Cost(40000)
+	Cost(20000)
 },
 
 <Orbital Space Elevator>
@@ -147,7 +145,7 @@
 		Military(1),
 		Production(1)
 	},
-	Cost(140000)
+	Cost(70000)
 },
 
 <Mechanic Bard>
@@ -202,7 +200,7 @@
 		Military(1),
 		Efficiency(1)
 	},
-	Cost(100000)
+	Cost(50000)
 },
 
 <Planet Environment Stabilizer>
@@ -219,7 +217,7 @@
 		Growth(1),
 		Environment(2)
 	},
-	Cost(300000)
+	Cost(30000)
 },
 
 <Clone Family>
@@ -239,7 +237,7 @@
 		Genius(-1),
 		Research(-1)
 	},
-	Cost(100000)
+	Cost(50000)
 },
 
 <Memory Rewinder>
@@ -255,7 +253,7 @@
 	{
 		Research(1)
 	},
-	Cost(200000)
+	Cost(20000)
 },
 
 #<Transparent Image Control System>
@@ -288,7 +286,7 @@
 	{
 		Spy(2)
 	},
-	Cost(1500000)
+	Cost(150000)
 },
 
 #<Impregnable Area>
@@ -334,7 +332,7 @@
 		Spy(1),
 		Commerce(1)
 	},
-	Cost(1000000)
+	Cost(100000)
 },
 
 <Dream Maker>
@@ -353,7 +351,7 @@
 		Production(1),
 		Facility Cost(-1)
 	},
-	Cost(6000000)
+	Cost(600000)
 },
 
 <Saga Archive>
@@ -371,7 +369,7 @@
 		Genius(2),
 		Diplomacy(1)
 	},
-	Cost(100000)
+	Cost(10000)
 },
 
 <University of Past, Present and Future>
@@ -385,10 +383,10 @@
 	Type("Fixed"),
 	<Effect>
 	{
-		Research(2),
+		Research(3),
 		Diplomacy(2)
 	},
-	Cost(6000000)
+	Cost(300000)
 },
 
 <Dimension Gate>
@@ -430,7 +428,7 @@
 		Growth(-1),
 		Environment(-2)
 	},
-	Cost(20000000)
+	Cost(2000000)
 },
 
 
@@ -448,7 +446,7 @@
 		spy(1)
 #		Info Net. 보호(spy 관련 방어)
 	},
-	Cost(1000000)
+	Cost(100000)
 },
 
 <Nova Plant>
@@ -467,7 +465,7 @@
 		Commerce(-1)
 #		Nova 상태일 때만 가능?
 	},
-	Cost(2000000)
+	Cost(200000)
 },
 
 <Archmage>
@@ -483,7 +481,7 @@
 	{
 		Genius(1)
 	},
-	Cost(500000)
+	Cost(50000)
 },
 
 <Humanoid Plant>
@@ -503,7 +501,7 @@
 		Production(2),
 		Diplomacy(-1)
 	},
-	Cost(6000000)
+	Cost(600000)
 },
 
 <Thinker Ball>
@@ -522,7 +520,7 @@
 		Efficiency(2),
 		Facility Cost(-2)
 	},
-	Cost(20000000)
+	Cost(2000000)
 },
 
 <AI Bill of Rights>
@@ -540,7 +538,7 @@
 		Efficiency(4),
 		Facility Cost(-1)
 	},
-	Cost(2000000)
+	Cost(200000)
 },
 
 <Truth Tester>
@@ -558,7 +556,7 @@
 		Spy(1),
 		Diplomacy(1)
 	},
-	Cost(2250000)
+	Cost(225000)
 },
 
 <Imperial Palace>
@@ -578,7 +576,7 @@
 		Production(1),
 		Facility Cost(-1)
 	},
-	Cost(3000000)
+	Cost(300000)
 },
 
 <Symbol of Liberation>
@@ -599,7 +597,7 @@
 		Research(1),
 		Spy(-2)
 	},
-	Cost(3000000)
+	Cost(300000)
 },
 
 <The One Unified Mind>
@@ -620,7 +618,7 @@
 		Spy(-1),
 		Diplomacy(-1)
 	},
-	Cost(3000000)
+	Cost(300000)
 },
 <Organic Plant>
 {
@@ -636,9 +634,10 @@
 	<Effect>
 	{
 		Growth(1),
-		Production(1)
+		Production(1),
+		Facility Cost(2)
 	},
-	Cost(30000)
+	Cost(60000)
 },
 <Desire Amplifier>
 {
@@ -657,7 +656,7 @@
 		Efficiency(-1),
 		Research(-1)
 	},
-	Cost(5000)
+	Cost(3000)
 },
 <Will of the Righteous>
 {
@@ -676,7 +675,7 @@
 		Commerce(-1),
 		Diplomacy(-1)
 	},
-	Cost(50000)
+	Cost(5000)
 },
 
 <Galactic Liberalism Movement>
@@ -712,7 +711,7 @@
 		Efficiency(1),
 		Facility Cost(-1)
 	},
-	Cost(300000)
+	Cost(30000)
 },
 <Neutral Power Declaration>
 {
@@ -730,9 +729,9 @@
 		Commerce(2),
 		Production(2),
 		Spy(1),
-		Research(1)
+		Research(2)
 	},
-	Cost(5000000)
+	Cost(500000)
 },
 
 <Galactic Agreement of Free Commerce>
@@ -752,7 +751,7 @@
 #		},
 		Commerce(2)
 	},
-	Cost(150000)
+	Cost(15000)
 },
 
 <Propaganda Entertainment>
@@ -791,17 +790,17 @@
 		Military(1),
 		<Produce MP Per Turn>
 		{
-			Amount(30000),
+			Amount(50000),
 			Apply("Absolute")
 		}
 	},
-	Cost(3000000)
+	Cost(300000)
 },
 
 <Galactic University>
 {
 	Number(7047),
-	Description("This institute was established from the need to combine the research of many different species on a galactic basis. The learning and research gains are tremendous but the cost to bring the minds of so many people togethor is hefty and has to be maintained."),
+	Description("This institute was established from the need to combine the research of many different species on a galactic basis. The learning and research gains are tremendous but the cost to bring the minds of so many people togethor is hefty and has to be maintained. [Clarification: For each single RP gained from the +75% RP income increase, you lose one 1PP]"),
 	<Prerequisite>
 	[
 		Tech(1214),
@@ -813,348 +812,12 @@
 	{
 		<Produce RP Per Turn>
 		{
-			Amount(100000),
-			Apply("Absolute")
-		},
-		<Consume PP Per Turn>
-		{
-			Amount(75000),
-			Apply("Absolute")
+			Amount(35)
 		}
 	},
-	Cost(5000000)
+	Cost(300000)
 },
 
-<Secret of Genetic Code>
-{
-	Number(7101),
-	Description("Genetic code has been handed down from the ancestors for centuries. This means the genetic code pool has been static for the period. Current research has embarked on numerous events, small and large, ever since the claim, by a group of scientists, that there are hidden messages from the ancient civilization in the genetic code. Could it be that those people from the past have left messages in the genetic code? If it is true, what could be the message?"),
-	<Prerequisite>
-	[
-	#Genetic Engineering
-		Tech(1404)
-	],
-	Type("BM"),
-	<Effect>
-	{
-		Growth(2),
-		Genius(2),
-		Research(-1)
-	},
-	Cost(9000)
-},
-
-<Information Network Library>
-{
-#	Number(7019),
-	Number(8000),
-	Description("Superficially, it's an information library that stays on the network. In actuality, this device intercepts informations flowing through the network. The information could be about a cutting-edge information, information about other sectors or the informations about the Empire itself. But at times it could be about a worthless rumors too."),
-	<Prerequisite>
-	[
-		Tech(1222)
-	],
-	Type("BM"),
-	<Effect>
-	{
-		Research(2),
-		Production(2),
-		Diplomacy(-2)
-	},
-	Cost(4000000)
-},
-
-<Human Ending Mk.I>
-{
-	Number(9001),
-	<Prerequisite>
-	[
-	#Ultimate Truth
-		Tech(1131),
-	#Ascension
-		Tech(1426),
-		Planet(30),
-		Cluster(4),
-	#Human
-		Race(1)
-	],
-	Type("Ending"),
-	<Effect>
-	{
-                <Change Production>
-                {
-                        Amount(2000000),
-                        Apply("Absolute")
-                },
-		<Produce RP Per Turn>
-		{
-			Amount(25000),
-			Apply("Absolute")
-		},
-		<Produce MP Per Turn>
-		{
-			Amount(25000),
-			Apply("Absolute")
-		}
-	},
-	Cost(0),
-	Description("Human race has taken many pains for millennia looking for a solution to the construction of Utopia. Finally human race succeeded in developing a computer with transcendental ability. Many questions were thrown at it upon coming out. When it was finally asked for the solution to the ultimate truth, life and space, it gave out the answer 'Forty Two.' (Special thanks to: Douglas Adams, who now travels in other space.)")
-},
-
-<Evintos Ending Mk.I>
-{
-	Number(9002),
-	<Prerequisite>
-	{
-	#Oracle Computing
-		Tech(1225),
-		Cluster(3),
-		Planet(20),
-		CouncilSize(8),
-		<EmpireRelation>
-		{
-			LessOrEqual(20)
-		},
-	#Evintos
-		Race(5)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Efficiency(-1),
-		Genius(3)
-	},
-	Cost(0),
-	Description("For a race whose everyday life consisted of seclusion at the outer part of the Empire along with lifeless production and disassembly, your contact with carbon-based life form resulted in a massive load of information. To adapt and compete in this Galaxy, you are mandated to fortify the strength of the race, which originates from the Creators of Evintos. Other than that, there doesn't seem to be much of a chance of survival.")
-},
-<Xesperados Ending Mk.I>
-{
-	Number(9003),
-	<Prerequisite>
-	{
-		TechAll(0),
-		RP(40000),
-		Fleet(25),
-		CouncilSize(4),
-	#Xesperados
-		Race(10)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Diplomacy(2),
-		Military(2)
-	},
-	Cost(0),
-	Description("Technological achievement during the past have given your race the confidence, and bought envy from many a race as well. However, there isn't much of a progress recently, with labs that can't publish the research progress. Many scientists worry that current science and technology have hit the plateau finally. Possibly, by the acquisition of the lost results of Trabotulins in the past, this problem can be solved, they hope. You will have to challenge the Empire for this, of course.")
-},
-<Tecanoid Ending Mk.I>
-{
-	Number(9004),
-	<Prerequisite>
-	{
-	#Oracle Computing
-		Tech(1225),
-	#Ultimate Truth
-		Tech(1131),
-	#Fallen Head
-		CouncilProject(7022),
-		Planet(13),
-		<EmpireRelation>
-		{
-			LessOrEqual(10)
-		},
-	#Tecanoid
-		Race(4),
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Genius(2),
-		Efficiency(2),
-		Diplomacy(-1)
-	},
-	Cost(0),
-	Description("By the ultimate progress of engineering, your race have reached the status of demi god. You are stronger, more intelligent than many other barbarians, and even better yet, you all can sustain your lives practically for eternity. Who more deserves the throne of this Galaxy than you? You carefully start crafting the plans to advance to the throne at Caput Mundi, the Imperial Capital.")
-},
-<Bosalian Ending Mk.I>
-{
-	Number(9005),
-	<Prerequisite>
-	{
-	#Ultimate Truth
-		Tech(1131),
-		NoWarInCouncil(0),
-		ShipPool(200),
-		ConcentrationMode(2),
-	#Bosalian
-		Race(7)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Military(3),
-		<Lose Ability>
-		{
-		Ability("Pacifist")
-		}
-	},
-	Cost(0),
-	Description("You finally stop your meditation. You realized that, in this endless pan-galactic chaos, every effort till these days to lead the multitude to the path of truth and out of the wheels of karma was but wasted. To protect the good, and to cast light upon the path to the truth, you must vanquish whoever that stops you.")
-},
-<Xerusian Ending Mk.I>
-{
-	Number(9006),
-	<Prerequisite>
-	{
-	#Permanent Engine
-		Tech(1336),
-	#	HasShip(50),
-	#	HasPower(125000),
-		<Power>
-		{
-			GreaterOrEqual(125000)
-		},
-	#Nova Plant
-		CouncilProject(7024),
-		Planet(15),
-		<Efficiency>
-		{
-			GreaterOrEqual(10)
-		},
-		EmpireRelation(40),
-	#Xerusian
-		Race(9)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-	#Nahodoom Ray Launcher
-#		Device(6308)
-	},
-	Cost(0),
-	Description("3... 2... 1... Fire! Silent, yet excited atmosphere surrounds the scientists, staring down the experiment from their lab afar. Ultra-powerful Energy rays out of the test warship just disposed the target down to molecular level. This weapon, utilizing the Permanent Engine, is named \"Nahodoom\", and will render the futile resistance of the aboriginal creatures in the new world quite hopeless and useless - if they can miniaturize this beast, that is.")
-},
-<Targoid Ending Mk.I>
-{
-	Number(9007),
-	<Prerequisite>
-	{
-	#Cloning
-		Tech(1411),
-	#Thought of God
-		Tech(1130),
-		ConcentrationMode(2),
-		<EmpireRelation>
-		{
-			LessOrEqual(10)
-		},
-		<PopulationIncrease>
-		{
-			Less(250000)
-		},
-	#Targoid
-		Race(2)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Military(2)
-	},
-	Cost(0),
-	Description("New Targoids are waiting for their hatching in the hatchery. But this planet is not enough to hatch every component - drones, soldiers or overlords. After some reflection, you decide to carry the hatching eggs to the orbital cryostation. You once believed this space was vast enough for your race... You start recalling the memories of close clusters, and investigating new planet to expand. Soon you order the metamorphosis of warships out of the hatching eggs.")
-},
-<Agerus Ending Mk.I>
-{
-	Number(9008),
-	<Prerequisite>
-	{
-	#Ascension
-		Tech(1426),
-		<Power>
-		{
-			GreaterOrEqual(200000)
-		},
-		<PopulationIncrease>
-		{
-			GreaterOrEqual(100000)
-		},
-		Planet(25),
-		Cluster(3),
-	#Agerus
-		Race(6)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Diplomacy(2),
-		Efficiency(2)
-	},
-	Cost(0),
-	Description("While carrying your spore to the new planet, you feel the imminent change within your body. You suddenly feel that what once was your own body structure is now a part of your greater self. Also, you suddenly feel the presence of lower-class Agerus under your command as a part of your greater self too. You have transcended the limit of organism, and became aware of the greater self and unified will.")
-},
-<Buckaneer Ending Mk.I>
-{
-	Number(9009),
-	<Prerequisite>
-	{
-	#Anarchism
-		Tech(1127),
-		Planet(9),
-		Fleet(30),
-	#Military
-		ConcentrationMode(2),
-	#Buckaneer
-		Race(3)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		Military(2),
-		Commerce(2),
-		Efficiency(-1),
-		Diplomacy(-2),
-		<Gain Ability>
-		{
-			Ability("Stealth Pirate")
-		}
-	},
-	Cost(0),
-	Description("Armed group of so-called 'citizens' came with a few heavy equipments to dismantle the Planetary Administration Building. This is the final assault of Buckaneers, who want to see what we call 'Government' forgotten into the wake of oblivion. After all, who cares about Government?  Time will pass and they will live on as a wandering tribe in the space.")
-},
-<Xeloss Ending Mk.I>
-{
-	Number(9010),
-	<Prerequisite>
-	{
-	#Thought of God
-		Tech(1130),
-	#Fallen Head
-		CouncilProject(7022),
-	#Propaganda Entertainment
-		Project(7045),
-		CouncilSpeaker(0),
-		CouncilSize(6),
-	#Xeloss
-		Race(8)
-	},
-	Type("Ending"),
-	<Effect>
-	{
-		<Gain Ability>
-		{
-			Ability("Enhanced Psi")
-		}
-	},
-	Cost(0),
-	Description("Pan-denominational mass as that of today is not what they could afford in the last few millennia. You've led your people to the Promised Land during the Judgment of Fire, and now you are selected as the Highest Priest. Now you are holding the mass, and everybody around you considers you as the much-prophesied Messiah. They're all solemnly attending the mass. You now pray to the God that Xeloss be blessed with the opportunity to settle down in the Promised Land.")
-},
-
-
-
-
-
-
-# === CVS-merge: new project entries ported from CVSRoot (S4 content) ===
 <Dynamic Caste System>
 {
 	Number(7048),
@@ -1284,6 +947,58 @@
 	Cost(100000000)
 },
 
+<Secret of Genetic Code>
+{
+	Number(7101),
+	Description("Genetic code has been handed down from the ancestors for centuries. This means the genetic code pool has been static for the period. Current research has embarked on numerous events, small and large, ever since the claim, by a group of scientists, that there are hidden messages from the ancient civilization in the genetic code. Could it be that those people from the past have left messages in the genetic code? If it is true, what could be the message?"),
+	<Prerequisite>
+	[
+	#Genetic Engineering
+		Tech(1404)
+	],
+	Type("BM"),
+	<Effect>
+	{
+		Growth(3),
+		Genius(2),
+		Diplomacy(-2)
+	},
+	Cost(9000)
+},
+
+<Information Network Library>
+{
+#	Number(7019),
+	Number(8000),
+	Description("Superficially, it's an information library that stays on the network. In actuality, this device intercepts informations flowing through the network. The information could be about a cutting-edge information, information about other sectors or the informations about the Empire itself. But at times it could be about a worthless rumors too."),
+	<Prerequisite>
+	[
+		Tech(1222)
+	],
+	Type("BM"),
+	<Effect>
+	{
+		Research(5),
+		Diplomacy(-1)
+	},
+	Cost(4000000)
+},
+#<Sacrophagus>
+#{
+# 	Number(8001)
+#	Description("The Sacrophagus provides its owner with the ability to resurrect the dead. However, with multiple uses, it causes permament damage to the user's form and hence, it can only be used a limited number of times. As such, its usage is the subject of widespread criticism throughout the galaxy."),
+#	<Prerequisite>
+#	[
+#		Tech(1411)
+#	],
+#	Type("BM"),
+#	<Effect>
+#	{
+#		Genius(-2),
+#		Diplomacy(-2)
+#	},
+#	Cost(40000)
+#},
 <Planetary Sensor Array>
 {
  	Number(8002),
@@ -1300,7 +1015,6 @@
 	},
 	Cost(4000000)
 },
-
 <The Iron Will>
 {
  	Number(8003),
@@ -1386,6 +1100,312 @@
 		Diplomacy(4)
 	},
 	Cost(40000)
+},
+
+<Human Ending Mk.I>
+{
+	Number(9001),
+	<Prerequisite>
+	[
+	#Ultimate Truth
+		Tech(1131),
+	#Ascension
+		Tech(1426),
+		Planet(30),
+		Cluster(4),
+	#Human
+		Race(1)
+	],
+	Type("Ending"),
+	<Effect>
+	{
+                <Change Production>
+                {
+                        Amount(200000),
+                        Apply("Absolute")
+                },
+		<Produce RP Per Turn>
+		{
+			Amount(25000),
+			Apply("Absolute")
+		},
+		<Produce MP Per Turn>
+		{
+			Amount(100000),
+			Apply("Absolute")
+		}
+	},
+	Cost(0),
+	Description("Human race has taken many pains for millennia looking for a solution to the construction of Utopia. Finally human race succeeded in developing a computer with transcendental ability. Many questions were thrown at it upon coming out. When it was finally asked for the solution to the ultimate truth, life and space, it gave out the answer 'Forty Two.' (Special thanks to: Douglas Adams, who now travels in other space.)")
+},
+
+<Evintos Ending Mk.I>
+{
+	Number(9002),
+	<Prerequisite>
+	{
+	#Oracle Computing
+		Tech(1225),
+		Cluster(3),
+		Planet(20),
+		CouncilSize(8),
+	#Evintos
+		Race(5)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Production(-1),
+        Efficiency(-1),
+		Genius(5),
+		Research(2),
+		<Gain Ability>
+		{
+			Ability("Advanced Battle Processing")
+		}
+	},
+	Cost(0),
+	Description("For a race whose everyday life consisted of seclusion at the outer part of the Empire along with lifeless production and disassembly, your contact with carbon-based life form resulted in a massive load of information. To adapt and compete in this Galaxy, you are mandated to fortify the strength of the race, which originates from the Creators of Evintos. Other than that, there doesn't seem to be much of a chance of survival.")
+},
+<Xesperados Ending Mk.I>
+{
+	Number(9003),
+	<Prerequisite>
+	{
+	    #Permanent Engine
+		Tech(1336),
+		#Ultimate Truth
+		Tech(1131),
+		#Oracle Computing
+		Tech(1225),
+		RP(40000),
+		Fleet(25),
+		CouncilSize(4),
+	#Xesperados
+		Race(10)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Diplomacy(2),
+		Military(2),
+		Commerce(1)
+	},
+	Cost(0),
+	Description("Technological achievement during the past have given your race the confidence, and bought envy from many a race as well. However, there isn't much of a progress recently, with labs that can't publish the research progress. Many scientists worry that current science and technology have hit the plateau finally. Possibly, by the acquisition of the lost results of Trabotulins in the past, this problem can be solved, they hope. You will have to challenge the Empire for this, of course.")
+},
+<Tecanoid Ending Mk.I>
+{
+	Number(9004),
+	<Prerequisite>
+	{
+	#Oracle Computing
+		Tech(1225),
+	#Ultimate Truth
+		Tech(1131),
+	#Fallen Head
+		CouncilProject(7022),
+		Planet(13),
+	#Tecanoid
+		Race(4),
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Genius(2),
+		Efficiency(2),
+		Diplomacy(-1)
+	},
+	Cost(0),
+	Description("By the ultimate progress of engineering, your race have reached the status of demi god. You are stronger, more intelligent than many other barbarians, and even better yet, you all can sustain your lives practically for eternity. Who more deserves the throne of this Galaxy than you? You carefully start crafting the plans to advance to the throne at Caput Mundi, the Imperial Capital.")
+},
+<Bosalian Ending Mk.I>
+{
+	Number(9005),
+	<Prerequisite>
+	{
+	#Ultimate Truth
+		Tech(1131),
+		NoWarInCouncil(0),
+		ShipPool(200),
+		ConcentrationMode(2),
+	#Bosalian
+		Race(7)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Military(3),
+		<Lose Ability>
+		{
+			Ability("Pacifist")
+		},
+		<Gain Ability>
+		{
+			Ability("Enhanced PSI")
+		}
+	},
+	Cost(0),
+	Description("You finally stop your meditation. You realized that, in this endless pan-galactic chaos, every effort till these days to lead the multitude to the path of truth and out of the wheels of karma was but wasted. To protect the good, and to cast light upon the path to the truth, you must vanquish whoever that stops you.")
+},
+<Xerusian Ending Mk.I>
+{
+	Number(9006),
+	<Prerequisite>
+	{
+	#Permanent Engine
+		Tech(1336),
+	#	HasShip(50),
+	#	HasPower(125000),
+		<Power>
+		{
+			GreaterOrEqual(125000)
+		},
+	#Nova Plant
+		CouncilProject(7024),
+		Planet(15),
+		<Efficiency>
+		{
+			GreaterOrEqual(10)
+		},
+		EmpireRelation(40),
+	#Xerusian
+		Race(9)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Efficiency(2),
+		<Gain Ability>
+		{
+			Ability("Militaristic Dominance")
+		}
+	},
+	Cost(0),
+	Description("3... 2... 1... Fire! Silent, yet excited atmosphere surrounds the scientists, staring down the experiment from their lab afar. Ultra-powerful Energy rays out of the test warship just disposed the target down to molecular level. This weapon, utilizing the Permanent Engine, is named \"Nahodoom\", and will render the futile resistance of the aboriginal creatures in the new world quite hopeless and useless - if they can miniaturize this beast, that is.")
+},
+<Targoid Ending Mk.I>
+{
+	Number(9007),
+	<Prerequisite>
+	{
+	#Cloning
+		Tech(1411),
+	#Thought of God
+		Tech(1130),
+		ConcentrationMode(2),
+		<PopulationIncrease>
+		{
+			Less(250000)
+		},
+	#Targoid
+		Race(2)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Production(3),
+		<Gain Ability>
+		{
+			Ability("Hive Ship Yard")
+		}
+	},
+	Cost(0),
+	Description("New Targoids are waiting for their hatching in the hatchery. But this planet is not enough to hatch every component - drones, soldiers or overlords. After some reflection, you decide to carry the hatching eggs to the orbital cryostation. You once believed this space was vast enough for your race... You start recalling the memories of close clusters, and investigating new planet to expand. Soon you order the metamorphosis of warships out of the hatching eggs.")
+},
+<Agerus Ending Mk.I>
+{
+	Number(9008),
+	<Prerequisite>
+	{
+	#Ascension
+		Tech(1426),
+#		<Power>
+#		{
+#			GreaterOrEqual(200000)
+#		},
+		<PopulationIncrease>
+		{
+			GreaterOrEqual(10000)
+		},
+#		Planet(25),
+		Cluster(3),
+	#Agerus
+		Race(6)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Diplomacy(2),
+		Efficiency(1),
+		Production(2),
+		Research(2)
+	},
+	Cost(0),
+	Description("While carrying your spore to the new planet, you feel the imminent change within your body. You suddenly feel that what once was your own body structure is now a part of your greater self. Also, you suddenly feel the presence of lower-class Agerus under your command as a part of your greater self too. You have transcended the limit of organism, and became aware of the greater self and unified will.")
+},
+<Buckaneer Ending Mk.I>
+{
+	Number(9009),
+	<Prerequisite>
+	{
+	#Anarchism
+		Tech(1127),
+		Planet(9),
+		Fleet(30),
+	#Military
+		ConcentrationMode(2),
+	#Buckaneer
+		Race(3)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+		Growth(1),
+		Military(2),
+		Commerce(2),
+		Efficiency(-1),
+		Diplomacy(-2),
+		<Gain Ability>
+		{
+			Ability("Stealth Pirate")
+		}
+	},
+	Cost(0),
+	Description("Armed group of so-called 'citizens' came with a few heavy equipments to dismantle the Planetary Administration Building. This is the final assault of Buckaneers, who want to see what we call 'Government' forgotten into the wake of oblivion. After all, who cares about Government?  Time will pass and they will live on as a wandering tribe in the space.")
+},
+<Xeloss Ending Mk.I>
+{
+	Number(9010),
+	<Prerequisite>
+	{
+	#Thought of God
+		Tech(1130),
+	#Fallen Head
+		CouncilProject(7022),
+	#Propaganda Entertainment
+		Project(7045),
+		CouncilSpeaker(0),
+		CouncilSize(6),
+	#Xeloss
+		Race(8)
+	},
+	Type("Ending"),
+	<Effect>
+	{
+	    Production(2),
+		Research(2),
+		<Gain Ability>
+		{
+			Ability("Enhanced Psi")
+		},
+		<Gain Ability>
+		{
+			Ability("Fanatical Recruiting")
+		}
+	},
+	Cost(0),
+	Description("Pan-denominational mass as that of today is not what they could afford in the last few millennia. You've led your people to the Promised Land during the Judgment of Fire, and now you are selected as the Highest Priest. Now you are holding the mass, and everybody around you considers you as the much-prophesied Messiah. They're all solemnly attending the mass. You now pray to the God that Xeloss be blessed with the opportunity to settle down in the Promised Land.")
 },
 
 <Human Ending Mk.II Version A>
@@ -2001,4 +2021,11 @@
 	Cost(0),
 	Description("Despite their diversity of species, the Xesperados forces are one of the most feared in the galaxy. Now you are faced with a decision - expansion or pacifism. Naturally, you choose the former."),
 }
+
+
+
+
+
+
+
 

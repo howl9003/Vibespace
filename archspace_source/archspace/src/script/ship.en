@@ -1,4 +1,5 @@
 # 4XXX: Ship
+# Upkeep Cost = 1.8^(ship class)
 
 <Gunboat>
 {
@@ -9,7 +10,8 @@
 	Weapon(1),
 	Slot(100),
 	Device(0),
-	Cost(1000)
+	Cost(100),
+	Upkeep(2)
 },
 <Corvette>
 {
@@ -20,7 +22,8 @@
 	Weapon(2),
 	Slot(88),
 	Device(0),
-	Cost(3097)
+	Cost(309),
+	Upkeep(3)
 },
 <Frigate>
 {
@@ -31,7 +34,8 @@
 	Weapon(2),
 	Slot(153),
 	Device(1),
-	Cost(9363)
+	Cost(936),
+	Upkeep(6)
 },
 <Destroyer>
 {
@@ -42,7 +46,8 @@
 	Weapon(3),
 	Slot(179),
 	Device(1),
-	Cost(28836)
+	Cost(2884),
+	Upkeep(11)
 },
 <Cruiser>
 {
@@ -53,7 +58,8 @@
 	Weapon(4),
 	Slot(235),
 	Device(2),
-	Cost(88360)
+	Cost(8836),
+	Upkeep(19)
 },
 <BattleCruiser>
 {
@@ -64,7 +70,8 @@
 	Weapon(4),
 	Slot(410),
 	Device(2),
-	Cost(268960)
+	Cost(26896),
+	Upkeep(34)
 },
 <BattleShip>
 {
@@ -75,7 +82,8 @@
 	Weapon(5),
 	Slot(574),
 	Device(2),
-	Cost(823690)
+	Cost(82369),
+	Upkeep(61)
 },
 <Dreadnaught>
 {
@@ -86,7 +94,8 @@
 	Weapon(5),
 	Slot(1005),
 	Device(3),
-	Cost(2525062)
+	Cost(252506),
+	Upkeep(110)
 },
 <Mobile Fortress>
 {
@@ -97,18 +106,20 @@
 	Weapon(6),
 	Slot(1466),
 	Device(4),
-	Cost(7736961)
+	Cost(773696),
+	Upkeep(198)
 },
 <Doomstar>
 {
 	Number(4010),
-	Description("The Doom Star, as its name implies, is nearly a celestial body in its own right.  The pinnacle of space design for any known sentient species, this behemoth is so large that merely trying to land it on a planet would cause an ecological catastrophe.  It is large enough that it generates a large gravitational pull, which would wreak havoc on itself and any planets that it approached.  Fitted with a terrifying array of weaponry, the Doom Star can dispense annihilation upon any nearly any enemy.  Simply put, anyone who tries attacking a Doom Star deserves what they get."),
+	Description("The Doomstar, as its name implies, is nearly a celestial body in its own right.  The pinnacle of space design for any known sentient species, this behemoth is so large that merely trying to land it on a planet would cause an ecological catastrophe.  It is large enough that it generates a large gravitational pull, which would wreak havoc on itself and any planets that it approached.  Fitted with a terrifying array of weaponry, the Doomstar can dispense annihilation upon any nearly any enemy.  Simply put, anyone who tries attacking a Doomstar deserves what they get."),
 	Class(10),
 	Space(15400),
 	Weapon(7),
 	Slot(2200),
 	Device(5),
-	Cost(23716000)
+	Cost(2371600),
+	Upkeep(357)
 },
 <Astral Carrier>
 {
@@ -118,8 +129,9 @@
 	Space(27200),
 	Weapon(8),
 	Slot(3400),
-	Device(5),
-	Cost(73984000)
+	Device(6),
+	Cost(7271500),
+	Upkeep(642)
 },
 <Suncrusher>
 {
@@ -129,6 +141,7 @@
 	Space(48000),
 	Weapon(10),
 	Slot(4800),
-	Device(5),
-	Cost(230400000)
+	Device(8),
+	Cost(22294000),
+	Upkeep(1156)
 }

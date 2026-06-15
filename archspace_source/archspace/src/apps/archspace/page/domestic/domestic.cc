@@ -499,6 +499,9 @@ CPageDomestic::handler(CPlayer *aPlayer)
 	ITEM("STRING_MATTER_ENERGY_SCIENCE", GETTEXT("Matter-Energy Science"));
 	ITEM("STRING_INFO_SCIENCE", GETTEXT("Info Science"));
 	ITEM("STRING_LIFE_SCIENCE", GETTEXT("Life Science"));
+	ITEM("STRING_UPGRADE", GETTEXT("Upgrades"));
+	ITEM("STRING_SCHEMATICS", GETTEXT("Schematics"));
+	ITEM("STRING_ADV_MATTER_ENERGY_SCIENCE", GETTEXT("Advanced Matter-Energy Science"));
 
 	CKnownTechList *
 		TechList = aPlayer->get_tech_list();
@@ -508,6 +511,10 @@ CPageDomestic::handler(CPlayer *aPlayer)
 			TechList->count_by_category(CTech::TYPE_MATTER_ENERGY));
 	ITEM("INFO_SCIENCE", TechList->count_by_category(CTech::TYPE_INFORMATION));
 	ITEM("LIFE_SCIENCE", TechList->count_by_category(CTech::TYPE_LIFE));
+	ITEM("UPGRADE", TechList->count_by_category(CTech::TYPE_UPGRADE));
+	ITEM("SCHEMATICS", TechList->count_by_category(CTech::TYPE_SCHEMATICS));
+	ITEM("ADV_MATTER_ENERGY_SCIENCE",
+			TechList->count_by_category(CTech::TYPE_ADV_MATTER_ENERGY));
 
 	ITEM("STRING_CURRENTLY_RESEARCHING", GETTEXT("Currently Researching"));
 

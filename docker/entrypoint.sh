@@ -129,6 +129,17 @@ $M "$DB_NAME" -e "CREATE TABLE IF NOT EXISTS academy_ship (
     owner int NOT NULL, design_id int NOT NULL, number int NOT NULL,
     PRIMARY KEY(owner, design_id));" || true
 
+# Follow CVS: the known-tech store keeps the 3 advanced categories (upgrade /
+# schematics / amatter) so acquired Upgrade/Schematics/Advanced-Matter techs
+# persist. Additive char(10) columns (empty = none known); existing players keep
+# their info/life/matter/social and start untrained in the advanced categories.
+# IF NOT EXISTS -> no-op on fresh (all.sql) and already-migrated DBs.
+log "migrating: tech table -> 7 categories (upgrade, schematics, amatter)"
+$M "$DB_NAME" -e "ALTER TABLE tech
+    ADD COLUMN IF NOT EXISTS upgrade    char(10) NOT NULL DEFAULT '',
+    ADD COLUMN IF NOT EXISTS schematics char(10) NOT NULL DEFAULT '',
+    ADD COLUMN IF NOT EXISTS amatter    char(10) NOT NULL DEFAULT '';" || true
+
 # --- 3. runtime layout ------------------------------------------------------
 # Invoke via `sh` (not as an executable) so these still run when the scripts are
 # bind-mounted from a host checkout that didn't preserve the +x bit.

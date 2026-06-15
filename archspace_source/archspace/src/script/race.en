@@ -1,17 +1,17 @@
 # Society: Classism Personalism Totalism
 # Gravity: G(real). 
 # Temperature: K(Kelvin)
-# Tech: Social, Life, Matter, Info, ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½È£
+# Tech: Social, Life, Matter, Info, Á÷Á¢ ÄÚµå ¹øÈ£
 # Control : Environment, Growth, Efficiency, Genius, Production,
 #      Facility Cost, Military, Ship Mobility, Commerce, Spy,
 #      Diplomacy, Ship Defense, Ship Attack,
 #      Research(Social, Life, Matter, Info)
 #      -: -    else: +
-# Air: H2, Cl2, CO2, O2, N2, CH4, H2O ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0-5ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ string ï¿½ï¿½ï¿½ï¿½
+# Air: H2, Cl2, CO2, O2, N2, CH4, H2O ¼ø¼­·Î 0-5°ªÀ» »ç¿ë string ±¸¼º
 # H2=1, N2=4 ====> 1000400
-# Bonus, Penalty, Device - ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½
-#			  ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½)
-# Device: Space Mining Module, Psionic Barrier, ï¿½ï¿½Ã¼ ï¿½å°©
+# Bonus, Penalty, Device - ³ªÁß¿¡ ¹øÈ£·Î º¯°æ(ÀÏ´ÜÀº ¼³Á¤µÈ ¹Ù°¡ ¾ø´Â
+#			  °ü°è·Î ¹®ÀÚ¿­)
+# Device: Space Mining Module, Psionic Barrier, »ýÃ¼ Àå°©
 # Penalty: PSEUDOHERO
 <Human>
 {
@@ -23,7 +23,8 @@
 		Number(1104),
 		Number(1105),
 		Number(1106),
-		Number(1107)
+		Number(1107),
+		Number(1112)
 	],
 	<Home>
 	{	
@@ -36,7 +37,7 @@
 		Environment(-1),
 		Growth(2),
 		Efficiency(-1),
-		Genius(2),
+		Genius(5),
 		Research Social(3)
 	},
 	<Fleet>
@@ -54,7 +55,10 @@
 	[
 		Number(1404),
 		Number(1405),
-		Number(1406)
+		Number(1406),
+		Number(1408),
+		Number(1413),
+		Number(1603)
 	],
 	<Home>
 	{	
@@ -64,10 +68,10 @@
 	},
 	<Control>
 	{	
-		Growth(2),
+		Growth(3),
 		Production(2),
-		Facility Cost(4),
-		Research(-1)
+		Facility Cost(2),
+		Research(-3)
 	},
 	<Ability>
 	{
@@ -78,7 +82,7 @@
 	<Fleet>
 	{
 		Berserk(5),
-		Survival(-5)
+		Survival(-10)
 	}
 },
 
@@ -87,6 +91,12 @@
 	Number(3),
 	Description("A Buckaneer\'s spaceship is his home and center of life.  They spend the majority of their life roaming space and finding fortune through trade (and sometimes piracy.)  Because they are accustomed to this type of gypsy roaming life, their fleets move swiftly and cannot be traced easily.  Buckaneer merchants possess information and contacts throughout the universe, which are indispensable aids to commerce, and thus hold the majority of trade and business in the universe.  It is common to see Buckaneer crafts that have duplicator systems for needed items built into the ship's interior design."),
 	Society("Personalism"),
+	<Tech>
+	[
+		Number(1208),
+		Number(1112),
+		Number(1603)
+	],
 	<Home>
 	{	
 		Air("0200300"),
@@ -95,9 +105,9 @@
 	},
 	<Control>
 	{	
-		Growth(-1),
+		Growth(-3),
 		Military(-1),
-		Commerce(3)
+		Commerce(4)
 	},
 	<Ability>
 	{
@@ -130,7 +140,7 @@
 	<Control>
 	{
 		Environment(2),
-		Spy(2),
+		Spy(4),
 		Research Social(-2),
 		Research Info(4)
 	},
@@ -157,7 +167,8 @@
 		Number(1306),
 		Number(1307),
 		Number(1308),
-		Number(1309)
+		Number(1309),
+		Number(1603)
 	],
 	<Home>
 	{
@@ -167,10 +178,10 @@
 	},
 	<Control>
 	{
-                Production(1),
+                Production(2),
 		Efficiency(2),
-		Diplomacy(-2),
-		Research(-2)
+		Diplomacy(-4),
+		Research(-4)
 	},
 	<Ability>
 	{
@@ -181,7 +192,8 @@
 	<Fleet>
 	{
 		Morale(-5),
-		Berserk(-5)
+		Berserk(-5),
+		Survival(-5)
 	}
 },
 <Agerus>
@@ -206,22 +218,24 @@
 		Military(4),
 #		Ship Defense(4),
 		Commerce(-3),
-		Diplomacy(-3),
+		Diplomacy(-6),
 		Research Life(3)
 	},
 	<Ability>
 	{
 		Ability("No Spy"),
 		Ability("Asteroid Management"),
-		Ability("Stealth")
+#		Ability("Stealth"),
+		Ability("Natural Stealth"),
+		Ability("Stealthed Ambush")
 	},
 	<Fleet>
 	{
 		Berserk(-5),
-		Survival(-10)
+		Survival(-5)
 	}
 #	Penalty("PSEUDOHERO")
-#	Device("ï¿½ï¿½Ã¼ ï¿½å°©")
+#	Device("»ýÃ¼ Àå°©")
 },
 <Bosalian>
 {
@@ -242,13 +256,15 @@
 	<Control>
 	{
 		Military(-2),
-		Diplomacy(4),
+		Diplomacy(6),
+		Production(1),
 		Research Life(2),
 		Research Social(2)
 	},
 	<Ability>
 	{
 		Ability("PSI"),
+		Ability("Enhanced PSI"),
 		Ability("Diplomat"),
 		Ability("Trained Mind"),
 		Ability("Pacifist")
@@ -278,7 +294,7 @@
 	<Control>
 	{
 		Military(2),
-		Diplomacy(-2)
+		Diplomacy(-4)
 	},
 	<Ability>
 	{
@@ -289,7 +305,7 @@
 	{
 		Morale(-5),
 		Berserk(5),
-		Survival(-5)
+		Survival(-10)
 	}
 },
 <Xerusian>
@@ -306,7 +322,6 @@
 		Number(1309),
 		Number(1310),
 		Number(1311),
-		Number(1312),
 		Number(1313),
 		Number(1314)
 	],
@@ -319,6 +334,8 @@
 	<Control>
 	{
 		Efficiency(-2),
+		Genius(2),
+		Facility Cost(-1),
 		Research Matter(3)
 	},
 	<Ability>
@@ -338,6 +355,10 @@
 	Description("Like the Xeloss or Xerusian, the Xesperados race was a group of military species that escaped the Magellan Galaxy during its collapse.  In their wanderings throughout space, they have been joined by other military species and leaders of rebel races, making the Xesperados an impressive force throughout the galaxy.  The merger of many different species is handicapped by potential problems such as the threat of spies from other races and the complex process of expanding life support capable of sustaining the entire group.  But their open minds and universal acceptance has become a great stimulant to the progress of science, and they are continuing to attract talented researchers of all species."),
 	Society("Personalism"),
 	Empire(30),
+	<Tech>
+	[
+		Number(1204)
+	],
 	<Home>
 	{
 		Air("0000000"),
@@ -346,21 +367,26 @@
 	},
 	<Control>
 	{
-		Spy(-3),
-		Genius(3),
+		Spy(-4),
+		Genius(2),
 		Facility Cost(-3),
-		Research(2)
+		Research(3)
 	},
 	<Ability>
 	{
 		Ability("No Breath")
+	},
+	<Fleet>
+	{
+		Morale(-10),
+		Berserk(-5)
 	}
 },
 <Trabotulin>
 {
 	Number(11),
 	Description("The Trabotulins were an ancient race that existed long before the Empire was conceived. Their civilization flourished in the era of peace, and they achieved technological marvels that would have otherwise been unachievable in times of war. However, it is their technological aspirations that inevitably led to the creation of a weapon so powerful that brought their once glorious civilization to an abrupt end. The remnants of this once great race of people have since then dedicated themselves to the advancement of temporal sciences, in hope that one day they will be able travel back in time to resurrect their long lost heritage."),
-	Society("Classism"),
+	Society("Unknown"),
 	Empire(25),
 	<Tech>
 	[
@@ -394,23 +420,5 @@
 		Morale(-10),
 		Berserk(-5)
 	}
+	
 }
-#<Tarenian>
-#{
-#	Number(11),
-#	Description("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å»ç¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½×µï¿½ï¿½ï¿½ ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï¸ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½Ï¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Â¥ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½Ï¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç¿¡ ï¿½ï¿½ï¿½ï¿½) ï¿½Ñ´ï¿½. ï¿½Ö³ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½Ï¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½â¿¡ ï¿½Û½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Tarenize(Å¸ï¿½ï¿½ï¿½Ï¾ï¿½È­)ï¿½Ç±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½. ï¿½Æ¸ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´É·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½."),
-#	Society("Personalism"),
-#	<Home>
-#	{
-#		Air("0001400"),
-#		Gravity(1),
-#		Temperature(300)
-#	},
-#	<Control>
-#	{
-#		Growth(4),
-#		Production(-4),
-#		Ship Mobility(4)
-#	},
-#	Players in war with Tarenian Production(-4): Applied Once
-#}

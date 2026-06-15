@@ -325,34 +325,25 @@ CShipSizeTable::available_size_list_html(CPlayer *aPlayer)
 		SizeList;
 	SizeList.clear();
 
+	// CVS: offer hull classes 1..N where N = number of Schematics techs known.
 	int
-		Tech = aPlayer->count_tech_by_category( CTech::TYPE_MATTER_ENERGY ) / 2;
+		Tech = aPlayer->count_tech_by_category( CTech::TYPE_SCHEMATICS );
 
 	SizeList = "<SELECT NAME=\"SHIP_SIZE\">\n";
 
-	for (int i=0 ; i<Tech+DEFAULT_SHIP_SIZE_NUMBER && i<10 ; i++)
+	for (int i=1 ; i < (Tech + 1) && i <= MAX_SHIP_CLASS ; i++)
 	{
 		CShipSize *
-			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4001 + i);
+			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + i);
 
 		if(!Ship)
-			SLOG("Ship %d null", 4001+i);
+		{
+			SLOG("Ship %d null", 4000+i);
+			continue;
+		}
 
 		SizeList.format("<OPTION VALUE=\"%d\">%s</OPTION>\n",
 						Ship->get_class(), Ship->get_name());
-	}
-
-	// CVS-merge (specific-schematic unlock): each megaclass (11..MAX_SHIP_CLASS)
-	// is offered only if the player owns that hull's own schematic tech. Classes
-	// 1-10 keep the Matter-Energy formula above unchanged.
-	for (int Class=FIRST_MEGACLASS ; Class<=MAX_SHIP_CLASS ; Class++)
-	{
-		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Class) )) continue;
-		CShipSize *
-			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + Class);
-		if (Ship)
-			SizeList.format("<OPTION VALUE=\"%d\">%s</OPTION>\n",
-							Ship->get_class(), Ship->get_name());
 	}
 
 	SizeList += "</SELECT>\n";
@@ -367,8 +358,9 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 		SizeInfo;
 	SizeInfo.clear();
 
+	// CVS: list hull classes 1..N where N = number of Schematics techs known.
 	int
-		Tech = aPlayer->count_tech_by_category( CTech::TYPE_MATTER_ENERGY ) / 2;
+		Tech = aPlayer->count_tech_by_category( CTech::TYPE_SCHEMATICS );
 
 	SizeInfo = "<TABLE WIDTH=\"550\" BORDER=\"1\""
 				" CELLSPACING=\"0\" CELLPADDING=\"0\" BORDERCOLOR=\"#2A2A2A\">";
@@ -404,13 +396,16 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 
 	SizeInfo += "</TR>\n";
 
-	for (int i=0 ; i<Tech+DEFAULT_SHIP_SIZE_NUMBER && i<10 ; i++)
+	for (int i=1 ; i < (Tech + 1) && i <= MAX_SHIP_CLASS ; i++)
 	{
 		CShipSize *
-			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4001 + i);
+			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + i);
 
 		if(!Ship)
-			SLOG("Ship %d null", 4001+i);
+		{
+			SLOG("Ship %d null", 4000+i);
+			continue;
+		}
 
 		SizeInfo.format("<TR ALIGN=\"CENTER\">"
 						"<TD CLASS=\"tabletxt\" WIDTH=\"35\">"
@@ -422,30 +417,7 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 						"<TD CLASS=\"tabletxt\" WIDTH=\"80\">%d</TD>"
 						"<TD CLASS=\"tabletxt\" WIDTH=\"100\">%s</TD>"
 						"</TR>\n",
-						i+1, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
-						Ship->get_slot(),
-						Ship->get_device(), dec2unit(Ship->get_cost()));
-	}
-
-	// CVS-merge (specific-schematic unlock): megaclasses 11..MAX_SHIP_CLASS each
-	// require the player to own that hull's own schematic tech.
-	for (int Class=FIRST_MEGACLASS ; Class<=MAX_SHIP_CLASS ; Class++)
-	{
-		if (!aPlayer->has_tech( SHIP_SCHEMATIC_TECH(Class) )) continue;
-		CShipSize *
-			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + Class);
-		if (!Ship) continue;
-		SizeInfo.format("<TR ALIGN=\"CENTER\">"
-						"<TD CLASS=\"tabletxt\" WIDTH=\"35\">"
-						"<FONT COLOR=\"#666666\"></FONT>%d</TD>"
-						"<TD WIDTH=\"112\" CLASS=\"tabletxt\">%s</TD>"
-						"<TD WIDTH=\"52\" CLASS=\"tabletxt\">%d</TD>"
-						"<TD WIDTH=\"70\" CLASS=\"tabletxt\">%d</TD>"
-						"<TD CLASS=\"tabletxt\" WIDTH=\"85\">%d</TD>"
-						"<TD CLASS=\"tabletxt\" WIDTH=\"80\">%d</TD>"
-						"<TD CLASS=\"tabletxt\" WIDTH=\"100\">%s</TD>"
-						"</TR>\n",
-						Class, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
+						i, Ship->get_name(), Ship->get_space(), Ship->get_weapon(),
 						Ship->get_slot(),
 						Ship->get_device(), dec2unit(Ship->get_cost()));
 	}

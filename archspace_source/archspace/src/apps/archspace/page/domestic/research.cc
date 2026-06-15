@@ -18,6 +18,9 @@ CPageResearch::handler(CPlayer *aPlayer)
 	ITEM("STRING_INFORMATION_SCIENCE", GETTEXT("Information Science"));
 	ITEM("STRING_MATTER_ENERGY_SCIENCE", GETTEXT("Matter-Energy Science"));
 	ITEM("STRING_LIFE_SCIENCE", GETTEXT("Life Science"));
+	ITEM("STRING_UPGRADE", GETTEXT("Upgrades"));
+	ITEM("STRING_SCHEMATICS", GETTEXT("Schematics"));
+	ITEM("STRING_ADV_MATTER_ENERGY_SCIENCE", GETTEXT("Advanced Matter-Energy Science"));
 	ITEM("STRING_TECH_TREE", GETTEXT("To see the Tech Tree"));
 	ITEM("STRING_TECH_ARCHIVED", GETTEXT("To see what you have already achieved"));
 
@@ -87,6 +90,12 @@ CPageResearch::handler(CPlayer *aPlayer)
 			aPlayer->available_science_list_html(CTech::TYPE_MATTER_ENERGY));
 	ITEM("LIFE_SCIENCE_LIST",
 			aPlayer->available_science_list_html(CTech::TYPE_LIFE));
+	ITEM("UPGRADE_LIST",
+			aPlayer->available_science_list_html(CTech::TYPE_UPGRADE));
+	ITEM("SCHEMATICS_LIST",
+			aPlayer->available_science_list_html(CTech::TYPE_SCHEMATICS));
+	ITEM("ADV_MATTER_ENERGY_SCIENCE_LIST",
+			aPlayer->available_science_list_html(CTech::TYPE_ADV_MATTER_ENERGY));
 
 //	system_log("end page handler %s", get_name());
 

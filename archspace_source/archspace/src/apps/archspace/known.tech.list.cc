@@ -74,7 +74,10 @@ CKnownTechList::initialize(MYSQL_ROW aRow)
 		FIELD_INFO,
 		FIELD_LIFE,
 		FIELD_MATTER,
-		FIELD_SOCIAL
+		FIELD_SOCIAL,
+		FIELD_UPGRADE,
+		FIELD_SCHEMATICS,
+		FIELD_AMATTER
 	};
 
 	mOwner = as_atoi(aRow[FIELD_OWNER]);
@@ -83,12 +86,18 @@ CKnownTechList::initialize(MYSQL_ROW aRow)
 		Info,
 		Life,
 		Matter,
-		Social;
+		Social,
+		Upgrade,
+		Schematics,
+		AMatter;
 
 	Info.set_string(aRow[FIELD_INFO]);
 	Life.set_string(aRow[FIELD_LIFE]);
 	Matter.set_string(aRow[FIELD_MATTER]);
 	Social.set_string(aRow[FIELD_SOCIAL]);
+	Upgrade.set_string(aRow[FIELD_UPGRADE]);
+	Schematics.set_string(aRow[FIELD_SCHEMATICS]);
+	AMatter.set_string(aRow[FIELD_AMATTER]);
 
 	for (int i=0 ; i<TECH_TABLE->length() ; i++)
 	{
@@ -113,6 +122,18 @@ CKnownTechList::initialize(MYSQL_ROW aRow)
 
 			case CTech::TYPE_SOCIAL :
 				if (Social.has(Tech->get_id() % 100)) AddTech = true;
+				break;
+
+			case CTech::TYPE_UPGRADE :
+				if (Upgrade.has(Tech->get_id() % 100)) AddTech = true;
+				break;
+
+			case CTech::TYPE_SCHEMATICS :
+				if (Schematics.has(Tech->get_id() % 100)) AddTech = true;
+				break;
+
+			case CTech::TYPE_ADV_MATTER_ENERGY :
+				if (AMatter.has(Tech->get_id() % 100)) AddTech = true;
 				break;
 
 			default :
@@ -168,6 +189,21 @@ CKnownTechList::remove_known_tech(int aTechID)
 			mStoreFlag += STORE_SOCIAL;
 			break;
 
+		case CTech::TYPE_UPGRADE :
+			mUpgrade -= Tech->get_id() % 100;
+			mStoreFlag += STORE_UPGRADE;
+			break;
+
+		case CTech::TYPE_SCHEMATICS :
+			mSchematics -= Tech->get_id() % 100;
+			mStoreFlag += STORE_SCHEMATICS;
+			break;
+
+		case CTech::TYPE_ADV_MATTER_ENERGY :
+			mAMatter -= Tech->get_id() % 100;
+			mStoreFlag += STORE_AMATTER;
+			break;
+
 		default :
 			break;
 	}
@@ -206,6 +242,21 @@ CKnownTechList::add_known_tech(CKnownTech *aTech)
 		case CTech::TYPE_SOCIAL :
 			mSocial += aTech->get_id() % 100;
 			mStoreFlag += STORE_SOCIAL;
+			break;
+
+		case CTech::TYPE_UPGRADE :
+			mUpgrade += aTech->get_id() % 100;
+			mStoreFlag += STORE_UPGRADE;
+			break;
+
+		case CTech::TYPE_SCHEMATICS :
+			mSchematics += aTech->get_id() % 100;
+			mStoreFlag += STORE_SCHEMATICS;
+			break;
+
+		case CTech::TYPE_ADV_MATTER_ENERGY :
+			mAMatter += aTech->get_id() % 100;
+			mStoreFlag += STORE_AMATTER;
 			break;
 
 		default :
@@ -314,13 +365,17 @@ CKnownTechList::query()
 	switch (type())
 	{
 		case QUERY_INSERT :
-			Query.format("INSERT INTO tech (owner, info, life, matter, social)"
-								" VALUES (%d, '%s', '%s', '%s', '%s')",
+			Query.format("INSERT INTO tech (owner, info, life, matter, social,"
+								" upgrade, schematics, amatter)"
+								" VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 							mOwner,
 							(char *)add_slashes(mInfo.get_string(64)),
 							(char *)add_slashes(mLife.get_string(64)),
 							(char *)add_slashes(mMatter.get_string(64)),
-							(char *)add_slashes(mSocial.get_string(64)));
+							(char *)add_slashes(mSocial.get_string(64)),
+							(char *)add_slashes(mUpgrade.get_string(64)),
+							(char *)add_slashes(mSchematics.get_string(64)),
+							(char *)add_slashes(mAMatter.get_string(64)));
 			break;
 
 		case QUERY_UPDATE :
@@ -339,6 +394,12 @@ CKnownTechList::query()
 					(char *)add_slashes(mMatter.get_string(64)));
 			STORE(STORE_SOCIAL, ", social = '%s'",
 					(char *)add_slashes(mSocial.get_string(64)));
+			STORE(STORE_UPGRADE, ", upgrade = '%s'",
+					(char *)add_slashes(mUpgrade.get_string(64)));
+			STORE(STORE_SCHEMATICS, ", schematics = '%s'",
+					(char *)add_slashes(mSchematics.get_string(64)));
+			STORE(STORE_AMATTER, ", amatter = '%s'",
+					(char *)add_slashes(mAMatter.get_string(64)));
 
 			Query.format(" WHERE owner = %d", mOwner);
 

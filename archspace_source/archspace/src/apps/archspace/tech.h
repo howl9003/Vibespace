@@ -357,7 +357,10 @@ class CKnownTechList: public CSortedList, public CStore
 			STORE_INFO,
 			STORE_LIFE,
 			STORE_MATTER,
-			STORE_SOCIAL
+			STORE_SOCIAL,
+			STORE_UPGRADE,
+			STORE_SCHEMATICS,
+			STORE_AMATTER
 		};
 
 	public:
@@ -372,10 +375,9 @@ class CKnownTechList: public CSortedList, public CStore
 
 		int count_by_category( int aType );
 
-		// Known techs the player could actually acquire -- excludes the locked
-		// class 1-10 ship schematics (IS_LOCKED_SHIP_SCHEMATIC). Used for the
-		// displayed tech total so it tops out at the obtainable count (190),
-		// matching the all-techs ending bonus.
+		// Count of known techs the player could acquire. Following CVS no tech
+		// is locked (IS_LOCKED_SHIP_SCHEMATIC is always false), so this counts
+		// every known tech across all 7 categories.
 		int count_obtainable();
 
 		CKnownTech* get_by_id(int aTechID);
@@ -390,6 +392,9 @@ class CKnownTechList: public CSortedList, public CStore
 		inline CCommandSet& get_life() { return mLife; }
 		inline CCommandSet& get_matter_energy() { return mMatter; }
 		inline CCommandSet& get_social() { return mSocial; }
+		inline CCommandSet& get_upgrade() { return mUpgrade; }
+		inline CCommandSet& get_schematics() { return mSchematics; }
+		inline CCommandSet& get_adv_matter_energy() { return mAMatter; }
 
 	private:
 		int
@@ -400,7 +405,10 @@ class CKnownTechList: public CSortedList, public CStore
 			mInfo,
 			mLife,
 			mMatter,
-			mSocial;
+			mSocial,
+			mUpgrade,
+			mSchematics,
+			mAMatter;
 
 	protected:
 		virtual bool free_item(TSomething aItem);

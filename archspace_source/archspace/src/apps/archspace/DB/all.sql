@@ -147,6 +147,9 @@ CREATE TABLE tech (
 	life char(10) NOT NULL,
 	matter char(10) NOT NULL,
 	social char(10) NOT NULL,
+	upgrade char(10) NOT NULL,
+	schematics char(10) NOT NULL,
+	amatter char(10) NOT NULL,
 
 	PRIMARY KEY (owner)
 );

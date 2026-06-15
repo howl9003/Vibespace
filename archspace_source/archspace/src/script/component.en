@@ -64,10 +64,15 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		{
 			Amount( 30 ),
 			Type( "Proportional" )
+		},
+		<Projectile Defense>
+		{
+			Amount( 20 ),
+			Type( "Proportional" )
 		}
 	},
-	DR(40),
-	HPMult(1.85)
+	DR(44),
+	HPMult(1.95)
 },
 <Neutronium>
 {
@@ -119,12 +124,17 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 			Amount( 20 ),
 			Type( "Proportional" )
 		},
+		<PSI Defense>
+		{
+			Amount( 30 ),
+			Type( "Proportional" )
+		},
 		<Non-Repairable>
 		{
 		}
 	},
-	DR(88),
-	HPMult(3.85)
+	DR(83),
+	HPMult(3.45)
 },
 <Self-Recovering Crystal>
 {
@@ -173,7 +183,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	],
 	Description("By combining the ideas of Crystal armor and Anti-matter reactive armor this armor draws some of the benefits from each. Like SRC this armor will repair itself, although not as quickly. As it also uses the reactive techniques of Anti-matter armor, it has overcome all the weaknesses that SRC has."),
 	Category("ARMOR"),
-	Type("NORM"),
+	Type("BIO"),
 	Level(4),
 	DR(40),
 	HPMult(2.4),
@@ -238,7 +248,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	DR(30),
-	HPMult(2.0)
+	HPMult(1.8)
 },
 <Organic>
 {
@@ -260,6 +270,11 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 			Period( 5 )
 		},
 		<PSI Defense>
+		{
+			Amount( -20 ),
+			Type( "Proportional" )
+		},
+		<Projectile Defense>
 		{
 			Amount( -20 ),
 			Type( "Proportional" )
@@ -285,38 +300,23 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		{
 			Amount( 1 ),
 			Type( "Proportional" ),
-			Period( 2 )
-		},
-		<Missile Defense>
-		{
-			Amount( 10 ),
-			Type( "Proportional" )
+			Period( 1 )
 		},
 		<Projectile Defense>
 		{
-			Amount( -10 ),
-			Type( "Proportional" )
-		},
-		<Beam Defense>
-		{
-			Amount( 10 ),
-			Type( "Proportional" )
-		},
-		<PSI Defense>
-		{
-			Amount( 50 ),
+			Amount( 40 ),
 			Type( "Proportional" )
 		}
 	},
 	DR(50),
-	HPMult(3.6)
+	HPMult(4.55)
 },
 <Anti-Matter Reactive Armor>
 {
 	Number(5111),
 	<Prerequisite>
 	[
-		Tech(1322)
+		Tech(1323)
 	],
 	Description("This armor uses a tailored form of anti matter to deflect certain types of weaponry. It is particularly effective against missiles. The one drawback to this armor is the fact that it is not as resilient as other armors of the same class."),
 	Category("ARMOR"),
@@ -329,7 +329,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 			Amount( 35 ),
 			Type( "Proportional" )
 		},
-		<Projectile Defense>
+		<Beam Defense>
 		{
 			Amount( 10 ),
 			Type( "Proportional" )
@@ -353,9 +353,19 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Missile Defense>
 		{
-			Amount( 50 ),
+			Amount( 55 ),
 			Type( "Proportional" )
 		},
+		<Projectile Defense>
+		{
+			Amount(5),
+			Type( "Proportional" )
+		},
+		<Beam Defense>
+		{
+			Amount(5),
+			Type( "Proportional" )
+		}
 	},
 	DR(40),
 	HPMult(2.1)
@@ -375,7 +385,107 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Missile Defense>
 		{
-			Amount( 50 ),
+			Amount( 70 ),
+			Type( "Proportional" )
+		},
+		<Projectile Defense>
+		{
+			Amount( 10 ),
+			Type( "Proportional" )
+		},
+		<Beam Defense>
+		{
+			Amount( 55 ),
+			Type( "Proportional" )
+		}
+	},
+	DR(30),
+	HPMult(2.35)
+},
+<Solarite>
+{
+	Number(5114),
+	<Prerequisite>
+	[
+		Tech(1701)
+	],
+	Description("Scientists first discovered this substance in the heart of a massive white giant microseconds before it collapsed in on itself. Due to the ultra-compressed state of its particles, this armor is nearly impenetrable by conventional weaponry. In fact, the only known method of destroying it is to fire on it continuously - which has proven to be rather inefficient."),
+	Category("ARMOR"),
+	Type("NORM"),
+	Level(6),
+	<Effect>
+	{
+		<Missile Defense>
+		{
+			Amount( 80 ),
+			Type( "Proportional" )
+		},
+		<Projectile Defense>
+		{
+			Amount( 95 ),
+			Type( "Proportional" )
+		},
+		<Beam Defense>
+		{
+			Amount( 80 ),
+			Type( "Proportional" )
+		},
+		<Non-Repairable>
+		{
+	    },
+		<Shield Strength>
+		{
+			Amount( -25 ),
+			Type( "Proportional" )
+		},
+        <Shield Recharge Rate>
+		{
+			Amount(-50),
+			Type( "Proportional" )
+		}
+	},
+	DR(96),
+	HPMult(0.50)
+},
+<Inorganic Bio-Crystal>
+{
+	Number(5115),
+	<Prerequisite>
+	[
+		Tech(1702)
+	],
+	Description("Technological advancements in organic-inorganic induction has lead to the creation of the ultimate biological armor. While not strictly made up of biological components, the armor is composed of numerous individual artificial cells, which function just as they would in an organic counterpart. This allows the Inorganic Bio-Crystal to overcome almost all of the weaknesses of conventional bio armor, yet at the same time, retain the enormous regeneration rates that bio armors have."),
+	Category("ARMOR"),
+	Type("BIO"),
+	Level(6),
+	<Effect>
+	{
+        <Repair>
+		{
+			Amount( 2 ),
+			Type( "Proportional" ),
+			Period( 1 )
+		}
+	},
+	DR(63),
+	HPMult(8.95)
+},
+<Dirac Plating>
+{
+	Number(5116),
+	<Prerequisite>
+	[
+		Tech(1703)
+	],
+	Description("Named after an influential human physicist, this armor is one of the toughest reactive armors available. Like all reactive armors, it has a considerable ability to deflect incoming missile attacks, but this particular one is also quite capable of deflecting majority of beam attacks, as well as enhancing a ship's shields. Unfortunately, the drawback that was found with all other reactive armors has not been rectified yet."),
+	Category("ARMOR"),
+	Type("REACT"),
+	Level(6),
+	<Effect>
+	{
+		<Missile Defense>
+		{
+			Amount( 75 ),
 			Type( "Proportional" )
 		},
 		<Projectile Defense>
@@ -385,18 +495,59 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		},
 		<Beam Defense>
 		{
-			Amount( 40 ),
+			Amount( 60 ),
+			Type( "Proportional" )
+		},
+		<Shield Strength>
+		{
+			Amount( 25 ),
+			Type( "Proportional" )
+		},
+		<Impenetrable Armor>
+		{
+			Amount( 5 ),
 			Type( "Proportional" )
 		}
 	},
 	DR(40),
-	HPMult(2.2)
+	HPMult(2.8)
 },
+<Khorium>
+{
+	Number(5117),
+	<Prerequisite>
+	[
+		Tech(1431)
+	],
+	Description("This substance is one of the rarest and hardest to manufacture in the entire universe. While there are really no special characteristics of it, it does however completely negate PSI effects. Moreover, most weapons have a hard time penetrating a hull made from this material due to its innate microatomic structure."),
+	Category("ARMOR"),
+	Type("NORM"),
+	Level(6),
+	<Effect>
+	{
+        <PSI Defense>
+		{
+			Amount( 100 ),
+			Type( "Proportional" )
+		},
+        <Impenetrable Armor>
+		{
+			Amount( 20 ),
+			Type( "Proportional" )
+		}
+	},
+	DR(122),
+	HPMult(4.65)
+},
+
 
 # 52XX: Computer
 
 # AR: Attack Rate
 # DR: Defense Rate
+#####
+# To Generate Values for Level X+1 Computer:
+# AR(X+1) = AR(X)*(1.2something)
 
 <Electronic Computer>
 {
@@ -457,11 +608,37 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	[
 		Tech(1223)
 	],
-	Description("This is the final level of computer which is ever used in ships. Using the most self advancing algorithms, this computer is able to evolve itself to fit certain situations. This makes it much more powerful and versatile than any other computers which are small enough to be housed on a ship of any size."),
+	Description("This is the fifth level of computer which is ever used in ships. Using the most self advancing algorithms, this computer is able to evolve itself to fit certain situations. This makes it much more powerful and versatile than any other computers which are small enough to be housed on a ship of any size."),
 	Category("COMP"),
 	Level(5),
 	AR(271),
 	DR(518)
+},
+<Self-Conscious Computer>
+{
+	Number(5206),
+	<Prerequisite>
+	[
+		Tech(1227)
+	],
+	Description("This is the sixth level of computer that has ever been seen on ships in the Empire. It is capable of non-heuristic-based data generation, which means that unlike its predecessors, it is capable of making optimal decisions in situations that it has never even encountered before. As such, scientists termed this level of computing 'self-conscious' - making ships equipped with such devices capable of being piloted without a crew."),
+	Category("COMP"),
+	Level(6),
+	AR(333),
+	DR(616)
+},
+<Planet-Based Computer Array>
+{
+	Number(5207),
+	<Prerequisite>
+	[
+		Project(9014)
+	],
+	Description("This is the seventh level of computer that is in existence. Instead of housing processors on board a ship, only basic terminal interfaces are provided on ships, and the processing power is provided by massive IPPNs on the ship's nearby friendly planets. This allows for vast computing power to be provided to the ship, without the spatial constraints of conventional computers."),
+	Category("COMP"),
+	Level(7),
+	AR(409),
+	DR(720)
 },
 
 # 53XX: Shield
@@ -469,6 +646,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 # Deflection: Deflection Solidity
 # Str: Strength
 # Recharge: Recharge Rate
+#####
+# To Generate Values for Level X Shields:
+# Deflection(X) = X + 1
+# Recharge(X) = 2*Ship Class*X
+# Str(X) = (30*((1.7)^(Ship Class - 1)))*((1.4)^(X - 1))
+
 
 <Electromagnetic Shield>
 {
@@ -492,7 +675,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(14),
 		Class8(16),
 		Class9(18),
-		Class10(20)
+		Class10(20),
+		Class11(22),
+		Class12(24)
 	],
 	<Str>
 	[
@@ -505,7 +690,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(724),
 		Class8(1232),
 		Class9(2092),
-		Class10(3558)
+		Class10(3558),
+		Class11(6408),
+		Class12(10282)
 	]
 },
 <Graviton Shield>
@@ -530,7 +717,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(28),
 		Class8(32),
 		Class9(36),
-		Class10(40)
+		Class10(40),
+		Class11(44),
+		Class12(48)
 	],
 	<Str>
 	[
@@ -543,7 +732,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(1014),
 		Class8(1724),
 		Class9(2930),
-		Class10(4980)
+		Class10(4980),
+		Class11(8467),
+		Class12(14394)
 	]
 },
 <Deflector>
@@ -568,7 +759,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(42),
 		Class8(48),
 		Class9(54),
-		Class10(60)
+		Class10(60),
+		Class11(66),
+		Class12(72)
 	],
 	<Str>
 	[
@@ -581,7 +774,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(1420),
 		Class8(2412),
 		Class9(4102),
-		Class10(6972)
+		Class10(6972),
+		Class11(11854),
+		Class12(20152)
 	]
 },
 <Barrier>
@@ -606,7 +801,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(56),
 		Class8(64),
 		Class9(72),
-		Class10(80)
+		Class10(80),
+		Class11(88),
+		Class12(96)
 	],
 	<Str>
 	[
@@ -619,7 +816,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(1988),
 		Class8(3378),
 		Class9(5742),
-		Class10(9762)
+		Class10(9762),
+		Class11(16596),
+		Class12(28213)
 	]
 },
 <Multiphase Shield>
@@ -644,7 +843,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(70),
 		Class8(80),
 		Class9(90),
-		Class10(100)
+		Class10(100),
+		Class11(110),
+		Class12(120)
 	],
 	<Str>
 	[
@@ -657,7 +858,51 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(2782),
 		Class8(4730),
 		Class9(8040),
-		Class10(13668)
+		Class10(13668),
+		Class11(23234),
+		Class12(39478)
+	]
+},
+<Reactive Shield>
+{
+	Number(5306),
+	<Prerequisite>
+	[
+		Tech(1338)
+	],
+	Description("This form of shielding is rather peculiar. Rather than acting as a barrier between a ship and the incoming weapons fire, this shield actually folds space-time the precise moment the weapon enters its area of effect, allowing the ship to avoid most of the damage that would've been done. However, the Heisenberg Uncertainty Principle prevents it from activating every volley - a flaw that even the most brilliant minds around never circumvented."),
+	Category("SHLD"),
+	Level(6),
+	Deflection(6),
+	<Recharge>
+	[
+		Class1(12),
+		Class2(24),
+		Class3(36),
+		Class4(48),
+		Class5(60),
+		Class6(72),
+		Class7(84),
+		Class8(96),
+		Class9(108),
+		Class10(120),
+		Class11(132),
+		Class12(144)
+	],
+	<Str>
+	[
+		Class1(161),
+		Class2(274),
+		Class3(466),
+		Class4(793),
+		Class5(1348),
+		Class6(2291),
+		Class7(3895),
+		Class8(6621),
+		Class9(11255),
+		Class10(19134),
+		Class11(32527),
+		Class12(55297)
 	]
 },
 
@@ -666,6 +911,10 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 # BSpeed: Battle Speed
 # Mobility: Battle Mobility
 # CSpeed: Cruise Speed
+#####
+# To Generate Values for Level X+1 Engines:
+# BSpeed(X+1) = 1.4*BSpeed(X)
+# Mobility(X+1) = 1.2*Mobility(X)
 
 <Retro>
 {
@@ -689,7 +938,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(12),
 		Class8(11),
 		Class9(10),
-		Class10(9)
+		Class10(9),
+		Class11(8),
+		Class12(7)
 	],
 	<Mobility>
 	[
@@ -702,7 +953,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(24),
 		Class8(21),
 		Class9(18),
-		Class10(15)
+		Class10(15),
+		Class11(12),
+		Class12(9)
 	]
 },
 <Fusion>
@@ -727,7 +980,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(16),
 		Class8(15),
 		Class9(14),
-		Class10(13)
+		Class10(13),
+		Class11(11),
+		Class12(10)
 	],
 	<Mobility>
 	[
@@ -740,7 +995,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(28),
 		Class8(24),
 		Class9(21),
-		Class10(18)
+		Class10(18),
+		Class11(14),
+		Class12(11)
 	]
 },
 <Anti-Matter>
@@ -765,7 +1022,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(23),
 		Class8(21),
 		Class9(19),
-		Class10(17)
+		Class10(17),
+		Class11(15),
+		Class12(14)
 	],
 	<Mobility>
 	[
@@ -778,7 +1037,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(34),
 		Class8(30),
 		Class9(26),
-		Class10(22)
+		Class10(22),
+		Class11(17),
+		Class12(13)
 	]
 },
 <Impulse>
@@ -803,7 +1064,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(30),
 		Class8(28),
 		Class9(26),
-		Class10(24)
+		Class10(24),
+		Class11(21),
+		Class12(20)
 	],
 	<Mobility>
 	[
@@ -816,7 +1079,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(41),
 		Class8(36),
 		Class9(31),
-		Class10(26)
+		Class10(26),
+		Class11(20),
+		Class12(16)
 	]
 },
 <Phase>
@@ -841,7 +1106,9 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(43),
 		Class8(40),
 		Class9(37),
-		Class10(34)
+		Class10(34),
+		Class11(29),
+		Class12(28)
 	],
 	<Mobility>
 	[
@@ -854,7 +1121,51 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		Class7(49),
 		Class8(43),
 		Class9(37),
-		Class10(31)
+		Class10(31),
+		Class11(24),
+		Class12(19)
+	]
+},
+<Temporal>
+{
+	Number(5406),
+	<Prerequisite>
+	[
+		Tech(1701)
+	],
+	Description("This engine utilizes an advanced understanding the principles of temporal mechanics. While time-travel was strictly forbidden by the Imperial Temporal Charter, warships within the empire were still equipped with these engines due to the extreme maneuverability they bring, which is often a decisive factor in battles."),
+	Category("ENGN"),
+	Level(6),
+#	CSpeed(),
+	<BSpeed>
+	[
+		Class1(83),
+		Class2(80),
+		Class3(76),
+		Class4(71),
+		Class5(67),
+		Class6(64),
+		Class7(60),
+		Class8(56),
+		Class9(52),
+		Class10(48),
+		Class11(41),
+		Class12(39)
+	],
+	<Mobility>
+	[
+		Class1(112),
+		Class2(102),
+		Class3(92),
+		Class4(83),
+		Class5(74),
+		Class6(66),
+		Class7(59),
+		Class8(52),
+		Class9(44),
+		Class10(37),
+		Class11(29),
+		Class12(23)
 	]
 },
 
@@ -876,6 +1187,11 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	Level(1),
 	<Effect>
 	{
+		<DR against Projectile>
+		{
+			Amount(5),
+			Type( "Proportional" )
+		},
 		<DR against Beam>
 		{
 			Amount(25),
@@ -883,12 +1199,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		},
 		<Mobility>
 		{
-			Amount(25),
+			Amount(30),
 			Type( "Proportional" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Amplifying Chip>
 {
@@ -904,12 +1220,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Shield Solidity>
 		{
-			Amount(1),
+			Amount(2),
 			Type("Absolute")
 		},
 		<Shield Strength>
 		{
-			Amount(10),
+			Amount(30),
 			Type("Proportional")
 		},
 		<Cooling Time>
@@ -919,7 +1235,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Psi Drive>
 {
@@ -940,17 +1256,17 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Mobility>
 		{
-			Amount(25),
+			Amount(45),
 			Type( "Proportional" )
 		},
 		<Speed>
 		{
-			Amount(25),
+			Amount(45),
 			Type( "Proportional" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Force Field Generator>
 {
@@ -966,12 +1282,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Shield Solidity>
 		{
-			Amount(1),
+			Amount(3),
 			Type("Absolute")
 		},
 		<Shield Strength>
 		{
-			Amount(25),
+			Amount(40),
 			Type("Proportional")
 		},
 		<Impenetrable Shield>
@@ -981,7 +1297,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <High Energy Focus>
 {
@@ -1002,7 +1318,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(5),
-	MaxC(10)
+	MaxC(12)
 },
 <Psi-Control System>
 {
@@ -1023,17 +1339,17 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<PSI Attack>
 		{
-			Amount(25),
+			Amount(60),
 			Type("Proportional")
 		},
 		<PSI Defense>
 		{
-			Amount(25),
+			Amount(100),
 			Type("Proportional")
 		}
 	},
 	MinC(4),
-	MaxC(10)
+	MaxC(12)
 },
 <Insanity Field Generator>
 {
@@ -1053,15 +1369,15 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<PSI Damage>
 		{
-			Amount( 2000 ),
+			Amount( 400 ),
 			Type( "Absolute" ),
 			Range( 875 ),
 			Period(50),
 			Target( "Enemy Fleet" )
 		}
 	},
-	MinC(6),
-	MaxC(10)
+	MinC(8),
+	MaxC(12)
 },
 <Mind Protector>
 {
@@ -1077,22 +1393,22 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<PSI Defense>
 		{
-			Amount( 30 ),
+			Amount( 50 ),
 			Type( "Proportional" )
 		},
 		<Berserk Modifier>
 		{
-			Amount( -5 ),
+			Amount( -10 ),
 			Type( "Absolute" )
 		},
 		<Panic Modifier>
 		{
-			Amount( -5 ),
+			Amount( -15 ),
 			Type( "Absolute" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Booster Device>
 {
@@ -1108,17 +1424,17 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Mobility>
 		{
-			Amount(20),
+			Amount(40),
 			Type( "Proportional" )
 		},
 		<Speed>
 		{
-			Amount(20),
+			Amount(40),
 			Type( "Proportional" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Shield Capacitor>
 {
@@ -1134,12 +1450,17 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Shield Recharge Rate>
 		{
-			Amount(100),
+			Amount(250),
 			Type( "Proportional" )
-		}
+		},
+		<Shield Solidity>
+		{
+			Amount(2),
+			Type("Absolute")
+		},
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <ECM Jammer>
 {
@@ -1155,12 +1476,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<DR against Missile>
 		{
-			Amount( 25 ),
+			Amount( 35 ),
 			Type( "Proportional" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Cloaking Field Generator>
 {
@@ -1183,33 +1504,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(5)
-},
-<Organic Regenerator>
-{
-	Number(5513),
-	<Prerequisite>
-	[
-		Tech(1418)
-	],
-	Description("This device is a vast supply of nutrients and steroids which can be fed into organic armor to allow it to heal faster. The effect cannot be used constantly, but as most battles do not last too long, it is almost always long enough to make a difference."),
-	Category("DEV"),
-	Level(3),
-	<Attribute>
-	{
-		Name("Bio Armor Only")
-	},
-	<Effect>
-	{
-		<Repair>
-		{
-			Amount( 3 ),
-			Type( "Proportional" ),
-			Period( 10 )
-		}
-	},
-	MinC(1),
-	MaxC(10)
+	MaxC(6)
 },
 <Auto Repairing Device>
 {
@@ -1221,21 +1516,17 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	Description("This \"device\" is actually a gigantic herd of miniscule robots. They swarm about your ship making repairs as needed. The only limitation is that they often need more materials than are available on smaller ships. This means that it is only truly useful on ships of a certain size."),
 	Category("DEV"),
 	Level(4),
-	<Attribute>
-	{
-		Name( "Non-Bio Armor Only" )
-	},
 	<Effect>
 	{
 		<Repair>
 		{
-			Amount( 2 ),
+			Amount( 1 ),
 			Type( "Proportional" ),
 			Period( 10 )
 		}
 	},
 	MinC(3),
-	MaxC(10)
+	MaxC(12)
 },
 <Train Injector>
 {
@@ -1254,17 +1545,22 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		},
 		<Berserk Modifier>
 		{
-			Amount( -5 ),
+			Amount( -10 ),
 			Type( "Absolute" )
 		},
 		<Panic Modifier>
 		{
-			Amount( -5 ),
+			Amount( -15 ),
 			Type( "Absolute" )
 		},
+		<Efficiency>
+		{
+			Amount( 10 ),
+			Type( "Absolute" )
+		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Reinforced Hull>
 {
@@ -1285,7 +1581,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Gyro Deformator>
 {
@@ -1331,7 +1627,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Mind Tracker>
 {
@@ -1347,12 +1643,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<PSI Attack>
 		{
-			Amount(30),
+			Amount(70),
 			Type( "Proportional" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Psi Barrier>
 {
@@ -1370,10 +1666,15 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		{
 			Amount(50),
 			Type( "Proportional" )
+		},
+		<PSI Neutralization Field>
+		{
+			Amount(25),
+			Type( "Absolute" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Self-Conscious Fleet>
 {
@@ -1389,12 +1690,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Efficiency>
 		{
-			Amount(15),
+			Amount(35),
 			Type( "Absolute" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Coprocessor>
 {
@@ -1410,7 +1711,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Computer>
 		{
-			Amount(10),
+			Amount(15),
 			Type( "Proportional" )
 		}
 	},
@@ -1476,7 +1777,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		{
 		}
 	},
-	MinC(1),
+	MinC(4),
 	MaxC(10)
 },
 <Anti-PSI Device>
@@ -1494,12 +1795,12 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<PSI Neutralization Field>
 		{
-			Amount(50),
+			Amount(65),
 			Type( "Absolute" )
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Ablative Coating>
 {
@@ -1519,7 +1820,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Crimson Figurehead>
 {
@@ -1549,7 +1850,7 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 		}
 	},
 	MinC(1),
-	MaxC(10)
+	MaxC(12)
 },
 <Ballistic Accelerator>
 {
@@ -1565,24 +1866,18 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	{
 		<Projectile AR>
 		{
-			Amount(15),
+			Amount(20),
 			Type("Proportional")
 		},
 		<Projectile Damage>
 		{
 			Amount(10),
 			Type("Proportional")
-		},
-		<Projectile Cooling Time>
-		{
-			Amount(10),
-			Type("Proportional")
 		}
 	},
 	MinC(5),
-	MaxC(10)
+	MaxC(12)
 },
-
 <Phase Shift Generator>
 {
 	Number(5530),
@@ -1601,1020 +1896,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	},
 	MinC(1),
 	MaxC(8)
-},
-
-# 6XXX: Weapon
-
-# Type: BM(Beam), MSL(Missile), PRJ(Projectile), (FGT(Fighter))
-# AR: Attack Rate
-# Roll: Roll
-# Dice: Dice
-# Space: 차지하는 공간
-# CT: Cooling Time. 발사 딜레이
-# Range: Attack Range. 사정거리
-# AOF: Angle of Fire. 발사각. 전면 기준
-# WSpeed: Weapon Speed. 턴당 이동하는 무기 속도
-
-<Laser>
-{
-	Number(6101),
-	<Prerequisite>
-	[
-		Tech(1302)
-	],
-	Description("The Laser is the basic idea behind all beam weapons. The focusing of light through the correct crystal matrix can make it into an efficient tool or a deadly weapon. This is another of the weapons that all races in the Empire seem to possess. Although not as powerful as some later weapons, the laser is an important weapon for all starting rulers."),
-	Category("WPN"),
-	Level(1),
-	Type("BM"),
-	AR(100),
-	Roll(2),
-	Dice(4),
-	Space(25),
-	CT(50),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Plasma Beam>
-{
-	Number(6102),
-	<Prerequisite>
-	[
-		Tech(1307)
-	],
-	Description("The Plasma Beam is a uses the your knowledge of the differing states of matter to form and project a focused ray of plasma at your enemies. When this matter reaches its target, the reaction is quite deadly. This makes the plasma beam quite effective against enemies who have not yet developed technology which protects from this type of attack."),
-	Category("WPN"),
-	Level(2),
-	Type("BM"),
-	<Effect>
-	{
-		<Shield Overheat>
-		{
-		},
-		<Additional Damage to Bio Armor>
-		{
-			Amount(100),
-			Type("Proportional")
-		}
-	},
-	AR(120),
-	Roll(3),
-	Dice(4),
-	Space(28),
-	CT(70),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Crystal Laser>
-{
-	Number(6103),
-	<Prerequisite>
-	[
-		Tech(1318)
-	],
-	Description("The Crystal Laser uses your knowledge of crystal manipulation to purify the focusing component in your laser weaponry. This newly focused beam is more deadly and more accurate than its predecessor. This new lens does not cool as fast as the originals though, which means you cannot fire as often without risking dangerous temperatures."),
-	Category("WPN"),
-	Level(2),
-	Type("BM"),
-	AR(120),
-	Roll(4),
-	Dice(4),
-	Space(30),
-	CT(60),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Graviton Beam>
-{
-	Number(6104),
-	<Prerequisite>
-	[
-		Tech(1316)
-	],
-	Description("The Graviton Beam is actually a focused projection of many graviton particles. As this projection moves it gathers both speed and mass through attraction to objects in its path. This means that when it hits it has much speed and mass, this, along with the actual effect of the particles on the target itself allow this beam to crush your enemies."),
-	Category("WPN"),
-	Level(3),
-	Type("BM"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(25)
-		},
-		<Armor Piercing>
-		{
-			Amount(25)
-		}
-	},
-	AR(144),
-	Roll(4),
-	Dice(4),
-	Space(29),
-	CT(55),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Psi Blaster>
-{
-	Number(6105),
-	<Prerequisite>
-	[
-		Tech(1419),
-		Race("Psi")
-	],
-	Description("The Psi Blaster is a weapon that can go from merely dangerous to outright deadly if used by the correct races. Powered by either a races own ability or by machines cleverly created for the purpose, the psi blaster destroys your enemies with forces that cannot be seen but only felt."),
-	Category("WPN"),
-	Level(3),
-	Type("BM"),
-	<Effect>
-	{
-		<PSI>
-		{
-		},
-#		<PSI Empower>
-#		{
-#			Amount( 100 ),
-#			Type( "Proportional" )
-#		}
-	},
-	AR(144),
-	Roll(4),
-	Dice(8),
-	Space(35),
-	CT(72),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Neutron Blaster>
-{
-	Number(6106),
-	<Prerequisite>
-	[
-		Tech(1325)
-	],
-	Description("The Neutron Blaster uses the understanding of sub atomic physics to assemble neutrons which are tailored to rip through hull components. These are then projected along the path of a guiding laser to the enemy. Upon contact, they interact with the hull and can often cripple if not destroy an enemy ship."),
-	Category("WPN"),
-	Level(3),
-	Type("BM"),
-	<Effect>
-	{
-		<Additional Damage to Bio Armor>
-		{
-			Amount(100),
-			Type("Proportional")
-		}
-	},
-	AR(144),
-	Roll(5),
-	Dice(5),
-	Space(38),
-	CT(60),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Phasor>
-{
-	Number(6107),
-	<Prerequisite>
-	[
-		Tech(1326)
-	],
-	Description("The Phasor is a deadly weapon that can alter the way in which space-time and the target interact. This can cause a high range of effects, from almost no damage, to complete destruction/dissolution of the component materials of the effected target. The phasor is perhaps on of the better known weapons in the current fighting happening within the Empire."),
-	Category("WPN"),
-	Level(5),
-	Type("BM"),
-	<Effect>
-	{
-		<Shield Overheat>
-		{
-		}
-	},
-	AR(200),
-	Roll(7),
-	Dice(7),
-	Space(50),
-	CT(45),
-	Range(1000),
-	AOF(180),
-	WSpeed(1000)
-},
-<Tachyon Beam>
-{
-	Number(6108),
-	<Prerequisite>
-	[
-		Tech(1331)
-	],
-	Description("The Tachyon Beam is a force which alters the probability of the target structure. The desired effect is to cause all of the particles of the structure to \"randomly\" repel each other. If this can be achieved for even an instant it can cause the effected area to explode as all of the particles attempt to put distance between their neighbors."),
-	Category("WPN"),
-	Level(4),
-	Type("BM"),
-	AR(273),
-	Roll(5),
-	Dice(5),
-	Space(40),
-	CT(54),
-	Range(1000),
-	AOF(60),
-	WSpeed(1000)
-},
-<Oscillation of Dissonance>
-{
-	Number(6109),
-	<Prerequisite>
-	[
-		Tech(1216)
-	],
-	Description("The Oscillation of Dissonance is the most deadly Beam weapon to be invented. It has the power to rip ships to pieces faster than any other beam weapon. One of the more deadly aspects of this weapon is its ability to ignore almost all armor that your enemies may have on their ships."),
-	Category("WPN"),
-	Level(5),
-	Type("BM"),
-	<Effect>
-	{
-		<Armor Piercing>
-		{
-			Amount( 85 )
-		}
-	},
-	AR(200),
-	Roll(7),
-	Dice(7),
-	Space(50),
-	CT(70),
-	Range(1000),
-	AOF(360),
-	WSpeed(1000)
-},
-<Psi Storm Launcher>
-{
-	Number(6110),
-	<Prerequisite>
-	[
-		Tech(1424),
-		Race("Psi")
-	],
-	Description("The Psi Storm Launcher is a weapon often feared not just for the obvious damage it can do to matter, but also for the effects upon minds that survive it. This weapon creates a temporary vortice to the fourth dimension allowing psionic apparitions to manifest in our physical space. They do not always choose to do great damage, but the mental storms this living thoughts create can cause the bravest commanders to retreat."),
-	Category("WPN"),
-	Level(5),
-	Type("BM"),
-	<Effect>
-	{
-		<PSI>
-		{
-		},
-		<Shield Distortion>
-		{
-			Amount( 75 )
-		}
-	},
-	AR(200),
-	Roll(5),
-	Dice(10),
-	Space(38),
-	CT(72),
-	Range(1200),
-	AOF(120),
-	WSpeed(1000)
-},
-<Nuclear Missile>
-{
-	Number(6201),
-	<Prerequisite>
-	[
-		Tech(1301)
-	],
-	Description("The Nuclear Missile was in the past one of the most feared weapons known. However, as races leave their first planet, they inevitably discover more powerful means of destruction. The nuclear missile is still a great force for destruction, and is in fact the one missile type that all races seem to have when they first reach the stars."),
-	Category("WPN"),
-	Level(1),
-	Type("MSL"),
-	AR(100),
-	Roll(5),
-	Dice(5),
-	Space(18),
-	CT(200),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Fusion Missile>
-{
-	Number(6202),
-	<Prerequisite>
-	[
-		Tech(1306)
-	],
-	Description("The Fusion Missile is a logical progression from the nuclear missile. As a race refines their science, they are able to truly utilize fusion power efficiently. This power can be used for many things. One of these uses is to make more deadly weapons. This is the second type of missile that many races use as its power is a simple upgrade to that of the nuclear missile that proves so effective early in a powers career."),
-	Category("WPN"),
-	Level(2),
-	Type("MSL"),
-	AR(120),
-	Roll(8),
-	Dice(10),
-	Space(33),
-	CT(300),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Nova Torpedo>
-{
-	Number(6203),
-	<Prerequisite>
-	[
-		Tech(1327)
-	],
-	Description("The Nova Torpedo is the final stage of the evolution of the nuclear missile. This missile takes initial science of fusion to a new height. With the use of each of these missiles a temporary star is created out of the component atoms of the target. This missile has the capacity for more damage than all but two other weapons. This force can be of great help in a battle, but be warned…the weapon takes a long time to prepare before it can be used again."),
-	Category("WPN"),
-        Level(4),
-        Type("MSL"),
-        AR(172),
-        Roll(18),
-        Dice(20),
-        Space(40),
-        CT(480),
-        Range(1500),
-        AOF(180),
-        WSpeed(50)
-},
-<Kamikaze Conscious Torpedo>
-{
-	Number(6204),
-	<Prerequisite>
-	[
-		Tech(1115)
-	],
-	Description("The Kamikaze Torpedo has caused demonstrations upon numerous words. This weapon uses the very force that lies behind all living things to track your enemy. Of course, this link is rarely one way, so when this weapon is activated, those who can notice are often said to cringe at the shock this device sends thru the unconsciousness. Some people have begun to argue that this abuse will have repercussions, but few rulers head this. The weapon is too efficient to avoid using it because it gives some sensitive people headaches."),
-	Category("WPN"),
-	Level(3),
-	Type("MSL"),
-	AR(200),
-	Roll(8),
-	Dice(10),
-	Space(28),
-	CT(330),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Death Spore>
-{
-	Number(6205),
-	<Prerequisite>
-	[
-		Tech(1416)
-	],
-	Description("The Death Spore might not sound like the most threatening weapon. However, this device has it uses. In this time when more and more races are turning to artificial life forms for many things, the death spore is merely the destructive use of this trend. This weapon is tailored to damage your enemies, and woe be to the enemy who tries to use any sort of living shield to protect themselves, as this life form will use such shielding to fuel itself to even greater destructive heights."),
-	Category("WPN"),
-	Level(3),
-	Type("MSL"),
-	<Effect>
-	{
-		<Additional Damage to Bio Armor>
-		{
-			Amount( 700 ),
-			Type( "Proportional" )
-		}
-	},
-	AR(144),
-	Roll(7),
-	Dice(7),
-	Space(30),
-	CT(280),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Anti-Matter Missile>
-{
-	Number(6206),
-	<Prerequisite>
-	[
-		Tech(1322)
-	],
-	Description("The Antimatter Missile seems simple enough. As one developer said while working on this project, \"just imagine what this material will do when it comes into contact with regular matter, without the proper controls.\. In fact this scientist witnessed it first hand when a containment mistake was made during prototype construction. It goes without saying that there was not enough of him for a proper burial."),
-        Category("WPN"),
-        Level(3),
-        Type("MSL"),
-        AR(144),
-        Roll(10),
-        Dice(20),
-        Space(38),
-        CT(400),
-        Range(1500),
-        AOF(180),
-        WSpeed(50)
-},
-<Reflexium Missile>
-{
-	Number(6207),
-	<Prerequisite>
-	[
-		Tech(1330)
-	],
-	Description("The Reflexium Missile is the use of an interesting property of reflexium. For some reason any interaction between this metal and most shielding causes great stress to the powering component of shields. This makes this weapon quite effective against those who utilize shielding to a great extent. Of course, the effect of a strong material impacting an object at high speed is nothing to laugh at either."),
-	Category("WPN"),
-	Level(4),
-	Type("MSL"),
-	<Effect>
-	{
-		<Shield Distortion>
-		{
-			Amount( 50 )
-		}
-	},
-	AR(172),
-	Roll(10),
-	Dice(20),
-	Space(40),
-	CT(355),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Psionic Pulse Shocker>
-{
-	Number(6208),
-	<Prerequisite>
-	[
-		Tech(1422),
-		Race("Psi")
-	],
-	Description("The Psionic Pulse Shocker a deadly method of using psionic forces. This missile is in fact a focusing device for the psionic energies of your crew. They then use their abilities to hasten the entropy within your enemies to dangerous levels. If the enemy is unprepared, this can easily be their undoing."),
-	Category("WPN"),
-	Level(4),
-	Type("MSL"),
-	<Effect>
-	{
-		<PSI>
-		{
-		},
-		<Shield Distortion>
-		{
-			Amount( 75 )
-		}
-	},
-	AR(172),
-	Roll(10),
-	Dice(10),
-	Space(32),
-	CT(240),
-	Range(1700),
-	AOF(180),
-	WSpeed(50)
-},
-<Time-Wake Homing Missile>
-{
-	Number(6209),
-	<Prerequisite>
-	[
-		Tech(1333)
-	],
-	Description("The Time-Wake Homing Missile is a tricky weapon to figure out. Whether it is in fact tracking its enemies future path, or if it tracks its own future to determine the best path, this missile can be quite deadly and effective. There are even reports of it relocating itself through space/time and thus penetrating enemy shields and armor."),
-	Category("WPN"),
-	Level(5),
-	Type("MSL"),
-	<Effect>
-	{
-		<Shield Distortion>
-		{
-			Amount(65)
-		},
-		<Armor Piercing>
-		{
-			Amount(25)
-		}
-	},
-	AR(250),
-	Roll(15),
-	Dice(17),
-	Space(50),
-	CT(375),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Homing Black Hole>
-{
-	Number(6210),
-	<Prerequisite>
-	[
-		Tech(1335)
-	],
-	Description("The Homing Black Hole is easily the single most powerful weapon ever created. This missile calls into being a temporary and small black hole, which can destroy fleets of weak vessels and cripple some of the largest ships in existence. The only drawback to this weapon is that it takes a long time to bring the next shot online."),
-	Category("WPN"),
-	Level(5),
-	Type("MSL"),
-	AR(250),
-	Roll(40),
-	Dice(25),
-	Space(100),
-	CT(500),
-	Range(1500),
-	AOF(180),
-	WSpeed(50)
-},
-<Rail Gun>
-{
-	Number(6301),
-	<Prerequisite>
-	[
-		Tech(1305)
-	],
-	Description("The Rail Gun uses the basic principle that species have been using for thousands of Millennia. If you throw something at your enemies fast enough, it will hurt them. While this principle has been refined in other ways, the rail gun is still an effective way to harm your enemy. The fact that you are only accelerating simple matter and not charging it means that this type of weapon is especially useful because it can pass through almost any shields that your enemy may use."),
-	Category("WPN"),
-	Level(1),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		}
-	},
-	AR(50),
-	Roll(2),
-	Dice(4),
-	Space(30),
-	CT(30),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-<Gatling Rail Gun>
-{
-	Number(6302),
-	<Prerequisite>
-	[
-		Tech(1312)
-	],
-	Description("The Gatling Rail Gun is a more effective version of the rail gun. It uses an understanding of inertia in order to direct a larger amount of matter toward your enemy. This means that when you hit you should usually do a greater amount of damage to your enemy. The fact that you have greater control also means there is less heat built up during the shot, so you can fire more often."),
-	Category("WPN"),
-	Level(2),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		}
-	},
-	AR(50),
-	Roll(3),
-	Dice(4),
-	Space(50),
-	CT(17),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-<Mass Driver>
-{
-	Number(6303),
-	<Prerequisite>
-	[
-		Tech(1319)
-	],
-	Description("The Mass Driver uses a strong electromagnetic field to propel a projectile towards your enemy at amazing speeds. This weapon does not have as much restraint as the gatling rail gun, however the greater speed and mass allow this weapon to be somewhat more effective both in hitting your enemy and in causing damage."),
-	Category("WPN"),
-	Level(2),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		}
-	},
-	AR(60),
-	Roll(4),
-	Dice(5),
-	Space(32),
-	CT(50),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-<Gauss Cannon>
-{
-	Number(6304),
-	<Prerequisite>
-	[
-		Tech(1329)
-	],
-	Description("The Gauss Cannon uses compressed material for the projectile. This material has much greater density and mass, so the force is exerts on its target is much more focused. This means that not only will this weapon pass through shields, but it will even penetrate a portion of your enemies armor."),
-	Category("WPN"),
-	Level(3),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		},
-		<Armor Piercing>
-		{
-			Amount(25)
-		}
-	},
-	AR(83),
-	Roll(5),
-	Dice(5),
-	Space(51),
-	CT(35),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-<Anti-Matter Cannon>
-{
-	Number(6305),
-	<Prerequisite>
-	[
-		Tech(1328)
-	],
-	Description("The Anti-Matter Cannon work on a combination of the principles used to create the rail gun and the anti-matter missile. Firing shots as though they were normal rail gun charges, the projectiles fired are much more deadly, and so the overall weapon becomes one of the most efficient projectile weapons available."),
-	Category("WPN"),
-	Level(4),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		}
-	},
-	AR(90),
-	Roll(6),
-	Dice(6),
-	Space(50),
-	CT(30),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-<Autofire Gauss Cannon>
-{
-	Number(6306),
-	<Prerequisite>
-	[
-		Tech(1333)
-	],
-	Description("The Autofire Gauss Cannon improves on the gauss cannon in one significant manner, speed. By using knowledge of space/time you are able to remove the heat from this weapon much faster and thus fire it at a greatly increased rate. It also has a slightly increased ability to make it past enemy defenses."),
-	Category("WPN"),
-	Level(4),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		},
-		<Armor Piercing>
-		{
-			Amount(25)
-		}
-	},
-	AR(90),
-	Roll(5),
-	Dice(5),
-	Space(68),
-	CT(17),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-<Distortion Blaster>
-{
-	Number(6307),
-	<Prerequisite>
-	[
-		Tech(1334)
-	],
-	Description("The Distortion Blaster is one of the most deadly weapons ever to be created. One shot from this monstrous weapon can out-damage some of the weaker weapons. Of course, it fires at speeds almost ten times faster than many missiles, which is why it is so feared. This weapon works by projecting small pieces of material from other dimensions into your enemies midst. These particles have a horrible effect on the enemy as they try to make anything they contact conform to their dimensional laws."),
-	Category("WPN"),
-	Level(5),
-	Type("PRJ"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		},
-		<Armor Piercing>
-		{
-			Amount(25)
-		},
-		<Additional Damage to Bio Armor>
-		{
-			Amount(-50),
-			Type( "Proportional" )
-		}
-	},
-	AR(120),
-	Roll(10),
-	Dice(10),
-	Space(100),
-	CT(31),
-	Range(800),
-	AOF(60),
-	WSpeed(200)
-},
-
-<Nahodoom Ray Launcher>
-{
-	Number(6308),
-	<Prerequisite>
-	[
-		Project(9006),
-		Race(9)
-	],
-	Description("3... 2... 1... Fire! Silent, yet excited atmosphere surrounds the scientists, staring down the experiment from their lab afar. Ultra-powerful Energy rays out of the test warship just disposed the target down to molecular level. This weapon, utilizing the Permanent Engine, is named \"Nahodoom,\" and will render the futile resistance of the aboriginal creatures in the new world quite hopeless and useless - if they can miniaturize this beast, that is."),
-	Category("WPN"),
-	Level(5),
-	Type("BM"),
-	<Effect>
-	{
-		<Shield Piercing>
-		{
-			Amount(100)
-		},
-		<Armor Piercing>
-		{
-			Amount(60)
-		}
-	},
-	AR(180),
-	Roll(15),
-	Dice(13),
-	Space(120),
-	CT(60),
-	Range(900),
-	AOF(150),
-	WSpeed(900)
-},
-
-# ============================================================
-# CVS-merge: new components/weapons ported from CVSRoot (S4).
-# 27 blocks: 13 weapons, 4 armor, 6 devices, 2 computers, 1 shield, 1 engine.
-# ============================================================
-<Solarite>
-{
-	Number(5114),
-	<Prerequisite>
-	[
-		Tech(1701)
-	],
-	Description("Scientists first discovered this substance in the heart of a massive white giant microseconds before it collapsed in on itself. Due to the ultra-compressed state of its particles, this armor is nearly impenetrable by conventional weaponry. In fact, the only known method of destroying it is to fire on it continuously - which has proven to be rather inefficient."),
-	Category("ARMOR"),
-	Type("NORM"),
-	Level(6),
-	<Effect>
-	{
-		<Missile Defense>
-		{
-			Amount( 80 ),
-			Type( "Proportional" )
-		},
-		<Projectile Defense>
-		{
-			Amount( 95 ),
-			Type( "Proportional" )
-		},
-		<Beam Defense>
-		{
-			Amount( 80 ),
-			Type( "Proportional" )
-		},
-		<Non-Repairable>
-		{
-	    },
-		<Shield Strength>
-		{
-			Amount( -25 ),
-			Type( "Proportional" )
-		},
-        <Shield Recharge Rate>
-		{
-			Amount(-50),
-			Type( "Proportional" )
-		}
-	},
-	DR(96),
-	HPMult(0.50)
-},
-
-<Inorganic Bio-Crystal>
-{
-	Number(5115),
-	<Prerequisite>
-	[
-		Tech(1702)
-	],
-	Description("Technological advancements in organic-inorganic induction has lead to the creation of the ultimate biological armor. While not strictly made up of biological components, the armor is composed of numerous individual artificial cells, which function just as they would in an organic counterpart. This allows the Inorganic Bio-Crystal to overcome almost all of the weaknesses of conventional bio armor, yet at the same time, retain the enormous regeneration rates that bio armors have."),
-	Category("ARMOR"),
-	Type("BIO"),
-	Level(6),
-	<Effect>
-	{
-        <Repair>
-		{
-			Amount( 2 ),
-			Type( "Proportional" ),
-			Period( 1 )
-		}
-	},
-	DR(63),
-	HPMult(8.95)
-},
-
-<Dirac Plating>
-{
-	Number(5116),
-	<Prerequisite>
-	[
-		Tech(1703)
-	],
-	Description("Named after an influential human physicist, this armor is one of the toughest reactive armors available. Like all reactive armors, it has a considerable ability to deflect incoming missile attacks, but this particular one is also quite capable of deflecting majority of beam attacks, as well as enhancing a ship's shields. Unfortunately, the drawback that was found with all other reactive armors has not been rectified yet."),
-	Category("ARMOR"),
-	Type("REACT"),
-	Level(6),
-	<Effect>
-	{
-		<Missile Defense>
-		{
-			Amount( 75 ),
-			Type( "Proportional" )
-		},
-		<Projectile Defense>
-		{
-			Amount( 20 ),
-			Type( "Proportional" )
-		},
-		<Beam Defense>
-		{
-			Amount( 60 ),
-			Type( "Proportional" )
-		},
-		<Shield Strength>
-		{
-			Amount( 25 ),
-			Type( "Proportional" )
-		},
-		<Impenetrable Armor>
-		{
-			Amount( 5 ),
-			Type( "Proportional" )
-		}
-	},
-	DR(40),
-	HPMult(2.8)
-},
-
-<Khorium>
-{
-	Number(5117),
-	<Prerequisite>
-	[
-		Tech(1431)
-	],
-	Description("This substance is one of the rarest and hardest to manufacture in the entire universe. While there are really no special characteristics of it, it does however completely negate PSI effects. Moreover, most weapons have a hard time penetrating a hull made from this material due to its innate microatomic structure."),
-	Category("ARMOR"),
-	Type("NORM"),
-	Level(6),
-	<Effect>
-	{
-        <PSI Defense>
-		{
-			Amount( 100 ),
-			Type( "Proportional" )
-		},
-        <Impenetrable Armor>
-		{
-			Amount( 20 ),
-			Type( "Proportional" )
-		}
-	},
-	DR(122),
-	HPMult(4.65)
-},
-
-<Self-Conscious Computer>
-{
-	Number(5206),
-	<Prerequisite>
-	[
-		Tech(1227)
-	],
-	Description("This is the sixth level of computer that has ever been seen on ships in the Empire. It is capable of non-heuristic-based data generation, which means that unlike its predecessors, it is capable of making optimal decisions in situations that it has never even encountered before. As such, scientists termed this level of computing 'self-conscious' - making ships equipped with such devices capable of being piloted without a crew."),
-	Category("COMP"),
-	Level(6),
-	AR(333),
-	DR(616)
-},
-
-<Planet-Based Computer Array>
-{
-	Number(5207),
-	<Prerequisite>
-	[
-		Project(9014)
-	],
-	Description("This is the seventh level of computer that is in existence. Instead of housing processors on board a ship, only basic terminal interfaces are provided on ships, and the processing power is provided by massive IPPNs on the ship's nearby friendly planets. This allows for vast computing power to be provided to the ship, without the spatial constraints of conventional computers."),
-	Category("COMP"),
-	Level(7),
-	AR(409),
-	DR(720)
-},
-
-<Reactive Shield>
-{
-	Number(5306),
-	<Prerequisite>
-	[
-		Tech(1338)
-	],
-	Description("This form of shielding is rather peculiar. Rather than acting as a barrier between a ship and the incoming weapons fire, this shield actually folds space-time the precise moment the weapon enters its area of effect, allowing the ship to avoid most of the damage that would've been done. However, the Heisenberg Uncertainty Principle prevents it from activating every volley - a flaw that even the most brilliant minds around never circumvented."),
-	Category("SHLD"),
-	Level(6),
-	Deflection(6),
-	<Recharge>
-	[
-		Class1(12),
-		Class2(24),
-		Class3(36),
-		Class4(48),
-		Class5(60),
-		Class6(72),
-		Class7(84),
-		Class8(96),
-		Class9(108),
-		Class10(120),
-		Class11(132),
-		Class12(144)
-	],
-	<Str>
-	[
-		Class1(161),
-		Class2(274),
-		Class3(466),
-		Class4(793),
-		Class5(1348),
-		Class6(2291),
-		Class7(3895),
-		Class8(6621),
-		Class9(11255),
-		Class10(19134),
-		Class11(32527),
-		Class12(55297)
-	]
-},
-
-<Temporal>
-{
-	Number(5406),
-	<Prerequisite>
-	[
-		Tech(1701)
-	],
-	Description("This engine utilizes an advanced understanding the principles of temporal mechanics. While time-travel was strictly forbidden by the Imperial Temporal Charter, warships within the empire were still equipped with these engines due to the extreme maneuverability they bring, which is often a decisive factor in battles."),
-	Category("ENGN"),
-	Level(6),
-#	CSpeed(),
-	<BSpeed>
-	[
-		Class1(83),
-		Class2(80),
-		Class3(76),
-		Class4(71),
-		Class5(67),
-		Class6(64),
-		Class7(60),
-		Class8(56),
-		Class9(52),
-		Class10(48),
-		Class11(41),
-		Class12(39)
-	],
-	<Mobility>
-	[
-		Class1(112),
-		Class2(102),
-		Class3(92),
-		Class4(83),
-		Class5(74),
-		Class6(66),
-		Class7(59),
-		Class8(52),
-		Class9(44),
-		Class10(37),
-		Class11(29),
-		Class12(23)
-	]
 },
 
 <Missile Guidance System>
@@ -2648,7 +1929,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
         MinC(5),
         MaxC(12)
 },
-
 <Hyperprocessor>
 {
 	Number(5532),
@@ -2670,7 +1950,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	MinC(11),
 	MaxC(12)
 },
-
 <Emergency Shuttle Craft>
 {
 	Number(5533),
@@ -2693,7 +1972,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	MinC(1),
 	MaxC(12)
 },
-
 <Immobilizer>
 {
 	Number(5534),
@@ -2717,7 +1995,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	MinC(11),
 	MaxC(12)
 },
-
 <Forward Hull Plating>
 {
 	Number(5535),
@@ -2738,7 +2015,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	MinC(8),
 	MaxC(12)
 },
-
 <Strategic Hull Plating>
 {
 	Number(5536),
@@ -2764,6 +2040,153 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	MaxC(12)
 },
 
+
+# 6XXX: Weapon
+
+# Type: BM(Beam), MSL(Missile), PRJ(Projectile), (FGT(Fighter))
+# AR: Attack Rate
+# Roll: Roll
+# Dice: Dice
+# Space: 차지하는 공간
+# CT: Cooling Time. 발사 딜레이
+# Range: Attack Range. 사정거리
+# AOF: Angle of Fire. 발사각. 전면 기준
+# WSpeed: Weapon Speed. 턴당 이동하는 무기 속도
+
+<Laser>
+{
+	Number(6101),
+	<Prerequisite>
+	[
+		Tech(1302)
+	],
+	Description("The Laser is the basic idea behind all beam weapons. The focusing of light through the correct crystal matrix can make it into an efficient tool or a deadly weapon. This is another of the weapons that all races in the Empire seem to possess. Although not as powerful as some later weapons, the laser is an important weapon for all starting rulers."),
+	Category("WPN"),
+	Level(1),
+	Type("BM"),
+	AR(100),
+	Roll(2),
+	Dice(4),
+	Space(25),
+	CT(50),
+	Range(1000),
+	AOF(60),
+	WSpeed(10)
+},
+<Plasma Beam>
+{
+	Number(6102),
+	<Prerequisite>
+	[
+		Tech(1307)
+	],
+	Description("The Plasma Beam is a uses the your knowledge of the differing states of matter to form and project a focused ray of plasma at your enemies. When this matter reaches its target, the reaction is quite deadly. This makes the plasma beam quite effective against enemies who have not yet developed technology which protects from this type of attack."),
+	Category("WPN"),
+	Level(2),
+	Type("BM"),
+	<Effect>
+	{
+		<Shield Overheat>
+		{
+		},
+		<Additional Damage to Bio Armor>
+		{
+			Amount(175),
+			Type("Proportional")
+		}
+	},
+	AR(120),
+	Roll(3),
+	Dice(4),
+	Space(28),
+	CT(70),
+	Range(1000),
+	AOF(60),
+	WSpeed(15)
+},
+<Crystal Laser>
+{
+	Number(6103),
+	<Prerequisite>
+	[
+		Tech(1318)
+	],
+	Description("The Crystal Laser uses your knowledge of crystal manipulation to purify the focusing component in your laser weaponry. This newly focused beam is more deadly and more accurate than its predecessor. This new lens does not cool as fast as the originals though, which means you cannot fire as often without risking dangerous temperatures."),
+	Category("WPN"),
+	Level(2),
+	Type("BM"),
+	AR(120),
+	Roll(4),
+	Dice(4),
+	Space(30),
+	CT(60),
+	Range(1000),
+	AOF(60),
+	WSpeed(10)
+},
+<Graviton Beam>
+{
+	Number(6104),
+	<Prerequisite>
+	[
+		Tech(1320)
+	],
+	Description("The Graviton Beam is actually a focused projection of many graviton particles. As this projection moves it gathers both speed and mass through attraction to objects in its path. This means that when it hits it has much speed and mass, this, along with the actual effect of the particles on the target itself allow this beam to crush your enemies."),
+	Category("WPN"),
+	Level(3),
+	Type("BM"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(25)
+		},
+		<Armor Piercing>
+		{
+			Amount(25)
+		}
+	},
+	AR(144),
+	Roll(4),
+	Dice(4),
+	Space(29),
+	CT(55),
+	Range(1000),
+	AOF(60),
+	WSpeed(10)
+},
+<Psi Blaster>
+{
+	Number(6105),
+	<Prerequisite>
+	[
+		Tech(1419),
+		Race(7)
+	],
+	Description("The Psi Blaster is a weapon that can go from merely dangerous to outright deadly if used by the correct races. Powered by either a races own ability or by machines cleverly created for the purpose, the psi blaster destroys your enemies with forces that cannot be seen but only felt."),
+	Category("WPN"),
+	Level(3),
+	Type("BM"),
+	<Effect>
+	{
+		<PSI>
+		{
+		},
+#		<PSI Empower>
+#		{
+#			Amount( 100 ),
+#			Type( "Proportional" )
+#		}
+	},
+	AR(144),
+	Roll(4),
+	Dice(7),
+	Space(35),
+	CT(72),
+	Range(1000),
+	AOF(60),
+	WSpeed(15)
+},
 <Psi Disrupter>
 {
 	Number(6309),
@@ -2795,7 +2218,145 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(60),
 	WSpeed(20)
 },
-
+<Neutron Blaster>
+{
+	Number(6106),
+	<Prerequisite>
+	[
+		Tech(1325)
+	],
+	Description("The Neutron Blaster uses the understanding of sub atomic physics to assemble neutrons which are tailored to rip through hull components. These are then projected along the path of a guiding laser to the enemy. Upon contact, they interact with the hull and can often cripple if not destroy an enemy ship."),
+	Category("WPN"),
+	Level(3),
+	Type("BM"),
+	<Effect>
+	{
+		<Additional Damage to Bio Armor>
+		{
+			Amount(200),
+			Type("Proportional")
+		}
+	},
+	AR(144),
+	Roll(5),
+	Dice(5),
+	Space(38),
+	CT(60),
+	Range(1000),
+	AOF(60),
+	WSpeed(15)
+},
+<Phasor>
+{
+	Number(6107),
+	<Prerequisite>
+	[
+		Tech(1332)
+	],
+	Description("The Phasor is a deadly weapon that can alter the way in which space-time and the target interact. This can cause a high range of effects, from almost no damage, to complete destruction/dissolution of the component materials of the effected target. The phasor is perhaps on of the better known weapons in the current fighting happening within the Empire."),
+	Category("WPN"),
+	Level(5),
+	Type("BM"),
+	<Effect>
+	{
+		<Shield Overheat>
+		{
+		}
+	},
+	AR(250),
+	Roll(12),
+	Dice(5),
+	Space(50),
+	CT(40),
+	Range(1000),
+	AOF(180),
+	WSpeed(5)
+},
+<Tachyon Beam>
+{
+	Number(6108),
+	<Prerequisite>
+	[
+		Tech(1219)
+	],
+	Description("The Tachyon Beam is a force which alters the probability of the target structure. The desired effect is to cause all of the particles of the structure to \"randomly\" repel each other. If this can be achieved for even an instant it can cause the effected area to explode as all of the particles attempt to put distance between their neighbors."),
+	Category("WPN"),
+	Level(4),
+	Type("BM"),
+	<Effect>
+	{
+		<Armor Piercing>
+		{
+			Amount( 45 )
+		}
+	},
+	AR(273),
+	Roll(5),
+	Dice(6),
+	Space(40),
+	CT(54),
+	Range(1000),
+	AOF(60),
+	WSpeed(10)
+},
+<Oscillation of Dissonance>
+{
+	Number(6109),
+	<Prerequisite>
+	[
+		Tech(1224)
+	],
+	Description("The Oscillation of Dissonance is the most deadly Beam weapon to be invented. It has the power to rip ships to pieces faster than any other beam weapon. One of the more deadly aspects of this weapon is its ability to ignore almost all armor that your enemies may have on their ships."),
+	Category("WPN"),
+	Level(5),
+	Type("BM"),
+	<Effect>
+	{
+		<Armor Piercing>
+		{
+			Amount( 95 )
+		}
+	},
+	AR(250),
+	Roll(6),
+	Dice(8),
+	Space(50),
+	CT(80),
+	Range(1000),
+	AOF(360),
+	WSpeed(15)
+},
+<Psi Storm Launcher>
+{
+	Number(6110),
+	<Prerequisite>
+	[
+		Tech(1424),
+		Race("Psi")
+	],
+	Description("The Psi Storm Launcher is a weapon often feared not just for the obvious damage it can do to matter, but also for the effects upon minds that survive it. This weapon creates a temporary vortex to the fourth dimension allowing psionic apparitions to manifest in our physical space. They do not always choose to do great damage, but the mental storms this living thoughts create can cause the bravest commanders to retreat."),
+	Category("WPN"),
+	Level(5),
+	Type("BM"),
+	<Effect>
+	{
+		<PSI>
+		{
+		},
+		<Shield Distortion>
+		{
+			Amount( 25 )
+		}
+	},
+	AR(200),
+	Roll(7),
+	Dice(8),
+	Space(38),
+	CT(72),
+	Range(1200),
+	AOF(120),
+	WSpeed(15)
+},
 <Nahodoom Ray Launcher>
 {
 	Number(6111),
@@ -2828,7 +2389,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(150),
 	WSpeed(15)
 },
-
 <Phase Transfer Disruptor>
 {
 	Number(6112),
@@ -2860,7 +2420,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(150),
 	WSpeed(15)
 },
-
 <Psionic-Matter Destabilizer>
 {
 	Number(6113),
@@ -2897,7 +2456,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(150),
 	WSpeed(15)
 },
-
 <Nahodoom Ray Launcher Mk.II>
 {
 	Number(6114),
@@ -2929,7 +2487,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(150),
 	WSpeed(15)
 },
-
 <Temporal Beam>
 {
 	Number(6115),
@@ -2960,7 +2517,261 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(150),
 	WSpeed(15)
 },
-
+<Nuclear Missile>
+{
+	Number(6201),
+	<Prerequisite>
+	[
+		Tech(1301)
+	],
+	Description("The Nuclear Missile was in the past one of the most feared weapons known. However, as races leave their first planet, they inevitably discover more powerful means of destruction. The nuclear missile is still a great force for destruction, and is in fact the one missile type that all races seem to have when they first reach the stars."),
+	Category("WPN"),
+	Level(1),
+	Type("MSL"),
+	AR(100),
+	Roll(5),
+	Dice(5),
+	Space(20),
+	CT(200),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
+<Fusion Missile>
+{
+	Number(6202),
+	<Prerequisite>
+	[
+		Tech(1306)
+	],
+	Description("The Fusion Missile is a logical progression from the nuclear missile. As a race refines their science, they are able to truly utilize fusion power efficiently. This power can be used for many things. One of these uses is to make more deadly weapons. This is the second type of missile that many races use as its power is a simple upgrade to that of the nuclear missile that proves so effective early in a powers career."),
+	Category("WPN"),
+	Level(2),
+	Type("MSL"),
+	AR(120),
+	Roll(8),
+	Dice(10),
+	Space(33),
+	CT(300),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
+<Nova Torpedo>
+{
+	Number(6203),
+	<Prerequisite>
+	[
+		Tech(1327)
+	],
+	Description("The Nova Torpedo is the final stage of the evolution of the nuclear missile. This missile takes initial science of fusion to a new height. With the use of each of these missiles a temporary star is created out of the component atoms of the target. This missile has the capacity for more damage than all but two other weapons. This force can be of great help in a battle, but be warned…the weapon takes a long time to prepare before it can be used again."),
+	Category("WPN"),
+        Level(4),
+        Type("MSL"),
+        AR(172),
+        Roll(18),
+        Dice(20),
+        Space(40),
+        CT(450),
+        Range(1500),
+        AOF(180),
+        WSpeed(20)
+},
+<Kamikaze Conscious Torpedo>
+{
+	Number(6204),
+	<Prerequisite>
+	[
+		Tech(1115)
+	],
+	Description("The Kamikaze Torpedo has caused demonstrations upon numerous words. This weapon uses the very force that lies behind all living things to track your enemy. Of course, this link is rarely one way, so when this weapon is activated, those who can notice are often said to cringe at the shock this device sends thru the unconsciousness. Some people have begun to argue that this abuse will have repercussions, but few rulers head this. The weapon is too efficient to avoid using it because it gives some sensitive people headaches."),
+	Category("WPN"),
+	Level(3),
+	Type("MSL"),
+	<Effect>
+	{
+		<PSI>
+		{
+		},
+		<Additional Damage to Bio Armor>
+		{
+			Amount( 200 ),
+			Type( "Proportional" )
+		}
+		
+	},
+	AR(200),
+	Roll(8),
+	Dice(10),
+	Space(28),
+	CT(330),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
+<Death Spore>
+{
+	Number(6205),
+	<Prerequisite>
+	[
+		Tech(1416)
+	],
+	Description("The Death Spore might not sound like the most threatening weapon. However, this device has it uses. In this time when more and more races are turning to artificial life forms for many things, the death spore is merely the destructive use of this trend. This weapon is tailored to damage your enemies, and woe be to the enemy who tries to use any sort of living shield to protect themselves, as this life form will use such shielding to fuel itself to even greater destructive heights."),
+	Category("WPN"),
+	Level(3),
+	Type("MSL"),
+	<Effect>
+	{
+		<Additional Damage to Bio Armor>
+		{
+			Amount( 700 ),
+			Type( "Proportional" )
+		}
+	},
+	AR(172),
+	Roll(7),
+	Dice(7),
+	Space(30),
+	CT(280),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
+<Anti-Matter Missile>
+{
+	Number(6206),
+	<Prerequisite>
+	[
+		Tech(1322)
+	],
+	Description("The Antimatter Missile seems simple enough. As one developer said while working on this project, \"just imagine what this material will do when it comes into contact with regular matter, without the proper controls.\. In fact this scientist witnessed it first hand when a containment mistake was made during prototype construction. It goes without saying that there was not enough of him for a proper burial."),
+        Category("WPN"),
+        Level(3),
+        Type("MSL"),
+        AR(144),
+        Roll(10),
+        Dice(20),
+        Space(38),
+        CT(400),
+        Range(1500),
+        AOF(180),
+        WSpeed(20)
+},
+<Reflexium Missile>
+{
+	Number(6207),
+	<Prerequisite>
+	[
+		Tech(1330)
+	],
+	Description("The Reflexium Missile is the use of an interesting property of reflexium. For some reason any interaction between this metal and most shielding causes great stress to the powering component of shields. This makes this weapon quite effective against those who utilize shielding to a great extent. Of course, the effect of a strong material impacting an object at high speed is nothing to laugh at either."),
+	Category("WPN"),
+	Level(4),
+	Type("MSL"),
+	<Effect>
+	{
+		<Shield Distortion>
+		{
+			Amount( 100 )
+		}
+	},
+	AR(200),
+	Roll(12),
+	Dice(20),
+	Space(40),
+	CT(355),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
+<Psionic Pulse Shocker>
+{
+	Number(6208),
+	<Prerequisite>
+	[
+		Tech(1422),
+		Race("Psi")
+	],
+	Description("The Psionic Pulse Shocker a deadly method of using psionic forces. This missile is in fact a focusing device for the psionic energies of your crew. They then use their abilities to hasten the entropy within your enemies to dangerous levels. If the enemy is unprepared, this can easily be their undoing."),
+	Category("WPN"),
+	Level(4),
+	Type("MSL"),
+	<Effect>
+	{
+		<PSI>
+		{
+		},
+		<Shield Distortion>
+		{
+			Amount( 75 )
+		}
+	},
+	AR(172),
+	Roll(10),
+	Dice(14),
+	Space(32),
+	CT(240),
+	Range(1700),
+	AOF(180),
+	WSpeed(20)
+},
+<Time-Wake Homing Missile>
+{
+	Number(6209),
+	<Prerequisite>
+	[
+		Tech(1333)
+	],
+	Description("The Time-Wake Homing Missile is a tricky weapon to figure out. Whether it is in fact tracking its enemies future path, or if it tracks its own future to determine the best path, this missile can be quite deadly and effective. There are even reports of it relocating itself through space/time and thus penetrating enemy shields and armor."),
+	Category("WPN"),
+	Level(5),
+	Type("MSL"),
+	<Effect>
+	{
+		<Shield Distortion>
+		{
+			Amount(70)
+		},
+		<Armor Piercing>
+		{
+			Amount(30)
+		}
+	},
+	AR(250),
+	Roll(8),
+	Dice(21),
+	Space(50),
+	CT(275),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
+<Homing Black Hole>
+{
+	Number(6210),
+	<Prerequisite>
+	[
+		Tech(1335)
+	],
+	Description("The Homing Black Hole is easily the single most powerful weapon ever created. This missile calls into being a temporary and small black hole, which can destroy fleets of weak vessels and cripple some of the largest ships in existence. The only drawback to this weapon is that it takes a long time to bring the next shot online."),
+	Category("WPN"),
+	Level(5),
+	Type("MSL"),
+#	<Effect>
+#	{
+#		<Immobilize>
+#		{
+#		}
+#	},
+	AR(250),
+	Roll(40),
+	Dice(36),
+	Space(100),
+	CT(500),
+	Range(1500),
+	AOF(180),
+	WSpeed(20)
+},
 <Psionic Dominator>
 {
 	Number(6211),
@@ -2992,7 +2803,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(180),
 	WSpeed(20)
 },
-
 <Subspace Tracker Torpedo>
 {
 	Number(6212),
@@ -3017,7 +2827,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(180),
 	WSpeed(20)
 },
-
 <Hyperspace Homing Missile>
 {
 	Number(6213),
@@ -3042,7 +2851,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(180),
 	WSpeed(20)
 },
-
 <Worldslayer>
 {
 	Number(6214),
@@ -3074,7 +2882,235 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(180),
 	WSpeed(20)
 },
-
+<Rail Gun>
+{
+	Number(6301),
+	<Prerequisite>
+	[
+		Tech(1305)
+	],
+	Description("The Rail Gun uses the basic principle that species have been using for thousands of Millennia. If you throw something at your enemies fast enough, it will hurt them. While this principle has been refined in other ways, the rail gun is still an effective way to harm your enemy. The fact that you are only accelerating simple matter and not charging it means that this type of weapon is especially useful because it can pass through almost any shields that your enemy may use."),
+	Category("WPN"),
+	Level(1),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(100)
+		}
+	},
+	AR(50),
+	Roll(2),
+	Dice(4),
+	Space(25),
+	CT(30),
+	Range(800),
+	AOF(60),
+	WSpeed(5)
+},
+<Gatling Rail Gun>
+{
+	Number(6302),
+	<Prerequisite>
+	[
+		Tech(1312)
+	],
+	Description("The Gatling Rail Gun is a more effective version of the rail gun. It uses an understanding of inertia in order to direct a larger amount of matter toward your enemy. This means that when you hit you should usually do a greater amount of damage to your enemy. The fact that you have greater control also means there is less heat built up during the shot, so you can fire more often."),
+	Category("WPN"),
+	Level(2),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(100)
+		}
+	},
+	AR(60),
+	Roll(3),
+	Dice(4),
+	Space(40),
+	CT(15),
+	Range(800),
+	AOF(60),
+	WSpeed(5)
+},
+<Mass Driver>
+{
+	Number(6303),
+	<Prerequisite>
+	[
+		Tech(1319)
+	],
+	Description("The Mass Driver uses a strong electromagnetic field to propel a projectile towards your enemy at amazing speeds. This weapon does not have as much restraint as the gatling rail gun, however the greater speed and mass allow this weapon to be somewhat more effective both in hitting your enemy and in causing damage."),
+	Category("WPN"),
+	Level(2),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(100)
+		}
+	},
+	AR(90),
+	Roll(4),
+	Dice(5),
+	Space(30),
+	CT(45),
+	Range(800),
+	AOF(60),
+	WSpeed(7)
+},
+<Gauss Cannon>
+{
+	Number(6304),
+	<Prerequisite>
+	[
+		Tech(1329)
+	],
+	Description("The Gauss Cannon uses compressed material for the projectile. This material has much greater density and mass, so the force is exerts on its target is much more focused. This means that not only will this weapon pass through shields, but it will even penetrate a portion of your enemies armor."),
+	Category("WPN"),
+	Level(4),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(100)
+		},
+		<Armor Piercing>
+		{
+			Amount(15)
+		}
+	},
+	AR(90),
+	Roll(6),
+	Dice(8),
+	Space(45),
+	CT(30),
+	Range(600),
+	AOF(60),
+	WSpeed(5)
+},
+<Anti-Matter Cannon>
+{
+	Number(6305),
+	<Prerequisite>
+	[
+		Tech(1214)
+	],
+	Description("The Anti-Matter Cannon work on a combination of the principles used to create the rail gun and the anti-matter missile. Firing shots as though they were normal rail gun charges, the projectiles fired are much more deadly, and so the overall weapon becomes one of the most efficient projectile weapons available."),
+	Category("WPN"),
+	Level(3),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(100)
+		}
+	},
+	AR(120),
+	Roll(6),
+	Dice(6),
+	Space(50),
+	CT(30),
+	Range(800),
+	AOF(60),
+	WSpeed(4)
+},
+<Autofire Gauss Cannon>
+{
+	Number(6306),
+	<Prerequisite>
+	[
+		Tech(1333)
+	],
+	Description("The Autofire Gauss Cannon improves on the gauss cannon in one significant manner, speed. By using knowledge of space/time you are able to remove the heat from this weapon much faster and thus fire it at a greatly increased rate. It also has a slightly increased ability to make it past enemy defenses."),
+	Category("WPN"),
+	Level(5),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(100)
+		},
+		<Armor Piercing>
+		{
+			Amount(15)
+		}
+	},
+	AR(90),
+	Roll(6),
+	Dice(8),
+	Space(50),
+	CT(15),
+	Range(600),
+	AOF(60),
+	WSpeed(3)
+},
+<Distortion Blaster>
+{
+	Number(6307),
+	<Prerequisite>
+	[
+		Tech(1334)
+	],
+	Description("The Distortion Blaster is one of the most deadly weapons ever to be created. One shot from this monstrous weapon can out-damage some of the weaker weapons. Of course, it fires at speeds almost ten times faster than many missiles, which is why it is so feared. This weapon works by projecting small pieces of material from other dimensions into your enemies midst. These particles have a horrible effect on the enemy as they try to make anything they contact conform to their dimensional laws."),
+	Category("WPN"),
+	Level(5),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Shield Piercing>
+		{
+			Amount(150)
+		},
+		<Armor Piercing>
+		{
+			Amount(40)
+		}
+	},
+	AR(144),
+	Roll(10),
+	Dice(12),
+	Space(100),
+	CT(30),
+	Range(800),
+	AOF(60),
+	WSpeed(3)
+},
+<TEC-VX01 Nanite Blaster>
+{
+	Number(6308),
+	<Prerequisite>
+	[
+		Tech(1225),
+		Race(4)
+	],
+	Description("The TEC-VX01 Nanite Blaster is a Tecanoid experimental weapon that utilizes nanoscale robots to penetrate the hull of enemy ships. Once fired, countless nanobots are become active and begin cutting away at the enemy hull with immense efficiency. Of course, this means that any shielding present will have to be sufficiently weakened first."),
+	Category("WPN"),
+	Level(5),
+	Type("PRJ"),
+	<Effect>
+	{
+		<Corrosivity>
+		{
+			Amount(75)
+		}
+	},
+	AR(144),
+	Roll(4),
+	Dice(5),
+	Space(25),
+	CT(22),
+	Range(500),
+	AOF(60),
+	WSpeed(4)
+},
 <Singularity Cannon>
 {
 	Number(6310),
@@ -3106,7 +3142,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(60),
 	WSpeed(3)
 },
-
 <Vortex Vector Cannon>
 {
 	Number(6311),
@@ -3138,7 +3173,6 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(60),
 	WSpeed(3)
 },
-
 <Viper Mk.V>
 {
 	Number(6400),
@@ -3166,4 +3200,3 @@ N# 51XX: Armor, 52XX: Computer, 53XX: Shield, 54XX: Engine, 55XX: Device, 61XX: 
 	AOF(60),
 	WSpeed(3)
 }
-

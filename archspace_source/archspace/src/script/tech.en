@@ -1,11 +1,14 @@
-# 11XX: social(SOCL), 
+# 11XX: social(SOCL),
 # 12XX: info(INFO), 
 # 13XX: matter(MATR) 
-# 14XX: life(LIFE)
-# Project: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Project ï¿½ï¿½È£
-# Component: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Component ï¿½ï¿½È£(ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
-# Spy: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Special Ops ï¿½ï¿½È£
-# Control Modelï¿½ï¿½ race scriptï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+# 14XX: life(LIFE),
+# 15XX: upgrades(UPG),
+# 16XX: schematics(SSCH)
+# 17XX: amatter (AMATR)
+# Project: ³ª¿À´Â Project ¹øÈ£
+# Component: ³ª¿À´Â Component ¹øÈ£(ÀÇ ¹­À½)
+# Spy: ³ª¿À´Â »õ Special Ops ¹øÈ£
+# Control ModelÀº race script¿Í µ¿ÀÏ. ´Ü, ¾È ¾²´Â °ÍÀº ÀÖÀ½.
 # Control : Environment, Growth, Efficiency, Genius, Production,
 #      Facility Cost, Military, Ship Mobility, Commerce, Spy,
 #      Diplomacy, Ship Defense, Ship Attack,
@@ -719,6 +722,162 @@
 #	},
 	Attr("Normal")
 },
+
+<Trait Augmentation Theory>
+{
+	Number(1132),
+	<Prerequisite>
+	[
+		Tech(1131)
+	],
+	Description("Trait Augmentation Theory seeks to amplify existing traits in an individual, and make personalities more pronounced so their effects on others can be more significant. Under such behavior modifications, individuals become more 'themselves', than anything else."),
+	Type("SOCL"),
+	Level(12),
+	Project(7049),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Dynamic Caste Theory>
+{
+	Number(1133),
+	<Prerequisite>
+	[
+		Tech(1131)
+	],
+	Description("Dynamic Caste Theory looks at how a Classism society may eventually overcome its caste barriers to create a more dynamic system where individuals are not bound to certain castes for the rest of their lives and may progress, with some restrictions, up and down the caste system. The theory predicts increased productivity from individuals of the society as they aim to progress up the caste system. Ultimately, this theory aims to reach an equilibrium phase where the society is stable and the nett movement up and down the caste system becomes zero."),
+   	Type("SOCL"),
+	Level(12),
+	Project(7048),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Absolutism>
+{
+	Number(1134),
+	<Prerequisite>
+	[
+		Tech(1131)
+	],
+	Description("Absolutism is the final stage of a Totalism society. Under such a regime, the only will is the will of the one true leader, who has absolutely control over all aspects of every individual's lives. As in Unification, the leader is able to delegate the duties of control to other entities within the society, but in this case, instead of the the society moving on as one entity, it is possible to for societal subdivision to occur, allowing for smaller, but equally complex cells within the society."),
+    Type("SOCL"),
+	Level(12),
+	Project(7050),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Hybridization Theory>
+{
+	Number(1135),
+	<Prerequisite>
+	[
+		Tech(1132),
+		Tech(1133),
+		Tech(1134)
+	],
+	Description("Eventually, when a race progresses this far in terms of social development, they begin to realize that their absolute beliefs in their societal system may be flawed. Hybridization Theory explores the foundations of incorporating elements of other societal structures into an existing one, and ultimately results in the creation of hybrid societal stuctures, which possess many of the strengths of its original structures, yet eliminating some of the more blantant flaws within those structures."),
+	Type("SOCL"),
+	Level(13),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Advanced Hybridization Theory>
+{
+	Number(1136),
+	<Prerequisite>
+	[
+		Tech(1135)
+	],
+	Description("Even with regular Hybridization Theory, it was not possible to create the most perfect society. Many rulers realize this flaw and eventually pursue the development of a deeper understanding of societal hybridization. Advanced Hybridization Theory is the result of these endeavours and provides a ruler with the knowledge to create new societal structures by integrating conflicting ideals by reaching a compromise between the two extremes. As such, it is possible to achieve 'the better of both worlds', but there is certainly still room for improvement on this theory."),
+	Type("SOCL"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Universal Hypothesis>
+{
+	Number(1137),
+	<Prerequisite>
+	[
+		Tech(1136)
+	],
+	Description("A long time after the discovery of societal hybridization, philosophers began to question themselves as to where of not there can exist a unifying theory, much like that which was discovered in Matter-Energy Science ages ago, which links all societal structures to the some set of common goals or parameters. It was not long after that where traits were discovered in every race that existed throughout the universe - the will to survive. It is this will that motivates the creation of complex societal structures to oversee the progression of a race, which is a powerful driving force in the creation of large inter-galactic empires."),
+	Type("SOCL"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Utopia>
+{
+	Number(1138),
+	<Prerequisite>
+	[
+		Tech(1137)
+	],
+	Description("Utopia, once thought an impractical, imaginary setting for the overtly idealistic, has been finally realised. Simply put, perfection is relative, and in any race's eyes, they will be able to judge their own strengths and weaknesses based on other races they encounter. After lengthy generations of observation, a race is capable of assimilating ideas from races they view as stronger as them, and gradually progress towards their concept of the perfect race. Utopia is achieved when a race no longer views any other race as superior to themselves in any aspect."),
+	Type("SOCL"),
+	Level(16),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#		Number()
+#	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
  
 <Electronic Computer>
 {
@@ -957,7 +1116,7 @@
 	Type("INFO"),
 	Level(4),
 	Project(7011),
-#	Spy(),
+	Spy(8008),
 #	<Component>
 #	[
 #		Number()
@@ -1025,10 +1184,11 @@
 	Type("INFO"),
 	Level(5),
 #	Project(),
-	Spy(8008),
+#	Spy(),
 	<Component>
 	[
-		Number(5510)
+		Number(5510),
+		Number(6305)
 	],
 #	<Effect>
 #	{
@@ -1070,10 +1230,10 @@
 	Level(6),
 #	Project(),
 #	Spy(8006),
-	<Component>
-	[
-		Number(6109)
-	],
+#	<Component>
+#	[
+#		Number(6108)
+#	],
 #	<Effect>
 #	{
 #	},
@@ -1139,7 +1299,8 @@
 #	Spy(),
 	<Component>
 	[
-		Number(5303)
+		Number(5303),
+		Number(6108)
 	],
 #	<Effect>
 #	{
@@ -1158,7 +1319,7 @@
 	Type("INFO"),
 	Level(7),
 	Project(7030),
-#	Spy(),
+	Spy(8016),
 	<Component>
 	[
 		Number(5518)
@@ -1212,7 +1373,7 @@
 #	],
 	<Effect>
 	{
-		Research(1)
+		Research(2)
 	},
 	Attr("Normal")
 },
@@ -1252,11 +1413,11 @@
 	Type("INFO"),
 	Level(10),
 	Project(7027),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
+	Spy(8017),
+	<Component>
+	[
+		Number(6109)
+	],
 #	<Effect>
 #	{
 #	},
@@ -1270,7 +1431,7 @@
 	[
 		Tech(1224)
 	],
-	Description("Oracle Computing is the final goal of Information Science, and holds the key to all problems.  The Oracle Computer acts as if an answer exists for any question, even questions that are posed for the first time.  The computing system also maintains a strict cycle of evolution, preservation, improvement, organization, and information rotation in order to prevent its demise.  It is said that the Oracle Computing System has evolved to the point of absolute accuracy, and cannot be challenged.  It is also said that the system still maintains all of the solutions, procedures, and protocols needed for outside contact reception.  However, all of the above statements rest on the premise that the system \"still\" has all the answers, meaning that the statements can be disproved at any time.  It must never be forgotten that the Oracle Computing System is that much more dangerous because it is an indestructible object, and in the case that the system is destroyed or deviates off its course, it may become an unstoppable force."),
+	Description("Oracle Computing is a high end goal of Information Science, and holds the key to all problems.  The Oracle Computer acts as if an answer exists for any question, even questions that are posed for the first time.  The computing system also maintains a strict cycle of evolution, preservation, improvement, organization, and information rotation in order to prevent its demise.  It is said that the Oracle Computing System has evolved to the point of absolute accuracy, and cannot be challenged.  It is also said that the system still maintains all of the solutions, procedures, and protocols needed for outside contact reception.  However, all of the above statements rest on the premise that the system \"still\" has all the answers, meaning that the statements can be disproved at any time.  It must never be forgotten that the Oracle Computing System is that much more dangerous because it is an indestructible object, and in the case that the system is destroyed or deviates off its course, it may become an unstoppable force."),
 	Type("INFO"),
 	Level(11),
 #	Project(),
@@ -1278,6 +1439,119 @@
 #	<Component>
 #	[
 #		Number()
+#	],
+	<Effect>
+	{
+	    Research(1)
+	},
+	Attr("Normal")
+},
+
+<Self-Advancing Heuristics>
+{
+	Number(1226),
+	<Prerequisite>
+	[
+		Tech(1225)
+	],
+	Description("Self-Advancing Heuristics is the first attempt at creating an artificial intelligence that is able to generate ideas from random data. Normally, computers are only able to act in accordance to preset rules that its creators embed within its virtual memory space. However, this technique attempts to allow the computer to modify its own heuristical database based on rules it draws from randomly generated data. In essence, this technology aims to create the first true sentient computer, which is a feat that is even more remarkable than Oracle Computing. If used correctly, it is possible that it may generate techniques that even its creators had never thought of in the first place."),
+   	Type("INFO"),
+	Level(12),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5532)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Self-Conscious Artificial Intelligence>
+{
+	Number(1227),
+	<Prerequisite>
+	[
+		Tech(1226),
+		Tech(1338)
+	],
+	Description("Like a living organism, a self-conscious AI is able to judge its circumstances without prior information and input. By examining every single possibility that could result from a single scenario, it is possible to create an artificial system of intelligence where decisions are made based on intuition rather than rules."),
+   	Type("INFO"),
+	Level(13),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5206)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Artificial Sentience>
+{
+	Number(1228),
+	<Prerequisite>
+	[
+		Tech(1227)
+	],
+	Description("For many, artificial intelligence is synonymous with artificial sentience, but to the more developed races, there is a distinct difference between the two states. A being may be intelligent, but this does not necessarily mean that the being is sentient. To give an artificial being intelligence is as simple as providing it with heuristical rules for data analysis, as well and input and output channels. But for it to achieve sentience, it must also learn to perceive. It was not until recent times that scientists discovered that this could be achieved by adopting a neural network structure then populating it with useless random data and allowing the artificial intelligence simulation to run for a certain amount of time. Applications of these include creating original individuals not based on copies of existing ones, a technology that even Totalism governments see the benefits of."),
+   	Type("INFO"),
+	Level(14),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#
+#	],
+	<Effect>
+	{
+	    Research(1)
+	},
+	Attr("Normal")
+},
+
+<Inter-Planetary Processor Network>
+{
+	Number(1229),
+	<Prerequisite>
+	[
+		Tech(1228)
+	],
+	Description("The inception of the of the IPPN was not difficult at all, but the designing of the infrastructure and resource allocation for such a large scale project was costly and time-ineffective. After the discovery of artificial sentience, scientists began to let the newly created beings oversee the construction of this large-scale network. Using complex resource allocation algorithms, the network pools its resources, and the entire entity functions as a single processor, with the ability to perform even the most complex quantum calculations within a picosecond."),
+   	Type("INFO"),
+	Level(15),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+        Number(6115)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Advanced Parallel Processing Theory>
+{
+	Number(1230),
+	<Prerequisite>
+	[
+		Tech(1228)
+	],
+	Description("This particular theory involves the use multiple processors of different speeds and configurations and redistributing the workload amongst them. Computers linked up in such a way all operate with the same speed and efficiency as any other terminal in the network, with perfect task allocation routines. This made it possible for old computers to contribute to a large-scale computational project even though their processing power might be limited."),
+   	Type("INFO"),
+	Level(15),
+#	Project(),
+#	Spy(),
+#	<Component>
+#	[
+#
 #	],
 #	<Effect>
 #	{
@@ -1778,7 +2052,6 @@
 	Spy(8013),
 	<Component>
 	[
-		Number(5111),
 		Number(5403),
 		Number(6206)
 	],
@@ -1801,10 +2074,10 @@
 	Level(5),
 #	Project(7003),
 	Spy(8014),
-#	<Component>
-#	[
-#		Number()
-#	],
+	<Component>
+	[
+		Number(5111)
+	],
 #	<Effect>
 #	{
 #	},
@@ -1847,10 +2120,10 @@
 	Level(6),
 #	Project(),
 #	Spy(8010),
-	<Component>
-	[
-		Number(6107)
-	],
+#	<Component>
+#	[
+#		Number(5531)
+#	],
 #	<Effect>
 #	{
 #	},
@@ -1896,8 +2169,7 @@
 	[
 		Number(5107),
 		Number(5514),
-		Number(5527),
-		Number(6305)
+		Number(5527)
 	],
 #	<Effect>
 #	{
@@ -1919,8 +2191,7 @@
 #	Spy(),
 	<Component>
 	[
-		Number(5104),
-		Number(6304)
+		Number(5104)
 	],
 #	<Effect>
 #	{
@@ -1967,7 +2238,8 @@
 #	Spy(8012),
 	<Component>
 	[
-		Number(6108)
+		Number(5535),
+		Number(5536)
 	],
 #	<Effect>
 #	{
@@ -1990,7 +2262,8 @@
 	<Component>
 	[
 		Number(5404),
-		Number(5505)
+		Number(5505),
+		Number(6107)
 	],
 #	<Effect>
 #	{
@@ -2090,7 +2363,77 @@
 #	{
 #	},
 	Attr("Normal")
-}, 
+},
+
+<Singularity Manipulation>
+{
+	Number(1337),
+	<Prerequisite>
+	[
+		Tech(1335)
+	],
+	Description("Black Hole creation is spontaneous in nature, but to create small black holes under laboratory conditions is a challenge. Technology used in the creation of the Homing Black Hole missile was only the first step, but to properly manipulate singularity takes extreme precision, and knowledge of dimension manipulation helps provides safety nets should the procedure fail."),
+	Type("MATR"),
+	Level(12),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(6310)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Advanced Predictive Mechanics>
+{
+	Number(1338),
+	<Prerequisite>
+	[
+		Tech(1337),
+		Tech(1226)
+
+	],
+	Description("Founded on the principles of Probability Mechanics, this advanced study seeks to unravel the apparent randomness of chaos. It turns out that if a simulation was run for long periods of time, even chaotic motion will begin to oscillate regularly due to the fact that all possibilities are eliminated. Even in infinite chaotic motion, studies have shown that predictive mechanisms do exist to correctly determine outcome without running any simulations with the initial conditions."),
+	Type("MATR"),
+	Level(13),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5306)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
+
+<Spatial Anomaly Manipulation>
+{
+	Number(1339),
+	<Prerequisite>
+	[
+		Tech(1338)
+
+	],
+	Description("Space is filled with various anomalies which exist due to fluctuations in the fabric of spacetime. Sometimes, these anomalies are minor and undisruptive, at other times, they can cripple entire fleets. Being able to control and utilize spatial anomalies presents a considerable challenge even for the most advanced races."),
+	Type("MATR"),
+	Level(14),
+#	Project(),
+#	Spy(),
+	<Component>
+	[
+		Number(5534),
+		Number(6212)
+	],
+#	<Effect>
+#	{
+#	},
+	Attr("Normal")
+},
 
 <Genetic Science>
 {
@@ -2472,8 +2815,7 @@
 	Spy(8010),
 	<Component>
 	[
-		Number(5109),
-		Number(5513)
+		Number(5109)
 	],
 #	<Effect>
 #	{
@@ -2629,7 +2971,7 @@
 		Tech(1128),
 		Tech(1420)
 	],
-	Description("As science developed, there were many opinions that a life form is like a machinery with many parts, and that each part of an organism is like the nuts and bolts of machinery parts.  But with the development of artificial gene injection came the discovery of unique new elements which make up life.  In the case of life forms, 1+1 does not equal 2, but rather, + .  This force, stemming from the three dimensional structure of genes, is deduced to be more than a power existing in the three dimensional realm, and is thought to be the base for psychic abilities in the fouth dimenion.  That is, secrets lay not only in the genetic structure of genes, but in the space itself that surrounds them.  Though many questions were answered with this discovery, even more new questions arose."),
+	Description("As science developed, there were many opinions that a life form is like a machinery with many parts, and that each part of an organism is like the nuts and bolts of machinery parts.  But with the development of artificial gene injection came the discovery of unique new elements which make up life.  In the case of life forms, 1+1 does not equal 2, but rather, + .  This force, stemming from the three dimensional structure of genes, is deduced to be more than a power existing in the three dimensional realm, and is thought to be the base for psychic abilities in the fourth dimension.  That is, secrets lay not only in the genetic structure of genes, but in the space itself that surrounds them.  Though many questions were answered with this discovery, even more new questions arose."),
 	Type("LIFE"),
 	Level(9),
 	Project(7026),
@@ -2638,9 +2980,10 @@
 #	[
 #		Number()
 #	],
-#	<Effect>
-#	{
-#	},
+	<Effect>
+	{
+	    Research(1)
+	},
 	Attr("Normal"),
 },
 
@@ -2660,351 +3003,10 @@
 #	[
 #		Number()
 #	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-# ============================================================
-# CVS-merge: advanced/new techs ported from CVSRoot (S2 tech tree).
-# 84 nodes: 10 AMATR, 13 SSCH (schematics), 38 UPG (upgrade), 23 base.
-# ============================================================
-<Trait Augmentation Theory>
-{
-	Number(1132),
-	<Prerequisite>
-	[
-		Tech(1131)
-	],
-	Description("Trait Augmentation Theory seeks to amplify existing traits in an individual, and make personalities more pronounced so their effects on others can be more significant. Under such behavior modifications, individuals become more 'themselves', than anything else."),
-	Type("SOCL"),
-	Level(12),
-	Project(7049),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Dynamic Caste Theory>
-{
-	Number(1133),
-	<Prerequisite>
-	[
-		Tech(1131)
-	],
-	Description("Dynamic Caste Theory looks at how a Classism society may eventually overcome its caste barriers to create a more dynamic system where individuals are not bound to certain castes for the rest of their lives and may progress, with some restrictions, up and down the caste system. The theory predicts increased productivity from individuals of the society as they aim to progress up the caste system. Ultimately, this theory aims to reach an equilibrium phase where the society is stable and the nett movement up and down the caste system becomes zero."),
-   	Type("SOCL"),
-	Level(12),
-	Project(7048),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Absolutism>
-{
-	Number(1134),
-	<Prerequisite>
-	[
-		Tech(1131)
-	],
-	Description("Absolutism is the final stage of a Totalism society. Under such a regime, the only will is the will of the one true leader, who has absolutely control over all aspects of every individual's lives. As in Unification, the leader is able to delegate the duties of control to other entities within the society, but in this case, instead of the the society moving on as one entity, it is possible to for societal subdivision to occur, allowing for smaller, but equally complex cells within the society."),
-    Type("SOCL"),
-	Level(12),
-	Project(7050),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Hybridization Theory>
-{
-	Number(1135),
-	<Prerequisite>
-	[
-		Tech(1132),
-		Tech(1133),
-		Tech(1134)
-	],
-	Description("Eventually, when a race progresses this far in terms of social development, they begin to realize that their absolute beliefs in their societal system may be flawed. Hybridization Theory explores the foundations of incorporating elements of other societal structures into an existing one, and ultimately results in the creation of hybrid societal stuctures, which possess many of the strengths of its original structures, yet eliminating some of the more blantant flaws within those structures."),
-	Type("SOCL"),
-	Level(13),
-#	Project(),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Advanced Hybridization Theory>
-{
-	Number(1136),
-	<Prerequisite>
-	[
-		Tech(1135)
-	],
-	Description("Even with regular Hybridization Theory, it was not possible to create the most perfect society. Many rulers realize this flaw and eventually pursue the development of a deeper understanding of societal hybridization. Advanced Hybridization Theory is the result of these endeavours and provides a ruler with the knowledge to create new societal structures by integrating conflicting ideals by reaching a compromise between the two extremes. As such, it is possible to achieve 'the better of both worlds', but there is certainly still room for improvement on this theory."),
-	Type("SOCL"),
-	Level(14),
-#	Project(),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Universal Hypothesis>
-{
-	Number(1137),
-	<Prerequisite>
-	[
-		Tech(1136)
-	],
-	Description("A long time after the discovery of societal hybridization, philosophers began to question themselves as to where of not there can exist a unifying theory, much like that which was discovered in Matter-Energy Science ages ago, which links all societal structures to the some set of common goals or parameters. It was not long after that where traits were discovered in every race that existed throughout the universe - the will to survive. It is this will that motivates the creation of complex societal structures to oversee the progression of a race, which is a powerful driving force in the creation of large inter-galactic empires."),
-	Type("SOCL"),
-	Level(15),
-#	Project(),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Utopia>
-{
-	Number(1138),
-	<Prerequisite>
-	[
-		Tech(1137)
-	],
-	Description("Utopia, once thought an impractical, imaginary setting for the overtly idealistic, has been finally realised. Simply put, perfection is relative, and in any race's eyes, they will be able to judge their own strengths and weaknesses based on other races they encounter. After lengthy generations of observation, a race is capable of assimilating ideas from races they view as stronger as them, and gradually progress towards their concept of the perfect race. Utopia is achieved when a race no longer views any other race as superior to themselves in any aspect."),
-	Type("SOCL"),
-	Level(16),
-#	Project(),
-#	Spy(),
-#	<Component>
-#	[
-#		Number()
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Self-Advancing Heuristics>
-{
-	Number(1226),
-	<Prerequisite>
-	[
-		Tech(1225)
-	],
-	Description("Self-Advancing Heuristics is the first attempt at creating an artificial intelligence that is able to generate ideas from random data. Normally, computers are only able to act in accordance to preset rules that its creators embed within its virtual memory space. However, this technique attempts to allow the computer to modify its own heuristical database based on rules it draws from randomly generated data. In essence, this technology aims to create the first true sentient computer, which is a feat that is even more remarkable than Oracle Computing. If used correctly, it is possible that it may generate techniques that even its creators had never thought of in the first place."),
-   	Type("INFO"),
-	Level(12),
-#	Project(),
-#	Spy(),
-	<Component>
-	[
-		Number(5532)
-	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Self-Conscious Artificial Intelligence>
-{
-	Number(1227),
-	<Prerequisite>
-	[
-		Tech(1226),
-		Tech(1338)
-	],
-	Description("Like a living organism, a self-conscious AI is able to judge its circumstances without prior information and input. By examining every single possibility that could result from a single scenario, it is possible to create an artificial system of intelligence where decisions are made based on intuition rather than rules."),
-   	Type("INFO"),
-	Level(13),
-#	Project(),
-#	Spy(),
-	<Component>
-	[
-		Number(5206)
-	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Artificial Sentience>
-{
-	Number(1228),
-	<Prerequisite>
-	[
-		Tech(1227)
-	],
-	Description("For many, artificial intelligence is synonymous with artificial sentience, but to the more developed races, there is a distinct difference between the two states. A being may be intelligent, but this does not necessarily mean that the being is sentient. To give an artificial being intelligence is as simple as providing it with heuristical rules for data analysis, as well and input and output channels. But for it to achieve sentience, it must also learn to perceive. It was not until recent times that scientists discovered that this could be achieved by adopting a neural network structure then populating it with useless random data and allowing the artificial intelligence simulation to run for a certain amount of time. Applications of these include creating original individuals not based on copies of existing ones, a technology that even Totalism governments see the benefits of."),
-   	Type("INFO"),
-	Level(14),
-#	Project(),
-#	Spy(),
-#	<Component>
-#	[
-#
-#	],
 	<Effect>
 	{
-	    Research(1)
+        Research(1)
 	},
-	Attr("Normal")
-},
-
-<Inter-Planetary Processor Network>
-{
-	Number(1229),
-	<Prerequisite>
-	[
-		Tech(1228)
-	],
-	Description("The inception of the of the IPPN was not difficult at all, but the designing of the infrastructure and resource allocation for such a large scale project was costly and time-ineffective. After the discovery of artificial sentience, scientists began to let the newly created beings oversee the construction of this large-scale network. Using complex resource allocation algorithms, the network pools its resources, and the entire entity functions as a single processor, with the ability to perform even the most complex quantum calculations within a picosecond."),
-   	Type("INFO"),
-	Level(15),
-#	Project(),
-#	Spy(),
-	<Component>
-	[
-        Number(6115)
-	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Advanced Parallel Processing Theory>
-{
-	Number(1230),
-	<Prerequisite>
-	[
-		Tech(1228)
-	],
-	Description("This particular theory involves the use multiple processors of different speeds and configurations and redistributing the workload amongst them. Computers linked up in such a way all operate with the same speed and efficiency as any other terminal in the network, with perfect task allocation routines. This made it possible for old computers to contribute to a large-scale computational project even though their processing power might be limited."),
-   	Type("INFO"),
-	Level(15),
-#	Project(),
-#	Spy(),
-#	<Component>
-#	[
-#
-#	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Singularity Manipulation>
-{
-	Number(1337),
-	<Prerequisite>
-	[
-		Tech(1335)
-	],
-	Description("Black Hole creation is spontaneous in nature, but to create small black holes under laboratory conditions is a challenge. Technology used in the creation of the Homing Black Hole missile was only the first step, but to properly manipulate singularity takes extreme precision, and knowledge of dimension manipulation helps provides safety nets should the procedure fail."),
-	Type("MATR"),
-	Level(12),
-#	Project(),
-#	Spy(),
-	<Component>
-	[
-		Number(6310)
-	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Advanced Predictive Mechanics>
-{
-	Number(1338),
-	<Prerequisite>
-	[
-		Tech(1337),
-		Tech(1226)
-
-	],
-	Description("Founded on the principles of Probability Mechanics, this advanced study seeks to unravel the apparent randomness of chaos. It turns out that if a simulation was run for long periods of time, even chaotic motion will begin to oscillate regularly due to the fact that all possibilities are eliminated. Even in infinite chaotic motion, studies have shown that predictive mechanisms do exist to correctly determine outcome without running any simulations with the initial conditions."),
-	Type("MATR"),
-	Level(13),
-#	Project(),
-#	Spy(),
-	<Component>
-	[
-		Number(5306)
-	],
-#	<Effect>
-#	{
-#	},
-	Attr("Normal")
-},
-
-<Spatial Anomaly Manipulation>
-{
-	Number(1339),
-	<Prerequisite>
-	[
-		Tech(1338)
-
-	],
-	Description("Space is filled with various anomalies which exist due to fluctuations in the fabric of spacetime. Sometimes, these anomalies are minor and undisruptive, at other times, they can cripple entire fleets. Being able to control and utilize spatial anomalies presents a considerable challenge even for the most advanced races."),
-	Type("MATR"),
-	Level(14),
-#	Project(),
-#	Spy(),
-	<Component>
-	[
-		Number(5534),
-		Number(6212)
-	],
-#	<Effect>
-#	{
-#	},
 	Attr("Normal")
 },
 
@@ -4315,15 +4317,9 @@
 <Astral Carrier Schematics>
 {
 	Number(1610),
-#	cvs-merge: class 1-10 schematics (incl. Doomstar/1609) are locked from play,
-#	so this no longer chains through 1609. Gated directly on the end-game research
-#	techs the Doomstar schematic used, to keep Astral Carrier an end-game unlock.
 	<Prerequisite>
 	[
-        Tech(1334),
-        Tech(1225),
-        Tech(1131),
-        Tech(1426),
+        Tech(1609),
         Tech(1227),
         Tech(1135)
 	],
@@ -4619,4 +4615,6 @@
 #	},
 	Attr("Normal")
 }
+
+
 
