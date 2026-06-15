@@ -98,6 +98,22 @@ if [ -d "$TRAB/as_game/race/trabotulin" ]; then
     find "$WWW/image/as_game/race/trabotulin" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
+# 1a6) Black market placeholder icons. The office no-item / error templates
+#      (rare_goods, leasers_office, tech_deck, fleet_deck, officers_lounge) all
+#      reference image/as_game/black_market/black_market_error.gif, which the
+#      original www tarball never shipped -- so an office with nothing for sale
+#      (e.g. Rare Goods Office with no projects, Leaser's Office with no planets)
+#      rendered a broken image. That asset exists only under www-new, and unlike
+#      the dirs above the black_market dir was never overlaid, so it 404'd.
+#      Overlay it (no-clobber, tarball wins) so the placeholder resolves.
+BLACKMARKET="$SRC_TREE/www-new/image/as_game/black_market"
+if [ -d "$BLACKMARKET" ]; then
+    echo "[web] filling black_market image gaps from www-new (no-clobber; tarball wins)"
+    mkdir -p "$WWW/image/as_game/black_market"
+    cp -rn "$BLACKMARKET"/. "$WWW/image/as_game/black_market"/ 2>/dev/null || true
+    find "$WWW/image/as_game/black_market" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+fi
+
 # 1b) De-framed shell + other web overrides (replace the obsolete <frameset>
 #     with a CSS-grid + named-iframe shell; same look, modern + mobile).
 OVERRIDES="${WEB_OVERRIDES:-/build/docker/web-overrides}"
