@@ -89,8 +89,8 @@ repaired file that also exists in the tarball matches it). **Rules:**
   art slots (the black market, 17 diplomacy spy-op icons, 13 fleet-action
   buttons, `ending_score` / `retire` / `event/meeting` / `result/new_player_assign`).
   `setup-web.sh` now swaps every served copy (matched by content hash) for a clean
-  English `placeholder_en.gif`; the black-market no-item/error pages get a
-  dedicated `black_market_error.gif` ("No items available").
+  English `placeholder_en.gif`; the black-market no-item/error/bid-result slots
+  instead reuse the existing `title_black_market.gif` banner.
 
 ## Gotchas
 - `CString → char*` now returns `""` (not `NULL`) for empty strings. Old
