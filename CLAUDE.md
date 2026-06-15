@@ -19,6 +19,31 @@ task:**
 
 Replacing a dead applet or a cosmetic fix is almost never an engine change.
 
+## Two editions (read this first)
+The repo ships **two diverging editions** of the game on two hosts:
+
+| Edition | Branch | Live site | Deploy |
+|---|---|---|---|
+| **Faithful original** | `production` | **archspace.cc** | push-to-deploy (self-hosted runner runs `deploy.sh`) |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` (integrated on `main`) | **new.archspace.cc** | **manual** — SSH in, run `deploy.sh` (no runner) |
+
+The **restoration** edition adds original content recovered from the game's CVS
+history that the faithful edition omits — the 11th race **Trabotulin**, the
+**4-skill commander** model + per-race commander racial abilities, megaclass
+hulls (**Astral Carrier**, **Suncrusher**), an extended tech tree, tiered NPC
+bots, and more components/projects/events/spy ops. These are real gameplay
+changes, so the "strictly faithful" rule applies to the **faithful** edition only.
+
+**Branch-state heads-up (a real incident):** the restoration was merged into
+`main`, then shipped to `production` — which **took prod down** (the pre-cvs-merge
+engine can't read the migrated 4-skill / wide-class DB and crashes on load).
+`production` was **reverted to the pre-cvs-merge snapshot** (forward commit
+`4446f6b0`, never force-pushed) and now tracks the faithful tree. So **`main`
+carries the restoration, `production` is faithful, and the two have diverged** —
+do **not** fast-forward `production` to `main`, or you re-trigger the incident.
+Restoration work ships to `claude/peng-cvs-merge` / `main`; faithful fixes ship
+to `production`.
+
 ## Branches & deploying
 - Develop on your **own** feature branch, namespaced per collaborator:
   `claude/<handle>-<topic>` (e.g. `claude/howe-expeditions`). **Do not share a
@@ -26,7 +51,15 @@ Replacing a dead applet or a cosmetic fix is almost never an engine change.
 - `main` = mainline; `production` = **deploy branch** (pushing there deploys via a
   self-hosted runner). Engine/as-cgi/Dockerfile change → rebuild; everything else
   → restart — `docker/deploy/deploy.sh` decides via a host-local marker.
-- Ship by fast-forwarding `main` **and** `production` to your reviewed feature tip.
+- **Restoration edition deploy (new.archspace.cc):** there is **no runner** —
+  push to `claude/peng-cvs-merge`, then SSH to the box and run
+  `bash docker/deploy/deploy.sh` (its `docker/deploy/.deploy.env` pins
+  `DEPLOY_BRANCH=claude/peng-cvs-merge`). Use `FORCE_REBUILD=1` for any
+  image-baked change (engine, `src/script/*.en`, www, Dockerfile). The box deploy
+  key is **read-only**, so push from your own machine.
+- Ship by fast-forwarding `production` (faithful) or `claude/peng-cvs-merge`
+  (restoration) to your reviewed feature tip — **within an edition only**. Never
+  fast-forward `production` to `main`; they carry different editions (see above).
 - **Always watch the deploy to green** (GitHub Actions `deploy.yml`, branch
   `production`) and confirm the change live before calling it done.
 

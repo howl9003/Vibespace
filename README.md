@@ -6,7 +6,11 @@ repo takes the original 2004–05 source and turns it into a reproducible,
 Dockerized, HTTPS-served deployment with push-to-deploy CI/CD, while keeping the
 game itself faithful to the original.
 
-Live reference deployment: **https://archspace.cc**
+Live deployments — **two diverging editions** (see [Two editions](#two-editions)):
+- **https://archspace.cc** — the **faithful original** edition (branch `production`).
+- **https://new.archspace.cc** — the **cvs-merge restoration** edition (branch
+  `claude/peng-cvs-merge`): the same engine with a large body of original content
+  restored from the game's CVS history.
 
 ---
 
@@ -198,17 +202,60 @@ original `root` / `comconq1` **inside the container network only** (not exposed)
 
 ---
 
+## Two editions
+
+This repo maintains **two diverging editions** of the game, deployed to two
+separate hosts:
+
+| Edition | Branch | Live site | Deploy |
+|---|---|---|---|
+| **Faithful original** | `production` | **https://archspace.cc** | push-to-deploy (self-hosted runner) |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` (integrated on `main`) | **https://new.archspace.cc** | manual `deploy.sh` over SSH |
+
+**Faithful original** holds to the three-tier "strictly faithful" rule above:
+the original 2004–05 game — no rule, balance, or formula changes.
+
+**cvs-merge restoration** restores a large body of original content recovered
+from the game's CVS history that the faithful edition omits, and reworks some
+mechanics. Highlights:
+- 11th playable race **Trabotulin** (with its own commander racial abilities).
+- A **4-skill commander** model (Offense / Defense / Maneuver / Detection) plus
+  per-race commander racial abilities.
+- Two megaclass hulls — **Astral Carrier** (class 11) and **Suncrusher**
+  (class 12) — gated on specific schematics; ship designs widened to 10 weapon slots.
+- An extended tech tree (obtainable tech tops out at 190).
+- A tiered, self-running NPC **bot** population (Newbie … Supreme Admiral).
+- More restored components / projects / events / spy ops.
+
+These are deliberate gameplay divergences, so the "strictly faithful" rule does
+**not** apply to the restoration edition.
+
+**Why the branches diverged (an incident worth knowing).** The restoration was
+merged into `main` and then shipped to `production`, which **took prod down** —
+the pre-cvs-merge engine can't read the migrated DB (4-skill admiral table,
+widened ship classes) and crashes on load. `production` was **reverted to the
+pre-cvs-merge snapshot** (forward commit `4446f6b0` — no force-push) and now
+tracks the faithful tree. As a result **`main` carries the restoration while
+`production` is faithful**; do **not** fast-forward `production` to `main`, or you
+re-trigger the incident.
+
+---
+
 ## Deployment & CI/CD
 
 ### Branch model
 
 | Branch | Role |
 |---|---|
-| `main` | canonical mainline |
-| `production` | **deploy branch** — pushing here triggers a deploy |
-| feature branches (e.g. `claude/*`) | active development; do **not** deploy |
+| `production` | deploy branch for the **faithful** edition (archspace.cc) — pushing here triggers a deploy |
+| `main` | integration mainline; **currently carries the cvs-merge restoration** (see [Two editions](#two-editions)) |
+| `claude/peng-cvs-merge` | the **restoration** edition — deployed **manually** to new.archspace.cc (`main` + a small lead) |
+| other feature branches (`claude/*`) | active development; do **not** deploy |
 
-Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
+Ship by fast-forwarding `production` (faithful) or `claude/peng-cvs-merge`
+(restoration) to your reviewed feature tip — but **never fast-forward
+`production` to `main`**: they carry different editions, and doing so re-triggers
+the prod incident described in [Two editions](#two-editions).
 
 > **Multiple contributors:** `main`/`production` can move because another
 > collaborator's agent deploys too. Always `git fetch` before pushing; if the
@@ -216,7 +263,7 @@ Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
 > never force-push the shared branches or discard the other's commits. Agent
 > conventions live in **[`CLAUDE.md`](CLAUDE.md)** (auto-loaded by Claude Code).
 
-### Push-to-deploy (self-hosted runner)
+### Push-to-deploy (the faithful edition — archspace.cc)
 
 `.github/workflows/deploy.yml` runs on a **self-hosted GitHub Actions runner
 installed on the EC2 instance**. The runner dials *out* to GitHub — so there's
@@ -255,6 +302,28 @@ Caddy fronts `:80/:443`, auto-provisions/renews Let's Encrypt certs, redirects
 http→https, serves the apex, and 301-redirects `www` → apex. DNS: `A @` and
 `A www` → the Elastic IP. Once `DOMAIN` is in `.deploy.env`, every future
 auto-deploy stays on HTTPS.
+
+### Deploying the restoration edition (new.archspace.cc)
+
+The cvs-merge restoration runs on a **separate** EC2 box with **no auto-deploy
+runner** — updates are manual:
+
+1. Commit and push your change to **`claude/peng-cvs-merge`**.
+2. SSH to the staging box (`ssh -i <key>.pem ubuntu@<host>`).
+3. `cd ~/archspace && bash docker/deploy/deploy.sh`. The box's
+   `docker/deploy/.deploy.env` pins `DEPLOY_BRANCH=claude/peng-cvs-merge`, so
+   `deploy.sh` fetches that branch, resets to it, then rebuilds or restarts.
+   Use **`FORCE_REBUILD=1 bash docker/deploy/deploy.sh`** for any image-baked
+   change (the C++ engine, the `src/script/*.en` data tables, the `www` tarball,
+   or the Dockerfile).
+
+The box checks out via a **read-only deploy key** (it can fetch, not push), so
+always push from your own machine. As with prod, the DB and game-state named
+volumes survive a rebuild, so characters persist.
+
+> The restoration is intentionally kept **off `production`** after it broke prod
+> (see [Two editions](#two-editions)). Ship it to this staging box only, until
+> prod is ready for the migrated DB schema.
 
 ---
 
