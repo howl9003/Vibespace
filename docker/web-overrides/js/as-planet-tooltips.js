@@ -93,7 +93,6 @@
       var span = document.createElement("span");
       span.className = "as-modtip";
       span.textContent = core;
-      span.title = effect; // native fallback
       span.style.borderBottom = "1px dotted #888";
       span.style.cursor = "help";
       span.addEventListener("mouseenter", function (e) { show(e, effect); });
