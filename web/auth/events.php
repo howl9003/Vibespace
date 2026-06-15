@@ -85,6 +85,12 @@ function fetch_fingerprint(string $url, string $token): ?array
         'd' => (int)$data['d'],
         'c' => (int)$data['c'],
         'n' => (int)$data['n'],
+        // Top-bar stats (pass-through, display strings). Used by the client to
+        // patch [data-as-stat] in place on a push; not part of the increase-only
+        // advance test below, so they never trigger a refresh on their own.
+        'pp'     => isset($data['pp'])     ? (string)$data['pp']     : null,
+        'planet' => isset($data['planet']) ? (string)$data['planet'] : null,
+        'power'  => isset($data['power'])  ? (string)$data['power']  : null,
     ];
 }
 

@@ -43,10 +43,23 @@ CPageEvents::handle(CConnection &aConnection)
 
 	int Events = Player->get_pending_time_news_count();
 
+	// Current top-bar stats, formatted exactly as head_title.cc renders them
+	// ("PP : 1,234" etc.), so the web tier can drop them straight into the
+	// [data-as-stat] spans. The labels are fixed ASCII, so no JSON escaping is
+	// needed. CString::format is per-instance (the global format() shares one
+	// static buffer), so each is built on its own object.
+	CString PP, Planet, Power;
+	PP.format(GETTEXT("PP : %1$s"), dec2unit(Player->get_production()));
+	Planet.format(GETTEXT("Planet : %1$s"),
+				dec2unit(Player->get_planet_list()->length()));
+	Power.format(GETTEXT("Power : %1$s"), dec2unit(Player->get_power()));
+
 	static CString Out;
 	Out.clear();
-	Out.format("{\"t\":%d,\"d\":%d,\"c\":%d,\"n\":%d}",
-				Turn, Diplomatic, Council, Events);
+	Out.format("{\"t\":%d,\"d\":%d,\"c\":%d,\"n\":%d,"
+				"\"pp\":\"%s\",\"planet\":\"%s\",\"power\":\"%s\"}",
+				Turn, Diplomatic, Council, Events,
+				(char *)PP, (char *)Planet, (char *)Power);
 
 	mOutput = (char *)Out;
 	mConnection = NULL;
