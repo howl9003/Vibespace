@@ -107,10 +107,14 @@ The web root is assembled at boot by `docker/setup-web.sh`, in this order:
    (no-clobber)** so it can **never overwrite a good tarball image**.
 
 **Why no-clobber matters (a real incident):** `www-new/image/**` had 900+
-byte-corrupted GIFs (a Windows/CVS import mangled the binaries). The overlay used
-to `cp -f` them *over* the good tarball images, so the encyclopedia, deploy-board
-ship icons, etc. rendered broken. They were repaired from the tarball and the
-overlay switched to `cp -n`. **Rules:**
+byte-corrupted GIFs. Root cause: a Windows/CVS **text-mode import rewrote every
+`0x0A` byte to `0x0D0A`** inside the binaries (an LF→CRLF mangle). The overlay
+used to `cp -f` them *over* the good tarball images, so the encyclopedia,
+deploy-board ship icons, etc. rendered broken. Dual-present images were first
+masked by switching the overlay to `cp -n` (tarball wins); the corrupt binaries
+were then **repaired in place by reversing the mangle** (`0x0D0A`→`0x0A`) across
+the served tree and the archival `CVSRoot/` snapshot, proven byte-exact (every
+repaired file that also exists in the tarball matches it). **Rules:**
 - The **tarball wins**; `www-new` only fills gaps. Don't change the overlays back
   to `cp -f`.
 - A broken in-game image is almost always a *missing/corrupt asset in the web
@@ -120,8 +124,15 @@ overlay switched to `cp -n`. **Rules:**
 - `.gitattributes` marks `*.gif/*.png/...` as `binary` so checkouts can't
   re-corrupt them. **Keep it.** When adding image assets, verify they decode
   (`file x.gif` / open them) before committing.
-- Still-corrupt with no good source (tracked for reconstruction): the
-  `image/as_game/planets/` thumbnails and 3 `encyclopedia/special_ops/*` icons.
+- The `www-new`-exclusive assets with **no tarball fallback** (the
+  `image/as_game/planets/` thumbnails and the `encyclopedia/special_ops/*` icons)
+  were CRLF-corrupted and are **now repaired** in the served tree.
+- A legacy Korean "under construction" placeholder was served for 35 unfinished
+  art slots (the black market, 17 diplomacy spy-op icons, 13 fleet-action
+  buttons, `ending_score` / `retire` / `event/meeting` / `result/new_player_assign`).
+  `setup-web.sh` now swaps every served copy (matched by content hash) for a clean
+  English `placeholder_en.gif`; the black-market no-item/error pages get a
+  dedicated `black_market_error.gif` ("No items available").
 
 ## Gotchas
 - `CString → char*` now returns `""` (not `NULL`) for empty strings. Old
