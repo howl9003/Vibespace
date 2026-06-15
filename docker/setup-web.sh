@@ -98,20 +98,19 @@ if [ -d "$TRAB/as_game/race/trabotulin" ]; then
     find "$WWW/image/as_game/race/trabotulin" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
 fi
 
-# 1a6) Black market placeholder icons. The office no-item / error templates
-#      (rare_goods, leasers_office, tech_deck, fleet_deck, officers_lounge) all
-#      reference image/as_game/black_market/black_market_error.gif, which the
-#      original www tarball never shipped -- so an office with nothing for sale
-#      (e.g. Rare Goods Office with no projects, Leaser's Office with no planets)
-#      rendered a broken image. That asset exists only under www-new, and unlike
-#      the dirs above the black_market dir was never overlaid, so it 404'd.
-#      Overlay it (no-clobber, tarball wins) so the placeholder resolves.
-BLACKMARKET="$SRC_TREE/www-new/image/as_game/black_market"
-if [ -d "$BLACKMARKET" ]; then
-    echo "[web] filling black_market image gaps from www-new (no-clobber; tarball wins)"
-    mkdir -p "$WWW/image/as_game/black_market"
-    cp -rn "$BLACKMARKET"/. "$WWW/image/as_game/black_market"/ 2>/dev/null || true
-    find "$WWW/image/as_game/black_market" -type d -name CVS -prune -exec rm -rf {} + 2>/dev/null || true
+# 1a6) Black market no-item / error / bid-result graphic. Three slots have no
+#      real art: the tarball ships the Korean placeholder for black_market.gif /
+#      black_market_noitem.gif, and black_market_error.gif (referenced by every
+#      office no-item/error template) shipped nowhere, so it 404'd. Reuse the
+#      existing "BLACK MARKET" title banner (title_black_market.gif, a real image
+#      from the tarball) for all three. Runs BEFORE 1a7 so the banner -- not the
+#      generic English placeholder -- wins for the black market.
+BM_DIR="$WWW/image/as_game/black_market"
+if [ -f "$BM_DIR/title_black_market.gif" ]; then
+    echo "[web] black market: using title banner for no-item/error/bid-result"
+    for f in black_market_error.gif black_market.gif black_market_noitem.gif; do
+        cp -f "$BM_DIR/title_black_market.gif" "$BM_DIR/$f"
+    done
 fi
 
 # 1a7) Replace the legacy Korean "under construction" placeholder with a clean
