@@ -4,18 +4,26 @@
 #include "../archspace.h"
 #include "../banner.h"
 
-void 
+// The three top-bar stat items (PP / Planet / Power) are wrapped in a tagged
+// <span> so the web tier can live-update them in place: notifications.js patches
+// [data-as-stat="pp|planet|power"] on a tick/war push and after a PP spend, with
+// no page reload. CString::format is per-instance; the value and the span wrapper
+// are built in two steps because the global format() shares one static buffer and
+// would clobber itself if the calls were nested.
+void
 CPageHeadTitle::refresh_product_point_item()
 {
 	CPlayer *Player = get_player();
 	assert(Player);
 
-	ITEM("PRODUCT_POINT", 
-			(char*)format(GETTEXT("PP : %1$s"), 
-					dec2unit(Player->get_production())));
+	CString Value, Span;
+	Value.format(GETTEXT("PP : %1$s"), dec2unit(Player->get_production()));
+	Span.format("<span class=\"as-stat\" data-as-stat=\"pp\">%s</span>",
+				(char *)Value);
+	ITEM("PRODUCT_POINT", (char *)Span);
 }
 
-void 
+void
 CPageHeadTitle::refresh_planet_count_item()
 {
 	CPlayer *Player = get_player();
@@ -26,20 +34,24 @@ CPageHeadTitle::refresh_planet_count_item()
 	int
 		NumberOfPlanet = PlanetList->length();
 
-	ITEM("PLANET_COUNT", 
-			(char*)format(GETTEXT("Planet : %1$s"),
-					dec2unit(NumberOfPlanet)));
+	CString Value, Span;
+	Value.format(GETTEXT("Planet : %1$s"), dec2unit(NumberOfPlanet));
+	Span.format("<span class=\"as-stat\" data-as-stat=\"planet\">%s</span>",
+				(char *)Value);
+	ITEM("PLANET_COUNT", (char *)Span);
 }
 
-void 
+void
 CPageHeadTitle::refresh_population_item()
 {
 	CPlayer *Player = get_player();
 	assert(Player);
 
-	ITEM("POPULATION", 
-			(char *)format(GETTEXT("Power : %1$s"),
-							dec2unit(Player->get_power())));
+	CString Value, Span;
+	Value.format(GETTEXT("Power : %1$s"), dec2unit(Player->get_power()));
+	Span.format("<span class=\"as-stat\" data-as-stat=\"power\">%s</span>",
+				(char *)Value);
+	ITEM("POPULATION", (char *)Span);
 }
 
 bool
@@ -114,22 +126,11 @@ CPageHeadTitle::get_conversion()
 
 	ITEM("RACE_NAME", Player->get_race_name());
 
-	ITEM("PRODUCT_POINT", 
-			(char*)format(GETTEXT("PP : %1$s"), 
-					dec2unit(Player->get_production())));
-
-	CPlanetList *
-		PlanetList = Player->get_planet_list();
-	int
-		NumberOfPlanet = PlanetList->length();
-
-	ITEM("PLANET_COUNT", 
-			(char*)format(GETTEXT("Planet : %1$s"),
-					dec2unit(NumberOfPlanet)));
-
-	ITEM("POPULATION",
-			(char *)format(GETTEXT("Power : %1$s"),
-							dec2unit(Player->get_power())));
+	// Same span-wrapped values as after a spend -- one code path, so the markup
+	// the web tier patches is identical on first render and on refresh.
+	refresh_product_point_item();
+	refresh_planet_count_item();
+	refresh_population_item();
 
 	return true;
 }
