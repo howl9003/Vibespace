@@ -184,13 +184,6 @@ CPageCreate2::handle(CConnection &aConnection)
 		}
 			break;
 
-		case CRace::RACE_TRABOTULIN :
-		{
-			Story.format(GETTEXT("Long before the Empire was conceived, the Trabotulins flourished in an age of peace and achieved technological marvels unmatched in any era of war. It was that very ambition that doomed them: a weapon of unspeakable power brought their glorious civilization to an abrupt end. The scattered remnants of your people have since devoted themselves wholly to the temporal sciences, certain that one day they will fold time itself and reclaim their lost heritage. From the quiet world of %1$s, you take up that ancient burden. The past is not gone -- it merely waits to be reached..."),
-							HomePlanet->get_name());
-		}
-			break;
-
 		default :
 			break;
 	}

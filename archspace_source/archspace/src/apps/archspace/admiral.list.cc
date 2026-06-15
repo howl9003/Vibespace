@@ -150,18 +150,16 @@ CAdmiralList::attached_fleet_commander_info_html(CPlayer *aPlayer)
 	COMMANDER_STAT_TITLE(EXP, "Exp", 44);
 	COMMANDER_STAT_TITLE(FLEET_COMMANDING, "Fleet<BR>Commanding", 102);
 	COMMANDER_STAT_TITLE(EFFICIENCY, "Efficiency", 42);
-	/*COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
+	COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
 	COMMANDER_STAT_TITLE(BLOCKADE, "Blockade", 40);
 	COMMANDER_STAT_TITLE(RAID, "Raid", 40);
 	COMMANDER_STAT_TITLE(PRIVATEER, "Privateer", 40);
 	COMMANDER_STAT_TITLE(SIEGE_REPELLING, "Siege<BR>Repelling", 44);
 	COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "Break<BR>Blockade", 44);
-	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);*/
-	COMMANDER_STAT_TITLE(OFFENSE, "Offense", 40);
-	COMMANDER_STAT_TITLE(DEFENSE, "Defense", 40);
+	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);
 	COMMANDER_STAT_TITLE(MANEUVER, "Maneuver", 40);
 	COMMANDER_STAT_TITLE(DETECTION, "Detection", 40);
-	//COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
+	COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
 	COMMANDER_STAT_TITLE(ARMADA_CLASS, "Armada<BR>Class", 44);
 	COMMANDER_STAT_TITLE(ABILITY, "Ability", 44);
 
@@ -210,18 +208,16 @@ CAdmiralList::attached_fleet_commander_info_html(CPlayer *aPlayer)
 	COMMANDER_STAT(EXP, get_exp, 44);
 	COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding, 102);
 	COMMANDER_STAT(EFFICIENCY, get_real_efficiency, 42);
-	/*COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
+	COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
 	COMMANDER_STAT(BLOCKADE, get_blockade_level, 40);
 	COMMANDER_STAT(RAID, get_raid_level, 40);
 	COMMANDER_STAT(PRIVATEER, get_privateer_level, 40);
 	COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level, 44);
 	COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level, 44);
-	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);*/
-	COMMANDER_STAT(OFFENSE, get_overall_attack, 40);
-	COMMANDER_STAT(DEFENSE, get_overall_defense, 40);
+	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);
 	COMMANDER_STAT(MANEUVER, get_maneuver_level, 40);
 	COMMANDER_STAT(DETECTION, get_detection_level, 40);
-	//COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
+	COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
 #undef COMMANDER_STAT
 #define COMMANDER_STAT(enum, function, width) \
 	if (aPreference->hasCommanderStat(CPreference::enum))\
@@ -288,18 +284,16 @@ CAdmiralList::fleet_commander_list_javascript(CPlayer *aPlayer)
 	COMMANDER_STAT_TITLE(EXP, "Exp", 44);
 	COMMANDER_STAT_TITLE(FLEET_COMMANDING, "Fleet<BR>Commanding", 102);
 	COMMANDER_STAT_TITLE(EFFICIENCY, "Efficiency", 42);
-	/*COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
+	COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
 	COMMANDER_STAT_TITLE(BLOCKADE, "Blockade", 40);
 	COMMANDER_STAT_TITLE(RAID, "Raid", 40);
 	COMMANDER_STAT_TITLE(PRIVATEER, "Privateer", 40);
 	COMMANDER_STAT_TITLE(SIEGE_REPELLING, "Siege<BR>Repelling", 44);
 	COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "Break<BR>Blockade", 44);
-	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);*/
-	COMMANDER_STAT_TITLE(OFFENSE, "Offense", 40);
-	COMMANDER_STAT_TITLE(DEFENSE, "Defense", 40);
+	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);
 	COMMANDER_STAT_TITLE(MANEUVER, "Maneuver", 40);
 	COMMANDER_STAT_TITLE(DETECTION, "Detection", 40);
-	//COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
+	COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
 	COMMANDER_STAT_TITLE(ARMADA_CLASS, "Armada<BR>Class", 44);
 	COMMANDER_STAT_TITLE(ABILITY, "Ability", 44);
 
@@ -346,18 +340,16 @@ CAdmiralList::fleet_commander_list_javascript(CPlayer *aPlayer)
 	COMMANDER_STAT(EXP, get_exp, 44);
 	COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding, 102);
 	COMMANDER_STAT(EFFICIENCY, get_real_efficiency, 42);
-	/*COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
+	COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
 	COMMANDER_STAT(BLOCKADE, get_blockade_level, 40);
 	COMMANDER_STAT(RAID, get_raid_level, 40);
 	COMMANDER_STAT(PRIVATEER, get_privateer_level, 40);
 	COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level, 44);
 	COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level, 44);
-	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);*/
-	COMMANDER_STAT(OFFENSE, get_overall_attack, 40);
-	COMMANDER_STAT(DEFENSE, get_overall_defense, 40);
+	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);
 	COMMANDER_STAT(MANEUVER, get_maneuver_level, 40);
 	COMMANDER_STAT(DETECTION, get_detection_level, 40);
-	//COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
+	COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
 #undef COMMANDER_STAT
 #define COMMANDER_STAT(enum, function, width) \
 	if (aPreference->hasCommanderStat(CPreference::enum))\
@@ -439,18 +431,16 @@ CAdmiralList::pool_fleet_commander_info_html()
 	COMMANDER_STAT_TITLE(EXP, "Exp", 44);
 	COMMANDER_STAT_TITLE(FLEET_COMMANDING, "Fleet<BR>Commanding", 102);
 	COMMANDER_STAT_TITLE(EFFICIENCY, "Efficiency", 42);
-	/*COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
+	COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
 	COMMANDER_STAT_TITLE(BLOCKADE, "Blockade", 40);
 	COMMANDER_STAT_TITLE(RAID, "Raid", 40);
 	COMMANDER_STAT_TITLE(PRIVATEER, "Privateer", 40);
 	COMMANDER_STAT_TITLE(SIEGE_REPELLING, "Siege<BR>Repelling", 44);
 	COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "Break<BR>Blockade", 44);
-	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);*/
-	COMMANDER_STAT_TITLE(OFFENSE, "Offense", 40);
-	COMMANDER_STAT_TITLE(DEFENSE, "Defense", 40);
+	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);
 	COMMANDER_STAT_TITLE(MANEUVER, "Maneuver", 40);
 	COMMANDER_STAT_TITLE(DETECTION, "Detection", 40);
-	//COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
+	COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
 	COMMANDER_STAT_TITLE(ARMADA_CLASS, "Armada<BR> Class", 44);
 	COMMANDER_STAT_TITLE(ABILITY, "Ability", 44);
 
@@ -488,18 +478,16 @@ CAdmiralList::pool_fleet_commander_info_html()
 	COMMANDER_STAT(EXP, get_exp, 44);
 	COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding, 102);
 	COMMANDER_STAT(EFFICIENCY, get_real_efficiency, 42);
-	/*COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
+	COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
 	COMMANDER_STAT(BLOCKADE, get_blockade_level, 40);
 	COMMANDER_STAT(RAID, get_raid_level, 40);
 	COMMANDER_STAT(PRIVATEER, get_privateer_level, 40);
 	COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level, 44);
 	COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level, 44);
-	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);*/
-	COMMANDER_STAT(OFFENSE, get_overall_attack, 40);
-	COMMANDER_STAT(DEFENSE, get_overall_defense, 40);
+	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);
 	COMMANDER_STAT(MANEUVER, get_maneuver_level, 40);
 	COMMANDER_STAT(DETECTION, get_detection_level, 40);
-	//COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
+	COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
 #undef COMMANDER_STAT
 #define COMMANDER_STAT(enum, function, width) \
 	if (aPreference->hasCommanderStat(CPreference::enum))\
@@ -563,18 +551,16 @@ CAdmiralList::fleet_commander_list_html()
 	COMMANDER_STAT_TITLE(EXP, "Exp", 44);
 	COMMANDER_STAT_TITLE(FLEET_COMMANDING, "Fleet<BR>Commanding", 102);
 	COMMANDER_STAT_TITLE(EFFICIENCY, "Efficiency", 42);
-	/*COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
+	COMMANDER_STAT_TITLE(SIEGE_PLANET, "Siege<BR>Planet", 44);
 	COMMANDER_STAT_TITLE(BLOCKADE, "Blockade", 40);
 	COMMANDER_STAT_TITLE(RAID, "Raid", 40);
 	COMMANDER_STAT_TITLE(PRIVATEER, "Privateer", 40);
 	COMMANDER_STAT_TITLE(SIEGE_REPELLING, "Siege<BR>Repelling", 44);
 	COMMANDER_STAT_TITLE(BREAK_BLOCKADE, "Break<BR>Blockade", 44);
-	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);*/
-	COMMANDER_STAT_TITLE(OFFENSE, "Offense", 40);
-	COMMANDER_STAT_TITLE(DEFENSE, "Defense", 40);
+	COMMANDER_STAT_TITLE(PREVENT_RAID, "Prevent<BR>Raid", 44);
 	COMMANDER_STAT_TITLE(MANEUVER, "Maneuver", 40);
 	COMMANDER_STAT_TITLE(DETECTION, "Detection", 40);
-	//COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
+	COMMANDER_STAT_TITLE(INTERPRETATION, "Interpretation", 44);
 	COMMANDER_STAT_TITLE(ARMADA_CLASS, "Armada<BR>Class", 44);
 	COMMANDER_STAT_TITLE(ABILITY, "Ability", 44);
 
@@ -618,18 +604,16 @@ CAdmiralList::fleet_commander_list_html()
 	COMMANDER_STAT(EXP, get_exp, 44);
 	COMMANDER_STAT(FLEET_COMMANDING, get_fleet_commanding, 102);
 	COMMANDER_STAT(EFFICIENCY, get_real_efficiency, 42);
-	/*COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
+	COMMANDER_STAT(SIEGE_PLANET, get_siege_planet_level, 44);
 	COMMANDER_STAT(BLOCKADE, get_blockade_level, 40);
 	COMMANDER_STAT(RAID, get_raid_level, 40);
 	COMMANDER_STAT(PRIVATEER, get_privateer_level, 40);
 	COMMANDER_STAT(SIEGE_REPELLING, get_siege_repelling_level, 44);
 	COMMANDER_STAT(BREAK_BLOCKADE, get_break_blockade_level, 44);
-	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);*/
-	COMMANDER_STAT(OFFENSE, get_overall_attack, 40);
-	COMMANDER_STAT(DEFENSE, get_overall_defense, 40);
+	COMMANDER_STAT(PREVENT_RAID, get_prevent_raid_level, 44);
 	COMMANDER_STAT(MANEUVER, get_maneuver_level, 40);
 	COMMANDER_STAT(DETECTION, get_detection_level, 40);
-	//COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
+	COMMANDER_STAT(INTERPRETATION, get_interpretation_level, 44);
 #undef COMMANDER_STAT
 #define COMMANDER_STAT(enum, function, width) \
 	if (aPreference->hasCommanderStat(CPreference::enum))\

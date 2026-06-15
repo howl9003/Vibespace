@@ -188,7 +188,6 @@ CCFILES=\
 		page/preference.cc \
                 page/a0s/player_power.cc \
                 page/a0s/delete_player.cc \
-                page/a0s/end_score.cc \
 		page/domestic/domestic.cc \
 		page/domestic/domestic_link.cc \
 		page/domestic/concentration_mode.cc \

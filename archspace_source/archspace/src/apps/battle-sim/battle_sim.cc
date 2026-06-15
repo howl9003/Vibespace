@@ -422,8 +422,8 @@ static CPlayer *build_side(const JValue &aSide, int aGameID, CDefensePlan *aPlan
 		CAdmiral *Adm = new CAdmiral(20, 5, 0, Race);
 		Adm->set_owner(Player->get_game_id());
 		int siege = A["siege"].as_int(13);
-		Adm->sim_set_skill(CAdmiral::OFFENSE, siege);
-		Adm->sim_set_skill(CAdmiral::DEFENSE, siege);
+		Adm->sim_set_skill(CAdmiral::SIEGE_PLANET,    siege);
+		Adm->sim_set_skill(CAdmiral::SIEGE_REPELLING, siege);
 		Adm->sim_set_skill(CAdmiral::DETECTION, A["detection"].as_int(11));
 		Adm->sim_set_skill(CAdmiral::MANEUVER,  A["maneuver"].as_int(11));
 		Adm->sim_set_efficiency(A["efficiency"].as_int(100));

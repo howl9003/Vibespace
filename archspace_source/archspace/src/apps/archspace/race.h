@@ -8,7 +8,7 @@ extern TZone gRaceZone;
 extern TZone gRaceTableZone;
 
 //--------------------------------------------------- CRace
-#define MAX_RACE 11
+#define MAX_RACE 10
 /**
 */
 class CRace: public CBase
@@ -45,7 +45,6 @@ class CRace: public CBase
 			RACE_XELOSS,
 			RACE_XERUSIAN,
 			RACE_XESPERADOS,
-			RACE_TRABOTULIN,	// CVS-merge: 11th race
 			RACE_MAX
 		};
 

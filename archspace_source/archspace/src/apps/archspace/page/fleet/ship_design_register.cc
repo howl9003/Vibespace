@@ -49,7 +49,7 @@ CPageShipDesignRegister::handler(CPlayer *aPlayer)
 	int
 		ShipSize = as_atoi(ShipSizeString);
 
-	if (ShipSize<1 || ShipSize>MAX_SHIP_CLASS)	// CVS-merge: was 10
+	if (ShipSize<1 || ShipSize>10)
 	{
 		delete Design;
 
