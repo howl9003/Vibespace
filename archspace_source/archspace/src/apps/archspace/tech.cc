@@ -1,5 +1,6 @@
 #include "tech.h"
 #include "prerequisite.h"
+#include "archspace.h"
 
 static char *mTechTypeName[] = { "INFO", "LIFE", "MATR", "SOCL", "UPG", "SSCH", "AMATR" };
 static char *mTechTypeDescription[] = {
@@ -80,6 +81,26 @@ CTech::get_type_description(int aType)
 	if (aType < 0 || aType >= TYPE_MAX) return NULL;
 
 	return mTechTypeDescription[aType];
+}
+
+// CVS: given a targeted tech whose prerequisites aren't all met, descend to the
+// first unmet TECH prerequisite that is itself researchable, so targeting a deep
+// tech researches its chain in order (rather than falling back to free research).
+CTech *
+CTech::get_prereq(CTech *top, CPlayer *aPlayer)
+{
+	if (!top->evaluate(aPlayer) && top->mPrerequisiteList)
+	{
+		for (unsigned int i = 0; i < top->mPrerequisiteList->size(); i++)
+		{
+			CPrerequisite &Req = (*top->mPrerequisiteList)[i];
+			if (Req.evaluate(aPlayer)) continue;                  // already satisfied
+			if (Req.get_type() != CPrerequisite::RT_TECH) continue; // only walk tech prereqs
+			CTech *next = (CTech *)TECH_TABLE->get_by_id(Req.get_argument());
+			if (next) return get_prereq(next, aPlayer);
+		}
+	}
+	return top;
 }
 
 void

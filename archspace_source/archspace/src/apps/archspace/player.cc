@@ -2232,15 +2232,23 @@ CPlayer::update_tech()
 	CTech *
 		TargetTech = NULL;
 
+	// CVS: when a tech is targeted, descend to the first researchable unmet
+	// prerequisite so the chain is researched in order (e.g. targeting a high
+	// Schematics/Upgrade tech researches its prereqs first). Falls back to random
+	// free research when nothing is targeted.
 	if (mTargetTech)
-		TargetTech = mAvailableTechList.get_by_id(mTargetTech);
+	{
+		TargetTech = TECH_TABLE->get_by_id(mTargetTech);
+		if (TargetTech)
+			TargetTech = TargetTech->get_prereq(TargetTech, this);
+	}
 
 	if (!TargetTech && (mAvailableTechList.length()>0))
 		TargetTech =
 			(CTech *)mAvailableTechList.get(
 							number(mAvailableTechList.length())-1);
 
-	if (TargetTech)
+	if (TargetTech && !mTechList.get_by_id(TargetTech->get_id()))
 	{
 		int
 			ResearchCost = get_research_cost(TargetTech);

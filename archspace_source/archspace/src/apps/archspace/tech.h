@@ -79,6 +79,10 @@ class CTech: public CPrerequisiteList
 		inline int get_spy() { return mSpy; }
 		inline CIntegerList &get_component_list();
 
+		// CVS: walk down to the first researchable unmet tech-prerequisite of a
+		// targeted tech, so targeting a deep tech researches its prereqs in order.
+		CTech *get_prereq(CTech *top, CPlayer *aPlayer);
+
 	public: // set
 		inline void set_id(int aID);
 		inline void set_name(char *aName);
