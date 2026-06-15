@@ -41,15 +41,16 @@ echo "    last deployed: ${OLD_REV:-<none>}  ->  now: $(git rev-parse --short HE
 # --- decide: cheap restart vs full rebuild ---------------------------------
 # The compose file bind-mounts the web tier, page templates, nginx config and
 # setup scripts; the entrypoint re-assembles them on every start. So UI /
-# template / config changes apply with a plain `restart` (seconds). Only a
-# change to the compiled C++ engine, the CGI adapter, or the Dockerfile needs a
-# real image rebuild (minutes). FORCE_REBUILD=1 overrides to always rebuild.
+# template / config changes apply with a plain `restart` (seconds). A real image
+# rebuild (minutes) is needed for anything BAKED INTO the image: the compiled C++
+# engine, the CGI adapter, the Dockerfile, the www-new asset tree, the www
+# tarball, and the src/script game-data tables. FORCE_REBUILD=1 always rebuilds.
 NEEDS_BUILD=0
 if [ "${FORCE_REBUILD:-0}" = "1" ] || [ -z "$OLD_REV" ]; then
   # Explicit override, or no record of a prior deploy -> build to be safe.
   NEEDS_BUILD=1
 elif [ "$OLD_REV" != "$NEW_REV" ] && git diff --name-only "$OLD_REV" "$NEW_REV" \
-       | grep -qE '^archspace_source/archspace/src/(libs|apps)/|^docker/as-cgi/|^docker/Dockerfile$'; then
+       | grep -qE '^archspace_source/archspace/src/(libs|apps|script)/|^archspace_source/archspace/www-new/|^archspace_source/archspace\.tar\.gz$|^docker/as-cgi/|^docker/Dockerfile$'; then
   NEEDS_BUILD=1
 fi
 
