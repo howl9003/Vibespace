@@ -453,7 +453,7 @@ CBattleFleet::init(CBattle *aBattle, CPlayer *aOwner, CFleet *aFleet, CAdmiralLi
 		// morale penalty from honor
 		CCouncil *Council = aOwner->get_council();
 		int AvgHonor = (int) ( aOwner->get_honor() + Council->get_honor() ) / 2;
-		mMoraleModifier -= (AvgHonor - 50) / 2;
+		mMoraleModifier -= (AvgHonor - 50) / 3;	// cvs-merge: match CVSRoot honor->morale divisor (was /2)
 		mBerserkModifier += (AvgHonor - 50) / 10;
 
 		// prevents from disorder on first turn
@@ -466,6 +466,13 @@ CBattleFleet::init(CBattle *aBattle, CPlayer *aOwner, CFleet *aFleet, CAdmiralLi
 
 	mCommander = aAdmiralList->get_by_id(aFleet->get_admiral_id());
 	if (!mCommander) return false;
+
+	// cvs-merge: Tactical Genius +25 starting fleet morale (CVSRoot CBattleFleet::init).
+	// CVSRoot tests get_special_ability() against a *racial* enum value, which can
+	// never match (SA vs RA enums); keyed on get_racial_ability() so the documented
+	// effect actually fires (porting intent, not the bug).
+	if (mCommander->get_racial_ability() == CAdmiral::RA_TACTICAL_GENIUS)
+		mMorale += 25;
 
 	mEngine = (CEngine *)COMPONENT_TABLE->get_by_id(aFleet->get_engine());
 	mComputer = (CComputer *)COMPONENT_TABLE->get_by_id(aFleet->get_computer());
@@ -890,9 +897,10 @@ CBattleFleet::init_common()
 			add_static_effect( NewEffect );
 			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
 			add_static_effect( NewEffect );
-			// CVS original also granted FE_SHIELD_INTEGRITY here; that effect type is
-			// not yet in this engine's CFleetEffect set (lives with S4's combat-mechanics
-			// port) -- the impenetrable-shield grant below covers the shield role for now.
+			// cvs-merge: restore CVSRoot's FE_SHIELD_INTEGRITY grant (now consumed in the
+			// shield-distortion block of CBattleFleet::damage).
+			NewEffect = new CFleetEffect( CFleetEffect::FE_SHIELD_INTEGRITY, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
 			NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_SHIELD, mCommander->get_level() * 3 / 2, CFleetEffect::AT_PROPORTIONAL );
 			add_static_effect( NewEffect );
 			break;
@@ -2224,19 +2232,35 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 				Dam = (int)((double)Dam * 1.2);
 
 			int
-				ShieldPierceChance;
+				ShieldPierceChance,
+				ShieldDistortionChance;
 			bool
 				ShieldDistorted,
 				ShieldPierced;
 
+			ShieldDistorted = false;
+
 			ShieldPierceChance = aTurret->effect_amount( CFleetEffect::WE_SHIELD_PIERCING );
 			ShieldPierceChance = aEnemy->calc_minus_PA( ShieldPierceChance, CFleetEffect::FE_IMPENETRABLE_SHIELD );
+			// cvs-merge: shield-distortion now mitigated by enemy FE_SHIELD_INTEGRITY, and
+			// Shield Disrupter commanders get CVSRoot's second-chance distortion roll.
+			ShieldDistortionChance = aTurret->effect_amount( CFleetEffect::WE_SHIELD_DISTORTION );
+			ShieldDistortionChance = aEnemy->calc_minus_PA( ShieldDistortionChance, CFleetEffect::FE_SHIELD_INTEGRITY );
 			if( number(100) < ShieldPierceChance )
 				ShieldPierced = true;
 			else
 				ShieldPierced = false;
-			if( number(100) < aTurret->effect_amount( CFleetEffect::WE_SHIELD_DISTORTION ) )
+			if( number(100) < ShieldDistortionChance )
+			{
 				ShieldDistorted = true;
+			}
+			else if( (ShieldDistorted == false) && (mCommander->get_racial_ability() == CAdmiral::RA_SHIELD_DISRUPTER) )
+			{
+				ShieldDistortionChance = (mCommander->get_level() * 9 / 2);
+				ShieldDistortionChance = aEnemy->calc_minus_PA( ShieldDistortionChance, CFleetEffect::FE_SHIELD_INTEGRITY );
+				if( number(100) < ShieldDistortionChance )
+					ShieldDistorted = true;
+			}
 			else
 				ShieldDistorted = false;
 

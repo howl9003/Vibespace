@@ -471,17 +471,9 @@ CAdmiral::get_fleet_commanding()
 			Skill -= 3;
 	}
 
-	// Armada Synergy Specialist: signature commanding bonus (the ability's
-	// name effect -- previously only its battle effect was wired up). Scales
-	// with level; lifts fleet capacity since mMaxShip = commanding*sizeRating.
-	if( mRacialAbility == RA_ARMADA_SYNERGY_SPECIALIST ){
-		if( mLevel <= 7 )
-			Skill += 2;
-		else if( mLevel <= 14 )
-			Skill += 4;
-		else
-			Skill += 6;
-	}
+	// cvs-merge: Armada Synergy's commanding bonus is applied as a persistent
+	// per-level increment to the stored mFleetCommanding (in level_up/give_level,
+	// matching CVSRoot), not as a transient getter overlay.
 
 	return Skill;
 }
@@ -702,6 +694,11 @@ CAdmiral::get_detection_level()
 			Skill += 2;
 	}
 
+	// cvs-merge: Crusader commander detection bonus (CVSRoot get_detection_level)
+	if( mRacialAbility == RA_CRUSADER ){
+		Skill += (int) mLevel/2;
+	}
+
 	Skill += mSkillByEffect[DETECTION];
 
 	return Skill;
@@ -765,24 +762,48 @@ CAdmiral::get_armada_commanding_effect(int aSkillType)
 	if( Level < -5 ) Level = -5;
 	if( Level > 20 ) Level = 20;
 
-	return mArmadaCommandingData[get_armada_commanding()][Level+5];
+	// cvs-merge: Tactical Genius +50% armada-commanding skill effect (CVSRoot)
+	if (mRacialAbility != RA_TACTICAL_GENIUS)
+		return mArmadaCommandingData[get_armada_commanding()][Level+5];
+	else
+		return (int)(3*mArmadaCommandingData[get_armada_commanding()][Level+5]/2);
 }
 
 int
 CAdmiral::get_armada_commanding_effect_to_efficiency()
 {
-	switch (get_armada_commanding())
+	// cvs-merge: Tactical Genius +5 efficiency at every command grade (CVSRoot)
+	if (mRacialAbility != RA_TACTICAL_GENIUS)
 	{
-		case AC_A :
-			return 10;
-		case AC_B :
-			return 5;
-		case AC_C :
-			return 0;
-		case AC_D :
-			return -5;
-		default :
-			return -999;
+		switch (get_armada_commanding())
+		{
+			case AC_A :
+				return 10;
+			case AC_B :
+				return 5;
+			case AC_C :
+				return 0;
+			case AC_D :
+				return -5;
+			default :
+				return -999;
+		}
+	}
+	else
+	{
+		switch (get_armada_commanding())
+		{
+			case AC_A :
+				return 15;
+			case AC_B :
+				return 10;
+			case AC_C :
+				return 5;
+			case AC_D :
+				return 0;
+			default :
+				return -999;
+		}
 	}
 }
 
@@ -825,35 +846,44 @@ CAdmiral::level_up()
 		{
 			switch(mLevel)
 			{
+				// cvs-merge: match CVSRoot Breeder Male thresholds (was 2/6/11/16/20)
 				case 2:
-				{
-					mFleetCommanding += 1;
-					break;
-				}
 				case 6:
-				{
-					mFleetCommanding += 1;
-					break;
-				}
-				case 11:
-				{
-					mFleetCommanding += 1;
-					break;
-				}
+				case 10:
+				case 13:
 				case 16:
-				{
-					mFleetCommanding += 1;
-					break;
-				}
-				case 20:
+				case 19:
 				{
 					mFleetCommanding += 1;
 					break;
 				}
 			}
 		}
-		if(mFleetCommanding >= 45)
-			mFleetCommanding = 45;
+		// cvs-merge: Management Protocol +1 fleet-commanding at levels 2/7/12/17 (CVSRoot)
+		if(mRacialAbility == RA_MANAGEMENT_PROTOCOL)
+		{
+			switch(mLevel)
+			{
+				case 2:
+				case 7:
+				case 12:
+				case 17:
+				{
+					mFleetCommanding += 1;
+					break;
+				}
+			}
+		}
+		// cvs-merge: Armada Synergy +1 fleet-commanding per level (CVSRoot). The
+		// CVSRoot `break` that aborted the level-up loop is intentionally dropped so
+		// these commanders still gain skills/efficiency (porting intent, not the bug).
+		if(mRacialAbility == RA_ARMADA_SYNERGY_SPECIALIST)
+		{
+			mFleetCommanding += 1;
+		}
+		// cvs-merge: match CVSRoot's fleet-commanding cap (was 45)
+		if(mFleetCommanding > 100)
+			mFleetCommanding = 100;
 
 		mStoreFlag += STORE_FLEET_COMMANDING;
 
@@ -928,6 +958,44 @@ CAdmiral::give_level( int aLevel )
 				mSkill[j][LEVEL]++;
 		}
 		mFleetCommanding += mPlusFleetCommanding[i];
+		// cvs-merge: Breeder Male fleet-commanding growth on directly-granted levels
+		// too (CVSRoot give_level Breeder block), keyed on the level `i`.
+		if(mRacialAbility == RA_BREEDER_MALE)
+		{
+			switch(i)
+			{
+				case 2:
+				case 6:
+				case 10:
+				case 13:
+				case 16:
+				case 19:
+				{
+					mFleetCommanding += 1;
+					break;
+				}
+			}
+		}
+		// cvs-merge: Management Protocol / Armada Synergy fleet-commanding growth on
+		// directly-granted levels too (CVSRoot give_level), keyed on the level `i`.
+		if(mRacialAbility == RA_MANAGEMENT_PROTOCOL)
+		{
+			switch(i)
+			{
+				case 2:
+				case 7:
+				case 12:
+				case 17:
+				{
+					mFleetCommanding += 1;
+					break;
+				}
+			}
+		}
+		if(mRacialAbility == RA_ARMADA_SYNERGY_SPECIALIST)
+			mFleetCommanding += 1;
+		if(mFleetCommanding > 100)
+			mFleetCommanding = 100;
 
 		int EffUp;
 
@@ -968,6 +1036,7 @@ CAdmiral::give_level( int aLevel )
 	mExp = mExpLevelTable[mLevel+aLevel-1];
 	mLevel += aLevel;
 	mStoreFlag += STORE_LEVEL;
+	mStoreFlag += STORE_FLEET_COMMANDING;	// cvs-merge: persist FC growth from granted levels (CVSRoot)
 }
 
 CString &
