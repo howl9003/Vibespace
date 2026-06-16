@@ -429,7 +429,16 @@ CAdmiral::CAdmiral(int aLevel, int geniusLevel, int aFleetCommandingBonus, int a
 	mOwner = 0;
 	mID = ++mMaxID;
 	if( aRace < 0 )
-		mRace = number( 10 );
+	{
+		// Bug fix: was number(10), which yields races 1..10 and can NEVER produce
+		// race 11 (Trabotulin) -- so every random-race NPC / black-market commander
+		// excluded Trabotulin's three racial abilities (Armada Synergy Specialist,
+		// Crusader, Impingement). Restore CVSRoot's number(MAX_RACE) with a single
+		// re-roll on Trabotulin (== MAX_RACE) so it stays rare but reachable.
+		mRace = number( MAX_RACE );
+		if( mRace == MAX_RACE )
+			mRace = number( MAX_RACE );
+	}
 	else
 		mRace = aRace;
 	mName = ADMIRAL_NAME_TABLE->get_random_name( mRace );
