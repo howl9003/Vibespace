@@ -2333,6 +2333,25 @@ CBattleFleet::calc_0base_PA( int aValue, int aEffect )
 	return aValue*P/100+A;
 }
 
+int
+CBattleFleet::get_effect_amount( int aEffect )	// cvs-merge: CVSRoot PSI-damage accessor
+{
+	for( int i = 0; i < mStaticEffectList.length(); i++ ){
+		CFleetEffect
+			*Effect = (CFleetEffect*)mStaticEffectList.get(i);
+
+		if( Effect->get_type() == aEffect ) return Effect->get_amount();
+	}
+
+	for( int i = 0; i < mDynamicEffectList.length(); i++ ){
+		CFleetEffect
+			*Effect = (CFleetEffect*)mDynamicEffectList.get(i);
+
+		if( Effect->get_type() == aEffect ) return Effect->get_amount();
+	}
+	return 0;
+}
+
 bool
 CBattleFleet::has_effect( int aEffect )
 {
@@ -2526,6 +2545,18 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 
 			if( (has_enhanced_psi()) && (aTurret->has_effect( CFleetEffect::WE_PSI )) )
 				Dam = (int)((double)Dam * 1.25);
+
+			// cvs-merge: restore CVSRoot PSI-weapon damage scaling (uses get_effect_amount)
+			if (aTurret->has_effect(CFleetEffect::WE_PSI) && OriginalOwner->has_ability(ABILITY_PSI))
+			{
+				if (aEnemy->get_effect_amount(CFleetEffect::FE_PSI_DEFENSE) > get_effect_amount(CFleetEffect::FE_PSI_ATTACK)) Dam = calc_PA( Dam, CFleetEffect::FE_PSI_DAMAGE / 2);
+				else Dam = calc_PA( Dam, CFleetEffect::FE_PSI_DAMAGE);
+			}
+			else if (aTurret->has_effect(CFleetEffect::WE_PSI) && !OriginalOwner->has_ability(ABILITY_PSI))
+			{
+				if (aEnemy->get_effect_amount(CFleetEffect::FE_PSI_DEFENSE) > get_effect_amount(CFleetEffect::FE_PSI_ATTACK)) Dam = calc_PA( Dam, CFleetEffect::FE_PSI_DAMAGE / 4);
+				else Dam = calc_PA( Dam, CFleetEffect::FE_PSI_DAMAGE / 2);
+			}
 
 			int
 				ShieldPierceChance,

@@ -407,6 +407,7 @@ class CBattleFleet : public CVector
 		int calc_minus_PA( int aValue, int aEffect );
 		int calc_0base_PA( int aValue, int aEffect );
 		bool has_effect( int aEffect );
+		int get_effect_amount( int aEffect );	// cvs-merge: CVSRoot PSI-damage accessor
 		bool under_area_effect();
 
 		bool is_psi_race() { return mAttribute.has( PSI_RACE ); }
