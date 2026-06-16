@@ -481,7 +481,10 @@ CAdmiral::CAdmiral(int aLevel, int geniusLevel, int aFleetCommandingBonus, int a
 
 	mAcademy = false;
 
-	give_level(aLevel);
+	// give_level(N) ADDS N levels; from mLevel=1 we add aLevel-1 to reach exactly
+	// level aLevel. (Passing aLevel overshot to 1+aLevel, and for aLevel==20 tripped
+	// give_level's `mLevel+aLevel>20` guard -> 0 levels granted -> bots/NPCs stuck at 1.)
+	give_level(aLevel - 1);
 }
 
 char *
