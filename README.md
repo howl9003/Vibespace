@@ -59,6 +59,11 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   └── archspace.tar.gz            # Packaged original `www` tier + content (art,
 │                                   #   encyclopedia, static pages) — content source of truth
 │
+├── archspace_source/CVSRoot/        # Archival CVS snapshot of the 2004-05 game =
+│   └── archspace/archspace/         #   the BALANCE-AUTHORITATIVE reference. The live
+│                                    #   engine's game logic/mechanics must match it
+│                                    #   exactly. See "CVSRoot fidelity" below.
+│
 ├── docker/                         # The modern deployment
 │   ├── Dockerfile                  # Compiles the engine on ubuntu:24.04 / g++ 13
 │   ├── docker-compose.yml          # Single-image stack (+ optional `https` profile = Caddy)
@@ -85,6 +90,89 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │
 └── .github/workflows/deploy.yml    # Self-hosted-runner deploy on push to `production`
 ```
+
+---
+
+## CVSRoot fidelity — the reference snapshot and the balance audit
+
+The repo carries **two copies of the game**:
+
+- **`archspace_source/archspace/`** — the **live engine** that builds the Docker
+  image. It is a modernized base into which a large slice of original game content
+  was merged ("**cvs-merge**": the 11th race *Trabotulin*, a commander/admiral
+  racial-ability rework, the full 7-category tech tree, ship classes 11–12, more
+  components/projects/events/spy-ops, the Fleet Academy QoL).
+- **`archspace_source/CVSRoot/archspace/archspace/`** — an **archival CVS snapshot**
+  of the 2004–05 game. This is the **balance-authoritative reference**: the live
+  engine's *game logic and mechanics must compute exactly what CVSRoot does.* It is
+  also the source of truth for the original data tables and art.
+
+This is the concrete form of the "**Game logic & mechanics → strictly faithful**"
+tier above: *faithful to CVSRoot.*
+
+**Why it matters:** the cvs-merge was an **incomplete** merge — it appended the new
+content/enums and ported the headline *in-battle* effects, but silently **dropped
+or altered ~80 balance/mechanics hooks** relative to CVSRoot (admiral skill/leveling
+hooks, deeper battle subsystems, spy/black-market/council/event formulas, global
+`define.h` constants, …). A full audit (2026-06) diffed every engine file, data
+table, config and the DB schema against CVSRoot and reverted every confirmed
+divergence. The complete, adversarially-verified list is in **`cvs-audit/`**
+(`balance-divergences.md`, `triage.md`, `findings-by-file.json`).
+
+### Auditing a file against CVSRoot
+```sh
+diff -w --strip-trailing-cr \
+  archspace_source/archspace/src/apps/archspace/<file> \
+  archspace_source/CVSRoot/archspace/archspace/src/apps/archspace/<file>
+```
+**Always use `-w`** (and `--strip-trailing-cr`): the two trees differ heavily in
+indentation and line endings, so a raw diff is almost all noise — `-w` exposes the
+*real* logic deltas. The data tables (`script/*.en`) are already byte-identical to
+CVSRoot, so balance-via-data needs no porting.
+
+### What diverged (a representative slice — all reverted)
+- **Combat** (`battle.cc`/`battle.h`): morale-break thresholds, retreat behaviour,
+  the **research weapon-upgrade effect block** (researched weapon upgrades did
+  *nothing*), corrosivity, `prepare_turn` magnitudes, focus-fire / XP / detection /
+  PSI math, `MaxBattleFleet` / `EMPIRE_FLEET_MAX_SHIP`.
+- **Fleet / NPC-AI** (`fleet.cc`): the `get_power` formula, empire/magistrate
+  defender scaling, the admiral-level divisor.
+- **Spy** (`spy.cc`/`spy.en`): sabotage percentages, EMP-storm duration, the
+  three-tier tech-steal (two ops were dead), per-op race restrictions.
+- **Black market**: `classDayTable` (class 11–12 fleets never auctioned),
+  auction-planet rolls, leasing cost.
+- **Diplomacy / events**: war never auto-truced; honor math; per-turn event rate.
+- **Globals** (`define.h`): `DEVICE_MAX_NUMBER`, `INIT_ADMIRAL_NUMBER`,
+  `PROTECTION_MODE_TURNS`, `MAX_COUNCIL_MEMBER`, attack-power ranges, cluster caps.
+
+### Deliberately kept (NOT reverted to CVSRoot)
+- **Fleet Academy** (auto-train pool commanders) — additive QoL. Its **24-turn
+  training cadence is kept** because that *is* the faithful-to-original value
+  (CVSRoot's config has `TrainMissionTime = 1`, a dev/test artifact whose own
+  comment reads "Original 24 turns").
+- **Modern plumbing / UX** — the `CString → ""` fix, NULL/return-type fixes, the
+  4-skill admiral model, SSE live-news, saved attack templates, Docker/nginx/auth/
+  CGI. Fidelity applies to *game math*, not plumbing.
+- **`CGameStatus` downtime subsystem** — CVSRoot compensates mission/event/penalty
+  timers across a server outage; the modern build dropped it. Left **unported** (it
+  only matters after a restart; a contained subsystem to revisit if wanted).
+
+### CVSRoot has its own latent bugs — port the *intent*, not the bug
+When "matching CVSRoot," reproduce the **intended** effect, not a clear original
+bug (each such call is logged in the commit that made it):
+- **Armada Synergy** — CVSRoot's `give_level` adds a loop `break` that would stop
+  those commanders gaining any skills/efficiency. Ported the +fleet-commanding
+  intent, dropped the break.
+- **Tactical Genius** — CVSRoot keys its +25 battle morale on
+  `get_special_ability()` compared against a *racial*-ability enum value, so it
+  **never actually fired**. Re-keyed to `get_racial_ability()`.
+- **`give_level` over-20 guard** — CVSRoot clips via `i < 21`; the modern build's
+  active `if (mLevel+aLevel > 20) return;` *bails*. This guard, combined with the
+  level-taking `CAdmiral(int aLevel,…)` ctor calling `give_level(aLevel)` from
+  `mLevel=1` (it should be `give_level(aLevel-1)`), left **every level-20 bot/NPC
+  admiral stuck at level 1 with a ~7-ship fleet** — a latent bug on *both* the
+  production and cvs-merge lines (fixed 2026-06; see the `give_level` gotcha in
+  CLAUDE.md).
 
 ---
 

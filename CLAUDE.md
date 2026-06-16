@@ -19,6 +19,30 @@ task:**
 
 Replacing a dead applet or a cosmetic fix is almost never an engine change.
 
+## CVSRoot is the balance reference
+The repo carries **two copies of the game**: the live engine
+(`archspace_source/archspace/`, what builds the image) and an **archival CVS
+snapshot** (`archspace_source/CVSRoot/archspace/archspace/`). CVSRoot is the
+**balance-authoritative** version — any change to **engine game logic/mechanics
+must compute exactly what CVSRoot does**. The live tree is a modernized base that
+merged CVS content ("cvs-merge": the 11th race Trabotulin, commander-ability
+rework, 7-category tech tree, …) and had **drifted from CVSRoot in ~80 places**,
+all since reverted. To check a divergence:
+
+```sh
+diff -w --strip-trailing-cr <live-file> <matching CVSRoot-file>
+```
+**Always `-w`** — the two trees differ wildly in indentation/EOL, so a raw diff is
+almost all noise. Data tables (`script/*.en`) are already byte-identical to
+CVSRoot. The full audit + reverted-divergence list is in **`cvs-audit/`** and
+**README → "CVSRoot fidelity"**.
+- **Kept, NOT reverted:** Fleet Academy (and its 24-turn training cadence — the
+  faithful-to-original value), the `CGameStatus` downtime subsystem (left
+  unported), and all modern plumbing/UX. Fidelity applies to *game math*.
+- **Port the *intent*, not CVSRoot's own latent bugs** (e.g. the `give_level`
+  guard, the Armada-Synergy loop `break`, the Tactical-Genius morale mis-key —
+  see README).
+
 ## Branches & deploying
 - Develop on your **own** feature branch, namespaced per collaborator:
   `claude/<handle>-<topic>` (e.g. `claude/howe-expeditions`). **Do not share a
@@ -100,3 +124,12 @@ tarball now match the tarball bytes. **Rules:**
   (`docker/setup-web.sh`) — keep it; that sed is idempotent and bounded.
 - Race ids `1..10` map to image folders under `/image/as_game/race/<name>/` in
   `src/script/race.en` order (Human … Xesperados).
+- `CAdmiral::give_level(N)` **ADDS N levels** (its event/effect callers in
+  `player.cc` rely on that). The level-taking `CAdmiral(int aLevel,…)` ctor starts
+  at `mLevel = 1`, so it must call `give_level(aLevel - 1)` to land on level
+  `aLevel`. Passing `aLevel` overshoots to `1+aLevel`, and a target of **20** trips
+  give_level's `mLevel+aLevel > 20` guard → **0 levels granted** → bots /
+  empire-magistrate / black-market admirals stuck at level 1 with a ~7-ship fleet
+  (`Fleet->set_*_ship(get_fleet_commanding())`, which never grew). Was latent on
+  **both** `production` and `cvs-merge`; fixed 2026-06. (CVSRoot's `give_level`
+  has the guard commented out and clips via `i < 21` instead of bailing.)
