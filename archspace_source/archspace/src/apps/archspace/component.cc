@@ -842,8 +842,13 @@ CComponentList::armor_list_html()
 		CComponent *
 			Component = (CComponent *)get(i);
 		if (Component->get_category() != CComponent::CC_ARMOR) continue;
-		ComponentList.format("<OPTION VALUE=%d>%s</OPTION>\n",
-				Component->get_id(), Component->get_name());
+		// QoL: data-tip carries the part's description for the design-form
+		// notation line (as-project-tooltips.js). Escape it -- descriptions are
+		// free prose and may contain " < > &.
+		ComponentList.format("<OPTION VALUE=%d data-tip=\"%s\">%s</OPTION>\n",
+				Component->get_id(),
+				(char *)htmlspecialchars(Component->get_description()),
+				Component->get_name());
 	}
 
 	return (char *)ComponentList;
@@ -865,8 +870,10 @@ CComponentList::weapon_list_html(int aNumber, int aSpacePerSlot)
 		if (Component->get_category() != CComponent::CC_WEAPON) continue;
 		CWeapon *
 			Weapon = (CWeapon *)Component;
-		WeaponList.format("<OPTION VALUE=%d>%s x %d</OPTION>\n",
-				Weapon->get_id(), Weapon->get_name(),
+		WeaponList.format("<OPTION VALUE=%d data-tip=\"%s\">%s x %d</OPTION>\n",
+				Weapon->get_id(),
+				(char *)htmlspecialchars(Weapon->get_description()),
+				Weapon->get_name(),
 				aSpacePerSlot/Weapon->get_space());
 	}
 
@@ -905,8 +912,10 @@ CComponentList::device_list_html(int aNumber)
 		CComponent *
 			Component = (CDevice *)get(i);
 		if (Component->get_category() != CComponent::CC_DEVICE) continue;
-		DeviceList.format("<OPTION VALUE=%d>%s</OPTION>\n",
-				Component->get_id(), Component->get_name());
+		DeviceList.format("<OPTION VALUE=%d data-tip=\"%s\">%s</OPTION>\n",
+				Component->get_id(),
+				(char *)htmlspecialchars(Component->get_description()),
+				Component->get_name());
 	}
 
 	return (char *)DeviceList;

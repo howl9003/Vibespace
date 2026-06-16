@@ -230,7 +230,7 @@ CAdmiralList::attached_fleet_commander_info_html(CPlayer *aPlayer)
 				width, Admiral->function());\
 	}
 	COMMANDER_STAT(ARMADA_CLASS, get_armada_commanding_name, 44);
-	COMMANDER_STAT(ABILITY, get_ability_name, 44);
+	COMMANDER_STAT(ABILITY, get_ability_html, 44);	// QoL: tooltip spans
 
 #undef COMMANDER_STAT
 
@@ -366,7 +366,7 @@ CAdmiralList::fleet_commander_list_javascript(CPlayer *aPlayer)
 				width, Admiral->function());\
 	}
 	COMMANDER_STAT(ARMADA_CLASS, get_armada_commanding_name, 44);
-	COMMANDER_STAT(ABILITY, get_ability_name, 44);
+	COMMANDER_STAT(ABILITY, get_ability_html, 44);	// QoL: tooltip spans
 #undef COMMANDER_STAT
 
 		// Ship-class select. CDock::print_html_select() hardcodes
@@ -508,7 +508,7 @@ CAdmiralList::pool_fleet_commander_info_html()
 				width, Admiral->function());\
 	}
 	COMMANDER_STAT(ARMADA_CLASS, get_armada_commanding_name, 44);
-	COMMANDER_STAT(ABILITY, get_ability_name, 44);
+	COMMANDER_STAT(ABILITY, get_ability_html, 44);	// QoL: tooltip spans
 
 #undef COMMANDER_STAT
 
@@ -638,7 +638,7 @@ CAdmiralList::fleet_commander_list_html()
 				width, Admiral->function());\
 	}
 	COMMANDER_STAT(ARMADA_CLASS, get_armada_commanding_name, 44);
-	COMMANDER_STAT(ABILITY, get_ability_name, 44);
+	COMMANDER_STAT(ABILITY, get_ability_html, 44);	// QoL: tooltip spans
 
 #undef COMMANDER_STAT
 

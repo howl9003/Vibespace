@@ -191,7 +191,9 @@ class CAdmiral: public CStore
 		static char
 			*mStartingCircumstanceName[],
 			*mSpecialAbilityName[],
-			*mRacialAbilityName[];
+			*mRacialAbilityName[],
+			*mSpecialAbilityDescription[],
+			*mRacialAbilityDescription[];
 	public:
 		CAdmiral(CPlayer *aPlayer);
 		CAdmiral(MYSQL_ROW aRow);
@@ -249,10 +251,13 @@ class CAdmiral: public CStore
 
 		int get_special_ability() { return mSpecialAbility; }
 		char *get_special_ability_name();
+		char *get_special_ability_description();
 		int get_racial_ability() { return mRacialAbility; }
 		char *get_racial_ability_name();
-		
+		char *get_racial_ability_description();
+
 		char *get_ability_name();
+		char *get_ability_html();	// QoL: ability names wrapped in data-tip spans
 
 		// Fleet Academy enrollment
 		bool is_academy() { return mAcademy; }

@@ -153,12 +153,9 @@ CPageFleetCommanderInformation::handler(CPlayer *aPlayer)
 
 	ITEM("STRING_SPECIAL_ABILITIES", GETTEXT("Special Abilities"));
 
-	CString
-		CommonAbility = Admiral->get_special_ability_name(),
-		RaceAbility = Admiral->get_racial_ability_name();
-
-	ITEM("SPECIAL_ABILITIES",
-			(char *)format("%s, %s", (char *)CommonAbility, (char *)RaceAbility));
+	// QoL: ability names wrapped in data-tip spans -> hover tooltips
+	// (as-project-tooltips.js) explaining each ability.
+	ITEM("SPECIAL_ABILITIES", Admiral->get_ability_html());
 
 //	system_log("end page handler %s", get_name());
 
