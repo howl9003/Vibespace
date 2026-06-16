@@ -29,11 +29,13 @@ The repo maintains **two editions** of the game on two hosts:
 
 **Authoritative balance reference (precise):** each edition follows a different
 build of the game, and that build — not the other — is authoritative for its host:
-- **Faithful edition → archspace.cc → the www-new build**: the archspace.org-era
-  release, i.e. the live `archspace_source/archspace/` engine *as it ships*. This is
-  **not** cvsroot.
-- **Restoration edition → new.archspace.cc → the cvsroot build**:
-  `archspace_source/CVSRoot/archspace/archspace/`, an earlier CVS snapshot.
+- **Faithful edition → archspace.cc → the www-new build**: the **original official
+  2004–2005 game** (the live `archspace_source/archspace/` engine *as it ships*).
+  This is **not** cvsroot.
+- **Restoration edition → new.archspace.cc → the cvsroot build**: an **unofficial
+  fan update from ~2007** (`archspace_source/CVSRoot/archspace/archspace/`) — newer
+  than www-new — that reworked balance and added content (Trabotulin, megaclass
+  hulls, an extended tech tree, NPC bots).
 
 The two builds differ in **~80 *engine* balance points** (the `script/*.en` data
 tables are byte-identical). The restoration reverts those to the cvsroot values —

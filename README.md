@@ -213,14 +213,18 @@ This repo maintains **two editions** of the game, deployed to two separate hosts
 
 **Authoritative balance per edition (precise).** Each edition follows a *different
 build* of the game, and that build — not the other — is authoritative for its host:
-- **Faithful original → archspace.cc → the www-new build**: the archspace.org-era
-  release (the live `archspace_source/archspace/` engine as it ships). **Not cvsroot.**
-- **cvs-merge restoration → new.archspace.cc → the cvsroot build**
-  (`archspace_source/CVSRoot/archspace/archspace/`, an earlier CVS snapshot).
+- **Faithful original → archspace.cc → the www-new build**: the **original official
+  2004–2005 game** (the live `archspace_source/archspace/` engine as it ships).
+  **Not cvsroot.**
+- **cvs-merge restoration → new.archspace.cc → the cvsroot build**: an **unofficial
+  fan update from ~2007** (`archspace_source/CVSRoot/archspace/archspace/`) — newer
+  than www-new — that reworked balance and added content.
 
-The two builds differ in **~80 *engine* balance points** (the `script/*.en` data
-tables are byte-identical); the restoration reverts those to cvsroot **only on
-`claude/peng-cvs-merge`** (audit: `cvs-audit/`). Genuine *bugs* are fixed on both.
+Beyond that added content, the cvsroot build also reworked **~80 *engine* balance
+points** vs www-new; on `claude/peng-cvs-merge` a 2026-06 audit reverted those to
+the cvsroot values (audit: `cvs-audit/`). Both the restoration content and the
+cvsroot reverts stay on that branch — **never on `main`/`production`**. Genuine
+*bugs* are fixed on both.
 
 **Faithful original** holds to the three-tier "strictly faithful" rule above:
 the **www-new build** — no rule, balance, or formula changes away from it. `main`
