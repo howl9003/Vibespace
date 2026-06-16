@@ -346,6 +346,7 @@ CPageEmpireInvadeEmpireCapitalPlanetResult::handler(CPlayer *aPlayer)
 
 		Battle.finish_report_after_battle();
 		Battle.update_fleet_after_battle();
+		Battle.update_empire_fleet_after_battle();
 		Battle.save();
 
 		BattleView.format("&nbsp;\n"

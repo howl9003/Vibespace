@@ -126,6 +126,7 @@ class CBattleFleet : public CVector
 	public:
 		CBattleFleet();
 		~CBattleFleet();
+		static const int JUMP_OUT_TICKS = 30;
 
 		enum {
 			COMMAND_NORMAL,
@@ -207,7 +208,9 @@ class CBattleFleet : public CVector
 			mMoraleModifier,
 			mBerserkModifier,
 			mMoraleStatus,
-			mStatusLastingTurn;
+			mStatusLastingTurn,
+			mJumpWaitTurns,
+			mRemainingStealthTurns;
 		float
 			mMorale;
 		int
@@ -324,7 +327,7 @@ class CBattleFleet : public CVector
 
 		void set_engaged() { mEngaged = 50; }
 		void loose_engaged() { if( mEngaged > 0 ) mEngaged--; }
-		void reset_engaged() { mEngaged = 0; }
+		void reset_engaged() { mEngaged = 0; mRemainingStealthTurns = 0; }
 		bool is_engaged() { return (bool)mEngaged; }
 
 		bool is_disabled();
@@ -346,6 +349,8 @@ class CBattleFleet : public CVector
 		int get_morale_status() { return mMoraleStatus; }
 		int get_morale_modifier() { return mMoraleModifier; }
 		int get_berserk_modifier() { return mBerserkModifier; }
+		int get_jump_timer() {return mJumpWaitTurns;}
+		bool tick_jump_timer();
 
 		void turn_to( CVector *aVector ) { CVector::turn_to( aVector, get_mobility() ); }
 		void move() { CVector::move( get_speed() ); }
@@ -409,6 +414,7 @@ class CBattleFleet : public CVector
 		bool has_enhanced_mobility() { return mAttribute.has( ENHANCED_MOBILITY ); }
 		bool is_cloaked() { return mAttribute.has( COMPLETE_CLOAKING ) || mAttribute.has( WEAK_CLOAKING ); }
 		bool is_weak_cloaked() { return mAttribute.has( WEAK_CLOAKING ); }
+		bool is_stealthed() { if (mEngaged < (50-mRemainingStealthTurns)) return false; else return true; }
 		bool can_see( CBattleFleet *aEnemy );
 		void remove_cloaking() { mAttribute -= WEAK_CLOAKING; mAttribute -= COMPLETE_CLOAKING; }
 		void charge_effect();
@@ -549,11 +555,15 @@ class CBattleFleetList:public CSortedList
 		CPlayer *get_owner() { return mOwner; }
 
 		void update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin);
+		void update_empire_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin);
 
 		CFormationPoint *get_formation_point( int aIndex ) { return (CFormationPoint*)mFormationInfo.get(aIndex); }
 		int formation_length() { return mFormationInfo.length(); }
 		int get_total_power() { return mTotalPower; }
 		void calc_total_power();
+		// ---Change--- //
+		int get_current_power();
+		// ---End Change--- //
 
 		void update_morale(float aMoraleUp, float aCapitalMorale, float aFleetMorale);
 		int get_capital_fleet_id();
@@ -833,6 +843,7 @@ class CBattle
 		bool siege_war();
 
 		void update_fleet_after_battle();
+		void update_empire_fleet_after_battle();
 		void save();
 
 		void finish_report_after_battle();

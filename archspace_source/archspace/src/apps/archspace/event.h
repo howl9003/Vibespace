@@ -102,7 +102,9 @@ class CEvent
 			mDurationMin,
 			mDurationMax;
 		int mHonorMin,
-            mHonorMax;	
+            mHonorMax;
+        int mTurnMin,
+            mTurnMax;
 		CEventEffectList
 			mEffectList;
 
@@ -137,10 +139,15 @@ class CEvent
 		
         void set_honor_min(int aHonorMin) { mHonorMin = aHonorMin; }
         void set_honor_max(int aHonorMax) { mHonorMax = aHonorMax; }
+        void set_turn_min(int aTurnMin) { mTurnMin = aTurnMin; }
+        void set_turn_max(int aTurnMax) { mTurnMax = aTurnMax; }
         int  get_honor_min() { return mHonorMin; }
         int  get_honor_max() { return mHonorMax; }
+        int  get_turn_min() { return mTurnMin; }
+        int  get_turn_max() { return mTurnMax; }
         bool  honor_in_range(int aHonor);
-        
+        bool  turn_in_range();
+
 		void add_effect(CEventEffect *aEffect) { mEffectList.push(aEffect); }
 
 		CEventEffectList *get_effect_list() { return &mEffectList; }

@@ -362,6 +362,7 @@ CBattleFleet::CBattleFleet()
 	mFleet = NULL;
 	for( int i = 0; i < 5; i++ )
 		mDevice[i] = NULL;
+	mJumpWaitTurns = 0;
 }
 
 CBattleFleet::~CBattleFleet()
@@ -1515,6 +1516,18 @@ CBattleFleet::calc_effective_reach_time( CVector *aVector )
 	return ERT;
 }
 
+// ---Change--- //
+// Returns true if a fleet is able to jump out of the battle
+// at the current instant
+bool CBattleFleet::tick_jump_timer() {
+	int mTurnsToJumpOut = JUMP_OUT_TICKS;
+
+	// Code for faster retreat to be added here
+
+	return (++mJumpWaitTurns > mTurnsToJumpOut);
+}
+// ---End Change--- //
+
 void
 CBattleFleet::attack( CBattleRecord *aRecord, CBattleFleet *aEnemy )
 {
@@ -1593,6 +1606,13 @@ void
 CBattleFleet::fire( CBattleRecord *aRecord, CTurret *aTurret, CBattleFleet *aEnemy )
 {
 	if( aTurret->ready() == false ) return;
+
+	CFleet *
+	OriginalFleet = this->get_fleet();
+	CPlayer *
+	OriginalOwner = PLAYER_TABLE->get_by_game_id(OriginalFleet->get_owner());
+	if (is_stealthed() == true) mRemainingStealthTurns = number(20);
+	if (OriginalOwner->has_ability(ABILITY_NATURAL_STEALTH)) mRemainingStealthTurns += 20;
 
 	set_engaged();
 	aEnemy->set_engaged();
@@ -2491,11 +2511,21 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 			Dam = aEnemy->calc_minus_PA( Dam, CFleetEffect::FE_GENERIC_DEFENSE );
 			Dam = aEnemy->calc_PA( Dam, CFleetEffect::FE_CHAIN_REACTION );
 
+			if (is_stealthed())
+			{
+				Dam = (int)((double)Dam * 1.25);
+			}
+
+			if (OriginalOwner->has_ability(ABILITY_STEALTHED_AMBUSH) && is_stealthed())
+			{
+				Dam = (int)((double)Dam * 1.25);
+			}
+
 /*			if( is_psi_race() && aTurret->has_effect( CFleetEffect::WE_PSI_EMPOWER ) )
 				Dam *= 2; */
 
 			if( (has_enhanced_psi()) && (aTurret->has_effect( CFleetEffect::WE_PSI )) )
-				Dam = (int)((double)Dam * 1.2);
+				Dam = (int)((double)Dam * 1.25);
 
 			int
 				ShieldPierceChance,
@@ -3307,6 +3337,76 @@ CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool 
 }
 
 void
+CBattleFleetList::update_empire_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin)
+{
+//	CPlayer *OriginalOwner = EMPIRE;
+	CEmpireFleetInfoList *EmpireFleetInfoList =  EMPIRE->get_empire_fleet_info_list();
+	CEmpireAdmiralInfoList *EmpireAdmiralInfoList = EMPIRE->get_empire_admiral_info_list();
+
+	for (int i=0 ; i<length() ; i++)
+	{
+		CBattleFleet *
+			Fleet = (CBattleFleet *)get(i);
+		CFleet *
+			OriginalFleet = Fleet->get_fleet();
+		CAdmiral *
+			Commander = Fleet->get_admiral();
+		CEmpireFleetInfo *EmpireFleetInfo = EmpireFleetInfoList->get_by_fleet_id(OriginalFleet->get_id());
+		CEmpireAdmiralInfo *EmpireAdmiralInfo = EmpireAdmiralInfoList->get_by_admiral_id(Commander->get_id());
+
+		if (EmpireFleetInfo == NULL || EmpireAdmiralInfo == NULL)
+		{
+			SLOG("Error: Missing Empire Fleet/Admiral Info in CBattleFleetList::update_empire_fleet_after_battle() -- doing nothing!");
+			continue;
+		}
+		if( Fleet->get_status() == CBattleFleet::STATUS_ANNIHILATED_THIS_TURN ||
+			Fleet->get_status() == CBattleFleet::STATUS_ANNIHILATED )
+		{
+			switch (EmpireFleetInfo->get_fleet_type())
+			{
+				case CEmpire::LAYER_MAGISTRATE :
+				                                     // Not handled yet
+					break;
+				case CEmpire::LAYER_FORTRESS :
+				                                     // Not handled yet
+					break;
+				case CEmpire::LAYER_EMPIRE_CAPITAL_PLANET :
+					Commander->type(QUERY_DELETE);
+					OriginalFleet->type(QUERY_DELETE);
+					EmpireFleetInfo->type(QUERY_DELETE);
+					EmpireAdmiralInfo->type(QUERY_DELETE);
+
+					STORE_CENTER->store(*EmpireFleetInfo);
+					STORE_CENTER->store(*EmpireAdmiralInfo);
+					STORE_CENTER->store(*Commander);
+					STORE_CENTER->store(*OriginalFleet);
+
+					EMPIRE_CAPITAL_PLANET->remove_admiral(Commander->get_id());
+					EMPIRE_CAPITAL_PLANET->remove_fleet(OriginalFleet->get_id());
+					EmpireFleetInfoList->remove_empire_fleet_info(EmpireFleetInfo->get_fleet_id());
+					EmpireAdmiralInfoList->remove_empire_admiral_info(EmpireAdmiralInfo->get_admiral_id());
+
+					break;
+			}
+		}
+		else
+		{
+			Fleet->drop_ship_under_25();
+
+			if (OriginalFleet->get_max_ship() != Fleet->count_active_ship())
+			{
+				OriginalFleet->set_current_ship(Fleet->count_active_ship());
+				Commander->type(QUERY_UPDATE);
+//					   *STORE_CENTER << *Commander;
+				OriginalFleet->type(QUERY_UPDATE);
+//					   *STORE_CENTER << *OriginalFleet;
+
+			}
+		}
+	}
+}
+
+void
 CBattleFleetList::calc_total_power()
 {
 	mTotalPower = 1;
@@ -3319,14 +3419,42 @@ CBattleFleetList::calc_total_power()
 	}
 }
 
+// ---Change--- //
+// Returns the total power of active ships in the armada
+int
+CBattleFleetList::get_current_power()
+{
+	int mCurrentPower = 1;
+
+	for( int i = 0; i < length(); i++ ){
+		CBattleFleet
+			*Fleet = (CBattleFleet*)get(i);
+
+		mCurrentPower += Fleet->get_power();
+	}
+
+	return mCurrentPower;
+}
+// ---End Change--- //
+
 void
 CBattleFleetList::update_morale(float aMoraleUp, float aCapitalMorale, float aFleetMorale)
 {
+	// Updates an entire armada's morale and status effects
+	bool itIsAGoodDayToRun = false;
+	if (get_capital_fleet()->get_status() == CBattleFleet::STATUS_ANNIHILATED_THIS_TURN)
+	{
+		itIsAGoodDayToRun = true;
+		//SLOG("IT IS A GOOD DAY TO RUN!");
+	}
+	bool capitalIsDisabled = get_capital_fleet()->is_disabled();
+
 	for (int i=0 ; i<length() ; i++)
 	{
 		CBattleFleet *
 			Fleet = (CBattleFleet *)get(i);
 
+		// If fleet is disabled, get next fleet
 		if (Fleet->is_disabled() == true) continue;
 
 		CAdmiral *
@@ -3351,129 +3479,146 @@ CBattleFleetList::update_morale(float aMoraleUp, float aCapitalMorale, float aFl
 			Morale += aCapitalMorale+aFleetMorale;
 		}
 
-		Fleet->change_morale(Morale);
+		//SLOG("Current Power: %d Total Power: %d Player %d", get_current_power(), get_total_power(), Fleet->get_owner());
 
-		// calc new morale
-		// if new morale is different from old morale,
-		//	do some work
+		// ---Change--- //
+		int oldMorale = (int) Fleet->get_morale();
+		Fleet->change_morale(Morale);
+		int newMorale = (int) Fleet->get_morale();
 
 		int
 			OldMoraleStatus = Fleet->get_morale_status();
 
-		int
-			WeakMoraleBreak = 75 + Fleet->get_morale_modifier(),
-			NormalMoraleBreak = 50 + Fleet->get_morale_modifier(),
-			CompleteMoraleBreak = 25 + Fleet->get_morale_modifier();
-
-		// SLOG ("MORALE TEST: Fleet: %d , Morale: %d", Fleet->get_real_id(), Fleet->get_morale());
-
-		if (Fleet->get_morale() < CompleteMoraleBreak)
+		// If your allies are under attack don't just stand there!
+		if ((get_current_power() < (19*(get_total_power()/20)) && Fleet->count_active_ship() > (int) 4*(Fleet->get_max_ship())/5) &&
+			(Fleet->get_command() == CBattleFleet::COMMAND_FORMATION || Fleet->get_command() == CBattleFleet::COMMAND_STAND_GROUND))
 		{
-			Fleet->set_morale_status(CBattleFleet::MORALE_COMPLETE_BREAK);
-			if (OldMoraleStatus < CBattleFleet::MORALE_NORMAL_BREAK)
-			{
-				// rout by 50%
-				if (number(100) <= 50)
-				{
-					if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
+			Fleet->set_command(CBattleFleet::COMMAND_FREE);
+		}
 
-					Fleet->set_status(CBattleFleet::STATUS_ROUT);
-				}
-				// panic by 50%
-				else
-				{
-					Fleet->set_status(CBattleFleet::STATUS_PANIC, 100 - Fleet->get_morale());
-				}
+		// If morale went up this turn and normal status, continue
+		if (OldMoraleStatus == CBattleFleet::MORALE_NORMAL && oldMorale < newMorale) { continue; }
+
+		// Flankers don't have the same checks in place
+		if (!itIsAGoodDayToRun && capitalIsDisabled != true && Fleet->get_command() != CBattleFleet::COMMAND_FLANK)
+		{
+			// If 3/4 of the armada is still alive, no bad status effects may occur
+			if (get_current_power() > (3*(get_total_power()/4))) { continue; }
+
+			// If 3/5 of the fleet is still alive, fleet is unaffected by status effects
+			if (Fleet->count_active_ship() > (int) 3*(Fleet->get_max_ship())/5) { continue; }
+		}
+
+		// If capital died this turn, decide whether to stay or run
+		if (itIsAGoodDayToRun)
+		{ /*
+			int honor_modifier = ((Fleet->get_owner()->get_honor() + Fleet->get_owner()->get_council()->get_honor())/2) - 50;
+			if (honor_modifier > 0) {
+				honor_modifier = 0;
+			}        */
+
+			// 10% Retreat 10% Rout
+			// 1% extra chance per player honor point below 50
+			if (number(100) < (10))
+			{
+				if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
+				Fleet->set_morale_status(CBattleFleet::MORALE_COMPLETE_BREAK);
+				Fleet->set_status(CBattleFleet::STATUS_RETREAT);
+				continue;
 			}
-			else if (OldMoraleStatus == CBattleFleet::MORALE_NORMAL_BREAK)
+			if (number(100) < (10))
 			{
-				// rout by 50%
-				if (number(100) <= 50)
-				{
-					if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
-
-					Fleet->set_status(CBattleFleet::STATUS_ROUT);
-				}
-				// disorder/berserk by 50%
-				else
-				{
-					if (number(50) <= 20 + Fleet->get_berserk_modifier())
-					{
-						if (Fleet->has_effect(CFleetEffect::FE_NEVER_BERSERK)) break;
-
-						Fleet->set_status(CBattleFleet::STATUS_BERSERK, 100 - Fleet->get_morale());
-					}
-					else
-					{
-						Fleet->set_status(CBattleFleet::STATUS_DISORDER, 200 - Fleet->get_morale() - Fleet->get_efficiency());
-					}
-				}
+				if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
+				Fleet->set_morale_status(CBattleFleet::MORALE_COMPLETE_BREAK);
+				Fleet->set_status(CBattleFleet::STATUS_ROUT);
+				continue;
 			}
 		}
-		else if (Fleet->get_morale() < NormalMoraleBreak)
+
+		//Hippies Change to Moral, Might do some good..... or it might just suck
+		// I think we all agree that fleets run too much now
+		int
+			WeakMoraleBreak = 70 + Fleet->get_morale_modifier(),
+			NormalMoraleBreak = 35 + Fleet->get_morale_modifier(),
+			CompleteMoraleBreak = 0;
+
+		/*SLOG ("MORALE TEST: Fleet: %d , Morale: %d, Weak: %d, Normal: %d, Complete: %d",
+			Fleet->get_real_id(), (int)Fleet->get_morale(), WeakMoraleBreak,
+			NormalMoraleBreak, CompleteMoraleBreak);*/
+
+		if (newMorale <= CompleteMoraleBreak)
 		{
+			// If a fleet has 0 morale, 40% retreat, then 50% panic for 30 turns, if not, rout
+			// If morale modifier is non-zero, slight chance of berserk for 30 turns instead
+			Fleet->set_morale_status(CBattleFleet::MORALE_COMPLETE_BREAK);
+			if (number(100) <= 40 - Fleet->get_morale_modifier())
+			{
+				if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
+				Fleet->set_status(CBattleFleet::STATUS_RETREAT);
+			}
+			else if (number(100) <= 50 - Fleet->get_morale_modifier())
+			{
+				Fleet->set_status(CBattleFleet::STATUS_PANIC, 30);
+			}
+			else if (number(100) <= 50 - Fleet->get_morale_modifier())
+			{
+				if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
+				Fleet->set_status(CBattleFleet::STATUS_ROUT);
+			}
+			else
+			{
+				if (Fleet->has_effect(CFleetEffect::FE_NEVER_BERSERK)) break;
+				Fleet->set_status(CBattleFleet::STATUS_BERSERK, 30);
+			}
+		}
+		else if (newMorale < NormalMoraleBreak)
+		{
+			// The lower the morale, the more likely the outcome
 			Fleet->set_morale_status(CBattleFleet::MORALE_NORMAL_BREAK);
 			if (OldMoraleStatus == CBattleFleet::MORALE_NORMAL)
 			{
-				// status panic by 50%
-				if (number(100) <= 50)
+				// Status effects are more likely with huge decrease in morale
+				if (newMorale <= 30 + number(15))
 				{
-					Fleet->set_status(CBattleFleet::STATUS_PANIC, 100 - Fleet->get_morale());
+					if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
+					Fleet->set_status(CBattleFleet::STATUS_RETREAT);
 				}
-				// status berserk/disorder by 50%
 				else
 				{
-					if (number(50) <= 20 + Fleet->get_berserk_modifier())
+					if (newMorale <= 20 + Fleet->get_berserk_modifier())
 					{
 						if (Fleet->has_effect(CFleetEffect::FE_NEVER_BERSERK)) break;
-
-						Fleet->set_status(CBattleFleet::STATUS_BERSERK, 100 - Fleet->get_morale());
-					}
-					else
-					{
-						Fleet->set_status(CBattleFleet::STATUS_DISORDER, 200 - Fleet->get_morale() - Fleet->get_efficiency());
+							Fleet->set_status(CBattleFleet::STATUS_BERSERK, 60 - newMorale);
 					}
 				}
 			}
 			else if (OldMoraleStatus == CBattleFleet::MORALE_WEAK_BREAK)
 			{
-				// retreat by 40%
-				if (number(100) <= 40)
+				// Status effects are less likely from weak -> normal break levels
+				if (newMorale <= 30 + number(20))
 				{
 					if (Fleet->has_effect(CFleetEffect::FE_NEVER_RETREAT_ROUT)) break;
-
 					Fleet->set_status(CBattleFleet::STATUS_RETREAT);
 				}
-				// disorder/berserk by 60%
 				else
 				{
-					if (number(60) <= 10+Fleet->get_berserk_modifier())
+					if (newMorale <= 25 + Fleet->get_berserk_modifier())
 					{
 						if (Fleet->has_effect(CFleetEffect::FE_NEVER_BERSERK)) break;
-
-						Fleet->set_status(CBattleFleet::STATUS_BERSERK, 100 - Fleet->get_morale());
-					}
-					else
-					{
-						Fleet->set_status(CBattleFleet::STATUS_DISORDER, 200 - Fleet->get_morale() - Fleet->get_efficiency());
+						Fleet->set_status(CBattleFleet::STATUS_BERSERK, 60 - newMorale);
 					}
 				}
 			}
 		}
-		else if (Fleet->get_morale() < WeakMoraleBreak)
+		else if (newMorale < WeakMoraleBreak)
 		{
+			// If fleet has below weak break point amount of morale, chance of breaking formation
 			Fleet->set_morale_status(CBattleFleet::MORALE_WEAK_BREAK);
 			if (OldMoraleStatus == CBattleFleet::MORALE_NORMAL)
 			{
-				// order - free by 80%
-				if (number(100) <= 80)
+				if (number(100) <= 50)
 				{
 					Fleet->set_command(CBattleFleet::COMMAND_FREE);
-				}
-				// status - disorder by 20%
-				else
-				{
-					Fleet->set_status(CBattleFleet::STATUS_DISORDER, 200 - Fleet->get_morale() - Fleet->get_efficiency());
 				}
 			}
 		}
@@ -4715,50 +4860,17 @@ CBattle::fleet_run_disorder(CBattleFleet *aI, CBattleFleetList *aActive, CBattle
 void
 CBattle::fleet_run_retreat(CBattleFleet *aI, CBattleFleetList *aActive, CBattleFleetList *aPassive)
 {
-	// while you can attack, attack
-	// if touch border, retreat
-	// if substatus = turn to backward
-	//	turn to backward
-	// else move
 
-	if (aI->touch_border() == true)
+	// if jump timer expired, retreat
+	//else wait
+
+
+	if (aI->tick_jump_timer())
 	{
 		aI->set_status(CBattleFleet::STATUS_RETREATED_THIS_TURN);
 		return;
 	}
 
-	CBattleFleet *
-		Target;
-
-	Target = aI->find_target();
-	if (Target != NULL)
-	{
-		aI->attack(mRecord, Target);
-	}
-
-	if (aI->get_substatus() == CBattleFleet::SUBSTATUS_TURN_TO_BACKWARD)
-	{
-		CVector
-			Backward;
-		if (aActive->get_side() == CBattle::SIDE_OFFENSE)
-		{
-			Backward.set_vector(0, aI->get_y(), 0);
-		}
-		else
-		{
-			Backward.set_vector(10000, aI->get_y(), 0);
-		}
-
-		aI->turn_to(&Backward);
-		if (aI->is_heading_to(&Backward) == true)
-		{
-			aI->set_substatus(CBattleFleet::SUBSTATUS_NONE);
-		}
-	}
-	else
-	{
-		aI->move();
-	}
 }
 
 void
@@ -5667,6 +5779,19 @@ CBattle::update_fleet_after_battle()
 	{
 		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, false);
 		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, true);
+	}
+}
+
+void
+CBattle::update_empire_fleet_after_battle()
+{
+	if (mAttacker->get_game_id() == EMPIRE_GAME_ID)
+	{
+		mOffenseFleetList.update_empire_fleet_after_battle(mDefender, mWarType, attacker_win());
+	}
+	else if (mDefender->get_game_id() == EMPIRE_GAME_ID)
+	{
+		mDefenseFleetList.update_empire_fleet_after_battle(mAttacker, mWarType, !attacker_win());
 	}
 }
 

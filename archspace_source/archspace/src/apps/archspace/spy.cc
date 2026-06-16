@@ -348,7 +348,7 @@ CSpy::perform(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer, bool *aSuccess)
 			return (char *)Result;
 
 		case 8008 :
-			Result += steal_technology(aSpyPlayer, aTargetPlayer);
+			Result += steal_common_technology(aSpyPlayer, aTargetPlayer);
 			return (char *)Result;
 
 		case 8009 :
@@ -377,6 +377,13 @@ CSpy::perform(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer, bool *aSuccess)
 
 		case 8015 :
 			Result += assassination(aSpyPlayer, aTargetPlayer);
+			return (char *)Result;
+
+		case 8016 :
+			Result += steal_important_technology(aSpyPlayer, aTargetPlayer);
+			return (char *)Result;
+		case 8017 :
+			Result += steal_secret_technology(aSpyPlayer, aTargetPlayer);
 			return (char *)Result;
 
 		default :
@@ -1400,7 +1407,7 @@ CSpy::incite_riot(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 
 // ID : 8008
 char *
-CSpy::steal_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
+CSpy::steal_common_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 {
 	static CString
 		Result;
@@ -1421,6 +1428,134 @@ CSpy::steal_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 		CKnownTech *
 			KnownTech = (CKnownTech *)TargetKnownTechList->get(i);
 		if (KnownTech->get_level() >= 5) continue;
+
+		if (AvailableTechList->get_by_id(KnownTech->get_id()))
+		{
+			CKnownTech
+				*Tech = new CKnownTech(KnownTech->get_owner(), KnownTech->get_id(), KnownTech->get_attribute());
+			CandidateTechList.add_known_tech(Tech);
+		}
+	}
+
+	if (CandidateTechList.length() == 0)
+	{
+		Result.format(GETTEXT("There is no tech that %1$s has and you can learn."),
+						aTargetPlayer->get_nick());
+	}
+	else
+	{
+		int
+			RandomIndex = number(CandidateTechList.length()) - 1;
+		CKnownTech *
+			CandidateTech = (CKnownTech *)CandidateTechList.get(RandomIndex);
+
+		aSpyPlayer->discover_tech(CandidateTech->get_id());
+
+		KnownTechList->type(QUERY_UPDATE);
+		STORE_CENTER->store(*KnownTechList);
+
+		if (aSpyPlayer->get_target_tech() == CandidateTech->get_id())
+		{
+			aTargetPlayer->set_target_tech(0);
+		}
+
+		Result.format(GETTEXT("You stole a tech %1$s from %2$s successfully."),
+						CandidateTech->get_name_with_level(), aTargetPlayer->get_nick());
+
+		aTargetPlayer->time_news(
+				(char *)format(GETTEXT("Your tech %1$s has been stolen by someone's spy!"),
+								CandidateTech->get_name_with_level()));
+	}
+
+	return (char *)Result;
+}
+
+char *
+CSpy::steal_important_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
+{
+	static CString
+		Result;
+	Result.clear();
+
+	CKnownTechList *
+		KnownTechList = aSpyPlayer->get_tech_list();
+	CTechList *
+		AvailableTechList = aSpyPlayer->get_available_tech_list();
+	CKnownTechList *
+		TargetKnownTechList = aTargetPlayer->get_tech_list();
+
+	CKnownTechList
+		CandidateTechList;
+
+	for (int i=0 ; i<TargetKnownTechList->length() ; i++)
+	{
+		CKnownTech *
+			KnownTech = (CKnownTech *)TargetKnownTechList->get(i);
+		if (KnownTech->get_level() >= 7) continue;
+
+		if (AvailableTechList->get_by_id(KnownTech->get_id()))
+		{
+			CKnownTech
+				*Tech = new CKnownTech(KnownTech->get_owner(), KnownTech->get_id(), KnownTech->get_attribute());
+			CandidateTechList.add_known_tech(Tech);
+		}
+	}
+
+	if (CandidateTechList.length() == 0)
+	{
+		Result.format(GETTEXT("There is no tech that %1$s has and you can learn."),
+						aTargetPlayer->get_nick());
+	}
+	else
+	{
+		int
+			RandomIndex = number(CandidateTechList.length()) - 1;
+		CKnownTech *
+			CandidateTech = (CKnownTech *)CandidateTechList.get(RandomIndex);
+
+		aSpyPlayer->discover_tech(CandidateTech->get_id());
+
+		KnownTechList->type(QUERY_UPDATE);
+		STORE_CENTER->store(*KnownTechList);
+
+		if (aSpyPlayer->get_target_tech() == CandidateTech->get_id())
+		{
+			aTargetPlayer->set_target_tech(0);
+		}
+
+		Result.format(GETTEXT("You stole a tech %1$s from %2$s successfully."),
+						CandidateTech->get_name_with_level(), aTargetPlayer->get_nick());
+
+		aTargetPlayer->time_news(
+				(char *)format(GETTEXT("Your tech %1$s has been stolen by someone's spy!"),
+								CandidateTech->get_name_with_level()));
+	}
+
+	return (char *)Result;
+}
+
+char *
+CSpy::steal_secret_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
+{
+	static CString
+		Result;
+	Result.clear();
+
+	CKnownTechList *
+		KnownTechList = aSpyPlayer->get_tech_list();
+	CTechList *
+		AvailableTechList = aSpyPlayer->get_available_tech_list();
+	CKnownTechList *
+		TargetKnownTechList = aTargetPlayer->get_tech_list();
+
+	CKnownTechList
+		CandidateTechList;
+
+	for (int i=0 ; i<TargetKnownTechList->length() ; i++)
+	{
+		CKnownTech *
+			KnownTech = (CKnownTech *)TargetKnownTechList->get(i);
+		if (KnownTech->get_level() > 9) continue;
 
 		if (AvailableTechList->get_by_id(KnownTech->get_id()))
 		{

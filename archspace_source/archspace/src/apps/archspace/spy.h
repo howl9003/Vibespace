@@ -93,7 +93,9 @@ class CSpy
 		// ID : 8007
 		char *incite_riot(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer);
 		// ID : 8008
-		char *steal_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer);
+		char *steal_common_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer);
+		char *steal_important_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer);
+		char *steal_secret_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer);
 		// ID : 8009
 		char *artificial_disease(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer);
 		// ID : 8010

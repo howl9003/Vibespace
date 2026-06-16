@@ -172,6 +172,25 @@ CEventScript::get(CEventTable *aEventTable)
 			    TmpEvent->set_honor_min(-1);
 			    TmpEvent->set_honor_max(-1);
 		}
+		Something = get_section("MinTurn", Event);
+				if (Something)
+		        {
+		//		    SLOG("Something: %d", atoi(get_data(Something)));
+					TmpEvent->set_turn_min(atoi(get_data(Something)));
+					Something = get_section("MaxTurn", Event);
+		//			SLOG("Something 2: %d", atoi(get_data(Something)));
+					if (Something)
+						TmpEvent->set_turn_max(atoi(get_data(Something)));
+					else {
+					    SLOG("WARNING: MinTurn without MaxTurn :: TmpEvent->get_id() = %d", TmpEvent->get_id());
+					    TmpEvent->set_turn_min(-1);
+					    TmpEvent->set_turn_max(-1);
+		            }
+
+				} else {
+					    TmpEvent->set_turn_min(-1);
+					    TmpEvent->set_turn_max(-1);
+		}
 //		SLOG("honor min:%d honor max:%d",TmpEvent->get_honor_min(),TmpEvent->get_honor_max());
 
 		Something = get_section("EffectList", Event);
@@ -418,6 +437,28 @@ bool CEvent::honor_in_range(int aHonor)
 // SLOG("[!] H:%d HMax: %d HMin: %d", aHonor, mHonorMax, mHonorMin);
  return false;
 }
+bool CEvent::turn_in_range()
+{
+/* CString temp;
+ temp.clear();
+ if (mName == NULL)
+    temp = "(null)";
+ else
+    temp = mName;
+ SLOG("LOGGING: Event %s ID %d", (char *)temp, mID);*/
+ if (mTurnMin == -1 || mTurnMax == -1)
+ {
+ //   SLOG("[OK] H:%d HMax: %d HMin: %d", aHonor, mHonorMax, mHonorMin);
+    return true;
+ }
+ if ((CGame::get_game_time() / CGame::mSecondPerTurn) <= mTurnMax && (CGame::get_game_time() / CGame::mSecondPerTurn) >= mTurnMin)
+ {
+//   SLOG("[OK] H:%d HMax: %d HMin: %d", aHonor, mHonorMax, mHonorMin);
+    return true;
+ }
+// SLOG("[!] H:%d HMax: %d HMin: %d", aHonor, mHonorMax, mHonorMin);
+ return false;
+}
 
 CEventTable::CEventTable()
 {
@@ -527,7 +568,7 @@ CEventTable::get_random_by_honor_and_type (int aHonor, int aType)
 		CEvent *
 			Event = (CEvent *)get(i);
 
-		if (Event->has_type(aType) == true && Event->honor_in_range(aHonor) == true) 
+		if (Event->has_type(aType) == true && Event->honor_in_range(aHonor) == true && Event->turn_in_range( ))
             Count++;
 	}
 
@@ -537,7 +578,7 @@ CEventTable::get_random_by_honor_and_type (int aHonor, int aType)
 		CEvent *
 			Event = (CEvent *)get(i);
 
-		if (Event->has_type(aType) == true && Event->honor_in_range(aHonor) == true)
+		if (Event->has_type(aType) == true && Event->honor_in_range(aHonor) == true && Event->turn_in_range())
 		{
 			Count--;
 			if (Count <= 0) return Event;
