@@ -95,7 +95,12 @@ CPageSiegePlanetResult::handler(CPlayer *aPlayer)
 	if (Relation != NULL && Relation->get_relation() == CRelation::RELATION_BOUNTY)
 	{
 	}
-	else if (aPlayer->get_council() == TargetPlayerCouncil)
+	// Crash fix: when EITHER side has no council (e.g. a solo AI bot, or a
+	// council-less attacker) a council-to-council relation can't be computed --
+	// fall back to the player-to-player relation below instead of dereferencing a
+	// NULL council.
+	else if (aPlayer->get_council() == TargetPlayerCouncil
+			|| TargetPlayerCouncil == NULL || aPlayer->get_council() == NULL)
 	{
 		CHECK(!Relation,
 			(char*)format(GETTEXT("You have no relation with %1$s."),

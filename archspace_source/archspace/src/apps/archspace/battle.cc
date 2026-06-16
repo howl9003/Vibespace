@@ -452,7 +452,12 @@ CBattleFleet::init(CBattle *aBattle, CPlayer *aOwner, CFleet *aFleet, CAdmiralLi
 
 		// morale penalty from honor
 		CCouncil *Council = aOwner->get_council();
-		int AvgHonor = (int) ( aOwner->get_honor() + Council->get_honor() ) / 2;
+		// Crash fix: a council-less owner (a solo AI bot defending a siege, or any
+		// player whose council no longer resolves) has no council honor -- use the
+		// owner's own honor instead of dereferencing a NULL council.
+		int AvgHonor = (Council != NULL)
+			? (int) ( aOwner->get_honor() + Council->get_honor() ) / 2
+			: aOwner->get_honor();
 		mMoraleModifier -= (AvgHonor - 50) / 2;
 		mBerserkModifier += (AvgHonor - 50) / 10;
 
