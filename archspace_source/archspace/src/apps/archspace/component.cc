@@ -428,6 +428,83 @@ CComponent::html_print_row()
 	return buf;
 }
 
+// QoL: compact stats summary for ship-part tooltips. Returns the part's STATS
+// (not the prose Description), <BR>-separated, dispatching by category and
+// downcasting `this` (these classes are non-polymorphic / pool-allocated). The
+// result is emitted RAW into data-tip so the <BR> separators survive, so it must
+// never contain a double-quote -- by construction it does not (numbers, fixed
+// labels, effect names from the FE_ name table).
+char *
+CComponent::get_tip_stats()
+{
+	static CString
+		s;
+	s.clear();
+
+	switch( get_category() )
+	{
+		case CC_WEAPON:
+		{
+			CWeapon *w = (CWeapon *)this;
+			s.format( "Type: %s<BR>\n", w->get_weapon_type_name_normal() );
+			s.format( "Attack Rate: %d<BR>\n", w->get_attacking_rate() );
+			s.format( "Damage: %dd%d<BR>\n", w->get_damage_roll(), w->get_damage_dice() );
+			s.format( "Range: %d<BR>\n", w->get_range() );
+			s.format( "Cooling: %d<BR>\n", w->get_cooling_time() );
+			s.format( "Space: %d<BR>\n", w->get_space() );
+			break;
+		}
+		case CC_ARMOR:
+		{
+			CArmor *a = (CArmor *)this;
+			s.format( "Type: %s<BR>\n", a->get_armor_type_name_normal() );
+			s.format( "Defense Rate: %d<BR>\n", a->get_defense_rate() );
+			s.format( "HP: x%.2f<BR>\n", a->get_hp_multiplier() );
+			break;
+		}
+		case CC_SHIELD:
+		{
+			CShield *sh = (CShield *)this;
+			s.format( "Solidity: %d<BR>\n", sh->get_deflection_solidity() );
+			s.format( "Strength: %d-%d<BR>\n", sh->get_strength(0), sh->get_strength(9) );
+			s.format( "Recharge: %d-%d<BR>\n", sh->get_recharge_rate(0), sh->get_recharge_rate(9) );
+			break;
+		}
+		case CC_ENGINE:
+		{
+			CEngine *e = (CEngine *)this;
+			s.format( "Speed: %d-%d<BR>\n", e->get_battle_speed(0), e->get_battle_speed(9) );
+			s.format( "Mobility: %d-%d<BR>\n", e->get_battle_mobility(0), e->get_battle_mobility(9) );
+			break;
+		}
+		case CC_COMPUTER:
+		{
+			CComputer *c = (CComputer *)this;
+			s.format( "Attack Rate: %d<BR>\n", c->get_attacking_rate() );
+			s.format( "Defense Rate: %d<BR>\n", c->get_defense_rate() );
+			break;
+		}
+		case CC_DEVICE:
+		{
+			CDevice *d = (CDevice *)this;
+			s.format( "Class: %d-%d<BR>\n", d->get_min_class(), d->get_max_class() );
+			break;
+		}
+		default:
+			break;
+	}
+
+	// Append any fleet effects (weapon special effects, device effects, ...);
+	// each CFleetEffect::print_html() already ends with <BR>.
+	for( int i=0 ; i<effect_length() ; i++ )
+	{
+		CFleetEffect *fx = get_effect(i);
+		if( fx ) s += fx->print_html();
+	}
+
+	return (char *)s;
+}
+
 int
 CComponent::effect_amount( int aEffect )
 {
@@ -838,7 +915,7 @@ CComponentList::armor_list_html()
 		// free prose and may contain " < > &.
 		ComponentList.format("<OPTION VALUE=%d data-tip=\"%s\">%s</OPTION>\n",
 				Component->get_id(),
-				(char *)htmlspecialchars(Component->get_description()),
+				Component->get_tip_stats(),
 				Component->get_name());
 	}
 
@@ -863,7 +940,7 @@ CComponentList::weapon_list_html(int aNumber, int aSpacePerSlot)
 			Weapon = (CWeapon *)Component;
 		WeaponList.format("<OPTION VALUE=%d data-tip=\"%s\">%s x %d</OPTION>\n",
 				Weapon->get_id(),
-				(char *)htmlspecialchars(Weapon->get_description()),
+				Weapon->get_tip_stats(),
 				Weapon->get_name(),
 				aSpacePerSlot/Weapon->get_space());
 	}
@@ -905,7 +982,7 @@ CComponentList::device_list_html(int aNumber)
 		if (Component->get_category() != CComponent::CC_DEVICE) continue;
 		DeviceList.format("<OPTION VALUE=%d data-tip=\"%s\">%s</OPTION>\n",
 				Component->get_id(),
-				(char *)htmlspecialchars(Component->get_description()),
+				Component->get_tip_stats(),
 				Component->get_name());
 	}
 

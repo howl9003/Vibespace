@@ -51,7 +51,7 @@ CPageShipDesign2::handler( CPlayer *aPlayer)
 	ITEM("COMPUTER",
 			format("<span data-tip=\"%s\">%s (%s %d)</span>"
 					"<INPUT TYPE=hidden NAME=COMPUTER VALUE=\"%d\">",
-					(char *)htmlspecialchars(Computer->get_description()),
+					Computer->get_tip_stats(),
 					Computer->get_name(), GETTEXT("Level"), Computer->get_level(), Computer->get_id()));
 
 	CEngine *
@@ -59,7 +59,7 @@ CPageShipDesign2::handler( CPlayer *aPlayer)
 	ITEM("ENGINE",
 			format("<span data-tip=\"%s\">%s (%s %d)</span>"
 					"<INPUT TYPE=hidden NAME=ENGINE VALUE=\"%d\">",
-					(char *)htmlspecialchars(Engine->get_description()),
+					Engine->get_tip_stats(),
 					Engine->get_name(), GETTEXT("Level"), Engine->get_level(), Engine->get_id()));
 
 	CShield *
@@ -67,7 +67,7 @@ CPageShipDesign2::handler( CPlayer *aPlayer)
 	ITEM("SHIELD",
 			(char *)format("<span data-tip=\"%s\">%s (%s %d)</span>"
 					"<INPUT TYPE=hidden NAME=SHIELD VALUE=\"%d\">",
-					(char *)htmlspecialchars(Shield->get_description()),
+					Shield->get_tip_stats(),
 					Shield->get_name(), GETTEXT("Level"), Shield->get_level(), Shield->get_id()));
 
 	ITEM("STRING_ARMOR", GETTEXT("Armor"));
