@@ -39,7 +39,7 @@ CCronTabEmpireFleetRegeneration::handler()
 				Fortress->regen_empire_fleets();
 			}
 		}
-        if (EmpireCapitalPlanet->get_fleet_list()->length() < 20)
+//        if (EmpireCapitalPlanet->get_fleet_list()->length() < 20)
 		    EmpireCapitalPlanet->regen_empire_fleets();
 	}
 

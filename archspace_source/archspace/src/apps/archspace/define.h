@@ -9,7 +9,7 @@
 //#define ATTACKER_COOLDOWN
 //#define DEFENDER_COOLDOWN
 
-#define EMPIRE_FLEET_MAX_SHIP 48
+#define EMPIRE_FLEET_MAX_SHIP 100
 
 #define GETTEXT(String)		gettext(String)
 
@@ -33,10 +33,10 @@
 #define COUNCIL_TABLE_LIMIT			1024
 #define COUNCIL_TABLE_BLOCK			256
 
-#define MAX_PLAYER_PER_CLUSTER			500
-#define MAX_PLANET_PER_CLUSTER			5000
+#define MAX_PLAYER_PER_CLUSTER			200
+#define MAX_PLANET_PER_CLUSTER			2000
 
-#define MAX_COUNCIL_MEMBER			41
+#define MAX_COUNCIL_MEMBER			20
 
 #define TURNS_PER_24HOURS			96
 #define TURNS_PER_6HOURS			24
@@ -48,11 +48,11 @@
 #define ONE_WEEK				60*60*24*7
 
 #define MAX_PLAYER_NAME				30
-#define INIT_ADMIRAL_NUMBER			5
+#define INIT_ADMIRAL_NUMBER			10
 
 #define MAX_COMMERCE_PLANET			3
 
-#define PROTECTION_MODE_TURNS			200
+#define PROTECTION_MODE_TURNS			300
 #define PROTECTION_MODE_PLANET_LIMIT		4
 
 #define MAX_PLAYER_PP				2000000000
@@ -156,10 +156,13 @@
 #define EMPIRE_PLANET_INFO_LIST \
 			(((CArchspace *)gApplication)->game()->player_table()->get_by_game_id(0))->get_empire_planet_info_list()
 
-#define PLAYER_ATTACK_RESTRICTION_POWER_MAX	200
-#define PLAYER_ATTACK_RESTRICTION_POWER_MIN	50
+#define PLAYER_ATTACK_RESTRICTION_POWER_MAX	(float)133.33334
+#define PLAYER_ATTACK_RESTRICTION_POWER_MIN			(float)75
 
-#define COUNCIL_ATTACK_RESTRICTION_POWER_MAX	400
+#define PLAYER_ATTACK_RESTRICTION_POWER_MAX_HI	(float)133.33334
+#define PLAYER_ATTACK_RESTRICTION_POWER_MIN_HI			(float)75
+
+#define COUNCIL_ATTACK_RESTRICTION_POWER_MAX	800
 #define COUNCIL_ATTACK_RESTRICTION_POWER_MIN	50
 
 #define ADMIN_TOOL \
@@ -175,7 +178,7 @@
 #define SLOG_FOR_PSTAT system_log_for_pstat
 
 /* For Ship Design Classes */
-#define DEVICE_MAX_NUMBER			5
+#define DEVICE_MAX_NUMBER			8
 #define WEAPON_MAX_NUMBER			10
 
 /* CVS-merge: ship hull classes 1..12 (was 10; +Astral Carrier, Suncrusher) */

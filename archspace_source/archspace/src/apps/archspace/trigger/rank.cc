@@ -23,21 +23,6 @@ CTriggerRank::handler()
 	}
 
 	system_log("trigger ranking end");
-	
-	if (GAME->get_game_time() > 2*ONE_WEEK) {
-		GAME->mTechRate = 3;
-	} else if (GAME->get_game_time() > ONE_WEEK) {
-		GAME->mTechRate = 2;
-	} else if (PLAYER_TABLE->length() > 0) {
-		float aTechRate = (PLAYER_TABLE->get_tech_rank_table()->get_top_number_of_techs()-20)/48;
-		if (aTechRate < 1) {
-			aTechRate = 1;
-		} else if (aTechRate > 2) {
-			aTechRate = 2;
-		}
-		GAME->mTechRate = aTechRate;
-	} else {
-		GAME->mTechRate = 1;
-	}
+
 	return true;
 }

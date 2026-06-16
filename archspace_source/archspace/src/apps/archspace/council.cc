@@ -502,11 +502,10 @@ CCouncil::remove_member(int aGameID)
 	//clear commerce on all planets
 	CPlanetList* tempyPlanetList  = Player->get_planet_list();
 	CPlanet* tempyPlanet;
-	int i = 1;
-	while((tempyPlanet = tempyPlanetList->get_by_order(i)))
+	for (int i = 0; i < tempyPlanetList->length(); i++)
 	{
+		tempyPlanet = tempyPlanetList->get_by_order(i);
 		tempyPlanet->clear_commerce_all();
-		i++;
 	}
 
  	CMySQL
@@ -990,7 +989,7 @@ CCouncil::max_member()
 
 	Max += Speaker->count_tech_by_category(CTech::TYPE_SOCIAL);
 
-	if (Max > 40) Max = 40;
+	if (Max > 20) Max = 20;
 
 	return Max;
 }
@@ -1167,6 +1166,7 @@ CCouncil::update_by_time()
 		NewSpeaker = process_vote();
 
 	collect_tax();
+	change_honor(1);
 
 	if (NewSpeaker)
 	{
@@ -1324,7 +1324,7 @@ CCouncil::set_honor(int aHonor)
 void
 CCouncil::change_honor(int aChange)
 {
-	int Diplomacy = 0;
+	/*int Diplomacy = 0;
 	if (mSpeakerID)
 	{
 		CPlayer* Speaker = get_member_by_game_id(mSpeakerID);
@@ -1336,22 +1336,22 @@ CCouncil::change_honor(int aChange)
 	int Change = aChange;
 	if (Change < 0)
 	{
-		Change += Diplomacy;
+		Change += (int) (Diplomacy / 3);
 		if (Change < aChange*2) Change = aChange*2;
 		if (Change >= 0) Change = -1;
 	} else if (Change > 0)
 	{
-		Change += Diplomacy;
+		Change += (int) (Diplomacy / 3);
 		if (Change > aChange*2) Change = aChange*2;
 		if (Change <= 0) Change = 1;
-	}
+	} <- more sillyness. */
 
-	if ((mHonor == 100) && (Change < 0))
+	/*if ((mHonor == 100) && (Change < 0))
 		Change = (Change < -1) ? (int)(Change/2):-1;
 	if ((mHonor == 0) && (Change > 0))
-		Change = (Change > 1) ? (int)(Change/2):1;
+		Change = (Change > 1) ? (int)(Change/2):1; <- stupid? */
 
-	set_honor(mHonor+Change);
+	set_honor(mHonor + aChange);
 }
 
 bool
@@ -2193,24 +2193,26 @@ CCouncil::declare_war(CCouncil* aCouncil)
 	int	HonorLoss = 0;
 	int	AttackRatio = (long long int)aCouncil->get_power()*100/(long long int)get_power();
 
-	if (AttackRatio < 60) HonorLoss += 20;
-	else if (AttackRatio < 70) HonorLoss += 15;
-	else if (AttackRatio < 80) HonorLoss += 10;
-	else if (AttackRatio < 90) HonorLoss += 6;
-	else if (AttackRatio < 100) HonorLoss += 3;
+	if (AttackRatio < 60) HonorLoss += 8;
+	else if (AttackRatio < 70) HonorLoss += 5;
+	else if (AttackRatio < 80) HonorLoss += 3;
+	else if (AttackRatio < 90) HonorLoss += 2;
+	else if (AttackRatio < 100) HonorLoss += 1;
 
 	// modify the loss by the difference of honor divided by 6
 	HonorLoss += (int)((aCouncil->get_honor()-get_honor())/6);
+
+	set_declare_war_effect_timer(aCouncil);
 
 	CCouncilAction *Action = check_break_pact_effect_timer(aCouncil);
 	if (Action)
 	{
 		if (Action->get_start_time() <= PERIOD_24HOURS*CGame::mSecondPerTurn)
-			HonorLoss += 10;
+			HonorLoss += 6;
 		else if (Action->get_start_time() <= PERIOD_48HOURS*CGame::mSecondPerTurn)
-			HonorLoss += 5;
+			HonorLoss += 3;
 		else // over 48 hours
-			HonorLoss += 2;
+			HonorLoss += 1;
 
 		Action->type(QUERY_DELETE);
 		STORE_CENTER->store(*Action);
@@ -2265,11 +2267,11 @@ CCouncil::declare_total_war(CCouncil* aCouncil)
 	if (Action)
 	{
 		if (Action->get_start_time() <= PERIOD_24HOURS*CGame::mSecondPerTurn)
-			HonorLoss += 15;
+			HonorLoss += 4;
 		else if (Action->get_start_time() <= PERIOD_48HOURS*CGame::mSecondPerTurn)
-			HonorLoss += 10;
+			HonorLoss += 2;
 		else // over 48 hours
-			HonorLoss += 5;
+			HonorLoss += 1;
 
 		Action->type(QUERY_DELETE);
 		STORE_CENTER->store(*Action);
@@ -2321,11 +2323,11 @@ CCouncil::break_pact(CCouncil* aCouncil)
 	if (Action)
 	{
 		if (Action->get_start_time() <= PERIOD_24HOURS*CGame::mSecondPerTurn)
-			HonorLoss += 15;
+			HonorLoss += 6;
 		else if (Action->get_start_time() <= PERIOD_48HOURS*CGame::mSecondPerTurn)
-			HonorLoss += 10;
+			HonorLoss += 4;
 		else // over 48 hours
-			HonorLoss += 5;
+			HonorLoss += 2;
 
 		Action->type(QUERY_DELETE);
 		STORE_CENTER->store(*Action);

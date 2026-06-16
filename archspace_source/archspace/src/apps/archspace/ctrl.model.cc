@@ -144,7 +144,13 @@ CControlModel::get_military()
 	return mMilitary;
 }
 
-int 
+int
+CControlModel::get_uncapped_military()
+{
+	return mMilitary;
+}
+
+int
 CControlModel::get_spy()
 {
 	return mSpy;

@@ -1,10 +1,10 @@
 # Name: The name of missions
-# Difficulty: ³­ÀÌµµ. %°ª.
+# Difficulty: ï¿½ï¿½ï¿½Ìµï¿½. %ï¿½ï¿½.
 # Cost: PP
 # Prerequisite: Prerequisite
 # Type: ACPT(Acceptable), ORDN(Ordinary), HOST(Hostile), ATRO(Atrocious)
 
-# Version: ÇØ´ç SpyÀÇ ÀÌÀü ¹öÀüÀÌ ¹«¾ùÀÎ°¡¸¦ Ç¥½Ã(°íÀ¯¹øÈ£·Î)
+# Version: ï¿½Ø´ï¿½ Spyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î°ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½)
 
 
 <General Information Gathering>
@@ -98,6 +98,7 @@
 	Cost(6500),
 	<Prerequisite>
 	[
+		Race(4),
         Tech(1211)
 	],
 	Type("ACPT")
@@ -110,6 +111,7 @@
 	Cost(25000),
 	<Prerequisite>
 	[
+		Race(4),
         Tech(1220)
 	],
 	Type("ORDN")
@@ -122,6 +124,7 @@
 	Cost(200000),
 	<Prerequisite>
 	[
+		Race(4),
 		Tech(1224)
 	],
 	Type("HOST")

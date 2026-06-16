@@ -1311,7 +1311,7 @@ inline bool CPlayer::is_protected()
         LostPlanet *aPrevLostPlanet = NULL;
         for (aLostPlanet = mFirstLostPlanet; aLostPlanet != NULL; aLostPlanet = aLostPlanet->next)
         {
-          if (time(0) - aLostPlanet->time >= 60*60*24)
+          if (time(0) - aLostPlanet->time >= 60*60*12)
           {
               if (aPrevLostPlanet != NULL && aLostPlanet->next != NULL)
               {

@@ -51,7 +51,7 @@ CCronTabEvent::handler()
 			int Honor = (Player->get_honor()+Council->get_honor())/2;
 			int
 				Roll = number(100);
-			if (Roll <= 63)
+			if (Roll <= 35)
 			{
 				int
 					RollAgain = number(100);
@@ -87,7 +87,7 @@ CCronTabEvent::handler()
 						}
 					}
 				}
-				else if (RollAgain <= 10)
+				else if (RollAgain <= 4)
 				{	// Racial 4%
 					int
 						Type = 0;
@@ -154,7 +154,7 @@ CCronTabEvent::handler()
 						}
 					}
 				}
-				else
+				else if (RollAgain <= 55)
 				{	// Regular 90%
 					CEvent *
 						Event = EVENT_TABLE->get_random_by_honor_and_type(Honor,CEvent::EVENT_SYSTEM);

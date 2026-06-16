@@ -119,6 +119,7 @@ class CControlModel
 		int get_genius();
 		int get_diplomacy();
 		int get_facility_cost();
+		int get_uncapped_military();	// cvs-merge: restore CVSRoot uncapped-military accessor
 
 		int get_real_environment() { return mEnvironment; }
 		int get_real_growth() { return mGrowth; }

@@ -1640,7 +1640,10 @@ CPlayerTable::update(void *aArg)
 //				SLOG("%s has a update time delay %d second", Update->get_nick(), CGame::get_game_time()-Update->get_tick());	
 			}
 
-			Update->set_tick(CGame::get_game_time()+CGame::mSecondPerTurn);
+			if(GAME->mUpdateTurn)
+			{
+				Update->set_tick(CGame::get_game_time()+CGame::mSecondPerTurn);
+			}
 			mUpdatePlayer = mUpdatePlayer->next();
 
 			if (CGame::mUpdateTurn)

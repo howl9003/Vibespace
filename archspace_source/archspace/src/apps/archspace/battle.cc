@@ -270,6 +270,10 @@ CTargetFleet::CTargetFleet( CBattleFleet *aMe, CBattleFleet *aEnemy )
 	if( mDistance == 0 ) mDangerRating = aEnemy->get_power();
 	else mDangerRating = aEnemy->get_power()/mDistance;
 
+	if( aEnemy->is_capital_fleet() ) {
+        mDangerRating *= 3;
+    }
+
 	if( mDangerRating < 0 ) mDangerRating = 1;
 
 	if( aMe->get_enemy() == aEnemy || aEnemy->get_enemy() == aMe )
@@ -524,10 +528,254 @@ CBattleFleet::init_common()
 	CFleetEffect
 		*NewEffect;
 
+	CFleet *
+	OriginalFleet = this->get_fleet();
+	CPlayer *
+	OriginalOwner = PLAYER_TABLE->get_by_game_id(OriginalFleet->get_owner());
+
 	if (has_enhanced_mobility()) {
 		NewEffect = new CFleetEffect( CFleetEffect::FE_SPEED, 30, CFleetEffect::AT_PROPORTIONAL );
 		add_static_effect( NewEffect );
 	}
+
+	if (OriginalOwner->has_ability(ABILITY_ENHANCED_PSI_WEAPONRY))
+	{
+		NewEffect = new CFleetEffect( CFleetEffect::FE_PSI_DAMAGE, 30, CFleetEffect::AT_PROPORTIONAL );
+			add_static_effect( NewEffect );
+	}
+
+	if (OriginalOwner->has_ability(ABILITY_NATURAL_STEALTH))
+	{
+		NewEffect = new CFleetEffect( CFleetEffect::FE_STEALTH,  mCommander->get_level()/2, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+	}
+
+	if (OriginalOwner->has_ability(ABILITY_STEALTHED_AMBUSH))
+	{
+		NewEffect = new CFleetEffect( CFleetEffect::FE_STEALTH,  mCommander->get_level()/2, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+	}
+
+	CKnownTechList *KnownTechList = OriginalOwner->get_tech_list();
+
+	// Set offensive bonuses from Upgrade techs
+	#define MISSILE_UPGRADE_1 1513
+	#define MISSILE_UPGRADE_2 1514
+	#define MISSILE_UPGRADE_3 1515
+	#define MISSILE_UPGRADE_4 1516
+	#define MISSILE_UPGRADE_5 1517
+	#define PROJECTILE_UPGRADE_1 1518
+	#define PROJECTILE_UPGRADE_2 1519
+	#define PROJECTILE_UPGRADE_3 1520
+	#define PROJECTILE_UPGRADE_4 1521
+	#define PROJECTILE_UPGRADE_5 1522
+	#define BEAM_UPGRADE_1 1523
+	#define BEAM_UPGRADE_2 1524
+	#define BEAM_UPGRADE_3 1525
+	#define BEAM_UPGRADE_4 1526
+	#define BEAM_UPGRADE_5 1527
+	#define AR_PER_UPGRADE 5
+	#define DAMAGE_PER_UPGRADE 5
+	#define LAST_LEVEL_BONUS_MULTIPLIER 3
+
+    int i;
+    for (i = MISSILE_UPGRADE_1; i <= MISSILE_UPGRADE_5; i++) {
+        if (!KnownTechList->get_by_id(i)) {
+            continue;
+        } else {
+            NewEffect = new CFleetEffect( CFleetEffect::FE_MISSILE_AR, AR_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            NewEffect = new CFleetEffect( CFleetEffect::FE_MISSILE_DAMAGE, DAMAGE_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            if (i == MISSILE_UPGRADE_5) {
+                NewEffect = new CFleetEffect( CFleetEffect::FE_MISSILE_AR, LAST_LEVEL_BONUS_MULTIPLIER*AR_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+                add_static_effect( NewEffect );
+                NewEffect = new CFleetEffect( CFleetEffect::FE_MISSILE_DAMAGE, LAST_LEVEL_BONUS_MULTIPLIER*DAMAGE_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+                add_static_effect( NewEffect );
+
+            }
+        }
+    }
+
+    for (i = PROJECTILE_UPGRADE_1; i <= PROJECTILE_UPGRADE_5; i++) {
+        if (!KnownTechList->get_by_id(i)) {
+            continue;
+        } else {
+            NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_AR, AR_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_DAMAGE, DAMAGE_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            if (i == PROJECTILE_UPGRADE_5) {
+                NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_AR, LAST_LEVEL_BONUS_MULTIPLIER*AR_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+                add_static_effect( NewEffect );
+                NewEffect = new CFleetEffect( CFleetEffect::FE_PROJECTILE_DAMAGE, LAST_LEVEL_BONUS_MULTIPLIER*DAMAGE_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+                add_static_effect( NewEffect );
+
+            }
+        }
+    }
+
+    for (i = BEAM_UPGRADE_1; i <= BEAM_UPGRADE_5; i++) {
+        if (!KnownTechList->get_by_id(i)) {
+            continue;
+        } else {
+            NewEffect = new CFleetEffect( CFleetEffect::FE_BEAM_AR, AR_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            NewEffect = new CFleetEffect( CFleetEffect::FE_BEAM_DAMAGE, DAMAGE_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            if (i == BEAM_UPGRADE_5) {
+                NewEffect = new CFleetEffect( CFleetEffect::FE_BEAM_AR, LAST_LEVEL_BONUS_MULTIPLIER*AR_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+                add_static_effect( NewEffect );
+                NewEffect = new CFleetEffect( CFleetEffect::FE_BEAM_DAMAGE, LAST_LEVEL_BONUS_MULTIPLIER*DAMAGE_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+                add_static_effect( NewEffect );
+
+            }
+        }
+    }
+
+	#undef MISSILE_UPGRADE_1
+	#undef MISSILE_UPGRADE_2
+	#undef MISSILE_UPGRADE_3
+	#undef MISSILE_UPGRADE_4
+	#undef MISSILE_UPGRADE_5
+	#undef PROJECTILE_UPGRADE_1
+	#undef PROJECTILE_UPGRADE_2
+	#undef PROJECTILE_UPGRADE_3
+	#undef PROJECTILE_UPGRADE_4
+	#undef PROJECTILE_UPGRADE_5
+	#undef BEAM_UPGRADE_1
+	#undef BEAM_UPGRADE_2
+	#undef BEAM_UPGRADE_3
+	#undef BEAM_UPGRADE_4
+	#undef BEAM_UPGRADE_5
+	#undef AR_PER_UPGRADE
+	#undef DAMAGE_PER_UPGRADE
+
+	// Set defensive bonuses from Upgrade techs
+	#define HULL_UPGRADE_1 1528
+	#define HULL_UPGRADE_2 1529
+	#define HULL_UPGRADE_3 1530
+	#define SHIELD_UPGRADE_1 1531
+	#define SHIELD_UPGRADE_2 1532
+	#define HP_PER_UPGRADE 10
+	#define SP_PER_UPGRADE 10
+	#define SS_PER_UPGRADE 1
+
+    for (i = HULL_UPGRADE_1; i <= HULL_UPGRADE_3; i++) {
+        if (!KnownTechList->get_by_id(i)) {
+            continue;
+        } else {
+            NewEffect = new CFleetEffect( CFleetEffect::FE_HP, HP_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+        }
+    }
+
+    for (i = SHIELD_UPGRADE_1; i <= SHIELD_UPGRADE_2; i++) {
+        if (!KnownTechList->get_by_id(i)) {
+            continue;
+        } else {
+            NewEffect = new CFleetEffect( CFleetEffect::FE_SHIELD_STRENGTH, SP_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            NewEffect = new CFleetEffect( CFleetEffect::FE_SHIELD_SOLIDITY, SS_PER_UPGRADE, CFleetEffect::AT_ABSOLUTE );
+            add_static_effect( NewEffect );
+        }
+    }
+
+	#undef HULL_UPGRADE_1
+	#undef HULL_UPGRADE_2
+	#undef HULL_UPGRADE_3
+	#undef SHIELD_UPGRADE_1
+	#undef SHIELD_UPGRADE_2
+	#undef HP_PER_UPGRADE
+	#undef SP_PER_UPGRADE
+	#undef SS_PER_UPGRADE
+
+	// Set other bonuses from Upgrade techs
+	#define ENGINE_UPGRADE_1 1533
+	#define ENGINE_UPGRADE_2 1534
+	#define ENGINE_UPGRADE_3 1535
+	#define SPEED_PER_UPGRADE 10
+	#define MOBILITY_PER_UPGRADE 10
+
+    for (i = ENGINE_UPGRADE_1; i <= ENGINE_UPGRADE_3; i++) {
+        if (!KnownTechList->get_by_id(i)) {
+            continue;
+        } else {
+            NewEffect = new CFleetEffect( CFleetEffect::FE_SPEED, SPEED_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+            NewEffect = new CFleetEffect( CFleetEffect::FE_MOBILITY, MOBILITY_PER_UPGRADE, CFleetEffect::AT_PROPORTIONAL );
+            add_static_effect( NewEffect );
+        }
+    }
+
+    #undef ENGINE_UPGRADE_1
+	#undef ENGINE_UPGRADE_2
+	#undef ENGINE_UPGRADE_3
+	#undef SPEED_PER_UPGRADE
+	#undef MOBILITY_PER_UPGRADE
+
+	#define NIRVANA 1434
+
+	if (!KnownTechList->get_by_id(NIRVANA)) {
+        // Do nothing
+    } else {
+        NewEffect = new CFleetEffect( CFleetEffect::FE_HP, number(30), CFleetEffect::AT_PROPORTIONAL );
+        add_static_effect( NewEffect );
+        NewEffect = new CFleetEffect( CFleetEffect::FE_SHIELD_STRENGTH, number(30), CFleetEffect::AT_PROPORTIONAL );
+        add_static_effect( NewEffect );
+        NewEffect = new CFleetEffect( CFleetEffect::FE_SHIELD_INTEGRITY, 20 + number(20), CFleetEffect::AT_ABSOLUTE );
+	    add_static_effect( NewEffect );
+    }
+
+	#undef NIRVANA
+
+	#define GRAND_ASSAULT 1536
+	#define GRAND_DEFENSE 1537
+
+	if (!KnownTechList->get_by_id(GRAND_ASSAULT)) {
+        // Do nothing
+    } else {
+        NewEffect = new CFleetEffect( CFleetEffect::FE_DAMAGE, 40, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_AR, 40, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+        NewEffect = new CFleetEffect( CFleetEffect::FE_CRITICAL_HIT, 20, CFleetEffect::AT_ABSOLUTE );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_DR, -20, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, -20, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, -10, CFleetEffect::AT_ABSOLUTE );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_SHIELD, -10, CFleetEffect::AT_ABSOLUTE );
+		add_static_effect( NewEffect );
+    }
+
+    if (!KnownTechList->get_by_id(GRAND_DEFENSE)) {
+        // Do nothing
+    } else {
+        NewEffect = new CFleetEffect( CFleetEffect::FE_DAMAGE, -20, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_AR, -20, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+        NewEffect = new CFleetEffect( CFleetEffect::FE_CRITICAL_HIT, -10, CFleetEffect::AT_ABSOLUTE );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_DR, 40, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_GENERIC_DEFENSE, 40, CFleetEffect::AT_PROPORTIONAL );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_ARMOR, 20, CFleetEffect::AT_ABSOLUTE );
+		add_static_effect( NewEffect );
+		NewEffect = new CFleetEffect( CFleetEffect::FE_IMPENETRABLE_SHIELD, 20, CFleetEffect::AT_ABSOLUTE );
+		add_static_effect( NewEffect );
+    }
+
+	#undef GRAND_ASSAULT
+	#undef GRAND_DEFENSE
+
+	//CPurchasedProjectList *PurchasedProjectList = OriginalOwner->get_purchased_project_list();
+
+
 
 	switch( mCommander->get_special_ability() ){
 		case CAdmiral::SA_ENGINEERING_SPECIALIST :
@@ -1051,7 +1299,7 @@ int
 CBattleFleet::get_detection_range()
 {
 	int
-		Mult = 20+mComputer->get_level()+mCommander->get_detection_level();
+		Mult = 15+mComputer->get_level()*2+(int)((double)mCommander->get_detection_level()*1.5);
 
 	Mult = calc_PA( Mult, CFleetEffect::FE_COMPUTER );
 	Mult = calc_PA( Mult, CFleetEffect::FE_DETECTION_RANGE );
@@ -1373,19 +1621,32 @@ CBattleFleet::fire( CBattleRecord *aRecord, CTurret *aTurret, CBattleFleet *aEne
 		SideDir = aEnemy->delta_direction( (CVector*)this );
 	if( SideDir > 180 ) SideDir = 360 - SideDir;
 
+	// 0 = front 1 = side 2 = rear
+	int hit_direction = 0;
+
 	// showing front
 	if( SideDir >= 0 && SideDir <= 45 ){
 		CritChance = 5;
 	// showing side
 	} else if( SideDir > 45 && SideDir < 135 ){
 		CritChance = 10;
+		hit_direction = 1;
 	// showing rear
 	} else {
 		CritChance = 20;
+		hit_direction = 2;
 	}
 	CritChance += aTurret->effect_amount( CFleetEffect::WE_ARMOR_PIERCING );
 	CritChance = calc_PA( CritChance, CFleetEffect::FE_CRITICAL_HIT );
 	CritChance = aEnemy->calc_minus_PA( CritChance, CFleetEffect::FE_IMPENETRABLE_ARMOR );
+
+	if (hit_direction == 0) {
+	    CritChance = aEnemy->calc_minus_PA( CritChance, CFleetEffect::FE_FRONT_ARMOR );
+	} else if (hit_direction == 1) {
+        CritChance = aEnemy->calc_minus_PA( CritChance, CFleetEffect::FE_SIDE_ARMOR );
+	} else {
+        CritChance = aEnemy->calc_minus_PA( CritChance, CFleetEffect::FE_REAR_ARMOR );
+	}
 
 	int
 		HitCount = 0,
@@ -2191,6 +2452,11 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 	int
 		ActiveShip = count_active_ship();
 
+	CFleet *
+	OriginalFleet = this->get_fleet();
+	CPlayer *
+	OriginalOwner = PLAYER_TABLE->get_by_game_id(OriginalFleet->get_owner());
+
 	for( int i = 0; i < ActiveShip; i++ )
 	{
 		if( aEnemy->is_disabled() ) break;
@@ -2280,7 +2546,7 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 			int
 				Index = -1;
 
-			if( number(100) <= get_efficiency() )
+			if( number(100) <= (get_efficiency() * .5) )
 			{
 				for( int i = 0; i < aEnemy->get_max_ship(); i++ )
 				{
@@ -2341,7 +2607,7 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 					Dam *= 3;
 
 				if ((float)aEnemy->get_shield_strength(Index) / (float)100 > .10f)
-					Dam -= Dam * 0.03 * aEnemy->get_shield_solidity();
+					Dam -= (int)(Dam * 0.03f * aEnemy->get_shield_solidity());
 
 				if( aEnemy->get_shield_strength(Index) < Dam ){
 					Dam -= aEnemy->get_shield_strength(Index);
@@ -2357,6 +2623,8 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 
 					if( aEnemy->get_armor()->get_armor_type() == AT_BIO )
 						Dam = (100+BioBonus)*Dam/100;
+					if( aTurret->has_effect(CFleetEffect::WE_CORROSIVITY) )
+						Dam = (int)((double)Dam * (1.0 + (double)aTurret->effect_amount(CFleetEffect::WE_CORROSIVITY) / (double)100));
 					if( number(100) < aCritChance )
 						Dam = (int)(2.0*aEnemy->get_armor()->get_hp_multiplier()*Dam);
 
@@ -2388,7 +2656,8 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 
 				PSIMoraleDrop = calc_PA_float( PSIMoraleDrop, CFleetEffect::FE_PSI_ATTACK );
 				PSIMoraleDrop = aEnemy->calc_minus_PA_float( PSIMoraleDrop, CFleetEffect::FE_PSI_DEFENSE );
-				MoraleDrop += (PSIMoraleDrop * 2);
+				if (OriginalOwner->has_ability(ABILITY_PSI)) MoraleDrop += (PSIMoraleDrop * 2);
+				else MoraleDrop += (PSIMoraleDrop);
 				SLOG ("PSI MORALE TEST: aTotalDamage: %d , Enemy_hp: %d , MoraleDrop: %f", aTotalDamage, aEnemy->get_total_hp(), MoraleDrop);
 
 
@@ -2403,13 +2672,17 @@ CBattleFleet::damage( CTurret *aTurret, CBattleFleet *aEnemy, int aHitChance, in
 					Exp = 0;
 				change_morale( 1 );
 				aEnemy->change_morale( -2 );
-				Exp += aEnemy->get_size()*aEnemy->get_size()*3;
+				Exp += aEnemy->get_size()*aEnemy->get_size()*aEnemy->get_size()*3;
 				if( aEnemy->count_active_ship() <= 0 ){
 					Exp += aEnemy->get_original_power();
 					aEnemy->set_status( STATUS_ANNIHILATED_THIS_TURN );
 				}
 				if( aEnemy->is_capital_fleet() )
 					Exp *= 3;
+				if (OriginalOwner->has_ability(ABILITY_ADVANCED_BATTLE_PROCESSING))
+				{
+					Exp = (int)(1.5 * (double)Exp);
+				}
 				mAdmiralExp += Exp;
 				(*aSunkenCount)++;
 			}
@@ -2822,14 +3095,15 @@ CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool 
 
 				if (mOwner->get_game_id() == EMPIRE_GAME_ID)
 				{
-					Chance = Commander->get_level()*2 + 5;
+					Chance = Commander->get_level()*1 + 5;
 				}
 				else
 				{
-					Chance = Commander->get_level()*2 +
+					Chance = Commander->get_level()*1 +
 							mOwner->get_race_data()->get_survival_modifier();
 				}
-				if (aWin) Chance += 20;
+				if (aWin) Chance += 40;
+				else Chance += 20;
 				Chance = Fleet->calc_PA(Chance, CFleetEffect::FE_COMMANDER_SURVIVAL);
 
 				if (Chance >= number(100)) // survive
@@ -3005,8 +3279,20 @@ CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool 
 				{
 					CShipSize *
 						Body = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(Fleet->get_body());
-					ScrapPP += Body->get_cost();
+					if (OriginalOwner->get_game_id() == EMPIRE_GAME_ID)
+					{
+						ScrapPP += Body->get_cost() * 3 / 20;
+					}
+					else
+					{
+						ScrapPP += Body->get_cost();
+					}
 				}
+			}
+
+			if (ScrapPP > MAX_PLAYER_PP || ScrapPP < 0)
+			{
+				ScrapPP = MAX_PLAYER_PP;
 			}
 		}
 	}
@@ -4057,7 +4343,7 @@ CBattle::run_step()
 		{
 			if (Fleet->is_capital_fleet() == true)
 			{
-				AttackerMoraleCapitalDown = -25;
+				AttackerMoraleCapitalDown = -40;
 				MoraleUp = 15;
 			}
 			else
@@ -4099,7 +4385,7 @@ CBattle::run_step()
 		{
 			if (Fleet->is_capital_fleet() == true)
 			{
-				DefenderMoraleCapitalDown = -25;
+				DefenderMoraleCapitalDown = -30;
 				MoraleUp = 15;
 			}
 			else
@@ -5057,9 +5343,9 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 				break;
 
 			case CBattleFleet::COMMAND_FREE :
-				NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 5, CFleetEffect::AT_PROPORTIONAL);
+				NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 25, CFleetEffect::AT_PROPORTIONAL);
 				Fleet->add_dynamic_effect(NewEffect);
-				NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 5, CFleetEffect::AT_PROPORTIONAL);
+				NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 15, CFleetEffect::AT_PROPORTIONAL);
 				Fleet->add_dynamic_effect(NewEffect);
 				break;
 
@@ -5067,6 +5353,8 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 				NewEffect = new CFleetEffect(CFleetEffect::FE_AR, 10, CFleetEffect::AT_PROPORTIONAL);
 				Fleet->add_dynamic_effect(NewEffect);
 				NewEffect = new CFleetEffect(CFleetEffect::FE_DR, 20, CFleetEffect::AT_PROPORTIONAL);
+				Fleet->add_dynamic_effect(NewEffect);
+				NewEffect = new CFleetEffect(CFleetEffect::FE_COMMANDER_SURVIVAL, -10, CFleetEffect::AT_PROPORTIONAL);
 				Fleet->add_dynamic_effect(NewEffect);
 				break;
 
@@ -5077,7 +5365,7 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 20, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
-					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, -10, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, -15, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_DR, -10, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
@@ -5090,7 +5378,7 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 5, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
-					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, 5, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, -25, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_DR, -10, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
@@ -5100,9 +5388,9 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 			case CBattleFleet::COMMAND_PENETRATE :
 				if (Fleet->get_substatus() == CBattleFleet::SUBSTATUS_PENETRATION)
 				{
-					NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 20, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 50, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
-					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 20, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 30, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, -10, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
@@ -5125,9 +5413,9 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 			case CBattleFleet::COMMAND_FLANK:
 				if (Fleet->get_substatus() == CBattleFleet::SUBSTATUS_CHARGE)
 				{
-					NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 5, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 20, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
-					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 5, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 20, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, 5, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
@@ -5136,9 +5424,9 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 				}
 				else
 				{
-					NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 20, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_SPEED, 60, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
-					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 20, CFleetEffect::AT_PROPORTIONAL);
+					NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, 60, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
 					NewEffect = new CFleetEffect(CFleetEffect::FE_AR, -10, CFleetEffect::AT_PROPORTIONAL);
 					Fleet->add_dynamic_effect(NewEffect);
@@ -5149,10 +5437,10 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 
 			case CBattleFleet::COMMAND_NORMAL :
 			default :
-				NewEffect = new CFleetEffect(CFleetEffect::FE_DR, 5, CFleetEffect::AT_PROPORTIONAL);
+				NewEffect = new CFleetEffect(CFleetEffect::FE_AR, 5, CFleetEffect::AT_PROPORTIONAL);
 				Fleet->add_dynamic_effect(NewEffect);
-				NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, -5, CFleetEffect::AT_PROPORTIONAL);
-				Fleet->add_dynamic_effect(NewEffect);
+				/*NewEffect = new CFleetEffect(CFleetEffect::FE_MOBILITY, -5, CFleetEffect::AT_PROPORTIONAL);
+				Fleet->add_dynamic_effect(NewEffect);*/
 				break;
 		}
 	}
@@ -5255,7 +5543,7 @@ CBattle::prepare_turn(CBattleFleetList *aActive, CBattleFleetList *aPassive)
 		}
 
 		int
-			RedZoneRadius = Fleet->get_red_zone_radius(),
+			RedZoneRadius = 300, // Radii within which a fleet is encountered.
 			DetectionRange = Fleet->get_detection_range();
 		for (int j=0 ; j<aPassive->length() ; j++)
 		{

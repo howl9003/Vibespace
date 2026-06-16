@@ -114,7 +114,7 @@ class CTurret: public CWeapon
 			mInited;
 };
 
-const int MaxBattleFleet = 50;
+const int MaxBattleFleet = 100;
 #define NUMBER_OF_ORDER			11
 
 extern TZone gBattleFleetZone;

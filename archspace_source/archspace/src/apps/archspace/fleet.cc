@@ -135,8 +135,8 @@ CMission::set_mission(CMission::EMissionType aMission)
 		case MISSION_EXPEDITION:
 			mTerminateTime = CGame::get_game_time() + mExpeditionMissionTime;
 			break;
-		case MISSION_SORTIE: // spend two turn
-			mTerminateTime = CGame::get_game_time()+2*CGame::mSecondPerTurn;
+		case MISSION_SORTIE: // spend one turn
+			mTerminateTime = CGame::get_game_time()+1*CGame::mSecondPerTurn;
 			break;
 		case MISSION_RETURNING:
 		case MISSION_NONE:
@@ -483,8 +483,11 @@ CFleet::get_nick()
 int
 CFleet::get_power()
 {
+	float TotalPower = 0;
+
 	int
-		TotalLevel = 0;
+		TotalLevel = 0,
+	TotalComponents = 0;
 
 	CComponent
 		*Component;
@@ -498,22 +501,32 @@ CFleet::get_power()
 	Component = COMPONENT_TABLE->get_by_id( get_shield() );
 	if (Component) TotalLevel += Component->get_level();
 
-	for (int i=0 ; i<7 ; i++)
-	{
-		Component = COMPONENT_TABLE->get_by_id( get_weapon(i) );
-		if( Component == NULL ) continue;
+	TotalComponents += 4;
 
-		TotalLevel += Component->get_level();
-	}
-	for (int i=0 ; i<5 ; i++)
-	{
-		Component = COMPONENT_TABLE->get_by_id( get_device(i) );
-		if( Component == NULL ) continue;
+    // ---Change---//
+    for (int i=0 ; i < WEAPON_MAX_NUMBER; i++) {
+    // ---End Change---//
+        Component = COMPONENT_TABLE->get_by_id( get_weapon(i) );
+        if( Component == NULL ) continue;
 
-		TotalLevel += Component->get_level();
-	}
+        TotalLevel += Component->get_level();
+        TotalComponents++;
+    }
+    // ---Change---//
+    for (int i=0 ; i < DEVICE_MAX_NUMBER; i++) {
+    // ---End Change---//
+        Component = COMPONENT_TABLE->get_by_id( get_device(i) );
+        if( Component == NULL ) continue;
 
-	return (get_body()-4000) * TotalLevel * get_current_ship();
+        TotalLevel += 5;//+= Component->get_level();
+        TotalComponents++;
+    }
+	CShipSize *
+	Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(get_body());
+
+	TotalPower = (float)((float)Ship->get_space() / 100.0f) * (2.5f + ((float)(((float)TotalLevel / (float)TotalComponents)) / 2.0f));
+	//SLOG("POWER LOGING: %d, %d",(int)TotalPower, Ship->get_space());
+	return (int)TotalPower * get_current_ship();
 }
 
 bool
@@ -798,42 +811,42 @@ CFleet::create_as_empire_fleet(int aFleetRating, int aTechLevel, int aSizeRating
 		case 4 :
 		case 5 :
 		case 6 :
-			mMaxShip = aAdmiral->get_fleet_commanding() * (aSizeRating/100);
+			mMaxShip = aAdmiral->get_fleet_commanding(); // * (aSizeRating/100);
 			if (mMaxShip > EMPIRE_FLEET_MAX_SHIP) mMaxShip = EMPIRE_FLEET_MAX_SHIP;
 			if (mMaxShip < 8) mMaxShip = 8;
 			set_current_ship(mMaxShip);
 			break;
 
 		case 7 :
-			mMaxShip = (aAdmiral->get_fleet_commanding()) * (aSizeRating/100);
+			mMaxShip = (aAdmiral->get_fleet_commanding());// * 75 * (aSizeRating/100) / 100;
 			if (mMaxShip > EMPIRE_FLEET_MAX_SHIP) mMaxShip = EMPIRE_FLEET_MAX_SHIP;
 			if (mMaxShip < 8) mMaxShip = 8;
 			set_current_ship(mMaxShip);
 			break;
 
 		case 8 :
-			mMaxShip = (aAdmiral->get_fleet_commanding()) * (aSizeRating/100);
+			mMaxShip = (aAdmiral->get_fleet_commanding());// * 66 * (aSizeRating/100) / 100;
 			if (mMaxShip > EMPIRE_FLEET_MAX_SHIP) mMaxShip = EMPIRE_FLEET_MAX_SHIP;
 			if (mMaxShip < 8) mMaxShip = 8;
 			set_current_ship(mMaxShip);
 			break;
 
 		case 9 :
-			mMaxShip = (aAdmiral->get_fleet_commanding())  * (aSizeRating/100);
+			mMaxShip = (aAdmiral->get_fleet_commanding());// * 50 * (aSizeRating/100) / 100;
 			if (mMaxShip > EMPIRE_FLEET_MAX_SHIP) mMaxShip = EMPIRE_FLEET_MAX_SHIP;
 			if (mMaxShip < 8) mMaxShip = 8;
 			set_current_ship(mMaxShip);
 			break;
 
 		case 10 :
-			mMaxShip = (aAdmiral->get_fleet_commanding()) * (aSizeRating/100);
+			mMaxShip = (aAdmiral->get_fleet_commanding());// * 20 * (aSizeRating/100) / 100;
 			if (mMaxShip > EMPIRE_FLEET_MAX_SHIP) mMaxShip = EMPIRE_FLEET_MAX_SHIP;
 			if (mMaxShip < 8) mMaxShip = 8;
 			set_current_ship(mMaxShip);
 			break;
 
 		default :
-			mMaxShip = (aAdmiral->get_fleet_commanding()) * (aSizeRating/100);
+			mMaxShip = (aAdmiral->get_fleet_commanding());// * 20 * (aSizeRating/100) / 100;
 			if (mMaxShip > EMPIRE_FLEET_MAX_SHIP) mMaxShip = EMPIRE_FLEET_MAX_SHIP;
 			if (mMaxShip < 8) mMaxShip = 8;
 			set_current_ship(mMaxShip);
@@ -2629,7 +2642,7 @@ CFleetList::create_as_empire_fleet_group_static(CAdmiralList *aAdmiralList, int 
 	int
 		CapitalFleetRating = 400 + FleetGroupRating*3;
 	int
-		CapitalAdmiralLevel = CapitalFleetRating/50 + number(CapitalFleetRating/50 + 2);
+		CapitalAdmiralLevel = CapitalFleetRating/150 + number(CapitalFleetRating/150 + 2);
 	int
 		CapitalAdmiralRace = AvailableRace[(number(5) - 1)];
 	int
@@ -2659,7 +2672,7 @@ CFleetList::create_as_empire_fleet_group_static(CAdmiralList *aAdmiralList, int 
 		}
 
 		int
-			AdmiralLevel = FleetRating/50 + number(FleetRating/50 + 2);
+			AdmiralLevel = FleetRating/150 + number(FleetRating/150 + 2);
 		int
 			AdmiralRace = AvailableRace[(number(5) - 1)];
 
@@ -2685,7 +2698,7 @@ CFleetList::create_as_empire_fleet_group_volatile(CAdmiralList *aAdmiralList, in
 		FleetGroupRating,
 		TechLevel;
 
-	if (aFleetGroupType == CEmpire::EMPIRE_FLEET_GROUP_TYPE_MAGISTRATE)//600 - 800
+	if (aFleetGroupType == CEmpire::EMPIRE_FLEET_GROUP_TYPE_MAGISTRATE)
 	{
 		CMagistrateList *
 			MagistrateList = EMPIRE->get_magistrate_list();
@@ -2694,20 +2707,46 @@ CFleetList::create_as_empire_fleet_group_volatile(CAdmiralList *aAdmiralList, in
 		int
 			CapturedPlanet = Magistrate->get_number_of_lost_planets();
 
-		if (CapturedPlanet < (int)(CEmpire::mInitialNumberOfMagistratePlanet * (1/5)))
+        /*
+         * TODO: Check if number of lost planets is modified when magi gains planets from retals
+         * should it be? Etc. Still will work, just may not have the desired fleet level (too strong).
+         */
+		int PercentLost = (int)((CapturedPlanet/(CEmpire::mInitialNumberOfMagistratePlanet * 1.0))*100);
+
+		if (PercentLost < 10)
 		{
-			FleetGroupRating = 500;//Battle Cruisers
-			TechLevel = 3;
+			TechLevel = 1;
+			FleetGroupRating = 150;
 		}
-		else if (CapturedPlanet <= (int)(CEmpire::mInitialNumberOfMagistratePlanet * (3/5)))
+		else if (PercentLost < 25)
 		{
-			FleetGroupRating = 600;//Battle Ships
+			FleetGroupRating = 200;
+			TechLevel = 2;
+		}
+		else if (PercentLost < 50)
+		{
+			TechLevel = 3;
+			FleetGroupRating = 250;
+		}
+		else if (PercentLost < 75)
+		{
+			TechLevel = 3;
+			FleetGroupRating = 350;
+		}
+		else if (PercentLost < 90)
+		{
 			TechLevel = 4;
+			FleetGroupRating = 275;
 		}
 		else
 		{
-			FleetGroupRating = 700;//Dreads
-			TechLevel = 5;
+			FleetGroupRating = 450;
+			TechLevel = 4;
+		}
+
+		if (PercentLost > 100 || PercentLost < 0)
+		{
+			SLOG("ERROR : Wrong CapturedPlanet in CFleetList::create_as_empire_fleet_group_volatile(), CapturedPlanet = %d, Magistrate->get_cluster_id() = %d", CapturedPlanet, Magistrate->get_cluster_id());
 		}
 	}
 	else if (aFleetGroupType == CEmpire::EMPIRE_FLEET_GROUP_TYPE_MAGISTRATE_COUNTERATTACK)
@@ -2719,50 +2758,90 @@ CFleetList::create_as_empire_fleet_group_volatile(CAdmiralList *aAdmiralList, in
 		int
 			CapturedPlanet = Magistrate->get_number_of_lost_planets();
 
-		if (CapturedPlanet < (int)(CEmpire::mInitialNumberOfMagistratePlanet * (1/5)))
+		int PercentLost = (int)((CapturedPlanet/(CEmpire::mInitialNumberOfMagistratePlanet * 1.0))*100);
+
+		if (PercentLost < 10)
 		{
-			FleetGroupRating = 3*CapturedPlanet + 250;//250 - 310 Frigate - Destroyer
+			TechLevel = 1;
+			FleetGroupRating = 150;
+		}
+		else if (PercentLost < 25)
+		{
+			FleetGroupRating = 200;
 			TechLevel = 2;
 		}
-		else if (CapturedPlanet < (int)(CEmpire::mInitialNumberOfMagistratePlanet * (2/5)))
+		else if (PercentLost < 50)
 		{
-			FleetGroupRating = 3*CapturedPlanet + 300;//360 - 420 Destroyer - Cruiser
 			TechLevel = 3;
+			FleetGroupRating = 200;
 		}
-		else if (CapturedPlanet < (int)(CEmpire::mInitialNumberOfMagistratePlanet * (3/5)))
+		else if (PercentLost < 75)
 		{
-			FleetGroupRating = (3*CapturedPlanet) + 350;//470 - 530 Cruiser - Battle Cruiser
+			TechLevel = 3;
+			FleetGroupRating = 250;
+		}
+		else if (PercentLost < 90)
+		{
 			TechLevel = 4;
+			FleetGroupRating = 275;
 		}
 		else
 		{
-			FleetGroupRating = 600; //Battle Ship
-			TechLevel = 5;
+			FleetGroupRating = 300;
+			TechLevel = 4;
 		}
-		FleetGroupRating += aFleetSize;
+
+		if (PercentLost > 100 || PercentLost < 0)
+		{
+			SLOG("ERROR : Wrong CapturedPlanet in CFleetList::create_as_empire_fleet_group_volatile() Counterattack, CapturedPlanet = %d, Magistrate->get_cluster_id() = %d", CapturedPlanet, Magistrate->get_cluster_id());
+		}
 	}
-	else if (aFleetGroupType == CEmpire::EMPIRE_FLEET_GROUP_TYPE_EMPIRE_PLANET)//700-900
+	else if (aFleetGroupType == CEmpire::EMPIRE_FLEET_GROUP_TYPE_EMPIRE_PLANET)
 	{
 		int
 			CapturedPlanet = EMPIRE->get_number_of_lost_empire_planets();
 
-		TechLevel = 5;
-		if (CapturedPlanet < (int)(CEmpire::mInitialNumberOfEmpirePlanet * (10/50)))
+		int PercentLost = (int)((CapturedPlanet/(CEmpire::mInitialNumberOfEmpirePlanet * 1.0))*100);
+
+		if (PercentLost < 10)
 		{
-			FleetGroupRating = 700;//dreads
+			TechLevel = 3;
+			FleetGroupRating = 200;
 		}
-		else if (CapturedPlanet < (int)(CEmpire::mInitialNumberOfEmpirePlanet * (30/50)))
+		else if (PercentLost < 25)
 		{
-			FleetGroupRating = 800;//mobiles
+			FleetGroupRating = 300;
+			TechLevel = 3;
+		}
+		else if (PercentLost < 50)
+		{
+			TechLevel = 3;
+			FleetGroupRating = 400;
+		}
+		else if (PercentLost < 75)
+		{
+			TechLevel = 4;
+			FleetGroupRating = 300;
+		}
+		else if (PercentLost < 90)
+		{
+			TechLevel = 5;
+			FleetGroupRating = 400;
 		}
 		else
 		{
-			FleetGroupRating = 900;//doomies
+			FleetGroupRating = 500;
+			TechLevel = 5;
+		}
+
+		if (PercentLost > 100 || PercentLost < 0)
+		{
+			SLOG("ERROR : Wrong CapturedPlanet in CFleetList::create_as_empire_fleet_group_volatile(), CapturedPlanet = %d, aFleetGroupType = %d", CapturedPlanet, aFleetGroupType);
 		}
 	}
 	else if (aFleetGroupType == CEmpire::EMPIRE_FLEET_GROUP_TYPE_EMPIRE_PLANET_COUNTERATTACK)
 	{
-		FleetGroupRating = 700 + aFleetSize;//720 - 900 dreads - doomies
+		FleetGroupRating = 150 + dice(2, 50);
 		TechLevel = 5;
 	}
 	else
@@ -2770,8 +2849,6 @@ CFleetList::create_as_empire_fleet_group_volatile(CAdmiralList *aAdmiralList, in
 		SLOG("ERROR : Wrong aFleetGroupType in create_as_empire_fleet_group_volatile(), aFleetGroupType = %d", aFleetGroupType);
 		return false;
 	}
-
-	if (FleetGroupRating < 20) FleetGroupRating = 20;
 
 	int
 		FleetGroupSize = FleetGroupRating/10 + number(FleetGroupRating/10 + 4);
@@ -2791,7 +2868,7 @@ CFleetList::create_as_empire_fleet_group_volatile(CAdmiralList *aAdmiralList, in
 	int
 		CapitalFleetRating = 400 + FleetGroupRating*3;
 	int
-		CapitalAdmiralLevel = CapitalFleetRating/50 + number(CapitalFleetRating/50 + 2);
+		CapitalAdmiralLevel = CapitalFleetRating/150 + number(CapitalFleetRating/150 + 2);
 	int
 		CapitalAdmiralRace = AvailableRace[(number(5) - 1)];
 	int
@@ -2809,19 +2886,30 @@ CFleetList::create_as_empire_fleet_group_volatile(CAdmiralList *aAdmiralList, in
 
 	for (int i=2 ; i<=FleetGroupSize ; i++)
 	{
+		int
+			FleetRating;
+
+		if (FleetGroupRating > 200)
+		{
+			FleetRating = (int)(CapitalFleetRating - ((double)i/20)*((double)(250-200)/200)*CapitalFleetRating);
+		}
+		else
+		{
+			FleetRating = (int)(CapitalFleetRating - ((double)i/20)*((double)(250-FleetGroupRating)/200)*CapitalFleetRating);
+		}
 
 		int
-			AdmiralLevel = FleetGroupRating/50 + number(FleetGroupRating/50 + 2);
+			AdmiralLevel = FleetRating/150 + number(FleetRating/150 + 2);
 		int
 			AdmiralRace = AvailableRace[(number(5) - 1)];
 
 		CAdmiral *
-			Admiral = new CAdmiral(AdmiralLevel, aFleetSize/20, aFleetSize/20, AdmiralRace);
+			Admiral = new CAdmiral(AdmiralLevel, 0, 0, AdmiralRace);
 		aAdmiralList->add_admiral(Admiral);
 
 		CFleet *
 			Fleet = new CFleet();
-		Fleet->create_as_empire_fleet(FleetGroupRating, TechLevel, aFleetSize, Admiral, i-1);
+		Fleet->create_as_empire_fleet(FleetRating, TechLevel, aFleetSize, Admiral, i-1);
 
 		add_fleet(Fleet);
 	}

@@ -113,7 +113,7 @@ CCouncilActionDeclareTotalWar::feedback()
 
 	if (Relation->get_relation() == CRelation::RELATION_TOTAL_WAR)
 	{
-		Relation->set_relation(CRelation::RELATION_WAR);
+		Relation->set_relation(CRelation::RELATION_TRUCE);
 		Relation->type(QUERY_UPDATE);
 		STORE_CENTER->store(*Relation);
 
@@ -142,7 +142,7 @@ CCouncilActionDeclareWar::feedback()
 
 	if (Relation->get_relation() == CRelation::RELATION_WAR)
 	{
-		Relation->set_relation(CRelation::RELATION_WAR);
+		Relation->set_relation(CRelation::RELATION_TRUCE);
 		Relation->type(QUERY_UPDATE);
 		STORE_CENTER->store(*Relation);
 

@@ -640,51 +640,59 @@ CAdmiral::get_detection_level()
 		else if( mLevel <= 15 )
 			Skill += 6;
 		else if( mLevel <= 17 )
-			Skill += 7;
-		else if( mLevel <= 18 )
 			Skill += 8;
-		else if( mLevel <= 19 )
-			Skill += 9;
-		else
+		else if( mLevel <= 18 )
 			Skill += 10;
+		else if( mLevel <= 19 )
+			Skill += 11;
+		else
+			Skill += 12;
 	}
 	if( mRacialAbility == RA_ARTIFACT_COOLING_ENGINE ){
-		if( mLevel <= 6 )
-			Skill --;
-		else if( mLevel <= 12 )
+		if( mLevel <= 5 )
+			Skill -= 1;
+		else if( mLevel <= 8 )
 			Skill -= 2;
-		else if( mLevel <= 18 )
-			Skill -= 3;
-		else if( mLevel == 19 )
+		else if( mLevel <= 13 )
 			Skill -= 4;
+		else if( mLevel <= 17 )
+			Skill -= 6;
 		else
-			Skill -= 5;
+			Skill -= 8;
 	}
 	if( mRacialAbility == RA_CYBER_SCAN_UNIT)
 	{
-		if( mLevel <= 4 )
-			Skill++;
-		else if( mLevel <= 8 )
+		if( mLevel <= 3 )
+			Skill += 1;
+		else if( mLevel <= 5 )
 			Skill += 2;
-		else if( mLevel <= 12 )
+		else if( mLevel <= 8 )
 			Skill += 3;
-		else if( mLevel <= 15 )
+		else if( mLevel <= 12 )
 			Skill += 4;
-		else if( mLevel <= 17 )
+		else if( mLevel <= 15 )
 			Skill += 5;
-		else if( mLevel <= 19 )
+		else if( mLevel <= 17 )
 			Skill += 6;
-		else
+		else if( mLevel <= 19 )
 			Skill += 7;
+		else
+			Skill += 9;
 	}
 	if( mRacialAbility == RA_INTUITION)
 	{
 		if( mLevel <= 4 )
-			Skill++;
-		else if( mLevel <= 15 )
+			Skill += 1;
+		else if( mLevel <= 7 )
 			Skill += 2;
-		else
+		else if( mLevel <= 11 )
 			Skill += 3;
+		else if( mLevel <= 14 )
+			Skill += 4;
+		else if( mLevel <= 17 )
+			Skill += 5;
+		else
+			Skill += 6;
 	}
 
 	if( mRacialAbility == RA_BREEDER_MALE ){

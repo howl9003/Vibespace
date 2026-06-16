@@ -9,10 +9,10 @@
 int
 CSpy::mHonorLossTable[][5] =
 {
-	{5,   0,  0,  0,  0},
-	{10,  5,  0,  0,  0},
-	{20, 15, 10,  5,  0},
-	{25, 20, 15, 10,  5}
+	{1,   0,  0,  0,  0},
+	{2,  1,  0,  0,  0},
+	{4, 3, 2,  1,  0},
+	{5, 4, 3, 2,  1}
 };
 
 char *
@@ -153,10 +153,10 @@ CSpy::get_security_status(int aSecurityLevel)
 			return 100;
 
 		case 4 :
-			return 150;
+			return 200;
 
 		case 5 :
-			return 200;
+			return 400;
 
 		default :
 			return -1;
@@ -1122,7 +1122,7 @@ CSpy::devastating_network_worm(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 		NumberOfTech = KnownTechList->count_by_category(CTech::TYPE_INFORMATION);
 
 	int
-		ResearchDiff = aTargetPlayer->get_research() * (50 - NumberOfTech) / 100;
+		ResearchDiff = aTargetPlayer->get_research() * (65 - NumberOfTech) / 100;
 	if (ResearchDiff == 0)
 	{
 		Result = GETTEXT("It had no effect on accumulated RP.");
@@ -1139,7 +1139,7 @@ CSpy::devastating_network_worm(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 	}
 
 	int
-		Rate = number(50) - NumberOfTech;
+		Rate = number(65) - NumberOfTech;
 	if (Rate < 0) Rate = 0;
 
 	int
@@ -1250,7 +1250,7 @@ CSpy::sabotage(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 		Building = Planet->get_building();
 
 	int
-		FactoryDiff = Building.get(BUILDING_FACTORY) * number(10) / 100;
+		FactoryDiff = Building.get(BUILDING_FACTORY) * number(20) / 100;
 	if (FactoryDiff == 0)
 	{
 		Result.format(GETTEXT("It had no effect on planet %1$s's factories."),
@@ -1420,7 +1420,7 @@ CSpy::steal_technology(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 	{
 		CKnownTech *
 			KnownTech = (CKnownTech *)TargetKnownTechList->get(i);
-		if (KnownTech->get_level() >= 8) continue;
+		if (KnownTech->get_level() >= 5) continue;
 
 		if (AvailableTechList->get_by_id(KnownTech->get_id()))
 		{
@@ -1615,7 +1615,7 @@ CSpy::strike_base(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 		Building = Planet->get_building();
 
 	int
-		MilitaryBaseDiff = Building.get(BUILDING_MILITARY_BASE) * number(10) / 100;
+		MilitaryBaseDiff = Building.get(BUILDING_MILITARY_BASE) * number(15) / 100;
 	if (MilitaryBaseDiff == 0)
 	{
 		Result.format(GETTEXT("It had no effect on planet %1$s's military bases."),
@@ -1642,7 +1642,7 @@ CSpy::strike_base(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 			CDockedShip *
 				Ship = (CDockedShip *)Dock->get(number(Dock->length()) - 1);
 			int
-				ShipDiff = Ship->get_number() * number(10) / 100;
+				ShipDiff = Ship->get_number() * number(15) / 100;
 			if (ShipDiff < 1) ShipDiff = 1;
 
 			Ship->change_number(-ShipDiff);
@@ -1857,7 +1857,7 @@ CSpy::emp_storm(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 		PlanetList = aTargetPlayer->get_planet_list();
 
 	int
-		ApplyTurn = number(10);
+		ApplyTurn = number(144);
 	int
 		ApplyPlanetIndex = number(PlanetList->length()) - 1;
 	CPlanet *
@@ -1933,7 +1933,7 @@ CSpy::stellar_bombardment(CPlayer *aSpyPlayer, CPlayer *aTargetPlayer)
 		NumberOfAsteroid;
 	if (aSpyPlayer->has_ability(ABILITY_ASTEROID_MANAGEMENT))
 	{
-		NumberOfAsteroid = 20;
+		NumberOfAsteroid = 40;
 	}
 	else
 	{

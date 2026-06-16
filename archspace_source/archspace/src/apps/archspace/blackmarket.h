@@ -16,11 +16,11 @@ class CPlanet;
 class CPlayer;
 
 /* these values are minute */
-#define TECH_EXPIRE_TIME	60 * 3	// 3 hours
-#define FLEET_EXPIRE_TIME	60 * 2	// 2 hours
-#define ADMIRAL_EXPIRE_TIME	60 * 3	// 3 hours
-#define PROJECT_EXPIRE_TIME	60 * 3	// 3 hours
-#define PLANET_EXPIRE_TIME	60 * 3	// 3 hours
+#define TECH_EXPIRE_TIME	60 * 1	// 1 hour
+#define FLEET_EXPIRE_TIME	60 * 1	// 1 hour
+#define ADMIRAL_EXPIRE_TIME	60 * 1	// 1 hour
+#define PROJECT_EXPIRE_TIME	60 * 1	// 1 hour
+#define PLANET_EXPIRE_TIME	60 * 1	// 1 hour
 
 // Display-only offset for the leasers-office cost message; the actual cost
 // check uses no offset, so 0 keeps the shown multiplier consistent (port fix:

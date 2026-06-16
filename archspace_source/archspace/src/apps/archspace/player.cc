@@ -684,9 +684,9 @@ CPlayer::set_dead(char *aReasonString)
 	{
 
 
-		BOUNTY_TABLE->remove_by_target_id(get_game_id());
-		OFFERED_BOUNTY_TABLE->remove_bounty_on_player(get_game_id());
-		mBountyList.remove_bounties();
+		//BOUNTY_TABLE->remove_by_target_id(get_game_id());
+		//OFFERED_BOUNTY_TABLE->remove_bounty_on_player(get_game_id());
+		//mBountyList.remove_bounties();
 		remove_relation_all();
 	}
 
@@ -1021,7 +1021,7 @@ CPlayer::build_control_model()
 	if (get_research_invest() > 0)
 	{
 		int
-			MaxPerTurn = get_research_lab() * 10;
+			MaxPerTurn = get_research_lab();
 
 		if (get_research_invest() >= MaxPerTurn)
 			mControlModel.change_research(3);
@@ -1033,7 +1033,9 @@ CPlayer::build_control_model()
 		}
 	}
 
-	// add control by major crossroute planet
+	bool bPlayerHasPAMSC = false, bPlayerHasPAAR = false, bPlayerHasPAMS = false, bPlayerHasPACA = false, bPlayerHasPAATL = false;
+
+	// add control modifiers for +global CM planet attributes.
 	for(int i=0; i<mPlanetList.length(); i++)
 	{
 		CPlanet *
@@ -1041,9 +1043,39 @@ CPlayer::build_control_model()
 
 		if (Planet->has_attribute(CPlanet::PA_MAJOR_SPACE_CROSSROUTE))
 		{
-			mControlModel.change_commerce(1);
-			break;
+			bPlayerHasPAMSC = true;
 		}
+		if (Planet->has_attribute(CPlanet::PA_ANCIENT_RUINS))
+		{
+			bPlayerHasPAAR = true;
+		}
+		if (Planet->has_attribute(CPlanet::PA_MILITARY_STRONGHOLD))
+		{
+			bPlayerHasPAMS = true;
+		}
+		if (Planet->has_attribute(CPlanet::PA_COGNITION_AMPLIFIER))
+		{
+			bPlayerHasPACA = true;
+		}
+		if (Planet->has_attribute(CPlanet::PA_LOST_TRABOTULIN_LIBRARY))
+		{
+			bPlayerHasPAATL = true;
+		}
+	}
+
+	if (bPlayerHasPAMSC)
+		mControlModel.change_commerce(2);
+	if (bPlayerHasPAAR)
+		mControlModel.change_genius(2);
+	if (bPlayerHasPAMS)
+		mControlModel.change_military(1);
+	if (bPlayerHasPACA)
+		mControlModel.change_production(2);
+	if (bPlayerHasPAATL)
+	{
+		mControlModel.change_facility_cost(1);
+		mControlModel.change_research(2);
+		mControlModel.change_military(1);
 	}
 
 	// add control by concentration mode
@@ -2036,11 +2068,25 @@ CPlayer::build_ship()
 		if (Armor->get_armor_type() == AT_BIO &&
 			mAbility.has(ABILITY_GREAT_SPAWNING_POOL))
 		{
-			CostPerShip = ShipToBuild->get_build_cost() * 80 / 100;
+			if (mAbility.has(ABILITY_HIVE_SHIP_YARD))
+			{
+				CostPerShip = ShipToBuild->get_build_cost() * 70 / 100;
+			}
+			else
+			{
+				CostPerShip = ShipToBuild->get_build_cost() * 80 / 100;
+			}
 		}
 		else
 		{
-			CostPerShip = ShipToBuild->get_build_cost();
+			if (mAbility.has(ABILITY_HIVE_SHIP_YARD))
+			{
+				CostPerShip = ShipToBuild->get_build_cost() * 90 / 100;
+			}
+			else
+			{
+				CostPerShip = ShipToBuild->get_build_cost();
+			}
 		}
 
 		while (mShipProduction > CostPerShip && ShipToBuild->get_number() > 0)

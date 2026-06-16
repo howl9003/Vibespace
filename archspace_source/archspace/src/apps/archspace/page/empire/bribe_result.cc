@@ -61,7 +61,7 @@ CPageEmpireBribeResult::handler(CPlayer *aPlayer)
 		ActualBribePP = BribePP/10*(10+aPlayer->get_control_model()->get_diplomacy());
 
 	int
-		RelationChange = (int)sqrt( (double)(ActualBribePP/100000) );
+		RelationChange = (int)sqrt( (double)(ActualBribePP/10000) );
 	if( RelationChange > 10 ) RelationChange = 10;
 
 	aPlayer->change_reserved_production(-BribePP);

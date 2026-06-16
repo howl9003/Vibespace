@@ -484,23 +484,23 @@ CBlackMarket::create_new_tech()
 void
 CBlackMarket::create_new_fleet()
 {
-	int classDayTable[16][10] = {
-			{ 43, 32, 15, 10,  0,  0,  0,  0, 0, 0 },
-			{ 42, 31, 16, 11,  0,  0,  0,  0, 0, 0 },
-			{ 36, 25, 18, 12,  9,  0,  0,  0, 0, 0 },
-			{ 33, 23, 19, 14, 11,  0,  0,  0, 0, 0 },
-			{ 31, 20, 18, 14, 11,  6,  0,  0, 0, 0 },
-			{ 30, 19, 18, 15, 11,  7,  0,  0, 0, 0 },
-			{ 28, 18, 16, 13, 11,  8,  6,  0, 0, 0 },
-			{ 28, 18, 15, 12, 11,  9,  7,  0, 0, 0 },
-			{ 25, 15, 14, 11, 11, 10,  7,  7, 0, 0 },
-			{ 25, 15, 14, 11, 11, 10,  7,  7, 0, 0 },
-			{ 23, 12, 13, 10, 11, 10,  8,  7, 6, 0 },
-			{ 22, 11, 12, 10, 12, 10,  8,  7, 7, 1 },
-			{ 21, 10, 12, 10, 12, 10,  8,  7, 7, 3 },
-			{ 19, 10, 12, 10, 12, 10,  9,  8, 7, 3 },
-			{ 16, 10, 11, 10, 13, 10,  9,  9, 8, 4 },
-			{ 13, 10, 10, 10, 13, 10, 10, 10, 9, 5 }
+	int classDayTable[16][MAX_SHIP_CLASS] = {
+			{ 43, 32, 15, 10,  0,  0,  0,  0, 0, 0, 0, 0 },
+			{ 42, 31, 16, 11,  0,  0,  0,  0, 0, 0, 0, 0 },
+			{ 36, 25, 18, 12,  9,  0,  0,  0, 0, 0, 0, 0 },
+			{ 33, 23, 19, 14, 11,  0,  0,  0, 0, 0, 0, 0 },
+			{ 31, 20, 18, 14, 11,  6,  0,  0, 0, 0, 0, 0 },
+			{ 30, 19, 18, 15, 11,  7,  0,  0, 0, 0, 0, 0 },
+			{ 28, 18, 16, 13, 11,  8,  6,  0, 0, 0, 0, 0 },
+			{ 28, 18, 15, 12, 11,  9,  7,  0, 0, 0, 0, 0 },
+			{ 25, 15, 14, 11, 11, 10,  7,  7, 0, 0, 0, 0 },
+			{ 25, 15, 14, 11, 11, 10,  7,  7, 0, 0, 0, 0 },
+			{ 23, 12, 13, 10, 11, 10,  8,  7, 6, 0, 0, 0 },
+			{ 22, 11, 12, 10, 12, 10,  8,  7, 7, 1, 0, 0 },
+			{ 20, 10, 12, 10, 12, 10,  8,  7, 7, 3, 1, 0 },
+			{ 18, 10, 12, 10, 12, 10,  9,  8, 7, 3, 1, 0 },
+			{ 13, 10, 11, 10, 13, 10,  9,  9, 8, 4, 2, 1 },
+			{  0,  0,  0,  0,  0, 10, 15, 20, 15, 10, 5, 5 }
 		};
 	int classIndex = number( 100 );
 	//int week = GAME->get_game_time() / (60*60*24*7);
@@ -510,7 +510,7 @@ CBlackMarket::create_new_fleet()
 	day = day/24;
 	if (day > 15)
 		day = 15;
-	for(int i=0 ; i<10 ; i++)
+	for(int i=0 ; i < MAX_SHIP_CLASS ; i++)
 	{
 		classIndex -= classDayTable[day][i];
 		if( classIndex <= 0 )
@@ -520,15 +520,16 @@ CBlackMarket::create_new_fleet()
 		}
 	}
 
-	int classLevelTable[5][5] = {
-			{ 25, 30, 20, 15, 10 },
-			{ 20, 30, 25, 15, 10 },
-			{ 15, 35, 25, 15, 10 },
-			{ 10, 30, 25, 25, 10 },
-			{  0, 25, 40, 25, 10 }
+	int classLevelTable[MAX_SHIP_CLASS/2][6] = {
+			{ 50, 30, 20,  0,  0,  0 },
+			{ 30, 30, 30, 10,  0,  0 },
+			{ 15, 35, 25, 15, 10,  0 },
+			{ 10, 30, 25, 25, 10,  0 },
+			{  0, 25, 40, 25, 10,  0 },
+			{  0,  0,  0, 50, 30, 20 }
 		};
 	int levelIndex = number(100);
-	for(int i=0 ; i<5; i++)
+	for(int i=0 ; i < 6; i++)
 	{
 		levelIndex -= classLevelTable[classIndex/2][i];
 		if( levelIndex <= 0 )
@@ -762,16 +763,38 @@ CBlackMarket::create_new_project()
 
 	CProjectList BMProjectList;
 
+    #define UNITY 8004
+	#define INGENUITY 8005
+	#define RESPONSIBILITY 8006
+
 	for (int i= 0; i < PROJECT_TABLE->length(); i++)
 	{
 		CProject *aProject = (CProject*)PROJECT_TABLE->get(i);
   		if (aProject == NULL)
   		    continue;
-        if (aProject->get_type() == CProject::TYPE_BM)
-  		    BMProjectList.add_project(aProject);
+        if (aProject->get_type() == CProject::TYPE_BM) {
+            // Ensure that ultimate projects have low spawn rates
+            if (aProject->get_id() == UNITY || aProject->get_id() == INGENUITY || aProject->get_id() == RESPONSIBILITY) {
+                //SLOG("%d detected", aProject->get_id());
+                if (number(4) == 1) {
+                    //SLOG("Keeping", aProject->get_id());
+                    BMProjectList.add_project(aProject);
+                } else {
+                    //SLOG("Excluding", aProject->get_id());
+                    // Do nothing
+                }
+            } else {
+  		        BMProjectList.add_project(aProject);
+            }
+        }
 //  		SLOG("Project Type %d Name %s", aProject->get_type(), aProject->get_name());
 
 	}
+
+	#undef UNITY
+	#undef INGENUITY
+	#undef RESPONSIBILITY
+
 	if (BMProjectList.length() < 1)
 	    return;
 //	SLOG("BMProjectList.length() -- %d", BMProjectList.length());
@@ -809,8 +832,8 @@ CBlackMarket::create_new_planet()
 	planet->set_cluster( cluster );
 	planet->set_name( cluster->get_new_planet_name() );
 	planet->change_population( 50000 );
-	planet->set_size(number(2)+1);
-	planet->change_resource(number(2)+1);
+	planet->set_size(number(5)-1);
+	planet->set_resource(number(3)+1);
 
 	if( add_new_item( planet ) == true )
 	{
@@ -1091,6 +1114,7 @@ CBlackMarket::expire(CBid *aBid)
 				mPlanetList->remove_planet( planet->get_id() );
 				planet->set_order( winner->get_planet_list()->length() );
 				winner->add_planet( planet );
+				planet->start_terraforming();
 				planet->type(QUERY_UPDATE);
 				//*STORE_CENTER << *planet;
 				STORE_CENTER->store(*planet);
@@ -1591,10 +1615,13 @@ CBlackMarket::bid(int aBidID, int aPlayerID, int price)
 	}
 	else
 	{
-		winner->change_reserved_production( -price * winner->get_planet_list()->length() );
-		bid->set_number_of_planet(winner->get_planet_list()->length());
+		winner->change_reserved_production( -price * (BLACK_MARKET_PLANET_COUNT_OFFSET + winner->get_planet_list()->length()) );
+		bid->set_number_of_planet(BLACK_MARKET_PLANET_COUNT_OFFSET + winner->get_planet_list()->length());
 	}
-	bid->set_expire_time(mBidExpireTime);
+	if (bid->get_expire_time() < mBidExpireTime)
+	{
+		bid->set_expire_time(mBidExpireTime);
+	}
 	bid->set_price( price );
 
 	bid->type(QUERY_UPDATE);
