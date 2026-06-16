@@ -937,12 +937,24 @@ class CMySQL
 
 		inline unsigned int error_no() { return (mysql_errno(mMySQL)); }
 	protected:
+		bool reconnect();			// re-establish a dropped link (errno 2006/2013)
+
 		MYSQL_ROW
 			mRow;
-		MYSQL 
+		MYSQL
 			*mMySQL;
-		MYSQL_RES 
+		MYSQL_RES
 			*mResult;
+		// retained connect params so query() can transparently reconnect
+		// after the server closes an idle connection (wait_timeout)
+		char
+			mHost[128];
+		char
+			mUser[64];
+		char
+			mPassword[128];
+		char
+			mDatabase[64];
 
 	RECYCLE(gMySQLZone);
 };
