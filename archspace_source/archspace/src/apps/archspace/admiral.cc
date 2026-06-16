@@ -1315,6 +1315,29 @@ CAdmiral::give_level( int aLevel )
 				mSkill[j][LEVEL]++;
 		}
 		mFleetCommanding += mPlusFleetCommanding[i];
+		// Bug fix: level_up() grants Breeder Male +1 fleet-commanding at levels
+		// 2/6/11/16/20, but give_level() (the pre-leveled path: black market, NPC
+		// fleets, player grants) omitted it -- so a pre-leveled Targoid Breeder Male
+		// commander ended up below an XP-leveled one of the same level. Mirror
+		// level_up() EXACTLY (same thresholds + cap 45, keyed on the loop level i);
+		// a path-parity fix, not a www-new balance change.
+		if(mRacialAbility == RA_BREEDER_MALE)
+		{
+			switch(i)
+			{
+				case 2:
+				case 6:
+				case 11:
+				case 16:
+				case 20:
+				{
+					mFleetCommanding += 1;
+					break;
+				}
+			}
+		}
+		if(mFleetCommanding >= 45)
+			mFleetCommanding = 45;
 
 		int EffUp;
 
@@ -1355,6 +1378,7 @@ CAdmiral::give_level( int aLevel )
 	mExp = mExpLevelTable[mLevel+aLevel-1];
 	mLevel += aLevel;
 	mStoreFlag += STORE_LEVEL;
+	mStoreFlag += STORE_FLEET_COMMANDING;	// persist the FC growth on the UPDATE path
 }
 
 CString &
