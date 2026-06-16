@@ -59,10 +59,10 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   └── archspace.tar.gz            # Packaged original `www` tier + content (art,
 │                                   #   encyclopedia, static pages) — content source of truth
 │
-├── archspace_source/CVSRoot/        # Archival CVS snapshot of the 2004-05 game =
-│   └── archspace/archspace/         #   the BALANCE-AUTHORITATIVE reference. The live
-│                                    #   engine's game logic/mechanics must match it
-│                                    #   exactly. See "CVSRoot fidelity" below.
+├── archspace_source/CVSRoot/        # Archival CVS snapshot = the "cvsroot build",
+│   └── archspace/archspace/         #   the authoritative balance for new.archspace.cc
+│                                    #   (cvs-merge). archspace.cc/production follows the
+│                                    #   www-new build. See "Two builds, two boxes" below.
 │
 ├── docker/                         # The modern deployment
 │   ├── Dockerfile                  # Compiles the engine on ubuntu:24.04 / g++ 13
@@ -93,33 +93,42 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 
 ---
 
-## CVSRoot fidelity — the reference snapshot and the balance audit
+## Two builds, two boxes — www-new (archspace.cc) vs cvsroot (new.archspace.cc)
 
-The repo carries **two copies of the game**:
+**Balance is box-specific.** Archspace existed in more than one version, and the
+two live servers run two different builds with two different *authoritative*
+balances:
 
-- **`archspace_source/archspace/`** — the **live engine** that builds the Docker
-  image. It is a modernized base into which a large slice of original game content
-  was merged ("**cvs-merge**": the 11th race *Trabotulin*, a commander/admiral
-  racial-ability rework, the full 7-category tech tree, ship classes 11–12, more
-  components/projects/events/spy-ops, the Fleet Academy QoL).
-- **`archspace_source/CVSRoot/archspace/archspace/`** — an **archival CVS snapshot**
-  of the 2004–05 game. This is the **balance-authoritative reference**: the live
-  engine's *game logic and mechanics must compute exactly what CVSRoot does.* It is
-  also the source of truth for the original data tables and art.
+| Box | Authoritative balance | Deploy branch |
+|---|---|---|
+| **archspace.cc** (production) | the **www-new build** — the newer, archspace.org-era game; i.e. the live `archspace_source/archspace/` engine *as it ships* | `production` |
+| **new.archspace.cc** (staging) | the **cvsroot build** — `archspace_source/CVSRoot/archspace/archspace/`, the older CVS-archived version | `claude/peng-cvs-merge` (cvs-merge) |
 
-This is the concrete form of the "**Game logic & mechanics → strictly faithful**"
-tier above: *faithful to CVSRoot.*
+(The repo also keeps even-older snapshots — `archspace_source/Old Code/`,
+`archspace_source/Older archspace/` — for reference only.)
 
-**Why it matters:** the cvs-merge was an **incomplete** merge — it appended the new
-content/enums and ported the headline *in-battle* effects, but silently **dropped
-or altered ~80 balance/mechanics hooks** relative to CVSRoot (admiral skill/leveling
-hooks, deeper battle subsystems, spy/black-market/council/event formulas, global
-`define.h` constants, …). A full audit (2026-06) diffed every engine file, data
-table, config and the DB schema against CVSRoot and reverted every confirmed
-divergence. The complete, adversarially-verified list is in **`cvs-audit/`**
-(`balance-divergences.md`, `triage.md`, `findings-by-file.json`).
+The live `archspace_source/archspace/` engine descends from the **www-new** build
+(it merged the CVS content — the 11th race *Trabotulin*, the commander/admiral
+racial-ability rework, the 7-category tech tree, ship classes 11–12, the Fleet
+Academy QoL — onto a modernized base). It differs from the older **cvsroot** build
+in **~80 engine balance points** (combat, fleet/NPC-AI, spy, black market,
+diplomacy, events, `define.h` constants). The data tables (`script/*.en`) are
+byte-identical between the builds, so the difference is entirely in the engine
+`.cc`/`.h`.
 
-### Auditing a file against CVSRoot
+### Which authority applies where
+- **new.archspace.cc / the `cvs-merge` branch restores the cvsroot balance.** A
+  2026-06 audit diffed every engine file, data table, config and the DB schema
+  against CVSRoot and reverted all ~80 confirmed differences to the cvsroot values
+  *on this branch*. The full, adversarially-verified list is in **`cvs-audit/`**
+  (`balance-divergences.md`, `triage.md`, `findings-by-file.json`).
+- **archspace.cc / `production` keeps the www-new balance.** ⚠️ **The cvsroot
+  reverts are STAGING-ONLY — never fast-forward them onto `production`.** On the
+  production line the www-new build *is* the authority.
+- **Genuine bugs are box-agnostic** and get fixed on both lines (e.g. the
+  `give_level` off-by-one below); only the *balance values* are box-specific.
+
+### Diffing the live engine against the cvsroot build
 ```sh
 diff -w --strip-trailing-cr \
   archspace_source/archspace/src/apps/archspace/<file> \
@@ -127,10 +136,10 @@ diff -w --strip-trailing-cr \
 ```
 **Always use `-w`** (and `--strip-trailing-cr`): the two trees differ heavily in
 indentation and line endings, so a raw diff is almost all noise — `-w` exposes the
-*real* logic deltas. The data tables (`script/*.en`) are already byte-identical to
-CVSRoot, so balance-via-data needs no porting.
+*real* logic deltas. The data tables are already byte-identical, so balance-via-data
+needs no porting.
 
-### What diverged (a representative slice — all reverted)
+### What differs between the two builds (reverted to cvsroot on the cvs-merge line only)
 - **Combat** (`battle.cc`/`battle.h`): morale-break thresholds, retreat behaviour,
   the **research weapon-upgrade effect block** (researched weapon upgrades did
   *nothing*), corrosivity, `prepare_turn` magnitudes, focus-fire / XP / detection /
@@ -145,7 +154,7 @@ CVSRoot, so balance-via-data needs no porting.
 - **Globals** (`define.h`): `DEVICE_MAX_NUMBER`, `INIT_ADMIRAL_NUMBER`,
   `PROTECTION_MODE_TURNS`, `MAX_COUNCIL_MEMBER`, attack-power ranges, cluster caps.
 
-### Deliberately kept (NOT reverted to CVSRoot)
+### On the cvs-merge line, deliberately KEPT (not reverted to cvsroot)
 - **Fleet Academy** (auto-train pool commanders) — additive QoL. Its **24-turn
   training cadence is kept** because that *is* the faithful-to-original value
   (CVSRoot's config has `TrainMissionTime = 1`, a dev/test artifact whose own

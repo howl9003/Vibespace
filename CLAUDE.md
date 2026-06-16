@@ -19,29 +19,39 @@ task:**
 
 Replacing a dead applet or a cosmetic fix is almost never an engine change.
 
-## CVSRoot is the balance reference
-The repo carries **two copies of the game**: the live engine
-(`archspace_source/archspace/`, what builds the image) and an **archival CVS
-snapshot** (`archspace_source/CVSRoot/archspace/archspace/`). CVSRoot is the
-**balance-authoritative** version — any change to **engine game logic/mechanics
-must compute exactly what CVSRoot does**. The live tree is a modernized base that
-merged CVS content ("cvs-merge": the 11th race Trabotulin, commander-ability
-rework, 7-category tech tree, …) and had **drifted from CVSRoot in ~80 places**,
-all since reverted. To check a divergence:
+## Balance authority is per-box: www-new vs cvsroot
+**The two live boxes run two different builds of the game and have two different
+authoritative balances. Which one applies depends on which box you ship to.**
 
+| Box | Authoritative balance | Deploy branch |
+|---|---|---|
+| **archspace.cc** (production) | the **www-new build** — the newer, archspace.org-era game (i.e. the live `archspace_source/archspace/` engine *as-shipped*) | `production` |
+| **new.archspace.cc** (staging) | the **cvsroot build** — `archspace_source/CVSRoot/archspace/archspace/`, the older CVS-archived version | `claude/peng-cvs-merge` (cvs-merge) |
+
+The two builds differ in **~80 engine balance points** (combat, fleet/NPC-AI, spy,
+black market, diplomacy, events, `define.h` constants). The data tables
+(`script/*.en`) are byte-identical between them, so the difference lives in the
+engine `.cc`/`.h`.
+
+The **cvs-merge** branch (→ new.archspace.cc) deliberately **reverts the engine
+balance toward cvsroot** — those reverts are **STAGING-ONLY**. **Production keeps
+the www-new balance; never apply the cvsroot reverts to `production` /
+archspace.cc.** Restoring cvsroot is correct *only* on the cvs-merge line.
+
+To compare the live engine against the cvsroot build:
 ```sh
-diff -w --strip-trailing-cr <live-file> <matching CVSRoot-file>
+diff -w --strip-trailing-cr <live-file> \
+  archspace_source/CVSRoot/archspace/archspace/src/apps/archspace/<file>
 ```
-**Always `-w`** — the two trees differ wildly in indentation/EOL, so a raw diff is
-almost all noise. Data tables (`script/*.en`) are already byte-identical to
-CVSRoot. The full audit + reverted-divergence list is in **`cvs-audit/`** and
-**README → "CVSRoot fidelity"**.
-- **Kept, NOT reverted:** Fleet Academy (and its 24-turn training cadence — the
-  faithful-to-original value), the `CGameStatus` downtime subsystem (left
-  unported), and all modern plumbing/UX. Fidelity applies to *game math*.
-- **Port the *intent*, not CVSRoot's own latent bugs** (e.g. the `give_level`
-  guard, the Armada-Synergy loop `break`, the Tactical-Genius morale mis-key —
-  see README).
+**Always `-w`** (the trees differ wildly in indentation/EOL). The full audit + the
+~80 reverted cvsroot-fidelity items are in **`cvs-audit/`** and **README →
+"Two builds, two boxes"**.
+- **Genuine bugs are box-agnostic — fix them on both** (e.g. the `give_level`
+  off-by-one that stuck bots/NPCs at level 1; see Gotchas).
+- On the cvs-merge line, **kept (not reverted to cvsroot):** Fleet Academy (+ its
+  24-turn cadence), the `CGameStatus` downtime subsystem, all modern plumbing/UX.
+- When matching cvsroot, **port the *intent*, not cvsroot's own latent bugs** (the
+  Armada-Synergy loop `break`, the Tactical-Genius morale mis-key — see README).
 
 ## Branches & deploying
 - Develop on your **own** feature branch, namespaced per collaborator:
