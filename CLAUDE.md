@@ -25,13 +25,16 @@ authoritative balances. Which one applies depends on which box you ship to.**
 
 | Box | Authoritative balance | Deploy branch |
 |---|---|---|
-| **archspace.cc** (production) | the **www-new build** — the newer, archspace.org-era game (i.e. the live `archspace_source/archspace/` engine *as-shipped*) | `production` |
-| **new.archspace.cc** (staging) | the **cvsroot build** — `archspace_source/CVSRoot/archspace/archspace/`, the older CVS-archived version | `claude/peng-cvs-merge` (cvs-merge) |
+| **archspace.cc** (production) | the **www-new build** — the **original official 2004–2005 game** (the live `archspace_source/archspace/` engine *as-shipped*) | `production` |
+| **new.archspace.cc** (staging) | the **cvsroot build** — an **unofficial fan update from ~2007** (`archspace_source/CVSRoot/archspace/archspace/`) | `claude/peng-cvs-merge` (cvs-merge) |
 
-The two builds differ in **~80 engine balance points** (combat, fleet/NPC-AI, spy,
-black market, diplomacy, events, `define.h` constants). The data tables
-(`script/*.en`) are byte-identical between them, so the difference lives in the
-engine `.cc`/`.h`.
+**Chronology:** *www-new* is the original 2004–2005 release; *cvsroot* is an
+**unofficial community update from ~2007** — *newer* than www-new — that reworked
+balance and added content (Trabotulin, megaclass hulls, an extended tech tree, NPC
+bots). The `cvs-merge` branch reproduces the cvsroot build: its `script/*.en` data
+already matches cvsroot, and a 2026-06 audit reverted the **~80 *engine* balance
+points** where the merged engine had drifted from cvsroot (combat, fleet/NPC-AI,
+spy, black market, diplomacy, events, `define.h` constants).
 
 The **cvs-merge** branch (→ new.archspace.cc) deliberately **reverts the engine
 balance toward cvsroot** — those reverts are **STAGING-ONLY**. **Production keeps

@@ -59,10 +59,11 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   └── archspace.tar.gz            # Packaged original `www` tier + content (art,
 │                                   #   encyclopedia, static pages) — content source of truth
 │
-├── archspace_source/CVSRoot/        # Archival CVS snapshot = the "cvsroot build",
-│   └── archspace/archspace/         #   the authoritative balance for new.archspace.cc
+├── archspace_source/CVSRoot/        # The "cvsroot build" — an unofficial ~2007 fan
+│   └── archspace/archspace/         #   update; authoritative balance for new.archspace.cc
 │                                    #   (cvs-merge). archspace.cc/production follows the
-│                                    #   www-new build. See "Two builds, two boxes" below.
+│                                    #   www-new build (original 2004-05). See "Two builds,
+│                                    #   two boxes" below.
 │
 ├── docker/                         # The modern deployment
 │   ├── Dockerfile                  # Compiles the engine on ubuntu:24.04 / g++ 13
@@ -101,20 +102,24 @@ balances:
 
 | Box | Authoritative balance | Deploy branch |
 |---|---|---|
-| **archspace.cc** (production) | the **www-new build** — the newer, archspace.org-era game; i.e. the live `archspace_source/archspace/` engine *as it ships* | `production` |
-| **new.archspace.cc** (staging) | the **cvsroot build** — `archspace_source/CVSRoot/archspace/archspace/`, the older CVS-archived version | `claude/peng-cvs-merge` (cvs-merge) |
+| **archspace.cc** (production) | the **www-new build** — the **original official 2004–2005 game** (the live `archspace_source/archspace/` engine *as it ships*) | `production` |
+| **new.archspace.cc** (staging) | the **cvsroot build** — an **unofficial fan update from ~2007** (`archspace_source/CVSRoot/archspace/archspace/`) | `claude/peng-cvs-merge` (cvs-merge) |
 
-(The repo also keeps even-older snapshots — `archspace_source/Old Code/`,
+(The repo also keeps other historical snapshots — `archspace_source/Old Code/`,
 `archspace_source/Older archspace/` — for reference only.)
 
-The live `archspace_source/archspace/` engine descends from the **www-new** build
-(it merged the CVS content — the 11th race *Trabotulin*, the commander/admiral
-racial-ability rework, the 7-category tech tree, ship classes 11–12, the Fleet
-Academy QoL — onto a modernized base). It differs from the older **cvsroot** build
-in **~80 engine balance points** (combat, fleet/NPC-AI, spy, black market,
-diplomacy, events, `define.h` constants). The data tables (`script/*.en`) are
-byte-identical between the builds, so the difference is entirely in the engine
-`.cc`/`.h`.
+**Chronology.** *www-new* is the **original official 2004–2005** game; *cvsroot* is
+an **unofficial community update from around 2007** — *newer* than www-new — that
+reworked the balance and added content (the 11th race *Trabotulin*, the
+commander/admiral racial-ability rework, the 7-category tech tree, megaclass hulls
+(ship classes 11–12), NPC bots, more components/projects/events/spy-ops).
+
+The modernized `archspace_source/archspace/` tree is built from **www-new**; on the
+`cvs-merge` branch it has the **cvsroot** content + balance merged in (plus the
+Fleet Academy QoL). On that branch the `script/*.en` data already matches cvsroot,
+so the only thing the audit chased is the **engine**: **~80 balance points**
+(combat, fleet/NPC-AI, spy, black market, diplomacy, events, `define.h` constants)
+where the merged engine had drifted from cvsroot — all reverted on this branch.
 
 ### Which authority applies where
 - **new.archspace.cc / the `cvs-merge` branch restores the cvsroot balance.** A
