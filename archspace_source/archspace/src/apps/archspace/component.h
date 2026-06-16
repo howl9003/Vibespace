@@ -229,6 +229,12 @@ class CComponent : public CPrerequisiteList
 
 		const char *html_print_row();
 
+		// QoL: compact stats summary for ship-part tooltips -- the part's stats
+		// (not its prose Description). Dispatches by category; returns
+		// <BR>-separated lines. Non-virtual on purpose (these classes are pool-
+		// allocated via RECYCLE and have no vtable); it downcasts by category.
+		char *get_tip_stats();
+
 		void add_effect( CFleetEffect *aEffect ) { mEffectList.push(aEffect); }
 		int effect_length() { return mEffectList.length(); }
 		CFleetEffect *get_effect( int i ) { return (CFleetEffect*)mEffectList.get(i); }

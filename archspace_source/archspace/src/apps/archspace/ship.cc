@@ -776,7 +776,7 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 	// Escape the description -- it is free prose and may contain " < > &.
 	Class.format("<TD CLASS=\"tabletxt\" WIDTH=\"99\" ALIGN=\"LEFT\">"
 						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
-						(char *)htmlspecialchars(Armor->get_description()),
+						Armor->get_tip_stats(),
 						Armor->get_name() );
 
 	CShipSize *
@@ -788,21 +788,21 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 		Computer = (CComputer *)COMPONENT_TABLE->get_by_id( get_computer() );
 	Class.format("<TD WIDTH=\"115\" CLASS=\"tabletxt\">"
 						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
-						(char *)htmlspecialchars(Computer->get_description()),
+						Computer->get_tip_stats(),
 						Computer->get_name() );
 
 	CEngine *
 		Engine = (CEngine *)COMPONENT_TABLE->get_by_id( get_engine() );
 	Class.format("<TD WIDTH=\"109\" CLASS=\"tabletxt\">"
 						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
-						(char *)htmlspecialchars(Engine->get_description()),
+						Engine->get_tip_stats(),
 						Engine->get_name() );
 
 	CShield *
 		Shield = (CShield *)COMPONENT_TABLE->get_by_id( get_shield() );
 	Class.format("<TD COLSPAN=\"2\" CLASS=\"tabletxt\" WIDTH=\"106\">"
 						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
-						(char *)htmlspecialchars(Shield->get_description()),
+						Shield->get_tip_stats(),
 						Shield->get_name() );
 
 	Class += "</TR>\n";
@@ -821,7 +821,7 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 			*Weapon = (CWeapon *)COMPONENT_TABLE->get_by_id( get_weapon(i) );
 		if (!Weapon) continue;
 		Class.format("&nbsp;<span data-tip=\"%s\">%s</span> * %d<BR>\n",
-						(char *)htmlspecialchars(Weapon->get_description()),
+						Weapon->get_tip_stats(),
 						Weapon->get_name(), get_weapon_number(i));
 		AnyWeapon = true;
 	}
@@ -847,7 +847,7 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 			*Device = (CDevice *)COMPONENT_TABLE->get_by_id( get_device(i) );
 		if (!Device) continue;
 		Class.format("&nbsp;<span data-tip=\"%s\">%s</span><BR>\n",
-						(char *)htmlspecialchars(Device->get_description()),
+						Device->get_tip_stats(),
 						Device->get_name());
 		AnyDevice = true;
 	}
