@@ -358,9 +358,11 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 		SizeInfo;
 	SizeInfo.clear();
 
-	// CVS: list hull classes 1..N where N = number of Schematics techs known.
-	int
-		Tech = aPlayer->count_tech_by_category( CTech::TYPE_SCHEMATICS );
+	// cvsroot fidelity: the size INFORMATION table lists ALL hull classes
+	// 1..MAX_SHIP_CLASS (incl. Astral Carrier, Suncrusher) as a reference,
+	// regardless of research -- matching the cvsroot original. The design
+	// dropdown (available_size_list_html) stays tech-gated for actual building.
+	(void)aPlayer;
 
 	SizeInfo = "<TABLE WIDTH=\"550\" BORDER=\"1\""
 				" CELLSPACING=\"0\" CELLPADDING=\"0\" BORDERCOLOR=\"#2A2A2A\">";
@@ -396,7 +398,7 @@ CShipSizeTable::size_information_html(CPlayer *aPlayer)
 
 	SizeInfo += "</TR>\n";
 
-	for (int i=1 ; i < (Tech + 1) && i <= MAX_SHIP_CLASS ; i++)
+	for (int i=1 ; i <= MAX_SHIP_CLASS ; i++)
 	{
 		CShipSize *
 			Ship = (CShipSize *)SHIP_SIZE_TABLE->get_by_id(4000 + i);
