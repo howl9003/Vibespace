@@ -3092,34 +3092,21 @@ CPlayer::refresh_power()
 {
 	if (mGameID == EMPIRE_GAME_ID) return true;
 
-	mPower = mFleetList.get_power();
+	// Power is the saturating sum of every owned source. Academy-docked ships
+	// (mAcademyDock) are real owned ships -- merely locked for auto-training, and
+	// moved out of mDock when enrolled (see CPageAcademyResult::handler) -- so they
+	// must count exactly like dock ships, or enrolling a ship would sink its power.
+	// Each get_power() already caps at MAX_POWER, so the sum of five of them fits a
+	// long long; clamp the total back to MAX_POWER (the long long idiom for power
+	// math is already used elsewhere in this file).
+	long long int
+		Total = (long long int)mFleetList.get_power()
+		      + (long long int)mDock.get_power()
+		      + (long long int)mAcademyDock.get_power()
+		      + (long long int)mPlanetList.get_power()
+		      + (long long int)mTechList.get_power();
 
-	if (MAX_POWER - mPower < mDock.get_power())
-	{
-		mPower = MAX_POWER;
-	}
-	else
-	{
-		mPower += mDock.get_power();
-
-		if (MAX_POWER - mPower < mPlanetList.get_power())
-		{
-			mPower = MAX_POWER;
-		}
-		else
-		{
-			mPower += mPlanetList.get_power();
-
-			if (MAX_POWER - mPower < mTechList.get_power())
-			{
-				mPower = MAX_POWER;
-			}
-			else
-			{
-				mPower += mTechList.get_power();
-			}
-		}
-	}
+	mPower = (Total > (long long int)MAX_POWER) ? MAX_POWER : (int)Total;
 
 	if (is_dead() == false)
 	{
