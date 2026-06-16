@@ -27,9 +27,24 @@ The repo maintains **two editions** of the game on two hosts:
 | **Faithful original** | `main` → `production` | **archspace.cc** | push-to-deploy (self-hosted runner runs `deploy.sh`) |
 | **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **new.archspace.cc** | **manual** — SSH in, run `deploy.sh` (no runner) |
 
-`main` and `production` are the **faithful** edition — the original 2004–05 game,
-no rule/balance/formula changes. `main` is the mainline; `production` is its
-deploy branch.
+**Authoritative balance reference (precise):** each edition follows a different
+build of the game, and that build — not the other — is authoritative for its host:
+- **Faithful edition → archspace.cc → the www-new build**: the archspace.org-era
+  release, i.e. the live `archspace_source/archspace/` engine *as it ships*. This is
+  **not** cvsroot.
+- **Restoration edition → new.archspace.cc → the cvsroot build**:
+  `archspace_source/CVSRoot/archspace/archspace/`, an earlier CVS snapshot.
+
+The two builds differ in **~80 *engine* balance points** (the `script/*.en` data
+tables are byte-identical). The restoration reverts those to the cvsroot values —
+but **only on `claude/peng-cvs-merge`**; the cvsroot-reverts (and the restoration
+content) must **never** reach `main`/`production`, which keep the www-new balance.
+(Full audit + the reverted list: `cvs-audit/` and the cvs-merge branch's README →
+"Two builds, two boxes".)
+
+`main` and `production` are the **faithful** edition — the www-new build, no
+rule/balance/formula changes away from it. `main` is the mainline; `production` is
+its deploy branch.
 
 The **restoration** edition lives **only on `claude/peng-cvs-merge`**. It adds
 original content recovered from the game's CVS history — the 11th race
