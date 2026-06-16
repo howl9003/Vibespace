@@ -46,20 +46,28 @@ CPageShipDesign2::handler( CPlayer *aPlayer)
 
 	CComputer *
 		Computer = (CComputer *)ComponentList->get_best_component(CComponent::CC_COMPUTER);
+	// QoL: hover tooltip (as-project-tooltips.js) on the auto-selected part;
+	// keep the hidden INPUT outside the span. Escape the free-prose description.
 	ITEM("COMPUTER",
-			format("%s (%s %d)<INPUT TYPE=hidden NAME=COMPUTER VALUE=\"%d\">",
+			format("<span data-tip=\"%s\">%s (%s %d)</span>"
+					"<INPUT TYPE=hidden NAME=COMPUTER VALUE=\"%d\">",
+					(char *)htmlspecialchars(Computer->get_description()),
 					Computer->get_name(), GETTEXT("Level"), Computer->get_level(), Computer->get_id()));
 
 	CEngine *
 		Engine = (CEngine *)ComponentList->get_best_component(CComponent::CC_ENGINE);
 	ITEM("ENGINE",
-			format("%s (%s %d)<INPUT TYPE=hidden NAME=ENGINE VALUE=\"%d\">",
+			format("<span data-tip=\"%s\">%s (%s %d)</span>"
+					"<INPUT TYPE=hidden NAME=ENGINE VALUE=\"%d\">",
+					(char *)htmlspecialchars(Engine->get_description()),
 					Engine->get_name(), GETTEXT("Level"), Engine->get_level(), Engine->get_id()));
 
 	CShield *
 		Shield = (CShield *)ComponentList->get_best_component(CComponent::CC_SHIELD);
 	ITEM("SHIELD",
-			(char *)format("%s (%s %d)<INPUT TYPE=hidden NAME=SHIELD VALUE=\"%d\">",
+			(char *)format("<span data-tip=\"%s\">%s (%s %d)</span>"
+					"<INPUT TYPE=hidden NAME=SHIELD VALUE=\"%d\">",
+					(char *)htmlspecialchars(Shield->get_description()),
 					Shield->get_name(), GETTEXT("Level"), Shield->get_level(), Shield->get_id()));
 
 	ITEM("STRING_ARMOR", GETTEXT("Armor"));

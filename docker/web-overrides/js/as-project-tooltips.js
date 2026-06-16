@@ -1,17 +1,17 @@
-// as-project-tooltips.js — QoL: hover tooltips showing a project's mechanical
-// effect on the project lists.
+// as-project-tooltips.js — QoL: data-tip hover tooltips + dropdown notation lines.
 //
-// The engine emits each project's effect as a data-tip="..." attribute:
-//   * on the project-name span/link in the black market, the council "achieved
-//     projects" list, and the domestic overview (real hover tooltips), and
-//   * on the <option>s of the council "propose a project" dropdown (since options
-//     can't host hover tooltips, the selected project's effect is shown just
-//     below the <select> instead).
-// The effect text comes from the engine (CProject::get_effect_tip, which reuses
-// get_effects_string_for_html + the special-effect list), so it matches the game.
+// The engine emits a data-tip="..." attribute carrying an explanation:
+//   * project effects (black market, council "achieved projects", domestic
+//     overview), commander abilities (fleet commander pages), and ship parts in
+//     the read-only design view -> shown as a hover tooltip on the element, and
+//   * on the <option>s of dropdowns (council "propose a project"; ship-design
+//     armor/weapon/device pickers) -> since options can't host hover tooltips,
+//     the selected option's text is shown on a line just below the <select>.
+// All text is engine-supplied (and HTML-escaped at the source), so it matches
+// the game.
 //
-// Bind-mounted web-tier asset (restart-only). Included from the project pages;
-// harmless elsewhere (it only acts on data-tip attributes / the PROJECT select).
+// Bind-mounted web-tier asset (restart-only). Included from those pages; harmless
+// elsewhere (it only acts on [data-tip] elements / selects with data-tip options).
 (function () {
   "use strict";
 
@@ -24,6 +24,11 @@
   }
 
   function init() {
+    // Idempotent: if this script is included more than once on a page (e.g. a
+    // template that already had it plus a shared include), only wire up once.
+    if (window.__asTipInit) return;
+    window.__asTipInit = true;
+
     var tip = document.createElement("div");
     var s = tip.style;
     s.position = "fixed"; s.zIndex = "100000"; s.maxWidth = "300px";
@@ -58,10 +63,17 @@
       el.addEventListener("mouseleave", hide);
     });
 
-    // 2) Council "propose a project" dropdown: options can't host tooltips, so
-    //    show the selected project's effect on a line just below the <select>.
-    var sel = document.querySelector('select[name="PROJECT"]');
-    if (sel) {
+    // 2) Dropdowns whose <option>s carry data-tip (council "propose a project";
+    //    ship-design armor/weapon/device pickers): options can't host hover
+    //    tooltips, so show the selected option's text on a line just below the
+    //    <select>. Selects with no data-tip options (ship size, council member,
+    //    etc.) are skipped so they get no stray box.
+    Array.prototype.forEach.call(document.querySelectorAll("select"), function (sel) {
+      var hasTip = false;
+      for (var i = 0; i < sel.options.length; i++) {
+        if (fmt(sel.options[i].getAttribute("data-tip"))) { hasTip = true; break; }
+      }
+      if (!hasTip) return;
       var box = document.createElement("div");
       var bs = box.style;
       bs.marginTop = "4px"; bs.color = "#bbb"; bs.minHeight = "1em";
@@ -74,7 +86,7 @@
       };
       sel.addEventListener("change", upd);
       upd();
-    }
+    });
   }
 
   if (document.readyState === "loading") {

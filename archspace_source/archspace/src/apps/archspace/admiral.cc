@@ -132,6 +132,50 @@ char *CAdmiral::mRacialAbilityName[] =
 	"Blitzkreig"
 };
 
+// QoL tooltips: player-facing descriptions for the commander abilities, in the
+// SAME order as mSpecialAbilityName[] / mRacialAbilityName[] above (and the
+// SA_*/RA_* enums). Kept lockstep with those arrays -- a short array would read
+// out of bounds. Stored raw; the emit sites escape via htmlspecialchars().
+char *CAdmiral::mSpecialAbilityDescription[] =
+{
+	"Strengthens armor: improves armor damage reduction, impenetrable armor and repair speed, and repairs the fleet's ships during battle. Effect grows with commander level.",
+	"Improves shields: higher shield strength, faster recharge, more impenetrable shielding and added shield solidity. Effect grows with commander level.",
+	"Master of missiles: raises missile accuracy and damage and shortens missile cooling time. Effect grows with commander level.",
+	"Master of projectile (ballistic) weapons: raises their accuracy and damage and shortens their cooling time. Effect grows with commander level.",
+	"Master of beam (energy) weapons: raises their accuracy and damage and shortens their cooling time. Effect grows with commander level.",
+	"A veteran combat pilot."
+};
+
+char *CAdmiral::mRacialAbilityDescription[] =
+{
+	"Unpredictable defensive flying: grants strong overall and armor damage reduction that climbs with level, at the cost of some maneuverability.",
+	"Sharp instincts: boosts critical-hit chance and detection, and at higher levels sees through weak cloaking.",
+	"A solitary fighter: raises mobility and stealth and steadies fleet morale in battle, with maneuver and cloak-piercing gains at higher levels.",
+	"Corrosive payloads: increases projectile and missile damage, scaling with commander level.",
+	"Prolific breeder: improves repair speed, efficiency and fleet-commanding capacity as the commander levels -- though the commander occasionally leaves on parental duty, idling the fleet.",
+	"Expendable clones: gives the commander a strong chance (up to 90% at high level) to survive what would otherwise be a fatal blow in battle.",
+	"Aggressive zealots: increase mobility and battle ferocity (and attack skill at high level), but lower morale and PSI defense.",
+	"Powerful psionics: greatly raises PSI attack and detection (seeing through cloaking at higher levels), at a small morale cost.",
+	"Crystalline technology: boosts beam-weapon damage, shield recharge rate and speed, all scaling with level.",
+	"Ancient psychics: massively boosts PSI attack and battle morale and pierces cloaking, at the cost of some efficiency.",
+	"Advanced cooling: shortens all weapon cooling times (faster fire rate) as it levels, but dulls the fleet's detection.",
+	"Ambush predator: grants weak cloaking and strongly boosts stealth, scaling sharply with level.",
+	"Saturation fire: shortens weapon cooling times for faster firing, but weakens armor damage reduction.",
+	"Drone screen: raises overall fleet defense as it levels, at some cost to maneuverability.",
+	"Sensor specialists: improve attack accuracy and detection (and pierce weak cloaking), scaling with level.",
+	"Field repairs: patches up the fleet's ships during battle as it levels, but commands a slightly smaller fleet.",
+	"Decoy patterns: greatly reduces incoming missile damage and confuses enemy targeting, but makes the fleet easier to detect.",
+	"Notorious raider: boosts speed and stealth and makes privateer (theft) missions far more successful.",
+	"Merchant warlord: boosts ship hull, speed and mobility, and earns extra commerce income each turn.",
+	"Defensive shielding: dramatically strengthens shields as it levels, trading away some aggression, morale and efficiency.",
+	"Atavistic warriors: strongly raise PSI attack and offensive skill and pierce cloaking, scaling with level.",
+	"Disciplined doctrine: boosts PSI defense and damage reduction, but lowers morale and aggression.",
+	"Salvagers: greatly improve repair speed and armor damage reduction, and repair ships during battle.",
+	"Lightning offense: raises weapon damage, critical-hit chance and maneuver, at a small cost to defensive skill."
+	// production/www-new has 24 racial abilities; the 9 cvs-merge-only ones are
+	// absent here, so this array stops at Blitzkreig to stay lockstep with the enum.
+};
+
 int
 CAdmiral::mPossibleRacialSkill[MAX_RACE][MAX_RACIAL_SKILL] =
 {
@@ -1079,6 +1123,19 @@ CAdmiral::get_racial_ability_name()
 	return mRacialAbilityName[mRacialAbility];
 }
 
+// QoL tooltips: raw (unescaped) ability descriptions; callers escape at emit.
+char *
+CAdmiral::get_special_ability_description()
+{
+	return mSpecialAbilityDescription[mSpecialAbility];
+}
+
+char *
+CAdmiral::get_racial_ability_description()
+{
+	return mRacialAbilityDescription[mRacialAbility];
+}
+
 char *
 CAdmiral::get_ability_name()
 {
@@ -1087,6 +1144,25 @@ CAdmiral::get_ability_name()
 		RaceAbility = get_racial_ability_name();
 
 	return (char *)format("%s, %s", (char *)CommonAbility, (char *)RaceAbility);
+}
+
+// QoL: the special + racial ability names, each wrapped in a data-tip span so the
+// web tier (as-project-tooltips.js) shows a hover tooltip explaining the ability.
+// Descriptions are escaped; built in two appends so only one htmlspecialchars()
+// is live per format() (it returns a shared static buffer). Kept separate from
+// get_ability_name() so that getter stays HTML-free for its JS-string callers.
+char *
+CAdmiral::get_ability_html()
+{
+	static CString
+		Html;
+	Html = (char *)format("<span data-tip=\"%s\">%s</span>, ",
+			(char *)htmlspecialchars(get_special_ability_description()),
+			get_special_ability_name());
+	Html += (char *)format("<span data-tip=\"%s\">%s</span>",
+			(char *)htmlspecialchars(get_racial_ability_description()),
+			get_racial_ability_name());
+	return (char *)Html;
 }
 
 bool

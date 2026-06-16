@@ -749,8 +749,12 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 	Class += "<TR>\n";
 
 	CArmor *
-		Armor = (CArmor *)COMPONENT_TABLE->get_by_id( get_armor() ); 
-	Class.format("<TD CLASS=\"tabletxt\" WIDTH=\"99\" ALIGN=\"LEFT\">&nbsp;%s</TD>\n",
+		Armor = (CArmor *)COMPONENT_TABLE->get_by_id( get_armor() );
+	// QoL: hover tooltip (as-project-tooltips.js) showing each part's description.
+	// Escape the description -- it is free prose and may contain " < > &.
+	Class.format("<TD CLASS=\"tabletxt\" WIDTH=\"99\" ALIGN=\"LEFT\">"
+						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
+						(char *)htmlspecialchars(Armor->get_description()),
 						Armor->get_name() );
 
 	CShipSize *
@@ -760,17 +764,23 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 
 	CComputer *
 		Computer = (CComputer *)COMPONENT_TABLE->get_by_id( get_computer() );
-	Class.format("<TD WIDTH=\"115\" CLASS=\"tabletxt\">&nbsp;%s</TD>\n",
+	Class.format("<TD WIDTH=\"115\" CLASS=\"tabletxt\">"
+						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
+						(char *)htmlspecialchars(Computer->get_description()),
 						Computer->get_name() );
 
 	CEngine *
 		Engine = (CEngine *)COMPONENT_TABLE->get_by_id( get_engine() );
-	Class.format("<TD WIDTH=\"109\" CLASS=\"tabletxt\">&nbsp;%s</TD>\n",
+	Class.format("<TD WIDTH=\"109\" CLASS=\"tabletxt\">"
+						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
+						(char *)htmlspecialchars(Engine->get_description()),
 						Engine->get_name() );
 
 	CShield *
 		Shield = (CShield *)COMPONENT_TABLE->get_by_id( get_shield() );
-	Class.format("<TD COLSPAN=\"2\" CLASS=\"tabletxt\" WIDTH=\"106\">&nbsp;%s</TD>\n",
+	Class.format("<TD COLSPAN=\"2\" CLASS=\"tabletxt\" WIDTH=\"106\">"
+						"&nbsp;<span data-tip=\"%s\">%s</span></TD>\n",
+						(char *)htmlspecialchars(Shield->get_description()),
 						Shield->get_name() );
 
 	Class += "</TR>\n";
@@ -788,7 +798,8 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 		CWeapon
 			*Weapon = (CWeapon *)COMPONENT_TABLE->get_by_id( get_weapon(i) );
 		if (!Weapon) continue;
-		Class.format("&nbsp;%s * %d<BR>\n",
+		Class.format("&nbsp;<span data-tip=\"%s\">%s</span> * %d<BR>\n",
+						(char *)htmlspecialchars(Weapon->get_description()),
 						Weapon->get_name(), get_weapon_number(i));
 		AnyWeapon = true;
 	}
@@ -813,7 +824,8 @@ CShipDesign::print_html(CPlayer *aPlayer, int aPP )
 		CDevice
 			*Device = (CDevice *)COMPONENT_TABLE->get_by_id( get_device(i) );
 		if (!Device) continue;
-		Class.format("&nbsp;%s<BR>\n",
+		Class.format("&nbsp;<span data-tip=\"%s\">%s</span><BR>\n",
+						(char *)htmlspecialchars(Device->get_description()),
 						Device->get_name());
 		AnyDevice = true;
 	}
