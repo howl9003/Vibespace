@@ -40,6 +40,26 @@ bot_cfg(const char *aKey, int aDefault)
 }
 
 // ---------------------------------------------------------------------------
+// True if the bot has any fleet whose commander is below the tier roster level
+// (or whose commander no longer resolves) -- an undersized legacy fleet left by
+// the pre-off-by-one-fix bot generation. Used to re-roster such bots.
+// ---------------------------------------------------------------------------
+static bool
+bot_has_undersized_fleet(CPlayer *aPlayer, int aMinLevel)
+{
+	CFleetList   *FleetList   = aPlayer->get_fleet_list();
+	CAdmiralList *AdmiralList = aPlayer->get_admiral_list();
+	for (int i=0 ; i<FleetList->length() ; i++)
+	{
+		CFleet *F = (CFleet *)FleetList->get(i);
+		if (F == NULL) continue;
+		CAdmiral *A = AdmiralList->get_by_id(F->get_admiral_id());
+		if (A == NULL || A->get_level() < aMinLevel) return true;
+	}
+	return false;
+}
+
+// ---------------------------------------------------------------------------
 // Population: keep each tier's target count (bot_tier_spec) of bots alive.
 // ---------------------------------------------------------------------------
 void
@@ -86,6 +106,7 @@ CCronTabBotPopulation::handler()
 	// Bounded per run (BotRerollPerRun) so the whole population converts over a few
 	// runs rather than thousands of deletes/inserts in a single tick.
 	int Reseeded = 0, MaxReseed = bot_cfg("BotRerollPerRun", 20);
+	int RosterLevel = bot_cfg("BotCommanderLevel", 20);
 	for (int i=0 ; i<PLAYER_TABLE->length() && Reseeded<MaxReseed ; i++)
 	{
 		CPlayer *P = (CPlayer *)PLAYER_TABLE->get(i);
@@ -99,7 +120,12 @@ CCronTabBotPopulation::handler()
 			if (D != NULL && D->get_name() && strstr(D->get_name(), " Mk. "))
 			{ HasTierDesign = true; break; }
 		}
-		if (HasTierDesign) continue;
+		// Re-roster a bot with no tier design (legacy pre-tier migration) OR one
+		// whose fleets are undersized -- the pre-off-by-one-fix backlog of level-1
+		// commanders in ~8-ship fleets the old (mis-ordered) bot_cull_to never
+		// retired. build_bot_roster rebuilds a fresh full level-20 roster;
+		// self-clearing, since afterwards every fleet sits at the tier level.
+		if (HasTierDesign && !bot_has_undersized_fleet(P, RosterLevel)) continue;
 
 		GAME->build_bot_roster(P, P->bot_band());
 		P->refresh_power();
@@ -219,16 +245,37 @@ bot_delete_fleet(CPlayer *aPlayer, CFleet *aFleet)
 static void
 bot_cull_to(CPlayer *aPlayer, int aTarget)
 {
-	CFleetList *FleetList = aPlayer->get_fleet_list();
-	for (int i=0 ; i<FleetList->length() && FleetList->length()>aTarget ; )
+	CFleetList   *FleetList   = aPlayer->get_fleet_list();
+	CAdmiralList *AdmiralList = aPlayer->get_admiral_list();
+
+	// Retire the genuinely-oldest fleets first. Fleet ids are RECYCLED
+	// (get_new_fleet_id returns the lowest free id) and the list is sorted by
+	// fleet id, so list order does NOT track creation order -- a fresh fleet
+	// reuses a low id and sorts to the front. Deleting from index 0 (the old
+	// code) culled the NEWEST fleets and preserved the legacy backlog, so bots
+	// never converged onto their level-20 roster. Age by COMMANDER id instead:
+	// admiral ids are a global monotonic counter, so the lowest-id commander
+	// marks the oldest fleet (an unresolved commander -> key 0 -> retired first).
+	while (FleetList->length() > aTarget)
 	{
-		CFleet *F = (CFleet *)FleetList->get(i);
-		if (F == NULL) { i++; continue; }
-		int M = F->get_mission().get_mission();
-		if (M == CMission::MISSION_EXPEDITION ||
-			M == CMission::MISSION_RETURNING_WITH_PLANET)
-		{ i++; continue; }                 // keep the one expedition fleet
-		bot_delete_fleet(aPlayer, F);      // removes element i; tail shifts into i
+		CFleet *Oldest    = NULL;
+		int     OldestKey = 0;
+		for (int i=0 ; i<FleetList->length() ; i++)
+		{
+			CFleet *F = (CFleet *)FleetList->get(i);
+			if (F == NULL) continue;
+			int M = F->get_mission().get_mission();
+			if (M == CMission::MISSION_EXPEDITION ||
+				M == CMission::MISSION_RETURNING_WITH_PLANET)
+				continue;                  // keep the one expedition fleet
+
+			CAdmiral *A = AdmiralList->get_by_id(F->get_admiral_id());
+			int Key = (A != NULL) ? A->get_id() : 0;
+			if (Oldest == NULL || Key < OldestKey)
+			{ Oldest = F; OldestKey = Key; }
+		}
+		if (Oldest == NULL) break;         // only the expedition fleet remains
+		bot_delete_fleet(aPlayer, Oldest);
 	}
 }
 
