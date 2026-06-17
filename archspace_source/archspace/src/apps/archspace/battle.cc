@@ -329,6 +329,8 @@ CTurret::~CTurret()
 void
 CTurret::init( CWeapon *aWeapon, int aNumber )
 {
+	// Defense in depth: never copy-assign from a NULL weapon (segfault at 0x8).
+	if (aWeapon == NULL) { mInited = false; return; }
 	*(CWeapon*)this = *aWeapon;
 
 	mNumber = aNumber;
@@ -417,7 +419,10 @@ CBattleFleet::init(CBattle *aBattle, CPlayer *aOwner, CFleet *aFleet, CAdmiralLi
 
 	mArmor = (CArmor*)COMPONENT_TABLE->get_by_id( aFleet->get_armor() );
 
-	if(Ship == NULL)
+	// Crash fix: a stale/removed hull or armor component id (a design id that no
+	// longer resolves) yields a NULL Ship/mArmor; mArmor->get_hp_multiplier()
+	// just below would then NULL-deref. Drop such a malformed fleet.
+	if(Ship == NULL || mArmor == NULL)
 	{
 		return false;
 	}
@@ -487,6 +492,10 @@ CBattleFleet::init(CBattle *aBattle, CPlayer *aOwner, CFleet *aFleet, CAdmiralLi
 	mEngine = (CEngine *)COMPONENT_TABLE->get_by_id(aFleet->get_engine());
 	mComputer = (CComputer *)COMPONENT_TABLE->get_by_id(aFleet->get_computer());
 	mShield = (CShield *)COMPONENT_TABLE->get_by_id(aFleet->get_shield());
+	// Crash fix: these required components are dereferenced unguarded throughout
+	// the battle; if any id is stale (NULL) drop the fleet rather than crash.
+	if (mEngine == NULL || mComputer == NULL || mShield == NULL)
+		return false;
 	for (int i=0 ; i<DEVICE_MAX_NUMBER ; i++)
 	{
 		if (aFleet->get_device(i) == 0) continue;
@@ -502,6 +511,12 @@ CBattleFleet::init(CBattle *aBattle, CPlayer *aOwner, CFleet *aFleet, CAdmiralLi
 		if (aFleet->get_weapon(i) == 0) continue;
 		CWeapon *
 			Weapon = (CWeapon *)COMPONENT_TABLE->get_by_id(aFleet->get_weapon(i));
+		// Crash fix (kernel 'segfault at 8'): a stale/removed weapon component id
+		// makes get_by_id return NULL; CTurret::init then copy-assigns
+		// *(CWeapon*)NULL, reading CPrerequisiteList::mPrerequisiteList at byte
+		// offset 8 -> NULL deref. Skip the turret (stays empty/mInited=false, and
+		// every firing/cooling loop already guards is_empty()).
+		if (Weapon == NULL) continue;
 		mTurret[i].init(Weapon, aFleet->get_weapon_number(i));
 		if (mTurret[i].get_range() > mRedZoneRadius)
 		{
