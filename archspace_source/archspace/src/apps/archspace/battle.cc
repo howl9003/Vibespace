@@ -2560,7 +2560,17 @@ CBattleFleetList::auto_deployment(CBattle *aBattle, CFleetList *aFleetList, CAdm
 		CBattleFleet *
 			BattleFleet = new CBattleFleet();
 
-		BattleFleet->init(aBattle, mOwner, Fleet, aAdmiralList, get_new_id());
+		// Crash fix: honor init()'s bool. It returns false when the fleet's
+		// admiral row does not resolve (NULL commander) or its ship body is
+		// missing. The capital-commander and per-fleet loops in
+		// init_battle_fleet() deref the commander with no NULL guard, so a
+		// half-built fleet must be dropped here, not added to the battle.
+		if (!BattleFleet->init(aBattle, mOwner, Fleet, aAdmiralList, get_new_id()))
+		{
+			SLOG("battle: skipping fleet (owner %d, admiral %d) -- unresolved commander/ship", Fleet->get_owner(), Fleet->get_admiral_id());
+			delete BattleFleet;
+			continue;
+		}
 
 		if (mCapitalFleet == NULL)
 		{
@@ -3175,7 +3185,17 @@ CBattleFleetList::deploy_extra_fleet(CBattle *aBattle, CPlanet *aPlanet)
 
 			CBattleFleet *
 				BattleFleet = new CBattleFleet();
-			BattleFleet->init(aBattle, mOwner, Fleet, AdmiralList, get_new_id());
+			// Crash fix: honor init()'s bool. It returns false when the fleet's
+			// admiral row does not resolve (NULL commander) or its ship body is
+			// missing. The capital-commander and per-fleet loops in
+			// init_battle_fleet() deref the commander with no NULL guard, so a
+			// half-built fleet must be dropped here, not added to the battle.
+			if (!BattleFleet->init(aBattle, mOwner, Fleet, AdmiralList, get_new_id()))
+			{
+				SLOG("battle: skipping fleet (owner %d, admiral %d) -- unresolved commander/ship", Fleet->get_owner(), Fleet->get_admiral_id());
+				delete BattleFleet;
+				continue;
+			}
 			BattleFleet->set_vector(9200, 2500+Interval*(DeployedFleetNumber + 1), 180);
 			add_battle_fleet(BattleFleet);
 
@@ -3218,7 +3238,17 @@ CBattleFleetList::deploy_extra_fleet(CBattle *aBattle, CPlanet *aPlanet)
 
 			CBattleFleet *
 				BattleFleet = new CBattleFleet();
-			BattleFleet->init(aBattle, mOwner, Fleet, AdmiralList, get_new_id());
+			// Crash fix: honor init()'s bool. It returns false when the fleet's
+			// admiral row does not resolve (NULL commander) or its ship body is
+			// missing. The capital-commander and per-fleet loops in
+			// init_battle_fleet() deref the commander with no NULL guard, so a
+			// half-built fleet must be dropped here, not added to the battle.
+			if (!BattleFleet->init(aBattle, mOwner, Fleet, AdmiralList, get_new_id()))
+			{
+				SLOG("battle: skipping fleet (owner %d, admiral %d) -- unresolved commander/ship", Fleet->get_owner(), Fleet->get_admiral_id());
+				delete BattleFleet;
+				continue;
+			}
 			BattleFleet->set_vector(9400, 2500+Interval*(DeployedFleetNumber + 1), 180);
 			add_battle_fleet(BattleFleet);
 
@@ -3799,7 +3829,17 @@ CBattle::deploy_by_plan(CPlayer *aPlanOwner, CDefensePlan *aPlan, CFleetList *aF
 		CBattleFleet *
 			BattleFleet = new CBattleFleet();
 //		SLOG("FLEET ID: %d", DefenseFleet->get_fleet_id());
-		BattleFleet->init(this, aPlanOwner, Fleet, aAdmiralList, aBattleFleetList->get_new_id());
+		// Crash fix: honor init()'s bool. It returns false when the fleet's
+		// admiral row does not resolve (NULL commander) or its ship body is
+		// missing. The capital-commander and per-fleet loops in
+		// init_battle_fleet() deref the commander with no NULL guard, so a
+		// half-built fleet must be dropped here, not added to the battle.
+		if (!BattleFleet->init(this, aPlanOwner, Fleet, aAdmiralList, aBattleFleetList->get_new_id()))
+		{
+			SLOG("battle: skipping fleet (owner %d, admiral %d) -- unresolved commander/ship", Fleet->get_owner(), Fleet->get_admiral_id());
+			delete BattleFleet;
+			continue;
+		}
 //		SLOG("DEFENSE FLEET COMMAND: %d", DefenseFleet->get_command());
 		BattleFleet->set_command(DefenseFleet->get_command());
 //		SLOG("BATTLE FLEET COMMAND: %d", BattleFleet->get_command());
