@@ -716,6 +716,7 @@ class CBattleRecord : public CStore
 	public :
 		void add_fleet( CBattleFleet *aFleet );
 		void add_location( CBattleFleet *aFleet );
+		void add_state( CBattleFleet *aFleet );
 		void disable_fleet( CBattleFleet *aFleet );
 		void add_fire( CBattleFleet *aAttacker, CBattleFleet *aTarget, CTurret *aTurret, int aHitChance );
 		void add_hit( CBattleFleet *aAttacker, CBattleFleet *aTarget, int aHitCount, int aMissCount, int aTotalDamage, int aSunkCount );
