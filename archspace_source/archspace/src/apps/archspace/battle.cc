@@ -311,6 +311,7 @@ CTargetFleetList::free_item(TSomething aItem)
 	return true;
 }
 
+
 CTurret::CTurret()
 {
 	mNumber = mCooling = 0;
@@ -2721,7 +2722,7 @@ CBattleFleetList::set_formation_speed()
 }
 
 void
-CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin)
+CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin, CBattleRecord *aRecord, int aTurn)
 {
 	CAllyFleetList *
 		AllyFleetList = mOwner->get_ally_fleet_list();
@@ -2911,13 +2912,20 @@ CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool 
 
 				if (aWarType != CBattle::WAR_PRIVATEER)
 				{
+					int
+						AdmiralExp = 0;
 					if (aWin)
 					{
-						Fleet->get_admiral()->gain_exp( Fleet->get_admiral_exp() );
+						AdmiralExp = Fleet->get_admiral_exp();
 					}
 					else
 					{
-						Fleet->get_admiral()->gain_exp( Fleet->get_admiral_exp()/4 );
+						AdmiralExp = Fleet->get_admiral_exp()/4;
+					}
+					Fleet->get_admiral()->gain_exp( AdmiralExp );
+					if (aRecord != NULL && AdmiralExp > 0)
+					{
+						aRecord->add_admiral_exp(Fleet, AdmiralExp, aTurn);
 					}
 				}
 			}
@@ -5335,13 +5343,13 @@ CBattle::update_fleet_after_battle()
 {
 	if (attacker_win() == true)
 	{
-		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, true);
-		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, false);
+		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, true, mRecord, mTurn);
+		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, false, mRecord, mTurn);
 	}
 	else
 	{
-		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, false);
-		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, true);
+		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, false, mRecord, mTurn);
+		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, true, mRecord, mTurn);
 	}
 }
 
@@ -6418,6 +6426,18 @@ CBattleRecord::add_state( CBattleFleet *aFleet )
 }
 
 void
+CBattleRecord::add_admiral_exp( CBattleFleet *aFleet, int aExp, int aTurn )
+{
+	CString
+		Buf,
+		AdmiralNameString;
+
+	AdmiralNameString = (char *)mark_forward_slashes(aFleet->get_admiral()->get_name());
+	Buf.format( "X/%d/%d/%d/%s/%d/%d\n", aTurn, aFleet->get_real_owner(), aFleet->get_real_id(), (char *)AdmiralNameString, aFleet->get_admiral()->get_id(), aExp );
+	add_buf( (char*)Buf );
+}
+
+void
 CBattleRecord::disable_fleet( CBattleFleet *aFleet )
 {
 	CString
@@ -6638,4 +6658,3 @@ CBattleRecordTable::load(CMySQL &aMySQL)
 
 	return true;
 }
-

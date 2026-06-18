@@ -39,6 +39,9 @@ assert.strictEqual(attacker.stateSamples[3].status, 6);
 assert.strictEqual(attacker.stateSamples[3].substatus, 3);
 assert.strictEqual(attacker.stateSamples[3].morale, 92);
 assert.strictEqual(attacker.stateSamples[3].cloaked, false);
+assert.deepStrictEqual(attacker.admiralXp, [
+  { turn: 30, admiral: 'Admiral/Ares', admiralId: 501, exp: 175 },
+]);
 
 assert.strictEqual(defender.nick, 'Home/Guard');
 assert.strictEqual(defender.side, 'def');
@@ -82,5 +85,6 @@ assert.strictEqual(
   'Home/Guard state: status Rout, maneuver Turning to border, Morale break (42), decloaked'
 );
 assert.strictEqual(battle.eventsByTurn[24][0], '☠ Home/Guard destroyed/retreated');
+assert.strictEqual(battle.eventsByTurn[30][0], 'First/Strike admiral Admiral/Ares gained 175 XP');
 
 console.log('battle replay parser fixture passed');

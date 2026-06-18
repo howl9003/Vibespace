@@ -25,6 +25,7 @@
     S/turn/owner/id/status/substatus/morale/moraleStatus/detected/cloaked
     F/fireid/turn/attOwner/attId/tgtOwner/tgtId/weapon/type/numFiring/hitChance
     H/fireid/turn/hits/misses/damage/sunk
+    X/turn/owner/id/admiral/admiralId/exp
     D/turn/owner/id                                            (fleet disabled)
     ENDTURN/finalTurn
   Names are escaped `/`->`\/` (CString::mark_forward_slashes); we un-escape.

@@ -19,7 +19,6 @@ battle but currently discards from the log:
 - **Per-ship HP and shield bars** over time (only fleet-level active-ship counts
   are logged now).
 - **Per-turn morale curves** per fleet, beyond the sampled morale-break state.
-- **Admiral XP** gained per fleet.
 
 **What it takes:** extend `CBattleRecord` with new log-line types (alongside the
 existing `FL/M/F/H/D` records in
@@ -39,9 +38,12 @@ snapshots beside roster and movement records. The parser and HTML5 replay use
 those snapshots to surface status/sub-status, morale-break state, cloak, and
 detection transitions without changing combat math.
 
+**Completed XP slice:** engine battle logs now include `X/` admiral XP award
+records at battle resolution. The parser stores those records per fleet and the
+HTML5 replay ticker shows the awarded XP alongside the end-of-battle events.
+
 **Next slice:** add deeper per-ship durability snapshots (HP/shield aggregates or
-bars) or admiral XP gain records, then parse and visualize them as another
-observe-only replay layer.
+bars), then parse and visualize them as another observe-only replay layer.
 
 Deferred for future consideration.
 
