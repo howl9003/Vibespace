@@ -204,6 +204,23 @@
           B.endTurn = Math.max(B.endTurn, t2);
           break;
         }
+        case 'X': {
+          // X/turn/owner/id/admiral/admiralId/exp
+          var tx = num(f[1]), flx = fleet(num(f[2]), num(f[3]));
+          var admiralName = f[4] || (flx ? flx.admiral : 'Admiral');
+          var admiralId = num(f[5]);
+          var exp = num(f[6]);
+          if (flx) {
+            flx.admiralXp = flx.admiralXp || [];
+            flx.admiralXp.push({ turn: tx, admiral: admiralName, admiralId: admiralId, exp: exp });
+          }
+          if (exp > 0) {
+            ev(tx, (flx ? flx.nick : 'Fleet ' + num(f[3])) + ' admiral ' +
+              admiralName + ' gained ' + comma(exp) + ' XP');
+          }
+          B.endTurn = Math.max(B.endTurn, tx);
+          break;
+        }
       }
     }
 
@@ -215,6 +232,7 @@
       fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
       fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
       fl3.stateSamples.sort(function (a, b) { return a.turn - b.turn; });
+      if (fl3.admiralXp) fl3.admiralXp.sort(function (a, b) { return a.turn - b.turn; });
     }
     return B;
   }
