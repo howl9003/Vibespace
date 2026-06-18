@@ -856,11 +856,14 @@ CBlackMarket::expire(CBid *aBid)
 		if (winner == NULL)
 		{
 			SLOG("ERROR : winner is NULL in CBlackMarket::expire(), aBid->get_id() = %d, aBid->get_winner_id() = %d", aBid->get_id(), aBid->get_winner_id());
-			// TODO: relist item or handle this better
+			// Winning player no longer exists (deleted/purged account), so we
+			// can't award the item. Relist it as a fresh, open listing: clear
+			// the winner, reset open/closed times and a per-type expire time,
+			// then persist the reset so it survives a reload (price kept as-is).
 			aBid->set_winner_id(0);
 			aBid->set_open_time(time(0));
 			aBid->set_closed_time(0);
-			
+
 			switch (aBid->get_type())
 			{
                 case CBid::ITEM_TECH:
@@ -891,10 +894,13 @@ CBlackMarket::expire(CBid *aBid)
                 {
                      //aBid->set_price();
                      aBid->set_expire_time(PLANET_EXPIRE_TIME);
-                     break;   
+                     break;
                 }
             }
-			
+
+			aBid->type(QUERY_UPDATE);
+			*STORE_CENTER << *aBid;
+
 			return;
 		}
 
@@ -1197,7 +1203,36 @@ CBlackMarket::expire_all()
 		if (winner == NULL)
 		{
 			SLOG("ERROR : winner is NULL in CBlackMarket::expire_all(), aBid->get_id() = %d, aBid->get_winner_id() = %d", aBid->get_id(), aBid->get_winner_id());
-			return;
+			// Winning player no longer exists: relist this bid as a fresh, open
+			// listing (see CBlackMarket::expire()) instead of aborting the whole
+			// loop, so the remaining bids are still processed.
+			aBid->set_winner_id(0);
+			aBid->set_open_time(time(0));
+			aBid->set_closed_time(0);
+
+			switch (aBid->get_type())
+			{
+				case CBid::ITEM_TECH:
+					aBid->set_expire_time(TECH_EXPIRE_TIME);
+					break;
+				case CBid::ITEM_FLEET:
+					aBid->set_expire_time(FLEET_EXPIRE_TIME);
+					break;
+				case CBid::ITEM_ADMIRAL:
+					aBid->set_expire_time(ADMIRAL_EXPIRE_TIME);
+					break;
+				case CBid::ITEM_PROJECT:
+					aBid->set_expire_time(PROJECT_EXPIRE_TIME);
+					break;
+				case CBid::ITEM_PLANET:
+					aBid->set_expire_time(PLANET_EXPIRE_TIME);
+					break;
+			}
+
+			aBid->type(QUERY_UPDATE);
+			*STORE_CENTER << *aBid;
+
+			continue;
 		}
 
 		switch (aBid->get_type())
