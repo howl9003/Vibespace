@@ -130,6 +130,7 @@ class CShipDesign: public CStore
 		enum EDeleteDesign {
 			USED_IN_FLEET,
 			USED_IN_DOCK,
+			USED_IN_ACADEMY,
 			USED_IN_REPAIR_BAY,
 			USED_IN_BUILD_Q,
 			DELETE_OK,
