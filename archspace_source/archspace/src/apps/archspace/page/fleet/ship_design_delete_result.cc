@@ -50,6 +50,16 @@ CPageShipDesignDeleteResult::handler(CPlayer *aPlayer)
 			return output("fleet/ship_design_error.html");
 		}
 
+		case CShipDesign::USED_IN_ACADEMY :
+		{
+			ITEM("ERROR_MESSAGE",
+				(char *)format(GETTEXT("Ships of %1$s class exist in your Fleet Academy."
+										" You cannot delete this class.<BR>Please return"
+										" them to the dock and try it later."),
+								Design->get_name()));
+			return output("fleet/ship_design_error.html");
+		}
+
 		case CShipDesign::USED_IN_REPAIR_BAY :
 		{
 			ITEM("ERROR_MESSAGE",
@@ -106,4 +116,3 @@ CPageShipDesignDeleteResult::handler(CPlayer *aPlayer)
 
 	return output("fleet/ship_design.html");
 }
-

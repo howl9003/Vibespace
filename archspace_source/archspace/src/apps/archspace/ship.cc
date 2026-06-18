@@ -952,6 +952,15 @@ CShipDesign::can_delete(CPlayer *aPlayer)
 		if (DockedShip->get_design_id() == mDesignID) return USED_IN_DOCK;
 	}
 
+	CDock *
+		AcademyDock = aPlayer->get_academy_dock();
+	for (int i=0 ; i<AcademyDock->length() ; i++)
+	{
+		CDockedShip *
+			DockedShip = (CDockedShip *)AcademyDock->get(i);
+		if (DockedShip->get_design_id() == mDesignID) return USED_IN_ACADEMY;
+	}
+
 	CRepairBay *
 		RepairBay = aPlayer->get_repair_bay();
 	for (int i=0 ; i<RepairBay->length() ; i++)
@@ -1754,12 +1763,15 @@ CDock::change_ship( CShipDesign *aClass, int aNumber )
 
 	CDockedShip *
 		Ship = get_by_id( aClass->get_design_id() );
+	int
+		OwnerID = 0;
 
 	if (!Ship)
 	{
 		if (aNumber < 0) return false;
 
 		Ship = new_ship(aClass, aNumber);
+		OwnerID = Ship->get_owner();
 
 		add_docked_ship(Ship);
 
@@ -1768,6 +1780,8 @@ CDock::change_ship( CShipDesign *aClass, int aNumber )
 	}
 	else
 	{
+		OwnerID = Ship->get_owner();
+
 		int
 			NewShipNumber = Ship->get_number() + aNumber;
 
@@ -1780,6 +1794,7 @@ CDock::change_ship( CShipDesign *aClass, int aNumber )
 		else
 		{
 			Ship->change_number(aNumber);
+			refresh_power();
 
 			Ship->type(QUERY_UPDATE);
 			*STORE_CENTER << *Ship;
@@ -1787,7 +1802,7 @@ CDock::change_ship( CShipDesign *aClass, int aNumber )
 	}
 
 	CPlayer *
-		Owner = PLAYER_TABLE->get_by_game_id(Ship->get_owner());
+		Owner = PLAYER_TABLE->get_by_game_id(OwnerID);
 	if (Owner) Owner->refresh_power();
 
 	return true;
@@ -2417,4 +2432,3 @@ CRepairBay::repairing_bay_info_html()
 }
 
 /* end of file ship.cc */
-
