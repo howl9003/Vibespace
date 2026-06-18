@@ -18,10 +18,7 @@ battle but currently discards from the log:
 
 - **Per-ship HP and shield bars** over time (only fleet-level active-ship counts
   are logged now).
-- **Morale curves** per fleet (berserk / rout / retreat thresholds).
-- **Status / formation / sub-status changes** as visible state (penetrate, flank,
-  stand-ground, disorder, panic…).
-- **Cloak / detection** transitions.
+- **Per-turn morale curves** per fleet, beyond the sampled morale-break state.
 - **Admiral XP** gained per fleet.
 
 **What it takes:** extend `CBattleRecord` with new log-line types (alongside the
@@ -37,8 +34,14 @@ safety check before changing engine log output. The fixture covers escaped
 slashes in names, `FL` roster rows, `M` movement samples, paired `F`/`H` weapon
 events, `D` disabled-fleet rows, and `ENDTURN`.
 
-**Next slice:** extend the engine with richer observe-only battle records, then
-parse and visualize those records without changing combat math.
+**Completed richer-state slice:** engine battle logs now include `S/` fleet-state
+snapshots beside roster and movement records. The parser and HTML5 replay use
+those snapshots to surface status/sub-status, morale-break state, cloak, and
+detection transitions without changing combat math.
+
+**Next slice:** add deeper per-ship durability snapshots (HP/shield aggregates or
+bars) or admiral XP gain records, then parse and visualize them as another
+observe-only replay layer.
 
 Deferred for future consideration.
 

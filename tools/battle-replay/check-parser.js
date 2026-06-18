@@ -32,12 +32,27 @@ assert.strictEqual(attacker.admiral, 'Admiral/Ares');
 assert.strictEqual(attacker.side, 'att');
 assert.strictEqual(attacker.samples.length, 3);
 assert.deepStrictEqual(attacker.samples.map((sample) => sample.turn), [0, 10, 20]);
+assert.strictEqual(attacker.samples[2].cmd, 6);
+assert.strictEqual(attacker.samples[2].substatus, 3);
+assert.deepStrictEqual(attacker.stateSamples.map((sample) => sample.turn), [0, 0, 10, 20]);
+assert.strictEqual(attacker.stateSamples[3].status, 6);
+assert.strictEqual(attacker.stateSamples[3].substatus, 3);
+assert.strictEqual(attacker.stateSamples[3].morale, 92);
+assert.strictEqual(attacker.stateSamples[3].cloaked, false);
 
 assert.strictEqual(defender.nick, 'Home/Guard');
 assert.strictEqual(defender.side, 'def');
 assert.strictEqual(defender.disabledTurn, 24);
 assert.strictEqual(defender.samples[2].cmd, 10);
+assert.strictEqual(defender.samples[2].substatus, 7);
 assert.strictEqual(defender.samples[2].ships, 8);
+assert.deepStrictEqual(defender.stateSamples.map((sample) => sample.turn), [0, 0, 10, 20]);
+assert.strictEqual(defender.stateSamples[1].cloaked, true);
+assert.strictEqual(defender.stateSamples[2].detected, true);
+assert.strictEqual(defender.stateSamples[2].moraleStatus, 1);
+assert.strictEqual(defender.stateSamples[3].status, 10);
+assert.strictEqual(defender.stateSamples[3].moraleStatus, 2);
+assert.strictEqual(defender.stateSamples[3].cloaked, false);
 
 const fire = battle.firesByTurn[12][0];
 assert.strictEqual(fire.from, '101:11');
@@ -53,6 +68,18 @@ assert.deepStrictEqual(Object.keys(battle.pendingFire), []);
 assert.strictEqual(
   battle.eventsByTurn[12][0],
   'First/Strike → Home/Guard: Laser/Cannon ×4 — 3 hits, 4,200 dmg, 2 sunk'
+);
+assert.strictEqual(
+  battle.eventsByTurn[10][0],
+  'Home/Guard state: Weak morale break (70), detected'
+);
+assert.strictEqual(
+  battle.eventsByTurn[20][0],
+  'First/Strike state: status Assault, maneuver Charging'
+);
+assert.strictEqual(
+  battle.eventsByTurn[20][1],
+  'Home/Guard state: status Rout, maneuver Turning to border, Morale break (42), decloaked'
 );
 assert.strictEqual(battle.eventsByTurn[24][0], '☠ Home/Guard destroyed/retreated');
 

@@ -6025,6 +6025,7 @@ CBattleRecord::CBattleRecord()
 {
 	mID = 0;
 	mFireID = 1;
+	mTurn = 0;
 	mIsDraw = false;
 	mThereWasBattle = 0;
 }
@@ -6119,6 +6120,7 @@ CBattleRecord::CBattleRecord(CPlayer *aAttacker, CPlayer *aDefender, int aWarTyp
 	mThereWasBattle = 0;
 
 	mFireID = 1;
+	mTurn = 0;
 
 	add_buf((char *)format("FIELD/%s\n",
 							(char *)mBattleFieldName));
@@ -6194,6 +6196,7 @@ CBattleRecord::CBattleRecord(MYSQL_ROW aRow)
 	}
 
 	mFireID = 1;
+	mTurn = 0;
 }
 
 CBattleRecord::~CBattleRecord()
@@ -6369,6 +6372,7 @@ CBattleRecord::add_fleet( CBattleFleet *aFleet )
 	// end telecard
 */
 	add_buf( (char*)Buf );
+	add_state( aFleet );
 }
 
 void
@@ -6398,6 +6402,18 @@ CBattleRecord::add_location( CBattleFleet *aFleet )
 	CString
 		Buf;
 	Buf.format( "M/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_x(), aFleet->get_y(), (int)aFleet->get_direction(), aFleet->get_command(), aFleet->get_substatus(), aFleet->count_active_ship() );
+	add_buf( (char*)Buf );
+	add_state( aFleet );
+}
+
+void
+CBattleRecord::add_state( CBattleFleet *aFleet )
+{
+	CString
+		Buf;
+
+	// Richer replay metadata only; no battle logic reads these records.
+	Buf.format( "S/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_status(), aFleet->get_substatus(), (int)aFleet->get_morale(), aFleet->get_morale_status(), aFleet->is_detected() ? 1 : 0, aFleet->is_cloaked() ? 1 : 0 );
 	add_buf( (char*)Buf );
 }
 
@@ -6622,6 +6638,4 @@ CBattleRecordTable::load(CMySQL &aMySQL)
 
 	return true;
 }
-
-
 

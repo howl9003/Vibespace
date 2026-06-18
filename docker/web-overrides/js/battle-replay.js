@@ -22,6 +22,7 @@
     FIELD/  ATTACKER/name/id/race   DEFENDER/name/id/race   TIME/  CAPITAL/  ALLIANCE/
     FL/owner/id/nick/admiral/class/NONE/ships/x/y/dir/cmd      (roster, once)
     M/turn/owner/id/x/y/dir/cmd/substatus/ships               (position, every 10 turns)
+    S/turn/owner/id/status/substatus/morale/moraleStatus/detected/cloaked
     F/fireid/turn/attOwner/attId/tgtOwner/tgtId/weapon/type/numFiring/hitChance
     H/fireid/turn/hits/misses/damage/sunk
     D/turn/owner/id                                            (fleet disabled)
@@ -77,6 +78,34 @@
     11: { ch: 'Rt', name: 'RETREAT',  color: '#5bc0ff' },
     12: { ch: 'P',  name: 'PANIC',    color: '#ff5577' }
   };
+  var SUBSTATUS_LABELS = {
+    1: 'CENTER',
+    2: 'PENETRATE',
+    3: 'CHARGE',
+    4: 'STRAIGHT',
+    5: 'FORWARD',
+    6: 'BACKWARD',
+    7: 'BORDER'
+  };
+  var MORALE_LABELS = {
+    1: 'MORALE LOW',
+    2: 'MORALE BREAK',
+    3: 'MORALE CRIT'
+  };
+  var BOARD_SUBSTATUS_LABELS = {
+    1: 'CTR',
+    2: 'PEN',
+    3: 'CHG',
+    4: 'STR',
+    5: 'FWD',
+    6: 'BWD',
+    7: 'BRDR'
+  };
+  var BOARD_MORALE_LABELS = {
+    1: 'M-LOW',
+    2: 'M-BRK',
+    3: 'M-CRT'
+  };
 
   function el(tag, css, html) {
     var e = document.createElement(tag);
@@ -91,6 +120,15 @@
       'border:1px solid #223355;color:#889;font:13px sans-serif;padding:28px 24px;' +
       'box-sizing:border-box;text-align:center;', msg));
   }
+  function fitCanvasText(ctx, text, maxWidth) {
+    if (ctx.measureText(text).width <= maxWidth) return text;
+    var suffix = '...';
+    for (var len = text.length - suffix.length; len > 3; len--) {
+      var shortText = text.substr(0, len) + suffix;
+      if (ctx.measureText(shortText).width <= maxWidth) return shortText;
+    }
+    return text.substr(0, 3);
+  }
 
   var parser = window.ArchspaceBattleReplayParser;
   if (!parser || typeof parser.parse !== 'function') {
@@ -102,21 +140,42 @@
 
   if (!logUrl) { notice('Battle replay is not available for this report.'); return; }
 
+  function latestState(fl, t) {
+    var s = fl.stateSamples || [], latest = null;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i].turn <= t) latest = s[i]; else break;
+    }
+    return latest;
+  }
+
+  function mergeReplayState(fl, t, st) {
+    var rs = latestState(fl, t);
+    st.status = rs && rs.status != null ? rs.status : st.cmd;
+    st.substatus = rs && rs.substatus != null ? rs.substatus : (st.substatus || 0);
+    st.morale = rs ? rs.morale : null;
+    st.moraleStatus = rs ? rs.moraleStatus : null;
+    st.detected = rs ? rs.detected : false;
+    st.cloaked = rs ? rs.cloaked : false;
+    return st;
+  }
+
   // fleet state (interpolated) at turn t, or null if not yet present / gone
   function stateAt(fl, t) {
     if (fl.disabledTurn != null && t >= fl.disabledTurn) return null;
     var s = fl.samples, n = s.length;
     if (!n) return null;
-    if (t <= s[0].turn) return { x: s[0].x, y: s[0].y, dir: s[0].dir, ships: s[0].ships, cmd: s[0].cmd };
+    if (t <= s[0].turn) return mergeReplayState(fl, t, { x: s[0].x, y: s[0].y, dir: s[0].dir, ships: s[0].ships, cmd: s[0].cmd, substatus: s[0].substatus || 0 });
     for (var i = 0; i < n - 1; i++) {
       if (t >= s[i].turn && t <= s[i + 1].turn) {
         var a = s[i], b = s[i + 1], span = (b.turn - a.turn) || 1, f = (t - a.turn) / span;
-        return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f,
-                 dir: a.dir, ships: a.ships, cmd: a.cmd };
+        return mergeReplayState(fl, t, {
+          x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f,
+          dir: a.dir, ships: a.ships, cmd: a.cmd, substatus: a.substatus || 0
+        });
       }
     }
     var last = s[n - 1];
-    return { x: last.x, y: last.y, dir: last.dir, ships: last.ships, cmd: last.cmd };
+    return mergeReplayState(fl, t, { x: last.x, y: last.y, dir: last.dir, ships: last.ships, cmd: last.cmd, substatus: last.substatus || 0 });
   }
 
   // ---- combatant header ---------------------------------------------------
@@ -263,11 +322,10 @@
       // morale-break status: flicker the marker (keeping its side colour so blue
       // fleets flicker blue and orange flicker orange), stamp its letter on the
       // icon, and show the full name in the label.
-      var fx = STATUS_FX[st.cmd];
+      var fx = STATUS_FX[st.status];
       var alpha = 1, tag = '';
       if (fx) {
         alpha = 0.3 + 0.7 * Math.abs(Math.sin(Date.now() / 120));
-        tag = ' ⚠ ' + fx.name;
       }
       var rad = (st.dir || 0) * Math.PI / 180;
       ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(-rad);   // -rad: ty flips the y axis (cy ∝ −y)
@@ -285,11 +343,30 @@
         ctx.fillStyle = '#000'; ctx.fillText(fx.ch, x, y);
         ctx.restore();
       }
+      if (st.cloaked || st.detected) {
+        ctx.save();
+        ctx.strokeStyle = st.detected ? '#f9d84a' : '#b392ff';
+        ctx.lineWidth = 1.2;
+        if (st.cloaked) ctx.setLineDash([2, 2]);
+        ctx.beginPath(); ctx.arc(x, y, r + 4, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+      }
+      var tags = [];
+      if (fx) tags.push(fx.ch);
+      if (st.substatus && BOARD_SUBSTATUS_LABELS[st.substatus]) tags.push(BOARD_SUBSTATUS_LABELS[st.substatus]);
+      if (st.moraleStatus && BOARD_MORALE_LABELS[st.moraleStatus]) tags.push(BOARD_MORALE_LABELS[st.moraleStatus]);
+      if (st.cloaked) tags.push('CL');
+      if (st.detected) tags.push('DET');
+      tag = tags.length ? ' [' + tags.join(' ') + ']' : '';
       ctx.save();
       ctx.globalAlpha = fx ? alpha : 1;
       ctx.fillStyle = fx ? col : '#7d8aa0';
       ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(fl.nick + ' (' + st.ships + ')' + tag, x, y - r - 3);
+      var label = fitCanvasText(ctx, fl.nick + ' (' + st.ships + ')' + tag, cw - 8);
+      var labelW = ctx.measureText(label).width;
+      var labelX = Math.max(4 + labelW / 2, Math.min(cw - 4 - labelW / 2, x));
+      var labelY = Math.max(10, Math.min(ch - 3, y - r - 3));
+      ctx.fillText(label, labelX, labelY);
       ctx.restore();
     }
 
@@ -337,7 +414,7 @@
     function anyAbnormal(t) {
       for (var i = 0; i < fleetList.length; i++) {
         var st = stateAt(fleetList[i], t);
-        if (st && STATUS_FX[st.cmd]) return true;
+        if (st && STATUS_FX[st.status]) return true;
       }
       return false;
     }

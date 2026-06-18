@@ -37,6 +37,71 @@
     return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  var STATUS_LABELS = {
+    0: 'Normal',
+    1: 'Formation',
+    2: 'Penetrate',
+    3: 'Flank',
+    4: 'Reserve',
+    5: 'Free',
+    6: 'Assault',
+    7: 'Stand ground',
+    8: 'Berserk',
+    9: 'Disorder',
+    10: 'Rout',
+    11: 'Retreat',
+    12: 'Panic',
+    13: 'Annihilated',
+    14: 'Annihilated this turn',
+    15: 'Retreated this turn',
+    16: 'Retreated'
+  };
+  var SUBSTATUS_LABELS = {
+    0: 'None',
+    1: 'Turning to center',
+    2: 'Penetrating',
+    3: 'Charging',
+    4: 'Moving straight',
+    5: 'Turning forward',
+    6: 'Turning backward',
+    7: 'Turning to border'
+  };
+  var MORALE_LABELS = {
+    0: 'Normal morale',
+    1: 'Weak morale break',
+    2: 'Morale break',
+    3: 'Complete morale break'
+  };
+
+  function label(map, id, fallback) {
+    return map.hasOwnProperty(id) ? map[id] : fallback + ' ' + id;
+  }
+
+  function stateChangeParts(prev, next) {
+    var parts = [];
+    if (!prev) return parts;
+    if (prev.status !== next.status) {
+      parts.push('status ' + label(STATUS_LABELS, next.status, 'status'));
+    }
+    if (prev.substatus !== next.substatus) {
+      parts.push(next.substatus ?
+        'maneuver ' + label(SUBSTATUS_LABELS, next.substatus, 'substatus') :
+        'maneuver clear');
+    }
+    if ((prev.moraleStatus != null || next.moraleStatus > 0) &&
+        prev.moraleStatus !== next.moraleStatus) {
+      parts.push(label(MORALE_LABELS, next.moraleStatus, 'morale') +
+        (next.morale != null ? ' (' + next.morale + ')' : ''));
+    }
+    if (prev.detected !== next.detected) {
+      parts.push(next.detected ? 'detected' : 'lost detection');
+    }
+    if (prev.cloaked !== next.cloaked) {
+      parts.push(next.cloaked ? 'cloaked' : 'decloaked');
+    }
+    return parts;
+  }
+
   function parse(text) {
     var B = {
       field: '', attackerId: null, defenderId: null, endTurn: 0,
@@ -48,6 +113,14 @@
     };
     function fleet(owner, id) { return B.fleets[owner + ':' + id]; }
     function ev(turn, s) { (B.eventsByTurn[turn] = B.eventsByTurn[turn] || []).push(s); }
+    function addStateSample(fl, state) {
+      var prev = fl.stateSamples.length ? fl.stateSamples[fl.stateSamples.length - 1] : null;
+      fl.stateSamples.push(state);
+      var changes = stateChangeParts(prev, state);
+      if (state.turn > 0 && changes.length) {
+        ev(state.turn, fl.nick + ' state: ' + changes.join(', '));
+      }
+    }
 
     var lines = text.split('\n');
     for (var li = 0; li < lines.length; li++) {
@@ -65,7 +138,8 @@
           B.fleets[owner + ':' + id] = {
             owner: owner, id: id, nick: f[3] || ('Fleet ' + id),
             admiral: f[4] || '', side: null /* set after attacker/def known */,
-            samples: [{ turn: 0, x: num(f[8]), y: num(f[9]), dir: num(f[10]), ships: num(f[7]), cmd: num(f[11]) }],
+            samples: [{ turn: 0, x: num(f[8]), y: num(f[9]), dir: num(f[10]), ships: num(f[7]), cmd: num(f[11]), substatus: 0 }],
+            stateSamples: [{ turn: 0, status: num(f[11]), substatus: 0, morale: null, moraleStatus: null, detected: false, cloaked: false }],
             disabledTurn: null
           };
           break;
@@ -73,8 +147,24 @@
         case 'M': {
           // M/turn/owner/id/x/y/dir/cmd/substatus/ships
           var t = num(f[1]), fl = fleet(num(f[2]), num(f[3]));
-          if (fl) fl.samples.push({ turn: t, x: num(f[4]), y: num(f[5]), dir: num(f[6]), ships: num(f[9]), cmd: num(f[7]) });
+          if (fl) fl.samples.push({ turn: t, x: num(f[4]), y: num(f[5]), dir: num(f[6]), ships: num(f[9]), cmd: num(f[7]), substatus: num(f[8]) });
           B.endTurn = Math.max(B.endTurn, t);
+          break;
+        }
+        case 'S': {
+          // S/turn/owner/id/status/substatus/morale/moraleStatus/detected/cloaked
+          var st = {
+            turn: num(f[1]),
+            status: num(f[4]),
+            substatus: num(f[5]),
+            morale: num(f[6]),
+            moraleStatus: num(f[7]),
+            detected: num(f[8]) !== 0,
+            cloaked: num(f[9]) !== 0
+          };
+          var fls = fleet(num(f[2]), num(f[3]));
+          if (fls) addStateSample(fls, st);
+          B.endTurn = Math.max(B.endTurn, st.turn);
           break;
         }
         case 'F': {
@@ -124,6 +214,7 @@
       // Attacker side vs everyone else (defender + allies render as defender).
       fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
       fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
+      fl3.stateSamples.sort(function (a, b) { return a.turn - b.turn; });
     }
     return B;
   }
