@@ -109,16 +109,23 @@
       fleets: {},            // key "owner:id" -> fleet
       firesByTurn: {},       // turn -> [fire]
       eventsByTurn: {},      // turn -> [string]  (ticker)
+      eventDetailsByTurn: {}, // turn -> [{ type, text }] for filtered ticker UI
       pendingFire: {}        // fireid -> fire (awaiting its H line)
     };
     function fleet(owner, id) { return B.fleets[owner + ':' + id]; }
-    function ev(turn, s) { (B.eventsByTurn[turn] = B.eventsByTurn[turn] || []).push(s); }
+    function ev(turn, s, type) {
+      (B.eventsByTurn[turn] = B.eventsByTurn[turn] || []).push(s);
+      (B.eventDetailsByTurn[turn] = B.eventDetailsByTurn[turn] || []).push({
+        type: type || 'info',
+        text: s
+      });
+    }
     function addStateSample(fl, state) {
       var prev = fl.stateSamples.length ? fl.stateSamples[fl.stateSamples.length - 1] : null;
       fl.stateSamples.push(state);
       var changes = stateChangeParts(prev, state);
       if (state.turn > 0 && changes.length) {
-        ev(state.turn, fl.nick + ' state: ' + changes.join(', '));
+        ev(state.turn, fl.nick + ' state: ' + changes.join(', '), 'state');
       }
     }
 
@@ -140,6 +147,8 @@
             admiral: f[4] || '', side: null /* set after attacker/def known */,
             samples: [{ turn: 0, x: num(f[8]), y: num(f[9]), dir: num(f[10]), ships: num(f[7]), cmd: num(f[11]), substatus: 0 }],
             stateSamples: [{ turn: 0, status: num(f[11]), substatus: 0, morale: null, moraleStatus: null, detected: false, cloaked: false }],
+            durabilitySamples: [],
+            admiralXp: [],
             disabledTurn: null
           };
           break;
@@ -167,6 +176,23 @@
           B.endTurn = Math.max(B.endTurn, st.turn);
           break;
         }
+        case 'Y': {
+          // Y/turn/owner/id/hp/maxHp/shield/maxShield/activeShips/maxShips
+          var ty = num(f[1]), fly = fleet(num(f[2]), num(f[3]));
+          if (fly) {
+            fly.durabilitySamples.push({
+              turn: ty,
+              hp: num(f[4]),
+              maxHp: num(f[5]),
+              shield: num(f[6]),
+              maxShield: num(f[7]),
+              activeShips: num(f[8]),
+              maxShips: num(f[9])
+            });
+          }
+          B.endTurn = Math.max(B.endTurn, ty);
+          break;
+        }
         case 'F': {
           // F/fireid/turn/attOwner/attId/tgtOwner/tgtId/weapon/type/num/hitChance
           var fire = {
@@ -189,7 +215,7 @@
                ': ' + fire2.weapon + ' ×' + fire2.num + ' — ' +
                fire2.hits + ' hit' + (fire2.hits === 1 ? '' : 's') +
                (fire2.damage ? ', ' + comma(fire2.damage) + ' dmg' : '') +
-               (fire2.sunk ? ', ' + fire2.sunk + ' sunk' : ''));
+               (fire2.sunk ? ', ' + fire2.sunk + ' sunk' : ''), 'fire');
             delete B.pendingFire[num(f[1])];
           }
           break;
@@ -199,7 +225,7 @@
           var t2 = num(f[1]), fl2 = fleet(num(f[2]), num(f[3]));
           if (fl2 && fl2.disabledTurn == null) {
             fl2.disabledTurn = t2;
-            ev(t2, '☠ ' + fl2.nick + ' destroyed/retreated');
+            ev(t2, '☠ ' + fl2.nick + ' destroyed/retreated', 'destroyed');
           }
           B.endTurn = Math.max(B.endTurn, t2);
           break;
@@ -211,12 +237,11 @@
           var admiralId = num(f[5]);
           var exp = num(f[6]);
           if (flx) {
-            flx.admiralXp = flx.admiralXp || [];
             flx.admiralXp.push({ turn: tx, admiral: admiralName, admiralId: admiralId, exp: exp });
           }
           if (exp > 0) {
             ev(tx, (flx ? flx.nick : 'Fleet ' + num(f[3])) + ' admiral ' +
-              admiralName + ' gained ' + comma(exp) + ' XP');
+              admiralName + ' gained ' + comma(exp) + ' XP', 'xp');
           }
           B.endTurn = Math.max(B.endTurn, tx);
           break;
@@ -232,7 +257,8 @@
       fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
       fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
       fl3.stateSamples.sort(function (a, b) { return a.turn - b.turn; });
-      if (fl3.admiralXp) fl3.admiralXp.sort(function (a, b) { return a.turn - b.turn; });
+      fl3.durabilitySamples.sort(function (a, b) { return a.turn - b.turn; });
+      fl3.admiralXp.sort(function (a, b) { return a.turn - b.turn; });
     }
     return B;
   }

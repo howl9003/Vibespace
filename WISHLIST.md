@@ -17,7 +17,7 @@ A **richer** replay could additionally show data the engine computes during a
 battle but currently discards from the log:
 
 - **Per-ship HP and shield bars** over time (only fleet-level active-ship counts
-  are logged now).
+  were logged originally; aggregate durability is now logged).
 - **Per-turn morale curves** per fleet, beyond the sampled morale-break state.
 
 **What it takes:** extend `CBattleRecord` with new log-line types (alongside the
@@ -42,8 +42,14 @@ detection transitions without changing combat math.
 records at battle resolution. The parser stores those records per fleet and the
 HTML5 replay ticker shows the awarded XP alongside the end-of-battle events.
 
-**Next slice:** add deeper per-ship durability snapshots (HP/shield aggregates or
-bars), then parse and visualize them as another observe-only replay layer.
+**Completed durability slice:** engine battle logs now include compact `Y/`
+durability snapshots with aggregate HP, shield, and active/max ship counts. The
+parser stores those records per fleet, and the HTML5 replay can draw HP/shield
+bars plus optional movement trails and filtered event categories.
+
+**Next slice:** if replay work continues, consider true per-ship compact
+durability bands or a morale graph panel. Keep these observe-only and gated by
+parser fixtures before changing engine log output.
 
 Deferred for future consideration.
 

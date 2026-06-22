@@ -37,3 +37,8 @@ configure    text eol=lf
 Makefile     text eol=lf
 Makefile.*   text eol=lf
 *.mk         text eol=lf
+
+# Legacy web asset names can collide with the Makefile.* rule on
+# case-insensitive checkouts; image bytes must still win.
+**/makefile.gif binary -eol
+**/Makefile.gif binary -eol

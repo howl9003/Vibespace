@@ -7,5 +7,7 @@ node tools/battle-replay/check-parser.js
 
 The fixture exercises the current battle-log grammar used by
 `docker/web-overrides/js/battle-replay.js`: escaped slashes, fleet roster rows,
-movement samples, richer `S/` fleet-state snapshots, paired fire/hit rows,
-admiral XP award rows, disabled fleets, and `ENDTURN`.
+movement samples, richer `S/` fleet-state snapshots, aggregate `Y/`
+durability snapshots, paired fire/hit rows, admiral XP award rows, disabled
+fleets, and `ENDTURN`. It also covers older logs with no richer rows, unknown
+row types, and incomplete optional richer rows.
