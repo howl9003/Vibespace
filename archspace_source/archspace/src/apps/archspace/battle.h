@@ -297,6 +297,9 @@ class CBattleFleet : public CVector
 		void set_target(int aTarget) { mTarget = aTarget; }
 
 		int get_active_ratio();
+		int get_current_hp();
+		int get_current_shield_strength();
+		int get_total_shield_capacity();
 		int count_active_ship();
 		int get_max_ship() { return mMaxShip; }
 
@@ -717,6 +720,7 @@ class CBattleRecord : public CStore
 		void add_fleet( CBattleFleet *aFleet );
 		void add_location( CBattleFleet *aFleet );
 		void add_state( CBattleFleet *aFleet );
+		void add_durability( CBattleFleet *aFleet );
 		void add_admiral_exp( CBattleFleet *aFleet, int aExp, int aTurn );
 		void disable_fleet( CBattleFleet *aFleet );
 		void add_fire( CBattleFleet *aAttacker, CBattleFleet *aTarget, CTurret *aTurret, int aHitChance );

@@ -1013,6 +1013,36 @@ CBattleFleet::get_active_ratio()
 }
 
 int
+CBattleFleet::get_current_hp()
+{
+	int
+		Count = 0;
+
+	for( int i = 0; i < mMaxShip; i++ )
+		if( mHP[i] > 0 ) Count += mHP[i];
+
+	return Count;
+}
+
+int
+CBattleFleet::get_current_shield_strength()
+{
+	int
+		Count = 0;
+
+	for( int i = 0; i < mMaxShip; i++ )
+		if( mHP[i] > 0 ) Count += mShieldStrength[i];
+
+	return Count;
+}
+
+int
+CBattleFleet::get_total_shield_capacity()
+{
+	return mShieldMaxStrength*mMaxShip;
+}
+
+int
 CBattleFleet::count_active_ship()
 {
 	int
@@ -6381,6 +6411,7 @@ CBattleRecord::add_fleet( CBattleFleet *aFleet )
 */
 	add_buf( (char*)Buf );
 	add_state( aFleet );
+	add_durability( aFleet );
 }
 
 void
@@ -6412,6 +6443,7 @@ CBattleRecord::add_location( CBattleFleet *aFleet )
 	Buf.format( "M/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_x(), aFleet->get_y(), (int)aFleet->get_direction(), aFleet->get_command(), aFleet->get_substatus(), aFleet->count_active_ship() );
 	add_buf( (char*)Buf );
 	add_state( aFleet );
+	add_durability( aFleet );
 }
 
 void
@@ -6422,6 +6454,17 @@ CBattleRecord::add_state( CBattleFleet *aFleet )
 
 	// Richer replay metadata only; no battle logic reads these records.
 	Buf.format( "S/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_status(), aFleet->get_substatus(), (int)aFleet->get_morale(), aFleet->get_morale_status(), aFleet->is_detected() ? 1 : 0, aFleet->is_cloaked() ? 1 : 0 );
+	add_buf( (char*)Buf );
+}
+
+void
+CBattleRecord::add_durability( CBattleFleet *aFleet )
+{
+	CString
+		Buf;
+
+	// Richer replay metadata only; no battle logic reads these records.
+	Buf.format( "Y/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_current_hp(), aFleet->get_total_hp(), aFleet->get_current_shield_strength(), aFleet->get_total_shield_capacity(), aFleet->count_active_ship(), aFleet->get_max_ship() );
 	add_buf( (char*)Buf );
 }
 
@@ -6442,6 +6485,7 @@ CBattleRecord::disable_fleet( CBattleFleet *aFleet )
 {
 	CString
 		Buf;
+	add_durability( aFleet );
 	Buf.format( "D/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id() );
 	// end telecard
 	add_buf( (char*)Buf );
