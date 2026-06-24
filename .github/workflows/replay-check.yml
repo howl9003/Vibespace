@@ -1,0 +1,22 @@
+name: Battle replay checks
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+jobs:
+  parser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check replay JavaScript syntax
+        run: |
+          node --check docker/web-overrides/js/battle-replay-parser.js
+          node --check docker/web-overrides/js/battle-replay.js
+
+      - name: Run replay parser fixture
+        run: node tools/battle-replay/check-parser.js

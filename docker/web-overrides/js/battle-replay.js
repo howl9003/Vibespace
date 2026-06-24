@@ -23,6 +23,7 @@
     FL/owner/id/nick/admiral/class/NONE/ships/x/y/dir/cmd      (roster, once)
     M/turn/owner/id/x/y/dir/cmd/substatus/ships               (position, every 10 turns)
     S/turn/owner/id/status/substatus/morale/moraleStatus/detected/cloaked
+    Y/turn/owner/id/hp/maxHp/shield/maxShield/activeShips/maxShips
     F/fireid/turn/attOwner/attId/tgtOwner/tgtId/weapon/type/numFiring/hitChance
     H/fireid/turn/hits/misses/damage/sunk
     X/turn/owner/id/admiral/admiralId/exp
@@ -67,8 +68,31 @@
   var BTN = 'background:#16243a;color:#cde;border:1px solid #2a4a6a;' +
             'border-radius:4px;padding:3px 12px;cursor:pointer;';
   var WIDE_KEY = 'as.battleReplay.wide';        // remembered layout opt-in
+  var FILTER_KEY = 'as.battleReplay.filters';
+  var DEFAULT_FILTERS = {
+    paths: false,
+    fire: true,
+    state: true,
+    destroyed: true,
+    xp: true,
+    durability: true
+  };
   function prefWide() { try { return localStorage.getItem(WIDE_KEY) === '1'; } catch (e) { return false; } }
   function setPrefWide(v) { try { localStorage.setItem(WIDE_KEY, v ? '1' : '0'); } catch (e) {} }
+  function replayFilters() {
+    var out = {};
+    for (var k in DEFAULT_FILTERS) out[k] = DEFAULT_FILTERS[k];
+    try {
+      var saved = JSON.parse(localStorage.getItem(FILTER_KEY) || '{}');
+      for (var sk in DEFAULT_FILTERS) {
+        if (typeof saved[sk] === 'boolean') out[sk] = saved[sk];
+      }
+    } catch (e) {}
+    return out;
+  }
+  function saveReplayFilters(filters) {
+    try { localStorage.setItem(FILTER_KEY, JSON.stringify(filters)); } catch (e) {}
+  }
   // CBattleFleet morale-break statuses (battle.h enum): each flickers + tints the
   // icon and stamps a label on it (Ro=Rout, Rt=Retreat to keep them distinct; the
   // full name is also shown in the text label).
@@ -149,6 +173,14 @@
     return latest;
   }
 
+  function latestDurability(fl, t) {
+    var s = fl.durabilitySamples || [], latest = null;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i].turn <= t) latest = s[i]; else break;
+    }
+    return latest;
+  }
+
   function mergeReplayState(fl, t, st) {
     var rs = latestState(fl, t);
     st.status = rs && rs.status != null ? rs.status : st.cmd;
@@ -157,6 +189,7 @@
     st.moraleStatus = rs ? rs.moraleStatus : null;
     st.detected = rs ? rs.detected : false;
     st.cloaked = rs ? rs.cloaked : false;
+    st.durability = latestDurability(fl, t);
     return st;
   }
 
@@ -296,11 +329,39 @@
     bar.appendChild(turnLbl); bar.appendChild(modeBtn);
     leftcol.appendChild(bar);
 
+    var filters = replayFilters();
+    var filterBar = el('div', 'display:flex;flex-wrap:wrap;gap:4px 10px;margin:-2px 0 8px;' +
+      'font:11px sans-serif;color:#8fa0b8;min-height:18px;');
+    function addToggle(key, label) {
+      var lab = el('label', 'display:inline-flex;align-items:center;gap:3px;white-space:nowrap;');
+      var input = el('input');
+      input.type = 'checkbox';
+      input.checked = !!filters[key];
+      input.style.cssText = 'margin:0;';
+      input.onchange = function () {
+        filters[key] = input.checked;
+        saveReplayFilters(filters);
+        lastTickTurn = -1;
+        render(cur);
+        renderTicker(cur);
+      };
+      lab.appendChild(input);
+      lab.appendChild(document.createTextNode(label));
+      filterBar.appendChild(lab);
+    }
+    addToggle('paths', 'Paths');
+    addToggle('fire', 'Fire');
+    addToggle('state', 'State');
+    addToggle('destroyed', 'Loss');
+    addToggle('xp', 'XP');
+    addToggle('durability', 'Bars');
+    leftcol.appendChild(filterBar);
+
     // ticker — below the board (inline) or a tall side rail (widescreen). The rail
     // has a FIXED width/height so the summary pane is full size from the start and
     // doesn't grow as longer attack lines stream in; long lines wrap inside it.
     var ticker = el('div', (wide
-        ? 'flex:none;width:' + railW + 'px;height:' + (ch + 44) + 'px;'
+        ? 'flex:none;width:' + railW + 'px;height:' + (ch + 72) + 'px;'
         : 'height:120px;') +
       'overflow-y:auto;overflow-wrap:break-word;background:#05050f;border:1px solid #223355;' +
       'font:12px/1.5 monospace;color:#9ab;padding:6px 10px;box-sizing:border-box;');
@@ -315,6 +376,58 @@
     // line where both capitals sit) to the exact vertical centre.
     function tx(x) { return x / FIELD * cw; }
     function ty(y) { return (FIELD - y) / FIELD * ch; }
+
+    function drawMovementPath(fl, t) {
+      var samples = fl.samples || [];
+      if (!samples.length) return;
+      var started = false;
+      ctx.save();
+      ctx.strokeStyle = fl.side === 'att' ? 'rgba(255,136,68,0.28)' : 'rgba(85,187,255,0.28)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      for (var i = 0; i < samples.length; i++) {
+        if (samples[i].turn > t) break;
+        var x = tx(samples[i].x), y = ty(samples[i].y);
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else ctx.lineTo(x, y);
+      }
+      var curState = stateAt(fl, t);
+      if (curState) {
+        var cx = tx(curState.x), cy = ty(curState.y);
+        if (!started) ctx.moveTo(cx, cy);
+        else ctx.lineTo(cx, cy);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBar(x, y, width, ratio, fill, bg) {
+      ratio = Math.max(0, Math.min(1, ratio || 0));
+      var h = 3;
+      ctx.fillStyle = bg;
+      ctx.fillRect(x, y, width, h);
+      ctx.fillStyle = fill;
+      ctx.fillRect(x, y, Math.round(width * ratio), h);
+      ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + 0.5, y + 0.5, width - 1, h - 1);
+    }
+
+    function drawDurabilityBars(x, y, r, st) {
+      var d = st.durability;
+      if (!d) return;
+      var width = Math.max(24, Math.min(38, 18 + Math.sqrt(st.ships || 1) * 4));
+      var bx = Math.max(3, Math.min(cw - width - 3, Math.round(x - width / 2)));
+      var by = Math.max(3, Math.min(ch - 11, Math.round(y + r + 5)));
+      if (d.maxShield > 0) {
+        drawBar(bx, by, width, d.shield / d.maxShield, '#58c8ff', 'rgba(20,45,70,0.9)');
+        by += 5;
+      }
+      if (d.maxHp > 0) {
+        drawBar(bx, by, width, d.hp / d.maxHp, '#ff6b4a', 'rgba(75,25,20,0.9)');
+      }
+    }
 
     function drawFleet(st, fl) {
       var x = tx(st.x), y = ty(st.y);
@@ -369,20 +482,28 @@
       var labelY = Math.max(10, Math.min(ch - 3, y - r - 3));
       ctx.fillText(label, labelX, labelY);
       ctx.restore();
+      if (filters.durability) drawDurabilityBars(x, y, r, st);
     }
 
     function render(t) {
       ctx.clearRect(0, 0, cw, ch);
+      if (filters.paths) {
+        for (var p = 0; p < fleetList.length; p++) {
+          drawMovementPath(fleetList[p], t);
+        }
+      }
       // fire lines for this turn
-      var fires = B.firesByTurn[Math.round(t)] || [];
-      for (var i = 0; i < fires.length; i++) {
-        var fr = fires[i], a = B.fleets[fr.from], d = B.fleets[fr.to];
-        if (!a || !d) continue;
-        var sa = stateAt(a, t), sd = stateAt(d, t);
-        if (!sa || !sd) continue;
-        ctx.strokeStyle = fr.hits > 0 ? (fr.sunk > 0 ? '#ffee66' : '#88ff99') : 'rgba(150,150,170,0.35)';
-        ctx.lineWidth = fr.hits > 0 ? 1.6 : 0.7;
-        ctx.beginPath(); ctx.moveTo(tx(sa.x), ty(sa.y)); ctx.lineTo(tx(sd.x), ty(sd.y)); ctx.stroke();
+      if (filters.fire) {
+        var fires = B.firesByTurn[Math.round(t)] || [];
+        for (var i = 0; i < fires.length; i++) {
+          var fr = fires[i], a = B.fleets[fr.from], d = B.fleets[fr.to];
+          if (!a || !d) continue;
+          var sa = stateAt(a, t), sd = stateAt(d, t);
+          if (!sa || !sd) continue;
+          ctx.strokeStyle = fr.hits > 0 ? (fr.sunk > 0 ? '#ffee66' : '#88ff99') : 'rgba(150,150,170,0.35)';
+          ctx.lineWidth = fr.hits > 0 ? 1.6 : 0.7;
+          ctx.beginPath(); ctx.moveTo(tx(sa.x), ty(sa.y)); ctx.lineTo(tx(sd.x), ty(sd.y)); ctx.stroke();
+        }
       }
       // fleets
       for (var j = 0; j < fleetList.length; j++) {
@@ -399,14 +520,21 @@
       lastTickTurn = t;
       var html = '';
       for (var tt = 0; tt <= t; tt++) {
-        var evs = B.eventsByTurn[tt];
+        var evs = B.eventDetailsByTurn && B.eventDetailsByTurn[tt];
+        if (!evs && B.eventsByTurn[tt]) {
+          evs = [];
+          for (var oi = 0; oi < B.eventsByTurn[tt].length; oi++) {
+            evs.push({ type: 'info', text: B.eventsByTurn[tt][oi] });
+          }
+        }
         if (!evs) continue;
         for (var e = 0; e < evs.length; e++) {
+          if (filters.hasOwnProperty(evs[e].type) && !filters[evs[e].type]) continue;
           html += '<div><span style="color:#566">T' + tt + '</span> ' +
-                  evs[e].replace(/</g, '&lt;') + '</div>';
+                  evs[e].text.replace(/</g, '&lt;') + '</div>';
         }
       }
-      ticker.innerHTML = html || '<div style="color:#566">No fleet engaged this battle.</div>';
+      ticker.innerHTML = html || '<div style="color:#566">No visible events for selected filters.</div>';
       ticker.scrollTop = ticker.scrollHeight;
     }
 
