@@ -3,12 +3,20 @@
 #
 #   docker compose -f docker/docker-compose.yml up --build
 #
+# Two editions on one host: give each checkout its own COMPOSE_PROJECT_NAME
+# (plus WEB_BIND/WEB_PORT) in docker/deploy/.deploy.env, e.g. `archspace` on
+# 127.0.0.1:8080 and `archspace-new` on 127.0.0.1:8081. The project name
+# namespaces the containers and volumes (otherwise both checkouts default to
+# project "docker" and share one database) and the image tag below (otherwise
+# each edition's rebuild replaces the other's image). Unset = the old
+# single-edition behaviour: project "docker", image archspace:latest.
+#
 services:
   archspace:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: archspace:latest
+    image: archspace:${COMPOSE_PROJECT_NAME:-latest}
     restart: unless-stopped
     ports:
       # web UI. Plain HTTP: set WEB_PORT=80 for a bare http://host. Behind the
