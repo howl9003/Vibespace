@@ -157,3 +157,9 @@ tarball now match the tarball bytes. **Rules:**
   (`Fleet->set_*_ship(get_fleet_commanding())`, which never grew). Was latent on
   **both** `production` and `cvs-merge`; fixed 2026-06. (CVSRoot's `give_level`
   has the guard commented out and clips via `i < 21` instead of bailing.)
+- **Hosting box:** the NUC's NVMe drive drops out under heavy disk I/O
+  (replacement pending), and the box then **reboots itself** (`errors=panic` +
+  `kernel.panic=10`). A 2–3 minute outage of both sites plus a fresh uptime
+  means exactly that, not your deploy. The kernel's last words are in
+  `/var/lib/systemd/pstore/`. Details and the settings not to remove:
+  `docker/deploy-nuc.md` → *Box notes*.

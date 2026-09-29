@@ -43,7 +43,8 @@ Treat access as root on the box.
 ## 2. Connect
 
 1. Install `cloudflared`:
-   - Windows: `winget install --id Cloudflare.cloudflared`
+   - Windows: `winget install --id Cloudflare.cloudflared` (then open a **new**
+     terminal so `cloudflared` is on your `PATH`)
    - macOS: `brew install cloudflared`
    - Debian/Ubuntu: see https://pkg.cloudflare.com (the `cloudflared` repo)
 2. Add to `~/.ssh/config`:
@@ -55,9 +56,15 @@ Treat access as root on the box.
      IdentitiesOnly yes
      ProxyCommand cloudflared access ssh --hostname %h
    ```
-3. `ssh archspace-nuc`. The first time (and when the session expires), a
-   browser opens for the Cloudflare Access login: enter your email and the
-   one-time PIN it sends you.
+3. `ssh archspace-nuc`. The first time (and when the 30-day session expires),
+   a browser opens the Cloudflare Access login at
+   `archspace.cloudflareaccess.com`: enter your email and the one-time PIN it
+   emails you.
+4. On the very first connection SSH asks you to trust the NUC's host key. Only
+   accept if the fingerprint matches:
+   ```
+   ED25519  SHA256:eQhhwQjoiKtGhk0D3a7KkQAiGG0ovpEzoryL4A9Pm/Y
+   ```
 
 ## 3. Deploy
 
@@ -103,8 +110,10 @@ and load https://archspace.cc / https://new.archspace.cc in a browser.
 
 **Add a contributor**
 1. Append their public-key line to `/home/howl/.ssh/authorized_keys` on the NUC.
-2. Cloudflare dashboard: **Zero Trust → Access → Applications →
-   ssh.archspace.cc → Policies**, and add their email to the Allow rule.
+2. Cloudflare dashboard: **Zero Trust → Access → Applications → "NUC SSH"**
+   (`ssh.archspace.cc`) → **Policies → "Allow NUC admins"**, and add their
+   email to the Include rule. Login is by emailed one-time PIN; sessions last
+   30 days.
 
 **Remove a contributor**: delete their line from `authorized_keys` and their
 email from the Access policy.
@@ -116,9 +125,34 @@ workflow runs `deploy.sh` in `$HOME/archspace`, which matches the NUC layout.
 Give it a distinct label (e.g. `nuc`).
 
 **Box notes**
-- The M.2 drive once dropped off the bus from NVMe/PCIe power saving. That is
-  fixed by `nvme_core.default_ps_max_latency_us=0 pcie_aspm=off` in
-  `/etc/default/grub.d/99-nuc-nvme-power.cfg`. Don't remove it.
+- **The M.2 drive (a second-hand Intel 660p 1 TB) is unreliable. Replace it.**
+  Under sustained heavy disk I/O it drops off the PCIe bus without logging any
+  error. It did this twice on the NUC (mid-build, and when both game engines
+  started together) and, per howl, in its previous Windows desktop, where
+  Windows recovered. SMART shows healthy flash (7% used, 0 media errors), so
+  the controller is suspected, not wear. Replace it with a mainstream TLC SSD,
+  ideally with DRAM, or an M.2 SATA drive (256–512 GB).
+- **Mitigations in place until then (don't remove them):**
+  - `/etc/default/grub.d/99-nuc-nvme-power.cfg`:
+    `nvme_core.default_ps_max_latency_us=0 pcie_aspm=off` (no NVMe/PCIe power
+    saving) and `nvme_core.io_timeout=120` (wait out stalls instead of
+    removing the drive after the default 30 s). Run `sudo update-grub` after
+    editing.
+  - `/etc/fstab`: root is mounted `errors=panic` (was `errors=remount-ro`),
+    and `/etc/sysctl.d/90-nuc-autoreboot.conf` sets `kernel.panic = 10`. If the
+    drive vanishes, the kernel panics and **reboots itself** instead of sitting
+    half-dead until someone power-cycles it.
+  - So **a 2–3 minute outage of both sites plus a fresh uptime means the drive
+    dropped and the box recovered itself.** The kernel's last messages are
+    saved via EFI pstore and appear after the reboot in
+    `/var/lib/systemd/pstore/`. Check there, then `sudo smartctl -a
+    /dev/nvme0`, and note it.
+- **Backups are not set up yet.** Game data lives only in the `archspace_*` /
+  `archspace-new_*` Docker volumes on this one drive.
+- BIOS is `SYSKLi35.86A.0054` (2016). The final version, 0073 (2020), exists,
+  but Intel has pulled the download and ASUS doesn't support 6th-gen NUCs. Use
+  the F7 update with the `.BIO` file from an archived Intel copy, and load
+  defaults afterwards. Also set **After Power Failure = Power On**.
 - The CMOS battery is unreliable, so after a power cut the clock is wrong until
   NTP syncs (about a minute). apt can fail with "Release file not valid yet" in
   that window.
