@@ -1,5 +1,11 @@
 # Deploying Archspace to AWS EC2
 
+> **Retired (2026-09).** The AWS account that ran archspace.cc and
+> new.archspace.cc no longer exists. Both editions now run on a self-hosted
+> NUC behind Cloudflare Tunnel. For access and deploys see
+> **[`deploy-nuc.md`](deploy-nuc.md)**. This guide is kept for history and for
+> anyone rebuilding on a cloud VM.
+
 A single Docker image runs the whole stack (game engine + MariaDB + web). You
 build it on the instance. Budget ~2–5 min for the first build (it compiles the
 C++ engine).

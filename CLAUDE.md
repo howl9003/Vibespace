@@ -20,12 +20,14 @@ task:**
 Replacing a dead applet or a cosmetic fix is almost never an engine change.
 
 ## Two editions (read this first)
-The repo maintains **two editions** of the game on two hosts:
+The repo maintains **two editions** of the game, both hosted on **one self-hosted
+NUC** behind a Cloudflare Tunnel (AWS was retired 2026-09; see
+**`docker/deploy-nuc.md`**):
 
 | Edition | Branch(es) | Live site | Deploy |
 |---|---|---|---|
-| **Faithful original** | `main` → `production` | **archspace.cc** | push-to-deploy (self-hosted runner runs `deploy.sh`) |
-| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **new.archspace.cc** | **manual** — SSH in, run `deploy.sh` (no runner) |
+| **Faithful original** | `main` → `production` | **archspace.cc** | **manual** — SSH to the NUC, `~/archspace`, run `deploy.sh` |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **new.archspace.cc** | **manual** — SSH to the NUC, `~/archspace-new`, run `deploy.sh` |
 
 **Authoritative balance reference (precise):** each edition follows a different
 build of the game, and that build — not the other — is authoritative for its host:
@@ -71,23 +73,26 @@ trees aren't byte-identical — reconcile by cherry-pick, not a blind fast-forwa
 - Develop on your **own** feature branch, namespaced per collaborator:
   `claude/<handle>-<topic>` (e.g. `claude/howe-expeditions`). **Do not share a
   feature branch** between collaborators.
-- `main` = mainline; `production` = **deploy branch** (pushing there deploys via a
-  self-hosted runner). Engine/as-cgi/Dockerfile change → rebuild; everything else
-  → restart — `docker/deploy/deploy.sh` decides via a host-local marker.
-- **Restoration edition deploy (new.archspace.cc):** there is **no runner** —
-  push to `claude/peng-cvs-merge`, then SSH to the box and run
-  `bash docker/deploy/deploy.sh` (its `docker/deploy/.deploy.env` pins
-  `DEPLOY_BRANCH=claude/peng-cvs-merge`). Use `FORCE_REBUILD=1` for any
-  image-baked change (engine, `src/script/*.en`, www, Dockerfile). The box deploy
-  key is **read-only**, so push from your own machine.
+- `main` = mainline; `production` = **deploy branch** for the faithful edition.
+  Since 2026-09-29 `main` and `production` are identical again, so ship by
+  fast-forwarding both to your reviewed feature tip.
+- **Deploys are manual over SSH to the NUC** (full guide:
+  **`docker/deploy-nuc.md`**). There is **no GitHub runner**: `deploy.yml` only
+  queues a job until one is registered. After pushing, run the edition's
+  `deploy.sh` from its own checkout:
+  `ssh archspace-nuc 'cd ~/archspace && bash docker/deploy/deploy.sh'` (faithful,
+  syncs to `production`) or `... 'cd ~/archspace-new && ...'` (restoration,
+  syncs to `claude/peng-cvs-merge`). `deploy.sh` rebuilds for image-baked changes
+  and restarts otherwise, via a host-local marker (`FORCE_REBUILD=1` forces it).
+- **Access:** SSH goes through Cloudflare Tunnel (`ssh.archspace.cc`) behind a
+  Cloudflare Access login. A contributor sends howl their **SSH public key** and
+  **Access email**. Never ask anyone for a private key.
 - Ship **faithful** fixes through `main` → `production` (archspace.cc); ship
   **restoration** work to `claude/peng-cvs-merge` (new.archspace.cc). **Never merge
   the restoration edition into `main`/`production`** — that is the prod-down
-  incident (see *Two editions*). `production` carries incident-recovery hotfixes
-  `main` lacks, so reconcile the two faithful trees by cherry-pick, not a blind
-  fast-forward.
-- **Always watch the deploy to green** (GitHub Actions `deploy.yml`, branch
-  `production`) and confirm the change live before calling it done.
+  incident (see *Two editions*). Genuine bugs are fixed on both (cherry-pick).
+- **Always confirm the deploy live** (`curl localhost:8080/healthz` /
+  `:8081` on the NUC, then the public site) before calling it done.
 
 ## Working alongside the other collaborator (important)
 `main`/`production` **move without warning** because the other collaborator's

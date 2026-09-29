@@ -3,10 +3,12 @@
 A working, self-hosted revival of **Archspace** — an early-2000s persistent,
 browser-based 4X space-strategy game (a C++ engine, ~449 source files). This
 repo takes the original 2004–05 source and turns it into a reproducible,
-Dockerized, HTTPS-served deployment with push-to-deploy CI/CD, while keeping the
-game itself faithful to the original.
+Dockerized, HTTPS-served deployment, while keeping the game itself faithful to
+the original.
 
-Live deployments — **two editions** (see [Two editions](#two-editions)):
+Live deployments — **two editions**, both on one self-hosted NUC behind a
+Cloudflare Tunnel (see [Two editions](#two-editions) and
+[`docker/deploy-nuc.md`](docker/deploy-nuc.md)):
 - **https://archspace.cc** — the **faithful original** edition (`main` → `production`).
 - **https://new.archspace.cc** — the **cvs-merge restoration** edition (branch
   `claude/peng-cvs-merge` only): the same engine with a large body of original
@@ -73,7 +75,8 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   ├── deploy/
 │   │   ├── ec2-bootstrap.sh        #   one-command EC2 setup (Docker, swap, build, run)
 │   │   └── deploy.sh               #   pull + rebuild-or-restart (marker-based detection)
-│   ├── deploy-ec2.md               # Full EC2 deployment guide
+│   ├── deploy-nuc.md               # Self-hosted NUC: access, deploys, admin (current)
+│   ├── deploy-ec2.md               # Retired AWS EC2 guide (history)
 │   └── README.md                   # Docker build/run notes
 │
 ├── web/auth/                       # Modern PHP auth service (served at /auth/)
@@ -84,7 +87,7 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   ├── theme.php                   #   original-look styling for the auth pages
 │   └── schema.sql                  #   accounts + sessions tables
 │
-└── .github/workflows/deploy.yml    # Self-hosted-runner deploy on push to `production`
+└── .github/workflows/deploy.yml    # Deploy on push to `production` (needs a self-hosted runner; none registered)
 ```
 
 ---
@@ -204,12 +207,13 @@ original `root` / `comconq1` **inside the container network only** (not exposed)
 
 ## Two editions
 
-This repo maintains **two editions** of the game, deployed to two separate hosts:
+This repo maintains **two editions** of the game, run side by side on one
+self-hosted box:
 
 | Edition | Branch(es) | Live site | Deploy |
 |---|---|---|---|
-| **Faithful original** | `main` → `production` | **https://archspace.cc** | push-to-deploy (self-hosted runner) |
-| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **https://new.archspace.cc** | manual `deploy.sh` over SSH |
+| **Faithful original** | `main` → `production` | **https://archspace.cc** | manual `deploy.sh` over SSH (`~/archspace`) |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **https://new.archspace.cc** | manual `deploy.sh` over SSH (`~/archspace-new`) |
 
 **Authoritative balance per edition (precise).** Each edition follows a *different
 build* of the game, and that build — not the other — is authoritative for its host:
@@ -265,15 +269,14 @@ residue: `production` still carries incident-recovery DB-reversal hotfixes in
 | Branch | Role |
 |---|---|
 | `main` | mainline for the **faithful** edition (archspace.cc) |
-| `production` | deploy branch for the **faithful** edition — pushing here triggers a deploy |
-| `claude/peng-cvs-merge` | the **restoration** edition — deployed **manually** to new.archspace.cc; **not** merged into `main` |
+| `production` | deploy branch for the **faithful** edition — what `~/archspace` on the NUC runs |
+| `claude/peng-cvs-merge` | the **restoration** edition — what `~/archspace-new` on the NUC runs; **not** merged into `main` |
 | other feature branches (`claude/*`) | active development; do **not** deploy |
 
-Ship **faithful** fixes through `main` → `production`; ship **restoration** work
-to `claude/peng-cvs-merge`. **Never merge the restoration into `main`/`production`**
+Ship **faithful** fixes through `main` → `production` (the two are identical
+again since 2026-09-29, so fast-forward both); ship **restoration** work to
+`claude/peng-cvs-merge`. **Never merge the restoration into `main`/`production`**
 — that re-triggers the prod incident described in [Two editions](#two-editions).
-`production` carries incident-recovery hotfixes `main` lacks, so reconcile the two
-faithful trees by cherry-pick rather than a blind fast-forward.
 
 > **Multiple contributors:** `main`/`production` can move because another
 > collaborator's agent deploys too. Always `git fetch` before pushing; if the
@@ -281,67 +284,48 @@ faithful trees by cherry-pick rather than a blind fast-forward.
 > never force-push the shared branches or discard the other's commits. Agent
 > conventions live in **[`CLAUDE.md`](CLAUDE.md)** (auto-loaded by Claude Code).
 
-### Push-to-deploy (the faithful edition — archspace.cc)
+### Hosting: one self-hosted NUC behind Cloudflare Tunnel
 
-`.github/workflows/deploy.yml` runs on a **self-hosted GitHub Actions runner
-installed on the EC2 instance**. The runner dials *out* to GitHub — so there's
-**no inbound SSH, no open port 22, no SSH key/secret, and the public IP can
-change freely**. On a push to `production` it runs `docker/deploy/deploy.sh`,
-which:
+Since 2026-09 both editions run on a single self-hosted box (an Intel NUC). The
+AWS account that hosted them is gone. Nothing on the NUC is exposed directly:
+Cloudflare Tunnel carries `archspace.cc` / `www` → `127.0.0.1:8080`,
+`new.archspace.cc` → `127.0.0.1:8081`, and admin SSH (`ssh.archspace.cc`,
+behind a Cloudflare Access login). **Access for contributors, the deploy
+commands and admin tasks are all in [`docker/deploy-nuc.md`](docker/deploy-nuc.md).**
+In short: send howl your SSH **public** key and your Access email, then after
+pushing run the edition's `deploy.sh` on the NUC over SSH.
+
+There is currently **no auto-deploy**. `.github/workflows/deploy.yml` still runs
+on a push to `production`, but it needs a self-hosted runner, and none is
+registered (the old one lived on AWS). Registering one on the NUC re-enables it;
+see the guide.
+
+### What `deploy.sh` does
+
+Run on the box from an edition's checkout, `docker/deploy/deploy.sh`:
 
 1. Pulls the new commit.
 2. Diffs it against the **last-deployed marker** (`docker/deploy/.last_deployed`,
    host-local) — *not* git HEAD, because the workflow already reset HEAD. (This
    marker is the fix for a subtle bug where every deploy silently took the
    no-rebuild path.)
-3. **Rebuilds** if the engine / as-cgi / Dockerfile changed; otherwise
+3. **Rebuilds** if anything baked into the image changed (engine, as-cgi,
+   `src/script` data tables, www tarball / `www-new`, Dockerfile); otherwise
    **restarts** (web/template/config). `FORCE_REBUILD=1` overrides.
 4. Records the new commit in the marker.
 
 The DB and game-state volumes survive; only a brief blip at the container swap.
-
-### First-time setup on EC2
-
-See **`docker/deploy-ec2.md`** for the full walkthrough. In short:
-1. Ubuntu 24.04 instance + **Elastic IP**; security group: SSH `22` (your IP),
-   and `8080` (HTTP) or `80`+`443` (HTTPS).
-2. Clone via a read-only **GitHub deploy key**; `git checkout production`.
-3. `sudo bash docker/deploy/ec2-bootstrap.sh` (installs Docker, swap if needed,
-   builds, runs; persists config to `docker/deploy/.deploy.env`).
-4. Install the self-hosted runner as a service (`svc.sh install && svc.sh start`).
-
-### HTTPS + domain
-
-Opt-in via the compose **`https` profile** (Caddy):
-```sh
-sudo DOMAIN=archspace.cc TLS_EMAIL=you@example.com bash docker/deploy/ec2-bootstrap.sh
-```
-Caddy fronts `:80/:443`, auto-provisions/renews Let's Encrypt certs, redirects
-http→https, serves the apex, and 301-redirects `www` → apex. DNS: `A @` and
-`A www` → the Elastic IP. Once `DOMAIN` is in `.deploy.env`, every future
-auto-deploy stays on HTTPS.
-
-### Deploying the restoration edition (new.archspace.cc)
-
-The cvs-merge restoration runs on a **separate** EC2 box with **no auto-deploy
-runner** — updates are manual:
-
-1. Commit and push your change to **`claude/peng-cvs-merge`**.
-2. SSH to the staging box (`ssh -i <key>.pem ubuntu@<host>`).
-3. `cd ~/archspace && bash docker/deploy/deploy.sh`. The box's
-   `docker/deploy/.deploy.env` pins `DEPLOY_BRANCH=claude/peng-cvs-merge`, so
-   `deploy.sh` fetches that branch, resets to it, then rebuilds or restarts.
-   Use **`FORCE_REBUILD=1 bash docker/deploy/deploy.sh`** for any image-baked
-   change (the C++ engine, the `src/script/*.en` data tables, the `www` tarball,
-   or the Dockerfile).
-
-The box checks out via a **read-only deploy key** (it can fetch, not push), so
-always push from your own machine. As with prod, the DB and game-state named
-volumes survive a rebuild, so characters persist.
+Each checkout's git-ignored `docker/deploy/.deploy.env` pins its
+`COMPOSE_PROJECT_NAME`, `WEB_BIND=127.0.0.1`, `WEB_PORT` and `DEPLOY_BRANCH`,
+so the two editions never share containers, volumes or images.
 
 > The restoration is intentionally kept **off `production`** after it broke prod
-> (see [Two editions](#two-editions)). Ship it to this staging box only, until
-> prod is ready for the migrated DB schema.
+> (see [Two editions](#two-editions)): it deploys only from
+> `claude/peng-cvs-merge` into `~/archspace-new`.
+
+The retired AWS setup (EC2 bootstrap, Caddy HTTPS profile) is documented in
+`docker/deploy-ec2.md` for history. On the NUC, HTTPS is terminated by
+Cloudflare, so the compose `https` profile stays off.
 
 ---
 
