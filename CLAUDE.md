@@ -60,12 +60,23 @@ diff -w --strip-trailing-cr <live-file> \
 - Develop on your **own** feature branch, namespaced per collaborator:
   `claude/<handle>-<topic>` (e.g. `claude/howe-expeditions`). **Do not share a
   feature branch** between collaborators.
-- `main` = mainline; `production` = **deploy branch** (pushing there deploys via a
-  self-hosted runner). Engine/as-cgi/Dockerfile change → rebuild; everything else
-  → restart — `docker/deploy/deploy.sh` decides via a host-local marker.
-- Ship by fast-forwarding `main` **and** `production` to your reviewed feature tip.
-- **Always watch the deploy to green** (GitHub Actions `deploy.yml`, branch
-  `production`) and confirm the change live before calling it done.
+- `main` = mainline; `production` = **deploy branch** for the faithful edition.
+  This branch (`claude/peng-cvs-merge`) is the restoration edition.
+- **Both editions run on one self-hosted NUC** behind a Cloudflare Tunnel (AWS
+  was retired 2026-09); full guide: **`docker/deploy-nuc.md`**. **Deploys are
+  manual over SSH** (there is no GitHub runner). After pushing, run the
+  edition's `deploy.sh` from its own checkout:
+  `ssh archspace-nuc 'cd ~/archspace-new && bash docker/deploy/deploy.sh'`
+  (this branch → new.archspace.cc) or `... 'cd ~/archspace && ...'` (faithful,
+  `production` → archspace.cc). `deploy.sh` rebuilds for image-baked changes and
+  restarts otherwise, via a host-local marker (`FORCE_REBUILD=1` forces it).
+- **Access:** SSH goes through Cloudflare Tunnel (`ssh.archspace.cc`) behind a
+  Cloudflare Access login. A contributor sends howl their **SSH public key** and
+  **Access email**. Never ask anyone for a private key.
+- Ship faithful work by fast-forwarding `main` **and** `production`; ship
+  restoration work to `claude/peng-cvs-merge` only.
+- **Always confirm the deploy live** (`curl localhost:8081/healthz` on the NUC
+  for this edition, then https://new.archspace.cc) before calling it done.
 
 ## Working alongside the other collaborator (important)
 `main`/`production` **move without warning** because the other collaborator's

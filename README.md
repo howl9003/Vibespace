@@ -3,10 +3,13 @@
 A working, self-hosted revival of **Archspace** — an early-2000s persistent,
 browser-based 4X space-strategy game (a C++ engine, ~449 source files). This
 repo takes the original 2004–05 source and turns it into a reproducible,
-Dockerized, HTTPS-served deployment with push-to-deploy CI/CD, while keeping the
-game itself faithful to the original.
+Dockerized, HTTPS-served deployment, while keeping the game itself faithful to
+the original.
 
-Live reference deployment: **https://archspace.cc**
+Live deployments, both on one self-hosted NUC behind a Cloudflare Tunnel (see
+[`docker/deploy-nuc.md`](docker/deploy-nuc.md)): **https://archspace.cc**
+(faithful, `production`) and **https://new.archspace.cc** (this restoration
+edition, `claude/peng-cvs-merge`).
 
 ---
 
@@ -78,7 +81,8 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   ├── deploy/
 │   │   ├── ec2-bootstrap.sh        #   one-command EC2 setup (Docker, swap, build, run)
 │   │   └── deploy.sh               #   pull + rebuild-or-restart (marker-based detection)
-│   ├── deploy-ec2.md               # Full EC2 deployment guide
+│   ├── deploy-nuc.md               # Self-hosted NUC: access, deploys, admin (current)
+│   ├── deploy-ec2.md               # Retired AWS EC2 guide (history)
 │   └── README.md                   # Docker build/run notes
 │
 ├── web/auth/                       # Modern PHP auth service (served at /auth/)
@@ -89,7 +93,7 @@ When in doubt: the engine binary is sacred; everything around it is fair game.
 │   ├── theme.php                   #   original-look styling for the auth pages
 │   └── schema.sql                  #   accounts + sessions tables
 │
-└── .github/workflows/deploy.yml    # Self-hosted-runner deploy on push to `production`
+└── .github/workflows/deploy.yml    # Deploy on push to `production` (needs a self-hosted runner; none registered)
 ```
 
 ---
@@ -309,11 +313,14 @@ original `root` / `comconq1` **inside the container network only** (not exposed)
 
 | Branch | Role |
 |---|---|
-| `main` | canonical mainline |
-| `production` | **deploy branch** — pushing here triggers a deploy |
+| `main` | canonical mainline (faithful edition) |
+| `production` | deploy branch for the faithful edition — what `~/archspace` on the NUC runs |
+| `claude/peng-cvs-merge` | this restoration edition — what `~/archspace-new` on the NUC runs |
 | feature branches (e.g. `claude/*`) | active development; do **not** deploy |
 
-Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
+Ship faithful work by fast-forwarding `main` and `production` to your feature
+tip; ship restoration work to `claude/peng-cvs-merge`. Then deploy over SSH
+(below).
 
 > **Multiple contributors:** `main`/`production` can move because another
 > collaborator's agent deploys too. Always `git fetch` before pushing; if the
@@ -321,45 +328,37 @@ Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
 > never force-push the shared branches or discard the other's commits. Agent
 > conventions live in **[`CLAUDE.md`](CLAUDE.md)** (auto-loaded by Claude Code).
 
-### Push-to-deploy (self-hosted runner)
+### Hosting: one self-hosted NUC behind Cloudflare Tunnel
 
-`.github/workflows/deploy.yml` runs on a **self-hosted GitHub Actions runner
-installed on the EC2 instance**. The runner dials *out* to GitHub — so there's
-**no inbound SSH, no open port 22, no SSH key/secret, and the public IP can
-change freely**. On a push to `production` it runs `docker/deploy/deploy.sh`,
-which:
+Since 2026-09 both editions run on a single self-hosted box (an Intel NUC). The
+AWS account that hosted them is gone. Cloudflare Tunnel carries `archspace.cc`
+/ `www` → `127.0.0.1:8080` (`~/archspace`, `production`), `new.archspace.cc` →
+`127.0.0.1:8081` (`~/archspace-new`, this branch), and admin SSH
+(`ssh.archspace.cc`, behind a Cloudflare Access login). **Access for
+contributors, the deploy commands and admin tasks are all in
+[`docker/deploy-nuc.md`](docker/deploy-nuc.md).** In short: send howl your SSH
+**public** key and your Access email, then after pushing run the edition's
+`deploy.sh` on the NUC over SSH.
 
-1. Pulls the new commit.
+There is currently **no auto-deploy**: `.github/workflows/deploy.yml` needs a
+self-hosted runner, and none is registered (the old one lived on AWS).
+
+### What `deploy.sh` does
+
+Run on the box from an edition's checkout, `docker/deploy/deploy.sh`:
+
+1. Pulls the new commit (the branch pinned by that checkout's `.deploy.env`).
 2. Diffs it against the **last-deployed marker** (`docker/deploy/.last_deployed`,
-   host-local) — *not* git HEAD, because the workflow already reset HEAD. (This
-   marker is the fix for a subtle bug where every deploy silently took the
-   no-rebuild path.)
-3. **Rebuilds** if the engine / as-cgi / Dockerfile changed; otherwise
+   host-local) — *not* git HEAD.
+3. **Rebuilds** if anything baked into the image changed (engine, as-cgi,
+   `src/script` data tables, www tarball / `www-new`, Dockerfile); otherwise
    **restarts** (web/template/config). `FORCE_REBUILD=1` overrides.
 4. Records the new commit in the marker.
 
 The DB and game-state volumes survive; only a brief blip at the container swap.
-
-### First-time setup on EC2
-
-See **`docker/deploy-ec2.md`** for the full walkthrough. In short:
-1. Ubuntu 24.04 instance + **Elastic IP**; security group: SSH `22` (your IP),
-   and `8080` (HTTP) or `80`+`443` (HTTPS).
-2. Clone via a read-only **GitHub deploy key**; `git checkout production`.
-3. `sudo bash docker/deploy/ec2-bootstrap.sh` (installs Docker, swap if needed,
-   builds, runs; persists config to `docker/deploy/.deploy.env`).
-4. Install the self-hosted runner as a service (`svc.sh install && svc.sh start`).
-
-### HTTPS + domain
-
-Opt-in via the compose **`https` profile** (Caddy):
-```sh
-sudo DOMAIN=archspace.cc TLS_EMAIL=you@example.com bash docker/deploy/ec2-bootstrap.sh
-```
-Caddy fronts `:80/:443`, auto-provisions/renews Let's Encrypt certs, redirects
-http→https, serves the apex, and 301-redirects `www` → apex. DNS: `A @` and
-`A www` → the Elastic IP. Once `DOMAIN` is in `.deploy.env`, every future
-auto-deploy stays on HTTPS.
+The retired AWS setup is documented in `docker/deploy-ec2.md` for history. On
+the NUC, HTTPS is terminated by Cloudflare, so the compose `https` profile
+stays off.
 
 ---
 
