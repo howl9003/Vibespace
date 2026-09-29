@@ -19,6 +19,54 @@ task:**
 
 Replacing a dead applet or a cosmetic fix is almost never an engine change.
 
+## Two editions (read this first)
+The repo maintains **two editions** of the game on two hosts:
+
+| Edition | Branch(es) | Live site | Deploy |
+|---|---|---|---|
+| **Faithful original** | `main` → `production` | **archspace.cc** | push-to-deploy (self-hosted runner runs `deploy.sh`) |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **new.archspace.cc** | **manual** — SSH in, run `deploy.sh` (no runner) |
+
+**Authoritative balance reference (precise):** each edition follows a different
+build of the game, and that build — not the other — is authoritative for its host:
+- **Faithful edition → archspace.cc → the www-new build**: the **original official
+  2004–2005 game** (the live `archspace_source/archspace/` engine *as it ships*).
+  This is **not** cvsroot.
+- **Restoration edition → new.archspace.cc → the cvsroot build**: an **unofficial
+  fan update from ~2007** (`archspace_source/CVSRoot/archspace/archspace/`) — newer
+  than www-new — that reworked balance and added content (Trabotulin, megaclass
+  hulls, an extended tech tree, NPC bots).
+
+The two builds differ in **~80 *engine* balance points** (the `script/*.en` data
+tables are byte-identical). The restoration reverts those to the cvsroot values —
+but **only on `claude/peng-cvs-merge`**; the cvsroot-reverts (and the restoration
+content) must **never** reach `main`/`production`, which keep the www-new balance.
+(Full audit + the reverted list: `cvs-audit/` and the cvs-merge branch's README →
+"Two builds, two boxes".)
+
+`main` and `production` are the **faithful** edition — the www-new build, no
+rule/balance/formula changes away from it. `main` is the mainline; `production` is
+its deploy branch.
+
+The **restoration** edition lives **only on `claude/peng-cvs-merge`**. It adds
+original content recovered from the game's CVS history — the 11th race
+**Trabotulin**, the **4-skill commander** model + per-race commander racial
+abilities, megaclass hulls (**Astral Carrier**, **Suncrusher**), an extended tech
+tree, tiered NPC bots, and more components/projects/events/spy ops. These are real
+gameplay changes, so the "strictly faithful" rule applies to the faithful edition
+only.
+
+**Never merge the restoration into `main`/`production` (a real incident).** It was
+once merged into `main` and shipped to `production`, which **took prod down** — the
+faithful engine can't read the migrated 4-skill / wide-class DB and crashes on
+load. `production` was reverted to the pre-cvs-merge snapshot (`4446f6b0`) and the
+restoration was reverted out of `main` (`1a1fd5e4`, `dad0189e`), so both are
+faithful again. The restoration is a **separate edition on its own branch** —
+develop it on `claude/peng-cvs-merge` and deploy it **manually** to new.archspace.cc;
+do not integrate it into `main`. (`production` still carries incident-recovery
+DB-reversal hotfixes in `entrypoint.sh` that `main` lacks, so the two faithful
+trees aren't byte-identical — reconcile by cherry-pick, not a blind fast-forward.)
+
 ## Branches & deploying
 - Develop on your **own** feature branch, namespaced per collaborator:
   `claude/<handle>-<topic>` (e.g. `claude/howe-expeditions`). **Do not share a
@@ -26,7 +74,18 @@ Replacing a dead applet or a cosmetic fix is almost never an engine change.
 - `main` = mainline; `production` = **deploy branch** (pushing there deploys via a
   self-hosted runner). Engine/as-cgi/Dockerfile change → rebuild; everything else
   → restart — `docker/deploy/deploy.sh` decides via a host-local marker.
-- Ship by fast-forwarding `main` **and** `production` to your reviewed feature tip.
+- **Restoration edition deploy (new.archspace.cc):** there is **no runner** —
+  push to `claude/peng-cvs-merge`, then SSH to the box and run
+  `bash docker/deploy/deploy.sh` (its `docker/deploy/.deploy.env` pins
+  `DEPLOY_BRANCH=claude/peng-cvs-merge`). Use `FORCE_REBUILD=1` for any
+  image-baked change (engine, `src/script/*.en`, www, Dockerfile). The box deploy
+  key is **read-only**, so push from your own machine.
+- Ship **faithful** fixes through `main` → `production` (archspace.cc); ship
+  **restoration** work to `claude/peng-cvs-merge` (new.archspace.cc). **Never merge
+  the restoration edition into `main`/`production`** — that is the prod-down
+  incident (see *Two editions*). `production` carries incident-recovery hotfixes
+  `main` lacks, so reconcile the two faithful trees by cherry-pick, not a blind
+  fast-forward.
 - **Always watch the deploy to green** (GitHub Actions `deploy.yml`, branch
   `production`) and confirm the change live before calling it done.
 

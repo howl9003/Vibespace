@@ -311,6 +311,7 @@ CTargetFleetList::free_item(TSomething aItem)
 	return true;
 }
 
+
 CTurret::CTurret()
 {
 	mNumber = mCooling = 0;
@@ -1009,6 +1010,36 @@ CBattleFleet::get_active_ratio()
 	Count = Count*100/mTotalHP;
 
 	return Count;
+}
+
+int
+CBattleFleet::get_current_hp()
+{
+	int
+		Count = 0;
+
+	for( int i = 0; i < mMaxShip; i++ )
+		if( mHP[i] > 0 ) Count += mHP[i];
+
+	return Count;
+}
+
+int
+CBattleFleet::get_current_shield_strength()
+{
+	int
+		Count = 0;
+
+	for( int i = 0; i < mMaxShip; i++ )
+		if( mHP[i] > 0 ) Count += mShieldStrength[i];
+
+	return Count;
+}
+
+int
+CBattleFleet::get_total_shield_capacity()
+{
+	return mShieldMaxStrength*mMaxShip;
 }
 
 int
@@ -2721,7 +2752,7 @@ CBattleFleetList::set_formation_speed()
 }
 
 void
-CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin)
+CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin, CBattleRecord *aRecord, int aTurn)
 {
 	CAllyFleetList *
 		AllyFleetList = mOwner->get_ally_fleet_list();
@@ -2911,13 +2942,20 @@ CBattleFleetList::update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool 
 
 				if (aWarType != CBattle::WAR_PRIVATEER)
 				{
+					int
+						AdmiralExp = 0;
 					if (aWin)
 					{
-						Fleet->get_admiral()->gain_exp( Fleet->get_admiral_exp() );
+						AdmiralExp = Fleet->get_admiral_exp();
 					}
 					else
 					{
-						Fleet->get_admiral()->gain_exp( Fleet->get_admiral_exp()/4 );
+						AdmiralExp = Fleet->get_admiral_exp()/4;
+					}
+					Fleet->get_admiral()->gain_exp( AdmiralExp );
+					if (aRecord != NULL && AdmiralExp > 0)
+					{
+						aRecord->add_admiral_exp(Fleet, AdmiralExp, aTurn);
 					}
 				}
 			}
@@ -5335,13 +5373,13 @@ CBattle::update_fleet_after_battle()
 {
 	if (attacker_win() == true)
 	{
-		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, true);
-		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, false);
+		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, true, mRecord, mTurn);
+		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, false, mRecord, mTurn);
 	}
 	else
 	{
-		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, false);
-		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, true);
+		mOffenseFleetList.update_fleet_after_battle(mDefender, mWarType, false, mRecord, mTurn);
+		mDefenseFleetList.update_fleet_after_battle(mAttacker, mWarType, true, mRecord, mTurn);
 	}
 }
 
@@ -6025,6 +6063,7 @@ CBattleRecord::CBattleRecord()
 {
 	mID = 0;
 	mFireID = 1;
+	mTurn = 0;
 	mIsDraw = false;
 	mThereWasBattle = 0;
 }
@@ -6119,6 +6158,7 @@ CBattleRecord::CBattleRecord(CPlayer *aAttacker, CPlayer *aDefender, int aWarTyp
 	mThereWasBattle = 0;
 
 	mFireID = 1;
+	mTurn = 0;
 
 	add_buf((char *)format("FIELD/%s\n",
 							(char *)mBattleFieldName));
@@ -6194,6 +6234,7 @@ CBattleRecord::CBattleRecord(MYSQL_ROW aRow)
 	}
 
 	mFireID = 1;
+	mTurn = 0;
 }
 
 CBattleRecord::~CBattleRecord()
@@ -6369,6 +6410,8 @@ CBattleRecord::add_fleet( CBattleFleet *aFleet )
 	// end telecard
 */
 	add_buf( (char*)Buf );
+	add_state( aFleet );
+	add_durability( aFleet );
 }
 
 void
@@ -6399,6 +6442,42 @@ CBattleRecord::add_location( CBattleFleet *aFleet )
 		Buf;
 	Buf.format( "M/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_x(), aFleet->get_y(), (int)aFleet->get_direction(), aFleet->get_command(), aFleet->get_substatus(), aFleet->count_active_ship() );
 	add_buf( (char*)Buf );
+	add_state( aFleet );
+	add_durability( aFleet );
+}
+
+void
+CBattleRecord::add_state( CBattleFleet *aFleet )
+{
+	CString
+		Buf;
+
+	// Richer replay metadata only; no battle logic reads these records.
+	Buf.format( "S/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_status(), aFleet->get_substatus(), (int)aFleet->get_morale(), aFleet->get_morale_status(), aFleet->is_detected() ? 1 : 0, aFleet->is_cloaked() ? 1 : 0 );
+	add_buf( (char*)Buf );
+}
+
+void
+CBattleRecord::add_durability( CBattleFleet *aFleet )
+{
+	CString
+		Buf;
+
+	// Richer replay metadata only; no battle logic reads these records.
+	Buf.format( "Y/%d/%d/%d/%d/%d/%d/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id(), aFleet->get_current_hp(), aFleet->get_total_hp(), aFleet->get_current_shield_strength(), aFleet->get_total_shield_capacity(), aFleet->count_active_ship(), aFleet->get_max_ship() );
+	add_buf( (char*)Buf );
+}
+
+void
+CBattleRecord::add_admiral_exp( CBattleFleet *aFleet, int aExp, int aTurn )
+{
+	CString
+		Buf,
+		AdmiralNameString;
+
+	AdmiralNameString = (char *)mark_forward_slashes(aFleet->get_admiral()->get_name());
+	Buf.format( "X/%d/%d/%d/%s/%d/%d\n", aTurn, aFleet->get_real_owner(), aFleet->get_real_id(), (char *)AdmiralNameString, aFleet->get_admiral()->get_id(), aExp );
+	add_buf( (char*)Buf );
 }
 
 void
@@ -6406,6 +6485,7 @@ CBattleRecord::disable_fleet( CBattleFleet *aFleet )
 {
 	CString
 		Buf;
+	add_durability( aFleet );
 	Buf.format( "D/%d/%d/%d\n", mTurn, aFleet->get_real_owner(), aFleet->get_real_id() );
 	// end telecard
 	add_buf( (char*)Buf );
@@ -6622,6 +6702,3 @@ CBattleRecordTable::load(CMySQL &aMySQL)
 
 	return true;
 }
-
-
-

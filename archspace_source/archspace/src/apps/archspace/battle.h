@@ -297,6 +297,9 @@ class CBattleFleet : public CVector
 		void set_target(int aTarget) { mTarget = aTarget; }
 
 		int get_active_ratio();
+		int get_current_hp();
+		int get_current_shield_strength();
+		int get_total_shield_capacity();
 		int count_active_ship();
 		int get_max_ship() { return mMaxShip; }
 
@@ -548,7 +551,7 @@ class CBattleFleetList:public CSortedList
 
 		CPlayer *get_owner() { return mOwner; }
 
-		void update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin);
+		void update_fleet_after_battle(CPlayer *aEnemy, int aWarType, bool aWin, CBattleRecord *aRecord, int aTurn);
 
 		CFormationPoint *get_formation_point( int aIndex ) { return (CFormationPoint*)mFormationInfo.get(aIndex); }
 		int formation_length() { return mFormationInfo.length(); }
@@ -716,6 +719,9 @@ class CBattleRecord : public CStore
 	public :
 		void add_fleet( CBattleFleet *aFleet );
 		void add_location( CBattleFleet *aFleet );
+		void add_state( CBattleFleet *aFleet );
+		void add_durability( CBattleFleet *aFleet );
+		void add_admiral_exp( CBattleFleet *aFleet, int aExp, int aTurn );
 		void disable_fleet( CBattleFleet *aFleet );
 		void add_fire( CBattleFleet *aAttacker, CBattleFleet *aTarget, CTurret *aTurret, int aHitChance );
 		void add_hit( CBattleFleet *aAttacker, CBattleFleet *aTarget, int aHitCount, int aMissCount, int aTotalDamage, int aSunkCount );

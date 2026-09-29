@@ -6,7 +6,11 @@ repo takes the original 2004–05 source and turns it into a reproducible,
 Dockerized, HTTPS-served deployment with push-to-deploy CI/CD, while keeping the
 game itself faithful to the original.
 
-Live reference deployment: **https://archspace.cc**
+Live deployments — **two editions** (see [Two editions](#two-editions)):
+- **https://archspace.cc** — the **faithful original** edition (`main` → `production`).
+- **https://new.archspace.cc** — the **cvs-merge restoration** edition (branch
+  `claude/peng-cvs-merge` only): the same engine with a large body of original
+  content restored from the game's CVS history.
 
 ---
 
@@ -198,17 +202,78 @@ original `root` / `comconq1` **inside the container network only** (not exposed)
 
 ---
 
+## Two editions
+
+This repo maintains **two editions** of the game, deployed to two separate hosts:
+
+| Edition | Branch(es) | Live site | Deploy |
+|---|---|---|---|
+| **Faithful original** | `main` → `production` | **https://archspace.cc** | push-to-deploy (self-hosted runner) |
+| **cvs-merge restoration** | `claude/peng-cvs-merge` **only** | **https://new.archspace.cc** | manual `deploy.sh` over SSH |
+
+**Authoritative balance per edition (precise).** Each edition follows a *different
+build* of the game, and that build — not the other — is authoritative for its host:
+- **Faithful original → archspace.cc → the www-new build**: the **original official
+  2004–2005 game** (the live `archspace_source/archspace/` engine as it ships).
+  **Not cvsroot.**
+- **cvs-merge restoration → new.archspace.cc → the cvsroot build**: an **unofficial
+  fan update from ~2007** (`archspace_source/CVSRoot/archspace/archspace/`) — newer
+  than www-new — that reworked balance and added content.
+
+Beyond that added content, the cvsroot build also reworked **~80 *engine* balance
+points** vs www-new; on `claude/peng-cvs-merge` a 2026-06 audit reverted those to
+the cvsroot values (audit: `cvs-audit/`). Both the restoration content and the
+cvsroot reverts stay on that branch — **never on `main`/`production`**. Genuine
+*bugs* are fixed on both.
+
+**Faithful original** holds to the three-tier "strictly faithful" rule above:
+the **www-new build** — no rule, balance, or formula changes away from it. `main`
+is the mainline; `production` is its deploy branch.
+
+**cvs-merge restoration** restores a large body of original content recovered
+from the game's CVS history that the faithful edition omits, and reworks some
+mechanics. Highlights:
+- 11th playable race **Trabotulin** (with its own commander racial abilities).
+- A **4-skill commander** model (Offense / Defense / Maneuver / Detection) plus
+  per-race commander racial abilities.
+- Two megaclass hulls — **Astral Carrier** (class 11) and **Suncrusher**
+  (class 12) — gated on specific schematics; ship designs widened to 10 weapon slots.
+- An extended tech tree (obtainable tech tops out at 190).
+- A tiered, self-running NPC **bot** population (Newbie … Supreme Admiral).
+- More restored components / projects / events / spy ops.
+
+These are deliberate gameplay divergences, so the "strictly faithful" rule does
+**not** apply to the restoration edition. The restoration lives **only** on
+`claude/peng-cvs-merge` — **do not merge it into `main` or `production`.**
+
+**Why this matters (an incident worth knowing).** The restoration was once merged
+into `main` and then shipped to `production`, which **took prod down** — the
+faithful engine can't read the migrated DB (4-skill admiral table, widened ship
+classes) and crashes on load. `production` was **reverted to the pre-cvs-merge
+snapshot** (forward commit `4446f6b0` — no force-push), and the restoration was
+**reverted out of `main`** (`1a1fd5e4`, `dad0189e`), so both are faithful again.
+The restoration is a separate edition on its own branch; keep it there. (One
+residue: `production` still carries incident-recovery DB-reversal hotfixes in
+`entrypoint.sh` that `main` lacks, so the two faithful trees aren't byte-identical.)
+
+---
+
 ## Deployment & CI/CD
 
 ### Branch model
 
 | Branch | Role |
 |---|---|
-| `main` | canonical mainline |
-| `production` | **deploy branch** — pushing here triggers a deploy |
-| feature branches (e.g. `claude/*`) | active development; do **not** deploy |
+| `main` | mainline for the **faithful** edition (archspace.cc) |
+| `production` | deploy branch for the **faithful** edition — pushing here triggers a deploy |
+| `claude/peng-cvs-merge` | the **restoration** edition — deployed **manually** to new.archspace.cc; **not** merged into `main` |
+| other feature branches (`claude/*`) | active development; do **not** deploy |
 
-Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
+Ship **faithful** fixes through `main` → `production`; ship **restoration** work
+to `claude/peng-cvs-merge`. **Never merge the restoration into `main`/`production`**
+— that re-triggers the prod incident described in [Two editions](#two-editions).
+`production` carries incident-recovery hotfixes `main` lacks, so reconcile the two
+faithful trees by cherry-pick rather than a blind fast-forward.
 
 > **Multiple contributors:** `main`/`production` can move because another
 > collaborator's agent deploys too. Always `git fetch` before pushing; if the
@@ -216,7 +281,7 @@ Ship by fast-forwarding `main` and `production` to your feature tip and pushing.
 > never force-push the shared branches or discard the other's commits. Agent
 > conventions live in **[`CLAUDE.md`](CLAUDE.md)** (auto-loaded by Claude Code).
 
-### Push-to-deploy (self-hosted runner)
+### Push-to-deploy (the faithful edition — archspace.cc)
 
 `.github/workflows/deploy.yml` runs on a **self-hosted GitHub Actions runner
 installed on the EC2 instance**. The runner dials *out* to GitHub — so there's
@@ -256,6 +321,28 @@ http→https, serves the apex, and 301-redirects `www` → apex. DNS: `A @` and
 `A www` → the Elastic IP. Once `DOMAIN` is in `.deploy.env`, every future
 auto-deploy stays on HTTPS.
 
+### Deploying the restoration edition (new.archspace.cc)
+
+The cvs-merge restoration runs on a **separate** EC2 box with **no auto-deploy
+runner** — updates are manual:
+
+1. Commit and push your change to **`claude/peng-cvs-merge`**.
+2. SSH to the staging box (`ssh -i <key>.pem ubuntu@<host>`).
+3. `cd ~/archspace && bash docker/deploy/deploy.sh`. The box's
+   `docker/deploy/.deploy.env` pins `DEPLOY_BRANCH=claude/peng-cvs-merge`, so
+   `deploy.sh` fetches that branch, resets to it, then rebuilds or restarts.
+   Use **`FORCE_REBUILD=1 bash docker/deploy/deploy.sh`** for any image-baked
+   change (the C++ engine, the `src/script/*.en` data tables, the `www` tarball,
+   or the Dockerfile).
+
+The box checks out via a **read-only deploy key** (it can fetch, not push), so
+always push from your own machine. As with prod, the DB and game-state named
+volumes survive a rebuild, so characters persist.
+
+> The restoration is intentionally kept **off `production`** after it broke prod
+> (see [Two editions](#two-editions)). Ship it to this staging box only, until
+> prod is ready for the migrated DB schema.
+
 ---
 
 ## Engine concepts worth knowing
@@ -289,9 +376,26 @@ appears, suspect this pattern and add an `if (!x || !*x)` guard at the source.
 
 ## Local development
 
-- Edit web/UI/templates → `docker compose ... restart` (seconds).
-- Edit engine C++ → `docker compose ... up --build` (recompiles).
-- The auth pages, page templates (`src/web`), and overrides are bind-mounted, so
-  most UI work doesn't need a rebuild.
-- Logs: `docker compose -f docker/docker-compose.yml logs -f`.
-- Health: `curl http://localhost:8080/healthz` → `ok`.
+Start the stack from the repo root:
+```sh
+docker compose -f docker/docker-compose.yml up --build
+```
+
+For web/UI/template changes, restart the existing container instead of
+rebuilding. The auth pages, page templates (`src/web`), and overrides are
+bind-mounted, and the entrypoint re-assembles the web root on start:
+```sh
+docker compose -f docker/docker-compose.yml restart
+curl http://localhost:8080/healthz
+```
+The health check should return `ok`.
+
+For engine C++ or `docker/as-cgi` changes, rebuild the image:
+```sh
+docker compose -f docker/docker-compose.yml up --build
+```
+
+Useful logs while iterating:
+```sh
+docker compose -f docker/docker-compose.yml logs -f
+```

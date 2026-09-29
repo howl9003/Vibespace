@@ -22,8 +22,11 @@
     FIELD/  ATTACKER/name/id/race   DEFENDER/name/id/race   TIME/  CAPITAL/  ALLIANCE/
     FL/owner/id/nick/admiral/class/NONE/ships/x/y/dir/cmd      (roster, once)
     M/turn/owner/id/x/y/dir/cmd/substatus/ships               (position, every 10 turns)
+    S/turn/owner/id/status/substatus/morale/moraleStatus/detected/cloaked
+    Y/turn/owner/id/hp/maxHp/shield/maxShield/activeShips/maxShips
     F/fireid/turn/attOwner/attId/tgtOwner/tgtId/weapon/type/numFiring/hitChance
     H/fireid/turn/hits/misses/damage/sunk
+    X/turn/owner/id/admiral/admiralId/exp
     D/turn/owner/id                                            (fleet disabled)
     ENDTURN/finalTurn
   Names are escaped `/`->`\/` (CString::mark_forward_slashes); we un-escape.
@@ -65,8 +68,31 @@
   var BTN = 'background:#16243a;color:#cde;border:1px solid #2a4a6a;' +
             'border-radius:4px;padding:3px 12px;cursor:pointer;';
   var WIDE_KEY = 'as.battleReplay.wide';        // remembered layout opt-in
+  var FILTER_KEY = 'as.battleReplay.filters';
+  var DEFAULT_FILTERS = {
+    paths: false,
+    fire: true,
+    state: true,
+    destroyed: true,
+    xp: true,
+    durability: true
+  };
   function prefWide() { try { return localStorage.getItem(WIDE_KEY) === '1'; } catch (e) { return false; } }
   function setPrefWide(v) { try { localStorage.setItem(WIDE_KEY, v ? '1' : '0'); } catch (e) {} }
+  function replayFilters() {
+    var out = {};
+    for (var k in DEFAULT_FILTERS) out[k] = DEFAULT_FILTERS[k];
+    try {
+      var saved = JSON.parse(localStorage.getItem(FILTER_KEY) || '{}');
+      for (var sk in DEFAULT_FILTERS) {
+        if (typeof saved[sk] === 'boolean') out[sk] = saved[sk];
+      }
+    } catch (e) {}
+    return out;
+  }
+  function saveReplayFilters(filters) {
+    try { localStorage.setItem(FILTER_KEY, JSON.stringify(filters)); } catch (e) {}
+  }
   // CBattleFleet morale-break statuses (battle.h enum): each flickers + tints the
   // icon and stamps a label on it (Ro=Rout, Rt=Retreat to keep them distinct; the
   // full name is also shown in the text label).
@@ -76,6 +102,34 @@
     10: { ch: 'Ro', name: 'ROUT',     color: '#ffd633' },
     11: { ch: 'Rt', name: 'RETREAT',  color: '#5bc0ff' },
     12: { ch: 'P',  name: 'PANIC',    color: '#ff5577' }
+  };
+  var SUBSTATUS_LABELS = {
+    1: 'CENTER',
+    2: 'PENETRATE',
+    3: 'CHARGE',
+    4: 'STRAIGHT',
+    5: 'FORWARD',
+    6: 'BACKWARD',
+    7: 'BORDER'
+  };
+  var MORALE_LABELS = {
+    1: 'MORALE LOW',
+    2: 'MORALE BREAK',
+    3: 'MORALE CRIT'
+  };
+  var BOARD_SUBSTATUS_LABELS = {
+    1: 'CTR',
+    2: 'PEN',
+    3: 'CHG',
+    4: 'STR',
+    5: 'FWD',
+    6: 'BWD',
+    7: 'BRDR'
+  };
+  var BOARD_MORALE_LABELS = {
+    1: 'M-LOW',
+    2: 'M-BRK',
+    3: 'M-CRT'
   };
 
   function el(tag, css, html) {
@@ -91,114 +145,52 @@
       'border:1px solid #223355;color:#889;font:13px sans-serif;padding:28px 24px;' +
       'box-sizing:border-box;text-align:center;', msg));
   }
+  function fitCanvasText(ctx, text, maxWidth) {
+    if (ctx.measureText(text).width <= maxWidth) return text;
+    var suffix = '...';
+    for (var len = text.length - suffix.length; len > 3; len--) {
+      var shortText = text.substr(0, len) + suffix;
+      if (ctx.measureText(shortText).width <= maxWidth) return shortText;
+    }
+    return text.substr(0, 3);
+  }
+
+  var parser = window.ArchspaceBattleReplayParser;
+  if (!parser || typeof parser.parse !== 'function') {
+    notice('Battle replay parser is not available.');
+    return;
+  }
+  var parse = parser.parse;
+  var num = parser.num;
 
   if (!logUrl) { notice('Battle replay is not available for this report.'); return; }
 
-  // ---- split on unescaped '/', then un-escape '\/' ------------------------
-  function fields(line) {
-    var out = [], cur = '', i = 0;
-    while (i < line.length) {
-      var c = line.charAt(i);
-      if (c === '\\' && line.charAt(i + 1) === '/') { cur += '/'; i += 2; continue; }
-      if (c === '/') { out.push(cur); cur = ''; i++; continue; }
-      cur += c; i++;
+  function latestState(fl, t) {
+    var s = fl.stateSamples || [], latest = null;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i].turn <= t) latest = s[i]; else break;
     }
-    out.push(cur);
-    return out;
+    return latest;
   }
-  function num(x) { var n = parseInt(x, 10); return isNaN(n) ? 0 : n; }
-  function comma(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
-  // ---- parse --------------------------------------------------------------
-  function parse(text) {
-    var B = {
-      field: '', attackerId: null, defenderId: null, endTurn: 0,
-      attackerName: '', defenderName: '', attackerRace: 0, defenderRace: 0,
-      fleets: {},            // key "owner:id" -> fleet
-      firesByTurn: {},       // turn -> [fire]
-      eventsByTurn: {},      // turn -> [string]  (ticker)
-      pendingFire: {}        // fireid -> fire (awaiting its H line)
-    };
-    function fleet(owner, id) { return B.fleets[owner + ':' + id]; }
-    function ev(turn, s) { (B.eventsByTurn[turn] = B.eventsByTurn[turn] || []).push(s); }
-
-    var lines = text.split('\n');
-    for (var li = 0; li < lines.length; li++) {
-      var line = lines[li]; if (!line) continue;
-      var f = fields(line);
-      switch (f[0]) {
-        // ATTACKER/name/id/race ; DEFENDER/name/id/race
-        case 'ATTACKER': B.attackerName = f[1] || ''; B.attackerId = num(f[2]); B.attackerRace = num(f[3]); break;
-        case 'DEFENDER': B.defenderName = f[1] || ''; B.defenderId = num(f[2]); B.defenderRace = num(f[3]); break;
-        case 'FIELD':    B.field = f[1] || ''; break;
-        case 'ENDTURN':  B.endTurn = Math.max(B.endTurn, num(f[1])); break;
-        case 'FL': {
-          // FL/owner/id/nick/admiral/class/NONE/ships/x/y/dir/cmd
-          var owner = num(f[1]), id = num(f[2]);
-          B.fleets[owner + ':' + id] = {
-            owner: owner, id: id, nick: f[3] || ('Fleet ' + id),
-            admiral: f[4] || '', side: null /* set after attacker/def known */,
-            samples: [{ turn: 0, x: num(f[8]), y: num(f[9]), dir: num(f[10]), ships: num(f[7]), cmd: num(f[11]) }],
-            disabledTurn: null
-          };
-          break;
-        }
-        case 'M': {
-          // M/turn/owner/id/x/y/dir/cmd/substatus/ships
-          var t = num(f[1]), fl = fleet(num(f[2]), num(f[3]));
-          if (fl) fl.samples.push({ turn: t, x: num(f[4]), y: num(f[5]), dir: num(f[6]), ships: num(f[9]), cmd: num(f[7]) });
-          B.endTurn = Math.max(B.endTurn, t);
-          break;
-        }
-        case 'F': {
-          // F/fireid/turn/attOwner/attId/tgtOwner/tgtId/weapon/type/num/hitChance
-          var fire = {
-            id: num(f[1]), turn: num(f[2]),
-            from: num(f[3]) + ':' + num(f[4]), to: num(f[5]) + ':' + num(f[6]),
-            weapon: f[7] || 'weapon', num: num(f[9]), hits: 0, damage: 0, sunk: 0, dealt: false
-          };
-          (B.firesByTurn[fire.turn] = B.firesByTurn[fire.turn] || []).push(fire);
-          B.pendingFire[fire.id] = fire;
-          B.endTurn = Math.max(B.endTurn, fire.turn);
-          break;
-        }
-        case 'H': {
-          // H/fireid/turn/hits/misses/damage/sunk
-          var fire2 = B.pendingFire[num(f[1])];
-          if (fire2) {
-            fire2.hits = num(f[3]); fire2.damage = num(f[5]); fire2.sunk = num(f[6]); fire2.dealt = true;
-            var a = B.fleets[fire2.from], d = B.fleets[fire2.to];
-            ev(fire2.turn, (a ? a.nick : '?') + ' → ' + (d ? d.nick : '?') +
-               ': ' + fire2.weapon + ' ×' + fire2.num + ' — ' +
-               fire2.hits + ' hit' + (fire2.hits === 1 ? '' : 's') +
-               (fire2.damage ? ', ' + comma(fire2.damage) + ' dmg' : '') +
-               (fire2.sunk ? ', ' + fire2.sunk + ' sunk' : ''));
-            delete B.pendingFire[num(f[1])];
-          }
-          break;
-        }
-        case 'D': {
-          // D/turn/owner/id
-          var t2 = num(f[1]), fl2 = fleet(num(f[2]), num(f[3]));
-          if (fl2 && fl2.disabledTurn == null) {
-            fl2.disabledTurn = t2;
-            ev(t2, '☠ ' + fl2.nick + ' destroyed/retreated');
-          }
-          B.endTurn = Math.max(B.endTurn, t2);
-          break;
-        }
-      }
+  function latestDurability(fl, t) {
+    var s = fl.durabilitySamples || [], latest = null;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i].turn <= t) latest = s[i]; else break;
     }
+    return latest;
+  }
 
-    // assign sides + sort samples. The viewport is the fixed full battlefield
-    // (0..FIELD on both axes, see tx/ty), so no per-battle bounds are computed.
-    for (var k in B.fleets) {
-      var fl3 = B.fleets[k];
-      // attacker side vs everyone else (defender + allies render as defender)
-      fl3.side = (fl3.owner === B.attackerId) ? 'att' : 'def';
-      fl3.samples.sort(function (a, b) { return a.turn - b.turn; });
-    }
-    return B;
+  function mergeReplayState(fl, t, st) {
+    var rs = latestState(fl, t);
+    st.status = rs && rs.status != null ? rs.status : st.cmd;
+    st.substatus = rs && rs.substatus != null ? rs.substatus : (st.substatus || 0);
+    st.morale = rs ? rs.morale : null;
+    st.moraleStatus = rs ? rs.moraleStatus : null;
+    st.detected = rs ? rs.detected : false;
+    st.cloaked = rs ? rs.cloaked : false;
+    st.durability = latestDurability(fl, t);
+    return st;
   }
 
   // fleet state (interpolated) at turn t, or null if not yet present / gone
@@ -206,16 +198,18 @@
     if (fl.disabledTurn != null && t >= fl.disabledTurn) return null;
     var s = fl.samples, n = s.length;
     if (!n) return null;
-    if (t <= s[0].turn) return { x: s[0].x, y: s[0].y, dir: s[0].dir, ships: s[0].ships, cmd: s[0].cmd };
+    if (t <= s[0].turn) return mergeReplayState(fl, t, { x: s[0].x, y: s[0].y, dir: s[0].dir, ships: s[0].ships, cmd: s[0].cmd, substatus: s[0].substatus || 0 });
     for (var i = 0; i < n - 1; i++) {
       if (t >= s[i].turn && t <= s[i + 1].turn) {
         var a = s[i], b = s[i + 1], span = (b.turn - a.turn) || 1, f = (t - a.turn) / span;
-        return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f,
-                 dir: a.dir, ships: a.ships, cmd: a.cmd };
+        return mergeReplayState(fl, t, {
+          x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f,
+          dir: a.dir, ships: a.ships, cmd: a.cmd, substatus: a.substatus || 0
+        });
       }
     }
     var last = s[n - 1];
-    return { x: last.x, y: last.y, dir: last.dir, ships: last.ships, cmd: last.cmd };
+    return mergeReplayState(fl, t, { x: last.x, y: last.y, dir: last.dir, ships: last.ships, cmd: last.cmd, substatus: last.substatus || 0 });
   }
 
   // ---- combatant header ---------------------------------------------------
@@ -335,11 +329,39 @@
     bar.appendChild(turnLbl); bar.appendChild(modeBtn);
     leftcol.appendChild(bar);
 
+    var filters = replayFilters();
+    var filterBar = el('div', 'display:flex;flex-wrap:wrap;gap:4px 10px;margin:-2px 0 8px;' +
+      'font:11px sans-serif;color:#8fa0b8;min-height:18px;');
+    function addToggle(key, label) {
+      var lab = el('label', 'display:inline-flex;align-items:center;gap:3px;white-space:nowrap;');
+      var input = el('input');
+      input.type = 'checkbox';
+      input.checked = !!filters[key];
+      input.style.cssText = 'margin:0;';
+      input.onchange = function () {
+        filters[key] = input.checked;
+        saveReplayFilters(filters);
+        lastTickTurn = -1;
+        render(cur);
+        renderTicker(cur);
+      };
+      lab.appendChild(input);
+      lab.appendChild(document.createTextNode(label));
+      filterBar.appendChild(lab);
+    }
+    addToggle('paths', 'Paths');
+    addToggle('fire', 'Fire');
+    addToggle('state', 'State');
+    addToggle('destroyed', 'Loss');
+    addToggle('xp', 'XP');
+    addToggle('durability', 'Bars');
+    leftcol.appendChild(filterBar);
+
     // ticker — below the board (inline) or a tall side rail (widescreen). The rail
     // has a FIXED width/height so the summary pane is full size from the start and
     // doesn't grow as longer attack lines stream in; long lines wrap inside it.
     var ticker = el('div', (wide
-        ? 'flex:none;width:' + railW + 'px;height:' + (ch + 44) + 'px;'
+        ? 'flex:none;width:' + railW + 'px;height:' + (ch + 72) + 'px;'
         : 'height:120px;') +
       'overflow-y:auto;overflow-wrap:break-word;background:#05050f;border:1px solid #223355;' +
       'font:12px/1.5 monospace;color:#9ab;padding:6px 10px;box-sizing:border-box;');
@@ -355,6 +377,58 @@
     function tx(x) { return x / FIELD * cw; }
     function ty(y) { return (FIELD - y) / FIELD * ch; }
 
+    function drawMovementPath(fl, t) {
+      var samples = fl.samples || [];
+      if (!samples.length) return;
+      var started = false;
+      ctx.save();
+      ctx.strokeStyle = fl.side === 'att' ? 'rgba(255,136,68,0.28)' : 'rgba(85,187,255,0.28)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      for (var i = 0; i < samples.length; i++) {
+        if (samples[i].turn > t) break;
+        var x = tx(samples[i].x), y = ty(samples[i].y);
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else ctx.lineTo(x, y);
+      }
+      var curState = stateAt(fl, t);
+      if (curState) {
+        var cx = tx(curState.x), cy = ty(curState.y);
+        if (!started) ctx.moveTo(cx, cy);
+        else ctx.lineTo(cx, cy);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBar(x, y, width, ratio, fill, bg) {
+      ratio = Math.max(0, Math.min(1, ratio || 0));
+      var h = 3;
+      ctx.fillStyle = bg;
+      ctx.fillRect(x, y, width, h);
+      ctx.fillStyle = fill;
+      ctx.fillRect(x, y, Math.round(width * ratio), h);
+      ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + 0.5, y + 0.5, width - 1, h - 1);
+    }
+
+    function drawDurabilityBars(x, y, r, st) {
+      var d = st.durability;
+      if (!d) return;
+      var width = Math.max(24, Math.min(38, 18 + Math.sqrt(st.ships || 1) * 4));
+      var bx = Math.max(3, Math.min(cw - width - 3, Math.round(x - width / 2)));
+      var by = Math.max(3, Math.min(ch - 11, Math.round(y + r + 5)));
+      if (d.maxShield > 0) {
+        drawBar(bx, by, width, d.shield / d.maxShield, '#58c8ff', 'rgba(20,45,70,0.9)');
+        by += 5;
+      }
+      if (d.maxHp > 0) {
+        drawBar(bx, by, width, d.hp / d.maxHp, '#ff6b4a', 'rgba(75,25,20,0.9)');
+      }
+    }
+
     function drawFleet(st, fl) {
       var x = tx(st.x), y = ty(st.y);
       var r = Math.max(4, Math.min(16, 3 + Math.sqrt(st.ships || 1) * 1.6));
@@ -362,11 +436,10 @@
       // morale-break status: flicker the marker (keeping its side colour so blue
       // fleets flicker blue and orange flicker orange), stamp its letter on the
       // icon, and show the full name in the label.
-      var fx = STATUS_FX[st.cmd];
+      var fx = STATUS_FX[st.status];
       var alpha = 1, tag = '';
       if (fx) {
         alpha = 0.3 + 0.7 * Math.abs(Math.sin(Date.now() / 120));
-        tag = ' ⚠ ' + fx.name;
       }
       var rad = (st.dir || 0) * Math.PI / 180;
       ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(-rad);   // -rad: ty flips the y axis (cy ∝ −y)
@@ -384,26 +457,53 @@
         ctx.fillStyle = '#000'; ctx.fillText(fx.ch, x, y);
         ctx.restore();
       }
+      if (st.cloaked || st.detected) {
+        ctx.save();
+        ctx.strokeStyle = st.detected ? '#f9d84a' : '#b392ff';
+        ctx.lineWidth = 1.2;
+        if (st.cloaked) ctx.setLineDash([2, 2]);
+        ctx.beginPath(); ctx.arc(x, y, r + 4, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+      }
+      var tags = [];
+      if (fx) tags.push(fx.ch);
+      if (st.substatus && BOARD_SUBSTATUS_LABELS[st.substatus]) tags.push(BOARD_SUBSTATUS_LABELS[st.substatus]);
+      if (st.moraleStatus && BOARD_MORALE_LABELS[st.moraleStatus]) tags.push(BOARD_MORALE_LABELS[st.moraleStatus]);
+      if (st.cloaked) tags.push('CL');
+      if (st.detected) tags.push('DET');
+      tag = tags.length ? ' [' + tags.join(' ') + ']' : '';
       ctx.save();
       ctx.globalAlpha = fx ? alpha : 1;
       ctx.fillStyle = fx ? col : '#7d8aa0';
       ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(fl.nick + ' (' + st.ships + ')' + tag, x, y - r - 3);
+      var label = fitCanvasText(ctx, fl.nick + ' (' + st.ships + ')' + tag, cw - 8);
+      var labelW = ctx.measureText(label).width;
+      var labelX = Math.max(4 + labelW / 2, Math.min(cw - 4 - labelW / 2, x));
+      var labelY = Math.max(10, Math.min(ch - 3, y - r - 3));
+      ctx.fillText(label, labelX, labelY);
       ctx.restore();
+      if (filters.durability) drawDurabilityBars(x, y, r, st);
     }
 
     function render(t) {
       ctx.clearRect(0, 0, cw, ch);
+      if (filters.paths) {
+        for (var p = 0; p < fleetList.length; p++) {
+          drawMovementPath(fleetList[p], t);
+        }
+      }
       // fire lines for this turn
-      var fires = B.firesByTurn[Math.round(t)] || [];
-      for (var i = 0; i < fires.length; i++) {
-        var fr = fires[i], a = B.fleets[fr.from], d = B.fleets[fr.to];
-        if (!a || !d) continue;
-        var sa = stateAt(a, t), sd = stateAt(d, t);
-        if (!sa || !sd) continue;
-        ctx.strokeStyle = fr.hits > 0 ? (fr.sunk > 0 ? '#ffee66' : '#88ff99') : 'rgba(150,150,170,0.35)';
-        ctx.lineWidth = fr.hits > 0 ? 1.6 : 0.7;
-        ctx.beginPath(); ctx.moveTo(tx(sa.x), ty(sa.y)); ctx.lineTo(tx(sd.x), ty(sd.y)); ctx.stroke();
+      if (filters.fire) {
+        var fires = B.firesByTurn[Math.round(t)] || [];
+        for (var i = 0; i < fires.length; i++) {
+          var fr = fires[i], a = B.fleets[fr.from], d = B.fleets[fr.to];
+          if (!a || !d) continue;
+          var sa = stateAt(a, t), sd = stateAt(d, t);
+          if (!sa || !sd) continue;
+          ctx.strokeStyle = fr.hits > 0 ? (fr.sunk > 0 ? '#ffee66' : '#88ff99') : 'rgba(150,150,170,0.35)';
+          ctx.lineWidth = fr.hits > 0 ? 1.6 : 0.7;
+          ctx.beginPath(); ctx.moveTo(tx(sa.x), ty(sa.y)); ctx.lineTo(tx(sd.x), ty(sd.y)); ctx.stroke();
+        }
       }
       // fleets
       for (var j = 0; j < fleetList.length; j++) {
@@ -420,14 +520,21 @@
       lastTickTurn = t;
       var html = '';
       for (var tt = 0; tt <= t; tt++) {
-        var evs = B.eventsByTurn[tt];
+        var evs = B.eventDetailsByTurn && B.eventDetailsByTurn[tt];
+        if (!evs && B.eventsByTurn[tt]) {
+          evs = [];
+          for (var oi = 0; oi < B.eventsByTurn[tt].length; oi++) {
+            evs.push({ type: 'info', text: B.eventsByTurn[tt][oi] });
+          }
+        }
         if (!evs) continue;
         for (var e = 0; e < evs.length; e++) {
+          if (filters.hasOwnProperty(evs[e].type) && !filters[evs[e].type]) continue;
           html += '<div><span style="color:#566">T' + tt + '</span> ' +
-                  evs[e].replace(/</g, '&lt;') + '</div>';
+                  evs[e].text.replace(/</g, '&lt;') + '</div>';
         }
       }
-      ticker.innerHTML = html || '<div style="color:#566">No fleet engaged this battle.</div>';
+      ticker.innerHTML = html || '<div style="color:#566">No visible events for selected filters.</div>';
       ticker.scrollTop = ticker.scrollHeight;
     }
 
@@ -436,7 +543,7 @@
     function anyAbnormal(t) {
       for (var i = 0; i < fleetList.length; i++) {
         var st = stateAt(fleetList[i], t);
-        if (st && STATUS_FX[st.cmd]) return true;
+        if (st && STATUS_FX[st.status]) return true;
       }
       return false;
     }

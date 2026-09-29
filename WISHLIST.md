@@ -17,12 +17,8 @@ A **richer** replay could additionally show data the engine computes during a
 battle but currently discards from the log:
 
 - **Per-ship HP and shield bars** over time (only fleet-level active-ship counts
-  are logged now).
-- **Morale curves** per fleet (berserk / rout / retreat thresholds).
-- **Status / formation / sub-status changes** as visible state (penetrate, flank,
-  stand-ground, disorder, panic…).
-- **Cloak / detection** transitions.
-- **Admiral XP** gained per fleet.
+  were logged originally; aggregate durability is now logged).
+- **Per-turn morale curves** per fleet, beyond the sampled morale-break state.
 
 **What it takes:** extend `CBattleRecord` with new log-line types (alongside the
 existing `FL/M/F/H/D` records in
@@ -30,6 +26,30 @@ existing `FL/M/F/H/D` records in
 and visualize them in `battle-replay.js`. This is an **engine change → image
 rebuild**, but stays faithful to the three-tier principle by being
 **observe-only** — log more, never change the combat math.
+
+**Completed first slice:** `tools/battle-replay/check-parser.js` and
+`tools/battle-replay/fixtures/synthetic-battle.log` now provide the parser-only
+safety check before changing engine log output. The fixture covers escaped
+slashes in names, `FL` roster rows, `M` movement samples, paired `F`/`H` weapon
+events, `D` disabled-fleet rows, and `ENDTURN`.
+
+**Completed richer-state slice:** engine battle logs now include `S/` fleet-state
+snapshots beside roster and movement records. The parser and HTML5 replay use
+those snapshots to surface status/sub-status, morale-break state, cloak, and
+detection transitions without changing combat math.
+
+**Completed XP slice:** engine battle logs now include `X/` admiral XP award
+records at battle resolution. The parser stores those records per fleet and the
+HTML5 replay ticker shows the awarded XP alongside the end-of-battle events.
+
+**Completed durability slice:** engine battle logs now include compact `Y/`
+durability snapshots with aggregate HP, shield, and active/max ship counts. The
+parser stores those records per fleet, and the HTML5 replay can draw HP/shield
+bars plus optional movement trails and filtered event categories.
+
+**Next slice:** if replay work continues, consider true per-ship compact
+durability bands or a morale graph panel. Keep these observe-only and gated by
+parser fixtures before changing engine log output.
 
 Deferred for future consideration.
 
