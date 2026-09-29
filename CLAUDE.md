@@ -164,3 +164,9 @@ repaired file that also exists in the tarball matches it). **Rules:**
   (`docker/setup-web.sh`) — keep it; that sed is idempotent and bounded.
 - Race ids `1..10` map to image folders under `/image/as_game/race/<name>/` in
   `src/script/race.en` order (Human … Xesperados).
+- **Hosting box:** the NUC's NVMe drive drops out under heavy disk I/O
+  (replacement pending), and the box then **reboots itself** (`errors=panic` +
+  `kernel.panic=10`). A 2–3 minute outage of both sites plus a fresh uptime
+  means exactly that, not your deploy. The kernel's last words are in
+  `/var/lib/systemd/pstore/`. Details and the settings not to remove:
+  `docker/deploy-nuc.md` → *Box notes*.
