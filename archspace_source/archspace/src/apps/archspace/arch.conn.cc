@@ -147,6 +147,30 @@ CArchspaceConnection::page(const char *aMessage)
 	send_terminate();
 }
 
+// The web/auth service only ever issues bin2hex(random_bytes(32)) session
+// tokens: exactly 64 lowercase hex characters. make_page() splices the
+// as_session cookie into SQL, and cookie values arrive URL-decoded, so
+// anything else must be rejected before it reaches the query -- otherwise a
+// forged cookie such as  x' UNION SELECT 5#  logs in as any account.
+static bool
+is_session_token(const char *aToken)
+{
+	int
+		Length = 0;
+
+	for (; aToken[Length]; Length++)
+	{
+		char
+			Char = aToken[Length];
+
+		if (Length >= 64) return false;
+		if (!((Char >= '0' && Char <= '9') || (Char >= 'a' && Char <= 'f')))
+			return false;
+	}
+
+	return Length == 64;
+}
+
 bool
 CArchspaceConnection::make_page()
 {
@@ -184,7 +208,7 @@ CArchspaceConnection::make_page()
     	// legacy phpBB `asbb_sessions` lookup. The account id plays the former
     	// portal-id role.
     	char * PHPSessionID = mCookies.get_value("as_session");
-	if (!PHPSessionID)
+	if (!PHPSessionID || !is_session_token(PHPSessionID))
 	{
 		portal_login_message_page(GETTEXT("First of all, you must log in."));
 		return true;
