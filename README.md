@@ -381,7 +381,10 @@ stays off.
 - **Turn speed** — `mSecondPerTurn`, set by `SecondPerTurn` in `etc/archspace.config`
   (shipped 60s; the original servers ran 300–900s). Override per host with
   `SECOND_PER_TURN=<seconds>` in `docker/deploy/.deploy.env`; applied at
-  container start (restart, no rebuild). The self-hosted NUC runs 120s.
+  container start (restart, no rebuild). `TurnOffset` / `TURN_OFFSET=<seconds>`
+  (default -1 = off) puts turns on fixed clock boundaries instead of "now + one
+  turn", so the schedule never drifts. The self-hosted NUC runs 120s turns at
+  offsets 0 and 60 for its two editions.
 
 ### A recurring gotcha
 

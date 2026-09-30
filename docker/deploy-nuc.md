@@ -14,15 +14,16 @@ Tunnel**, and SSH is additionally behind a **Cloudflare Access** login.
 Each checkout has its own `docker/deploy/.deploy.env` (git-ignored) setting
 `COMPOSE_PROJECT_NAME` (`archspace` / `archspace-new`), `WEB_BIND=127.0.0.1`,
 `WEB_PORT` and `DEPLOY_BRANCH`, so the two stacks never share containers,
-volumes or images. Two more keys go easy on the disk (see *Box notes*):
+volumes or images. Three more keys go easy on the disk (see *Box notes*):
 
 | Key | `~/archspace` | `~/archspace-new` | Why |
 |---|---|---|---|
 | `SECOND_PER_TURN` | `120` | `120` | Turn length. Each turn every player's news files (~600 files / ~13 MB per edition) are rewritten, so 2-minute turns halve that write load (the repo default is 60). |
-| `STARTUP_DELAY` | — | `60` | Starts the restoration edition half a turn later, so the two editions' startup and their per-turn write bursts don't coincide. Turn timers are per player and start when the engine loads them, so the offset holds. |
+| `TURN_OFFSET` | `0` | `60` | Puts turns on fixed clock boundaries: the faithful edition ticks at :00, :02, :04…, the restoration edition at :01, :03, :05…. Without it, each next turn is set to "processed time + one turn", so the schedule drifts and the two editions' bursts wander back into line. |
+| `STARTUP_DELAY` | — | `60` | Starts the restoration edition a minute later, so the two editions' heavy startup I/O doesn't coincide. |
 
-Both are applied at container start, so a restart applies a change. No rebuild
-is needed.
+All three are applied at container start, so a restart applies a change. No
+rebuild is needed; `TURN_OFFSET` needs an engine built from 2026-09-30 or later.
 
 **There is no auto-deploy right now.** `.github/workflows/deploy.yml` needs a
 self-hosted runner, and the old one died with the AWS account. Pushing to

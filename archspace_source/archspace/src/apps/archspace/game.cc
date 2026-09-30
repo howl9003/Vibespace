@@ -23,6 +23,7 @@ time_t CGame::mServerStartTime = 0;
 bool   CGame::mUpdateTurn = true;
 float CGame::mTechRate = 0;
 time_t CGame::mSecondPerTurn = 300;
+int CGame::mTurnOffset = -1;
 int	CGame::mMaxUser = 10000;
 int CGame::mSiegeBlockadeRestrictionDuration = 600;
 int CGame::mSiegeBlockadeProtectionDuration = 600;
@@ -253,6 +254,10 @@ CGame::initialize(CIniFile *aConfig)
 	Temp = mConfig->get_integer("Game", "SecondPerTurn", -1);
 	if (Temp > 0) mSecondPerTurn = Temp;
 
+	// Opt-in clock-aligned turns (see CGame::get_next_turn_tick).
+	Temp = mConfig->get_integer("Game", "TurnOffset", -1);
+	if (Temp >= 0) mTurnOffset = Temp;
+
 	Temp = mConfig->get_integer("Game", "TrainMissionTime", -1);
 	if (Temp > 0) CMission::mTrainMissionTime = Temp * mSecondPerTurn;
 
@@ -481,6 +486,8 @@ CGame::initialize(CIniFile *aConfig)
 
 	SLOG("Server Start:%d, Game Start:%d, Game Time:%d, Turn:%d",
 		mServerStartTime, mGameStartTime, get_game_time(), mSecondPerTurn);
+	SLOG("Turn schedule: every %d s, %s (TurnOffset %d)", (int)mSecondPerTurn,
+		mTurnOffset >= 0 ? "on fixed clock boundaries" : "now + one turn", mTurnOffset);
 
 	CString
 		ClearDir;

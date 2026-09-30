@@ -1642,7 +1642,7 @@ CPlayerTable::update(void *aArg)
 
 			if(GAME->mUpdateTurn)
 			{
-				Update->set_tick(CGame::get_game_time()+CGame::mSecondPerTurn);
+				Update->set_tick(CGame::get_next_turn_tick());
 			}
 			mUpdatePlayer = mUpdatePlayer->next();
 

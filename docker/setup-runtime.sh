@@ -31,6 +31,14 @@ case "${SECOND_PER_TURN:-}" in
     *) sed -i "s/^SecondPerTurn = [0-9]*/SecondPerTurn = ${SECOND_PER_TURN}/" /etc/archspace/archspace.config
        echo "[setup] SecondPerTurn = ${SECOND_PER_TURN} (from SECOND_PER_TURN)" ;;
 esac
+# Clock-aligned turns from env: TURN_OFFSET=<seconds> (e.g. 0 or 60) puts turns
+# on fixed wall-clock boundaries. Unset/empty/non-numeric = keep the file's
+# value (-1 = original drifting schedule).
+case "${TURN_OFFSET:-}" in
+    ''|*[!0-9]*) ;;
+    *) sed -i "s/^TurnOffset = -\{0,1\}[0-9]*/TurnOffset = ${TURN_OFFSET}/" /etc/archspace/archspace.config
+       echo "[setup] TurnOffset = ${TURN_OFFSET} (from TURN_OFFSET)" ;;
+esac
 cp -f "$SRC/etc/banner"   /etc/archspace/banner   2>/dev/null || : > /etc/archspace/banner
 cp -f "$SRC/etc/ip_ban"   /etc/archspace/ip_ban   2>/dev/null || : > /etc/archspace/ip_ban
 [ -f /etc/archspace/admin_list ] || echo "admin@local" > /etc/archspace/admin_list

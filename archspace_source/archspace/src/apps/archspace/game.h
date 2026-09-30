@@ -40,6 +40,9 @@ class CGame
 		static time_t mGameStartTime;
 		static time_t mServerStartTime;
 		static time_t mSecondPerTurn;
+		// -1 (default): next turn = now + one turn (original). >= 0: turns on fixed
+		// clock boundaries every mSecondPerTurn s, offset by this many seconds.
+		static int mTurnOffset;
 		static bool mUpdateTurn;
 		static int mMaxUser;
 		static int mSiegeBlockadeRestrictionDuration;
@@ -105,6 +108,7 @@ class CGame
 											int aTarget = -1 );
 
 		static inline time_t get_game_time();
+		static inline time_t get_next_turn_tick();
 
 	public:
 		CUniverse *universe() { return mUniverse; }
@@ -204,5 +208,25 @@ inline time_t
 CGame::get_game_time()
 {
 	return time(0)-mServerStartTime+mGameStartTime;
+}
+
+// Game time of a player's next turn, called when its turn is processed.
+// Original behaviour (mTurnOffset < 0): now + one turn, so every late turn
+// pushes all later turns back and the schedule drifts. With mTurnOffset >= 0
+// the next turn is the next fixed wall-clock boundary: every mSecondPerTurn
+// seconds since the epoch, shifted by mTurnOffset (e.g. 120/0 -> :00 :02 :04,
+// 120/60 -> :01 :03 :05). Late processing then never shifts the schedule, and
+// two servers on one host can keep their per-turn disk bursts apart.
+inline time_t
+CGame::get_next_turn_tick()
+{
+	if (mTurnOffset < 0 || mSecondPerTurn <= 0)
+		return get_game_time()+mSecondPerTurn;
+
+	time_t
+		Now = time(0),
+		Next = ((Now-mTurnOffset)/mSecondPerTurn+1)*mSecondPerTurn+mTurnOffset;
+
+	return Next-mServerStartTime+mGameStartTime;
 }
 #endif

@@ -185,7 +185,7 @@ CPlayer::CPlayer(int aPortalID, int aGameID,
 	mInvestedShipProduction = 0;
 	mHonor = 50;
 	mResearchInvest = 0;
-	mTick = CGame::get_game_time() + CGame::mSecondPerTurn;
+	mTick = CGame::get_next_turn_tick();
 	mTurn = 0;
 	mAdmiralTimer = 0;
 	mHonorTimer = 0;
