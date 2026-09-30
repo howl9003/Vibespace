@@ -26,6 +26,10 @@ services:
     environment:
       TZ: UTC
       DB_PASS: comconq1     # internal DB password (not publicly exposed)
+      # Per-host tuning from docker/deploy/.deploy.env (see docker/deploy-nuc.md).
+      # Empty = defaults: turn length from etc/archspace.config, no delay.
+      SECOND_PER_TURN: ${SECOND_PER_TURN:-}   # turn length in seconds
+      STARTUP_DELAY: ${STARTUP_DELAY:-0}      # seconds to wait before starting
       # SMTP_HOST: smtp.example.com   # set to enable password-reset email;
       # SMTP_PORT: 587                # unset -> reset links are logged instead
       # SMTP_USER: ...
