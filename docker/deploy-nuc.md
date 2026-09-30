@@ -14,7 +14,15 @@ Tunnel**, and SSH is additionally behind a **Cloudflare Access** login.
 Each checkout has its own `docker/deploy/.deploy.env` (git-ignored) setting
 `COMPOSE_PROJECT_NAME` (`archspace` / `archspace-new`), `WEB_BIND=127.0.0.1`,
 `WEB_PORT` and `DEPLOY_BRANCH`, so the two stacks never share containers,
-volumes or images.
+volumes or images. Two more keys go easy on the disk (see *Box notes*):
+
+| Key | `~/archspace` | `~/archspace-new` | Why |
+|---|---|---|---|
+| `SECOND_PER_TURN` | `120` | `120` | Turn length. Each turn every player's news files (~600 files / ~13 MB per edition) are rewritten, so 2-minute turns halve that write load (the repo default is 60). |
+| `STARTUP_DELAY` | — | `60` | Starts the restoration edition half a turn later, so the two editions' startup and their per-turn write bursts don't coincide. Turn timers are per player and start when the engine loads them, so the offset holds. |
+
+Both are applied at container start, so a restart applies a change. No rebuild
+is needed.
 
 **There is no auto-deploy right now.** `.github/workflows/deploy.yml` needs a
 self-hosted runner, and the old one died with the AWS account. Pushing to

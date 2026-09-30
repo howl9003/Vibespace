@@ -24,6 +24,13 @@ cp -f "$SRC/etc/archspace.config" /etc/archspace/
 sed -i 's#^ImageServerURL =.*#ImageServerURL =#' /etc/archspace/archspace.config
 # DB password from env (default comconq1 already in the file)
 [ -n "$DB_PASS" ] && sed -i "s/^Password = .*/Password = ${DB_PASS}/" /etc/archspace/archspace.config || true
+# Turn length from env (seconds), e.g. SECOND_PER_TURN=120 in
+# docker/deploy/.deploy.env. Unset/empty/non-numeric = keep the file's value.
+case "${SECOND_PER_TURN:-}" in
+    ''|*[!0-9]*) ;;
+    *) sed -i "s/^SecondPerTurn = [0-9]*/SecondPerTurn = ${SECOND_PER_TURN}/" /etc/archspace/archspace.config
+       echo "[setup] SecondPerTurn = ${SECOND_PER_TURN} (from SECOND_PER_TURN)" ;;
+esac
 cp -f "$SRC/etc/banner"   /etc/archspace/banner   2>/dev/null || : > /etc/archspace/banner
 cp -f "$SRC/etc/ip_ban"   /etc/archspace/ip_ban   2>/dev/null || : > /etc/archspace/ip_ban
 [ -f /etc/archspace/admin_list ] || echo "admin@local" > /etc/archspace/admin_list

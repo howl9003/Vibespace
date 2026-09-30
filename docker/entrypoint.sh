@@ -9,6 +9,16 @@ SRC="${ARCHSPACE_SRC:-/build/archspace}"
 
 log(){ echo "[entrypoint] $*"; }
 
+# Optional delay before anything starts (STARTUP_DELAY seconds, from
+# docker/deploy/.deploy.env). On a host running two editions, delaying one
+# keeps their heavy startup I/O apart, and because turn timers are per player
+# and start when the engine loads them, it also keeps their per-turn
+# news-file write bursts apart afterwards.
+if [ "${STARTUP_DELAY:-0}" -gt 0 ] 2>/dev/null; then
+    log "STARTUP_DELAY: waiting ${STARTUP_DELAY}s before starting"
+    sleep "$STARTUP_DELAY"
+fi
+
 # --- 1. MariaDB -------------------------------------------------------------
 mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld /var/lib/mysql
 FIRST_BOOT=0

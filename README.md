@@ -345,7 +345,10 @@ Cloudflare, so the compose `https` profile stays off.
 - **Game balancing** — two layers: per-entity declarative data in `script/*.en`
   (e.g. `<Tech>{ Number(), Level(), Cost(), <Prerequisite>, <Effect> }`) and
   global knobs in `etc/archspace.config`. Both are data, not code.
-- **Turn speed** — `mSecondPerTurn` (shipped 60s), env-configurable.
+- **Turn speed** — `mSecondPerTurn`, set by `SecondPerTurn` in `etc/archspace.config`
+  (shipped 60s; the original servers ran 300–900s). Override per host with
+  `SECOND_PER_TURN=<seconds>` in `docker/deploy/.deploy.env`; applied at
+  container start (restart, no rebuild). The self-hosted NUC runs 120s.
 
 ### A recurring gotcha
 
