@@ -110,7 +110,10 @@ CPlanetList::remove_without_free_planet(int aPlanetID)
 CPlanet*
 CPlanetList::get_by_order(int aOrder)
 {
-	if (aOrder < length()) return NULL;
+	// Was "if (aOrder < length()) return NULL;" -- inverted, so every valid
+	// position returned NULL. CVSRoot fixed it ("> length() || < 0"); >= is the
+	// exact bound, so get(length()) is never read either.
+	if (aOrder < 0 || aOrder >= length()) return NULL;
 
 	return (CPlanet*)get(aOrder);
 }

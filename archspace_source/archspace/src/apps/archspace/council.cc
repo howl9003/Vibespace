@@ -505,6 +505,10 @@ CCouncil::remove_member(int aGameID)
 	for (int i = 0; i < tempyPlanetList->length(); i++)
 	{
 		tempyPlanet = tempyPlanetList->get_by_order(i);
+		// Never call through a missing planet: with the old inverted
+		// get_by_order() this crashed the server whenever a player who owns
+		// planets left a council (segfault in CPlanet::clear_commerce_all).
+		if (tempyPlanet == NULL) continue;
 		tempyPlanet->clear_commerce_all();
 	}
 
